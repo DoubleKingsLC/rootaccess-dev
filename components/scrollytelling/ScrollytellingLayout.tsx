@@ -4,10 +4,10 @@ import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { WorldStage } from "./WorldStage";
-import { BoardroomMeeting } from "./BoardroomMeeting";
 import { IntroOverlay } from "./IntroOverlay";
 import { CareerRoadmap } from "./CareerRoadmap";
 import { IntelTicker } from "./IntelTicker";
+import { MonitorPortal } from "./MonitorPortal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,6 +16,12 @@ type ScrollytellingLayoutProps = {
 };
 
 type Orientation = "horizontal" | "vertical";
+
+export const PHASES = {
+  INTRO: [0.0, 0.05],
+  SOC_OPERATIONS: [0.05, 0.85],
+  EXIT_TO_ROADMAP: [0.85, 1.0]
+};
 
 const PACKETS = [
   { left: "0%", top: "15%", anim: "packet-h", dur: 14, delay: 0 },
@@ -37,11 +43,35 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
   const l2DeskRef = useRef<HTMLDivElement | null>(null);
   const l3DeskRef = useRef<HTMLDivElement | null>(null);
   const l3DiskRef = useRef<HTMLDivElement | null>(null);
+  const l1MonitorRef = useRef<HTMLDivElement | null>(null);
+  const l2MonitorRef = useRef<HTMLDivElement | null>(null);
+  const l3MonitorRef = useRef<HTMLDivElement | null>(null);
   const backgroundRef = useRef<HTMLDivElement | null>(null);
-  const boardroomRef = useRef<HTMLDivElement | null>(null);
+  const zoomWrapperRef = useRef<HTMLDivElement | null>(null);
   const [progress, setProgress] = useState(0);
   const [stageScaleFactor, setStageScaleFactor] = useState(1);
   const [orientation, setOrientation] = useState<Orientation>("horizontal");
+
+  const ZOOM_SCALE = 4.5;
+
+  const getCameraOffset = (targetRef: React.RefObject<HTMLDivElement | null>) => {
+    if (!targetRef.current || !pinnedViewportRef.current) return { x: 0, y: 0 };
+    const target = targetRef.current.getBoundingClientRect();
+    const viewport = pinnedViewportRef.current.getBoundingClientRect();
+
+    const targetCenterX = target.left + target.width / 2;
+    const targetCenterY = target.top + target.height / 2;
+    const viewportCenterX = viewport.left + viewport.width / 2;
+    const viewportCenterY = viewport.top + viewport.height / 2;
+
+    // Multiply by ZOOM_SCALE because the GSAP x/y translations are applied 
+    // independently of the scale in the transform matrix visually, but we need
+    // the translational distance to proportionally scale with the wrapper size to stay centered.
+    return {
+      x: (viewportCenterX - targetCenterX) * ZOOM_SCALE,
+      y: (viewportCenterY - targetCenterY) * ZOOM_SCALE
+    };
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -89,28 +119,135 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
       // 0–5%: Intro fade (only timeline animation)
       tl.fromTo(stageEl, { opacity: 0 }, { opacity: 1, duration: 0.05, ease: "power1.out" }, 0);
 
-      // SOC exit (0.75–0.80): blur + slide down + fade out
-      const socStageEl = socStageRef.current;
-      if (socStageEl) {
-        gsap.set(socStageEl, { y: 0, filter: "blur(0px)", opacity: 1 });
-        tl.to(socStageEl, {
-          y: 100,
-          filter: "blur(10px)",
-          opacity: 0,
-          duration: 0.05,
-          ease: "power2.inOut"
-        }, 0.75);
-      }
+      // We animate the workstations fading out for Cull Sync
+      const workstations = [l1DeskRef.current, l2DeskRef.current, l3DeskRef.current];
 
-      // Boardroom: hidden until 0.80, then glass-slide in (mount from 0.75 so ref exists)
-      tl.add(() => {
-        if (boardroomRef.current) gsap.set(boardroomRef.current, { y: 100, opacity: 0 });
-      }, 0.75);
+      // L1 Portal: Dive 0.12-0.17 | Hold 0.17-0.26 | Fade-out 0.26-0.30 | Return 0.30-0.35
+      // Dive
+      tl.to(
+        zoomWrapperRef.current,
+        { scale: ZOOM_SCALE, x: () => getCameraOffset(l1DeskRef).x, y: () => getCameraOffset(l1DeskRef).y, duration: 0.05, ease: "power4.out" },
+        0.12
+      );
+      tl.to(workstations, { autoAlpha: 0, duration: 0.05, ease: "power4.out" }, 0.12);
+
+      // Monitor GUI appears
       tl.fromTo(
-        () => boardroomRef.current,
-        { y: 100, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.05, ease: "power2.out" },
-        0.80
+        l1MonitorRef.current,
+        { autoAlpha: 0, scale: 0.8, filter: "blur(10px)" },
+        { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 0.04, ease: "expo.out" },
+        0.13
+      );
+
+      // Wait, is Fade-out meant for workstations to reappear? Yes! portal fades out, workstation re-appears.
+      tl.to(workstations, { autoAlpha: 1, duration: 0.04, ease: "power2.inOut", immediateRender: false }, 0.26);
+
+      // Monitor GUI exits
+      tl.to(
+        l1MonitorRef.current,
+        { autoAlpha: 0, scale: 1.5, filter: "blur(20px)", duration: 0.05 },
+        0.30
+      );
+
+      // Return
+      tl.to(zoomWrapperRef.current, { scale: 1, x: 0, y: 0, duration: 0.05, ease: "power2.in" }, 0.30);
+
+      // L2 Portal: Dive 0.38-0.43 | Hold 0.43-0.48 | Fade-out 0.48-0.52 | Return 0.52-0.57
+      tl.to(
+        zoomWrapperRef.current,
+        { scale: ZOOM_SCALE, x: () => getCameraOffset(l2DeskRef).x, y: () => getCameraOffset(l2DeskRef).y, duration: 0.05, ease: "power4.out" },
+        0.38
+      );
+      tl.to(workstations, { autoAlpha: 0, duration: 0.05, ease: "power4.out" }, 0.38);
+
+      // L2 Monitor appears
+      tl.fromTo(
+        l2MonitorRef.current,
+        { autoAlpha: 0, scale: 0.8, filter: "blur(10px)" },
+        { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 0.04, ease: "expo.out" },
+        0.39
+      );
+
+      tl.to(workstations, { autoAlpha: 1, duration: 0.04, ease: "power2.inOut", immediateRender: false }, 0.48);
+
+      // L2 Monitor exits
+      tl.to(
+        l2MonitorRef.current,
+        { autoAlpha: 0, scale: 1.5, filter: "blur(20px)", duration: 0.05 },
+        0.52
+      );
+
+      tl.to(zoomWrapperRef.current, { scale: 1, x: 0, y: 0, duration: 0.05, ease: "power2.in" }, 0.52);
+
+      // L3 Portal: Dive 0.58-0.63 | Hold 0.63-0.68 | Fade-out 0.68-0.72 | Return 0.72-0.77
+      tl.to(
+        zoomWrapperRef.current,
+        { scale: ZOOM_SCALE, x: () => getCameraOffset(l3DeskRef).x, y: () => getCameraOffset(l3DeskRef).y, duration: 0.05, ease: "power4.out" },
+        0.58
+      );
+      tl.to(workstations, { autoAlpha: 0, duration: 0.05, ease: "power4.out" }, 0.58);
+
+      // L3 Monitor appears
+      tl.fromTo(
+        l3MonitorRef.current,
+        { autoAlpha: 0, scale: 0.8, filter: "blur(10px)" },
+        { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 0.04, ease: "expo.out" },
+        0.59
+      );
+
+      tl.to(workstations, { autoAlpha: 1, duration: 0.04, ease: "power2.inOut", immediateRender: false }, 0.68);
+
+      // L3 Monitor exits
+      tl.to(
+        l3MonitorRef.current,
+        { autoAlpha: 0, scale: 1.5, filter: "blur(20px)", duration: 0.05 },
+        0.72
+      );
+
+      tl.to(zoomWrapperRef.current, { scale: 1, x: 0, y: 0, duration: 0.05, ease: "power2.in" }, 0.72);
+
+      // Operational Hold: Keep camera stable and full floor visible from 0.75 -> 0.85
+      tl.to(
+        zoomWrapperRef.current,
+        { scale: 1, x: 0, y: 0, duration: 0.1, ease: "none" },
+        0.75
+      );
+
+      // Global initial state: workstations + packets fully visible
+      tl.add(() => {
+        const allStations = [l1DeskRef.current, l2DeskRef.current, l3DeskRef.current].filter(Boolean);
+        gsap.set(allStations, { autoAlpha: 1, y: 0 });
+        gsap.set(".data-packet", { opacity: 1 });
+      }, 0);
+
+      // 0.85: Master Exit - cinematic vacuum out of the entire stage
+      tl.to(
+        socStageRef.current,
+        {
+          autoAlpha: 0,
+          y: 300,
+          filter: "blur(30px)",
+          duration: 0.05,
+          ease: "power3.in"
+        },
+        PHASES.SOC_OPERATIONS[1]
+      );
+
+      // Data packets GSAP cut-off
+      tl.set(".data-packet", { autoAlpha: 0 }, PHASES.SOC_OPERATIONS[1]);
+
+      // 0.90: Permanent Hard-Kill off-screen workstations
+      tl.set(
+        () => [socStageRef.current, worldStageRef.current, l1DeskRef.current, l2DeskRef.current, l3DeskRef.current].filter(Boolean),
+        { display: "none", pointerEvents: "none" },
+        0.90
+      );
+
+      // 1.0: End-of-timeline dead-end clamp to ensure zero scrubbing reappearance
+      tl.set(
+        () => [socStageRef.current, worldStageRef.current, l1DeskRef.current, l2DeskRef.current, l3DeskRef.current].filter(Boolean),
+        { autoAlpha: 0, display: "none", pointerEvents: "none" },
+        1.0
       );
 
       // L3 Forensic Disk: slide out at 55% relative to L3 desk
@@ -144,14 +281,14 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
         }
       }
 
-      tl.to(".data-packet", { animationDuration: "2s" }, 0.80);
+      // Removed the `.to(".data-packet", ...)` here because it was moved into phase-sync above
     }, scrollSectionRef);
 
     return () => ctx.revert();
   }, [orientation, stageScaleFactor]);
 
   const progressPercent = Math.round(progress * 100);
-  const roadmapOpacity = progress > 0.98 ? Math.min(1, (progress - 0.98) / 0.02) : 0;
+  const roadmapOpacity = progress > 0.85 ? Math.min(1, (progress - 0.85) / 0.07) : 0;
 
   return (
     <section ref={scrollSectionRef} className="relative h-[500vh] w-screen bg-ra-bg">
@@ -168,7 +305,7 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
           }}
           aria-hidden
         >
-          {progress < 0.8 && PACKETS.map((packet, i) => (
+          {PACKETS.map((packet, i) => (
             <div
               key={i}
               className="data-packet"
@@ -183,10 +320,14 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
         </div>
 
         <div className="relative flex h-[140vh] w-[140vw] items-center justify-center">
-          {progress < 0.8 && (
+          <div
+            ref={socStageRef}
+            className="absolute flex origin-center items-center justify-center z-10"
+          >
             <div
-              ref={socStageRef}
-              className="absolute z-10 flex origin-center items-center justify-center"
+              ref={zoomWrapperRef}
+              className="flex origin-center items-center justify-center w-full h-full z-10"
+              style={{ transformOrigin: "center center" }}
             >
               <div
                 className="flex origin-center items-center justify-center"
@@ -204,24 +345,28 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
                 </div>
               </div>
             </div>
-          )}
-
-          {progress >= 0.75 && progress <= 0.85 && (
-            <div ref={boardroomRef} className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
-              <BoardroomMeeting />
-            </div>
-          )}
-
-          {progress > 0.98 && (
-            <div className="pointer-events-none absolute inset-0">
-              <CareerRoadmap opacity={roadmapOpacity} />
-            </div>
-          )}
+          </div>
         </div>
+
+        <div
+          className="fixed inset-0 z-[100]"
+          style={{
+            opacity: roadmapOpacity,
+            pointerEvents: roadmapOpacity > 0.9 ? "auto" : "none"
+          }}
+        >
+          <CareerRoadmap opacity={roadmapOpacity} />
+        </div>
+
+        <MonitorPortal type="L1" ref={l1MonitorRef} />
+        <MonitorPortal type="L2" ref={l2MonitorRef} />
+        <MonitorPortal type="L3" ref={l3MonitorRef} />
 
         <IntelTicker />
 
-        {progress < 0.05 && <IntroOverlay progress={progress} />}
+        <div className="pointer-events-none absolute inset-0 z-50">
+          <IntroOverlay progress={progress} />
+        </div>
 
         <div className="pointer-events-none absolute inset-x-0 bottom-0 border-t border-white/10 bg-slate-950/20 px-4 py-2 backdrop-blur-sm">
           <div className="flex items-center justify-between gap-3">
