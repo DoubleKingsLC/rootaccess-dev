@@ -58,7 +58,7 @@ const WorldStageComponent: React.FC<WorldStageProps> = ({
           <AnalystPOV
             label="L3 STATION"
             screens={1}
-            isAlerted={p >= 0.55 && p < 0.85}
+            isAlerted={p >= 0.55 && p < 0.80}
             stationRef={l3Ref}
           />
         </div>

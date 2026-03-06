@@ -8,6 +8,7 @@ import { IntroOverlay } from "./IntroOverlay";
 import { CareerRoadmap } from "./CareerRoadmap";
 import { IntelTicker } from "./IntelTicker";
 import { MonitorPortal } from "./MonitorPortal";
+import Lenis from "lenis";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -98,6 +99,21 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
       return;
     }
 
+    // Initialize high-inertia smooth scrolling
+    const lenis = new Lenis({
+      lerp: 0.05,
+      wheelMultiplier: 0.7,
+    });
+
+    lenis.on('scroll', ScrollTrigger.update);
+
+    function update(time: number) {
+      lenis.raf(time * 1000);
+    }
+
+    gsap.ticker.add(update);
+    gsap.ticker.lagSmoothing(0);
+
     const ctx = gsap.context(() => {
       const stageEl = worldStageRef.current!;
 
@@ -109,7 +125,7 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
           trigger: scrollSectionRef.current,
           start: "top top",
           end: "bottom bottom",
-          scrub: 1,
+          scrub: 3,
           pin: pinnedViewportRef.current,
           anticipatePin: 1,
           onUpdate: (self) => setProgress(self.progress)
@@ -220,27 +236,27 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
         gsap.set(".data-packet", { opacity: 1 });
       }, 0);
 
-      // 0.85: Master Exit - cinematic vacuum out of the entire stage
+      // 0.80: Master Exit - cinematic vacuum out of the entire stage
       tl.to(
         socStageRef.current,
         {
           autoAlpha: 0,
           y: 300,
           filter: "blur(30px)",
-          duration: 0.05,
+          duration: 0.03, // Accelerated for momentum via scrub: 3
           ease: "power3.in"
         },
-        PHASES.SOC_OPERATIONS[1]
+        0.80
       );
 
       // Data packets GSAP cut-off
-      tl.set(".data-packet", { autoAlpha: 0 }, PHASES.SOC_OPERATIONS[1]);
+      tl.set(".data-packet", { autoAlpha: 0 }, 0.80);
 
-      // 0.90: Permanent Hard-Kill off-screen workstations
+      // 0.85: Hard-Kill off-screen workstations early to prevent DOM collision
       tl.set(
         () => [socStageRef.current, worldStageRef.current, l1DeskRef.current, l2DeskRef.current, l3DeskRef.current].filter(Boolean),
         { display: "none", pointerEvents: "none" },
-        0.90
+        0.85
       );
 
       // 1.0: End-of-timeline dead-end clamp to ensure zero scrubbing reappearance
@@ -284,14 +300,19 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
       // Removed the `.to(".data-packet", ...)` here because it was moved into phase-sync above
     }, scrollSectionRef);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      gsap.ticker.remove(update);
+      lenis.destroy();
+    };
   }, [orientation, stageScaleFactor]);
 
   const progressPercent = Math.round(progress * 100);
-  const roadmapOpacity = progress > 0.85 ? Math.min(1, (progress - 0.85) / 0.07) : 0;
+  // Re-map the roadmap fade correctly: fade in from 0.90 to 1.00 (distance: 0.10)
+  const roadmapOpacity = progress > 0.90 ? Math.min(1, (progress - 0.90) / 0.10) : 0;
 
   return (
-    <section ref={scrollSectionRef} className="relative h-[500vh] w-screen bg-ra-bg">
+    <section ref={scrollSectionRef} className="relative h-[1000vh] w-screen bg-ra-bg">
       <div ref={pinnedViewportRef} className="sticky top-0 flex h-screen min-h-[600px] w-screen items-center justify-center overflow-hidden">
         <div
           ref={backgroundRef}
