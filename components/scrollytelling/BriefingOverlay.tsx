@@ -53,7 +53,8 @@ export const BriefingOverlay: React.FC<BriefingOverlayProps> = ({ role }) => {
     <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center">
       <div
         ref={cardRef}
-        className={`pointer-events-auto w-[min(480px,90vw)] max-h-[70vh] rounded-2xl border-2 bg-slate-950/80 px-6 py-6 backdrop-blur-2xl ${borderClass}`}
+        className={`pointer-events-auto w-[min(480px,90vw)] max-h-[70vh] rounded-2xl border-2 bg-slate-950/80 px-6 py-6 backdrop-blur-2xl transition-transform duration-300 ease-out ${borderClass}`}
+        style={{ transform: "scale(1.5)" }}
       >
         <p className="font-mono text-[11px] uppercase tracking-[0.35em] text-cyan-400">
           {title}

@@ -4,89 +4,74 @@ import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { WorldStage } from "./WorldStage";
-import { NarrativeOverlay } from "./NarrativeOverlay";
+import { BoardroomMeeting } from "./BoardroomMeeting";
 import { IntroOverlay } from "./IntroOverlay";
-import { StakeholderBroadcast } from "./StakeholderBroadcast";
 import { CareerRoadmap } from "./CareerRoadmap";
-import { BriefingOverlay, BriefingRole } from "./BriefingOverlay";
 import { IntelTicker } from "./IntelTicker";
-import { PlaybookHUD } from "./PlaybookHUD";
-import { NotificationToast } from "./NotificationToast";
 
 gsap.registerPlugin(ScrollTrigger);
-
-const ROOM_WIDTH_PX = 2100;
 
 type ScrollytellingLayoutProps = {
   children?: React.ReactNode;
 };
 
-const PACKET_POINTS = {
-  l1: { x: 550, y: 450 },
-  l1ToL2_up: { x: 550, y: 350 },
-  l1ToL2_across: { x: 1050, y: 350 },
-  l2: { x: 1050, y: 450 },
-  l2ToL3_up: { x: 1050, y: 350 },
-  l2ToL3_across: { x: 1550, y: 350 },
-  l3: { x: 1550, y: 450 }
-} as const;
+type Orientation = "horizontal" | "vertical";
 
-function getStageScaleFactor(): number {
-  if (typeof window === "undefined") return 1;
-  return Math.min(1, window.innerWidth / ROOM_WIDTH_PX);
-}
-
-function getBriefingRole(progress: number): BriefingRole {
-  // Updated timing:
-  // Legal: 55%–60%, CISO: 68%–70%, Systems Admin: unchanged (72%–74%)
-  if (progress >= 0.55 && progress < 0.6) return "legal";
-  if (progress >= 0.68 && progress < 0.7) return "ciso";
-  if (progress >= 0.72 && progress < 0.74) return "systems";
-  return null;
-}
+const PACKETS = [
+  { left: "0%", top: "15%", anim: "packet-h", dur: 14, delay: 0 },
+  { left: "0%", top: "40%", anim: "packet-h", dur: 11, delay: 2 },
+  { left: "100%", top: "25%", anim: "packet-h-rev", dur: 12, delay: 3 },
+  { left: "20%", top: "0%", anim: "packet-v", dur: 13, delay: 1 },
+  { left: "80%", top: "0%", anim: "packet-v", dur: 15, delay: 2 },
+  { left: "35%", top: "100%", anim: "packet-v-rev", dur: 11, delay: 0 },
+  { left: "65%", top: "100%", anim: "packet-v-rev", dur: 12, delay: 2.5 }
+];
 
 export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
   const scrollSectionRef = useRef<HTMLDivElement | null>(null);
   const pinnedViewportRef = useRef<HTMLDivElement | null>(null);
+  const socStageRef = useRef<HTMLDivElement | null>(null);
   const worldStageRef = useRef<HTMLDivElement | null>(null);
+  const baseStageWidthRef = useRef<number | null>(null);
   const l1DeskRef = useRef<HTMLDivElement | null>(null);
   const l2DeskRef = useRef<HTMLDivElement | null>(null);
   const l3DeskRef = useRef<HTMLDivElement | null>(null);
-  const ticketRef = useRef<HTMLDivElement | null>(null);
-  const tracePathRef = useRef<SVGPathElement | null>(null);
-  const tracePathL2L3Ref = useRef<SVGPathElement | null>(null);
+  const l3DiskRef = useRef<HTMLDivElement | null>(null);
   const backgroundRef = useRef<HTMLDivElement | null>(null);
+  const boardroomRef = useRef<HTMLDivElement | null>(null);
   const [progress, setProgress] = useState(0);
   const [stageScaleFactor, setStageScaleFactor] = useState(1);
-  const [evidenceToastShown, setEvidenceToastShown] = useState(false);
+  const [orientation, setOrientation] = useState<Orientation>("horizontal");
 
   useEffect(() => {
-    const onResize = () => setStageScaleFactor(getStageScaleFactor());
-    onResize();
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    const handleResize = () => {
+      if (typeof window !== "undefined") {
+        if (worldStageRef.current) {
+          const stageRect = worldStageRef.current.getBoundingClientRect();
+          if (!baseStageWidthRef.current) {
+            baseStageWidthRef.current = stageRect.width || window.innerWidth || 1;
+          }
+          const baseWidth = baseStageWidthRef.current || 1;
+          const scale = Math.min(1, window.innerWidth / baseWidth);
+          setStageScaleFactor(scale || 1);
+        }
+        setOrientation(window.innerWidth < 768 ? "vertical" : "horizontal");
+      }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
-    if (
-      !scrollSectionRef.current ||
-      !pinnedViewportRef.current ||
-      !worldStageRef.current
-    ) {
+    if (!scrollSectionRef.current || !pinnedViewportRef.current || !worldStageRef.current) {
       return;
     }
 
     const ctx = gsap.context(() => {
-      const viewportEl = pinnedViewportRef.current!;
       const stageEl = worldStageRef.current!;
-      const l1El = l1DeskRef.current;
-      const l2El = l2DeskRef.current;
-      const l3El = l3DeskRef.current;
 
-      gsap.set(stageEl, {
-        opacity: 0,
-        filter: "blur(0px)"
-      });
+      gsap.set(stageEl, { opacity: 0, filter: "blur(0px)" });
 
       const tl = gsap.timeline({
         defaults: { ease: "none" },
@@ -97,273 +82,135 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
           scrub: 1,
           pin: pinnedViewportRef.current,
           anticipatePin: 1,
-          onUpdate: (self) => {
-            const p = self.progress;
-            setProgress(p);
-
-            // Briefing windows drive stage blur/dim
-            const role = getBriefingRole(p);
-            const active = role !== null;
-            gsap.to(stageEl, {
-              filter: active
-                ? "blur(8px) brightness(0.5)"
-                : "blur(0px) brightness(1)",
-              duration: 0.3,
-              ease: "power2.out"
-            });
-
-            const velocity =
-              // @ts-expect-error velocity is available on ScrollTrigger
-              typeof self.getVelocity === "function" ? self.getVelocity() : 0;
-            if (typeof document !== "undefined") {
-              document.body.style.cursor =
-                velocity === 0 ? "grab" : "grabbing";
-            }
-          }
+          onUpdate: (self) => setProgress(self.progress)
         }
       });
 
-      // 0–10%: fade in world stage
-      tl.fromTo(
-        stageEl,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 0.1,
-          ease: "power1.out"
-        },
-        0
-      );
+      // 0–5%: Intro fade (only timeline animation)
+      tl.fromTo(stageEl, { opacity: 0 }, { opacity: 1, duration: 0.05, ease: "power1.out" }, 0);
 
-      // 45–55%: subtle motion blur while transitioning to L2
-      tl.fromTo(
-        stageEl,
-        { filter: "blur(0px)" },
-        {
-          filter: "blur(2px)",
-          duration: 0.1
-        },
-        0.45
-      );
-
-      tl.to(
-        stageEl,
-        {
-          filter: "blur(0px)",
-          duration: 0.1
-        },
-        0.55
-      );
-
-      // Spotlight: dim background at 25% and 65%, restore at 50% and 80%
-      const bgEl = backgroundRef.current;
-      if (bgEl) {
-        gsap.set(bgEl, { opacity: 1 });
-        tl.to(bgEl, { opacity: 0.4, duration: 0.05 }, 0.25);
-        tl.to(bgEl, { opacity: 1, duration: 0.05 }, 0.5);
-        tl.to(bgEl, { opacity: 0.4, duration: 0.05 }, 0.65);
-        tl.to(bgEl, { opacity: 1, duration: 0.05 }, 0.8);
-      }
-
-      // 50–75%: ticket flies from L1 to L2
-      const ticketEl = ticketRef.current;
-      if (ticketEl) {
-        gsap.set(ticketEl, {
-          left: PACKET_POINTS.l1.x,
-          top: PACKET_POINTS.l1.y,
-          transformOrigin: "50% 50%",
-          color: "#22d3ee"
-        });
-
-        // Color phases tied to conceptual segments
-        // L1: 25–50% – cyan
-        tl.to(
-          ticketEl,
-          { color: "#22d3ee", duration: 0.01 },
-          0.25
-        );
-        // L2: 50–75% – emerald
-        tl.to(
-          ticketEl,
-          { color: "#22c55e", duration: 0.01 },
-          0.5
-        );
-        // L3: 75–85% – amber
-        tl.to(
-          ticketEl,
-          { color: "#fbbf24", duration: 0.01 },
-          0.75
-        );
-
-        // Data pulse when reaching each workstation
-        tl.fromTo(
-          ticketEl,
-          { scale: 1 },
-          { scale: 1.18, yoyo: true, repeat: 1, duration: 0.08, ease: "power2.out" },
-          0.25
-        );
-        tl.fromTo(
-          ticketEl,
-          { scale: 1 },
-          { scale: 1.18, yoyo: true, repeat: 1, duration: 0.08, ease: "power2.out" },
-          0.5
-        );
-        tl.fromTo(
-          ticketEl,
-          { scale: 1 },
-          { scale: 1.18, yoyo: true, repeat: 1, duration: 0.08, ease: "power2.out" },
-          0.75
-        );
-
-        // Orthogonal L1 → L2 path (50–65%)
-        tl.to(
-          ticketEl,
-          {
-            left: PACKET_POINTS.l1ToL2_up.x,
-            top: PACKET_POINTS.l1ToL2_up.y,
-            duration: 0.05,
-            ease: "power2.inOut"
-          },
-          0.5
-        );
-        tl.to(ticketEl, {
-          left: PACKET_POINTS.l1ToL2_across.x,
-          top: PACKET_POINTS.l1ToL2_across.y,
-          duration: 0.05,
-          ease: "power2.inOut"
-        });
-        tl.to(ticketEl, {
-          left: PACKET_POINTS.l2.x,
-          top: PACKET_POINTS.l2.y,
-          duration: 0.05,
-          ease: "power2.inOut"
-        });
-
-        // Orthogonal L2 → L3 path (75–85%)
-        tl.to(
-          ticketEl,
-          {
-            left: PACKET_POINTS.l2ToL3_up.x,
-            top: PACKET_POINTS.l2ToL3_up.y,
-            duration: 0.05,
-            ease: "power2.inOut"
-          },
-          0.75
-        );
-        tl.to(ticketEl, {
-          left: PACKET_POINTS.l2ToL3_across.x,
-          top: PACKET_POINTS.l2ToL3_across.y,
-          duration: 0.05,
-          ease: "power2.inOut"
-        });
-        tl.to(ticketEl, {
-          left: PACKET_POINTS.l3.x,
-          top: PACKET_POINTS.l3.y,
-          duration: 0.05,
-          ease: "power2.inOut"
-        });
-      }
-
-      // 50–75%: trace route L1→L2 draws itself
-      const pathEl = tracePathRef.current;
-      if (pathEl) {
-        const pathLen = pathEl.getTotalLength();
-        pathEl.style.strokeDasharray = String(pathLen);
-        gsap.set(pathEl, { strokeDashoffset: pathLen });
-        tl.to(
-          pathEl,
-          { strokeDashoffset: 0, duration: 0.25, ease: "power2.inOut" },
-          0.5
-        );
-      }
-
-      // 65–80%: trace route L2→L3 draws itself
-      const pathL2L3El = tracePathL2L3Ref.current;
-      if (pathL2L3El) {
-        const pathLen2 = pathL2L3El.getTotalLength();
-        pathL2L3El.style.strokeDasharray = String(pathLen2);
-        gsap.set(pathL2L3El, { strokeDashoffset: pathLen2 });
-        tl.to(
-          pathL2L3El,
-          { strokeDashoffset: 0, duration: 0.15, ease: "power2.inOut" },
-          0.65
-        );
-      }
-
-      // 85–100%: exit – scale up and fade out (zoom through floor)
-      // Also speed up background packets to create a tunnel / warp effect
-      tl.to(
-        ".data-packet",
-        {
-          animationDuration: "2s"
-        },
-        0.85
-      );
-
-      tl.to(
-        stageEl,
-        {
+      // SOC exit (0.75–0.80): blur + slide down + fade out
+      const socStageEl = socStageRef.current;
+      if (socStageEl) {
+        gsap.set(socStageEl, { y: 0, filter: "blur(0px)", opacity: 1 });
+        tl.to(socStageEl, {
+          y: 100,
+          filter: "blur(10px)",
           opacity: 0,
-          duration: 0.15,
-          ease: "power2.in"
-        },
-        0.85
+          duration: 0.05,
+          ease: "power2.inOut"
+        }, 0.75);
+      }
+
+      // Boardroom: hidden until 0.80, then glass-slide in (mount from 0.75 so ref exists)
+      tl.add(() => {
+        if (boardroomRef.current) gsap.set(boardroomRef.current, { y: 100, opacity: 0 });
+      }, 0.75);
+      tl.fromTo(
+        () => boardroomRef.current,
+        { y: 100, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.05, ease: "power2.out" },
+        0.80
       );
+
+      // L3 Forensic Disk: slide out at 55% relative to L3 desk
+      const l3DiskEl = l3DiskRef.current;
+      const l3DeskEl = l3DeskRef.current;
+      if (l3DiskEl && l3DeskEl) {
+        gsap.set(l3DiskEl, { opacity: 0 });
+        const parent = l3DiskEl.parentElement;
+        if (parent) {
+          tl.to(l3DiskEl, {
+            opacity: 1,
+            x: () => {
+              const disk = l3DiskRef.current;
+              const desk = l3DeskRef.current;
+              if (!disk || !desk || !disk.parentElement) return 0;
+              const pr = disk.parentElement.getBoundingClientRect();
+              const dr = desk.getBoundingClientRect();
+              return dr.left - pr.left + dr.width / 2 - (disk.offsetWidth || 0) / 2;
+            },
+            y: () => {
+              const disk = l3DiskRef.current;
+              const desk = l3DeskRef.current;
+              if (!disk || !desk || !disk.parentElement) return 0;
+              const pr = disk.parentElement.getBoundingClientRect();
+              const dr = desk.getBoundingClientRect();
+              return dr.top - pr.top + dr.height / 2 + 80 - (disk.offsetHeight || 0) / 2;
+            },
+            duration: 0.05,
+            ease: "power2.out"
+          }, 0.55);
+        }
+      }
+
+      tl.to(".data-packet", { animationDuration: "2s" }, 0.80);
     }, scrollSectionRef);
 
-    if (typeof document !== "undefined") {
-      document.body.style.cursor = "grab";
-    }
-
-    return () => {
-      if (typeof document !== "undefined") {
-        document.body.style.cursor = "";
-      }
-      ctx.revert();
-    };
-  }, []);
+    return () => ctx.revert();
+  }, [orientation, stageScaleFactor]);
 
   const progressPercent = Math.round(progress * 100);
-  const briefingRole = getBriefingRole(progress);
-  const roadmapOpacity =
-    progress > 0.98 ? Math.min(1, (progress - 0.98) / 0.02) : 0;
+  const roadmapOpacity = progress > 0.98 ? Math.min(1, (progress - 0.98) / 0.02) : 0;
 
   return (
-    <section
-      ref={scrollSectionRef}
-      className="relative h-[500vh] w-screen bg-ra-bg"
-    >
-      <div
-        ref={pinnedViewportRef}
-        className="sticky top-0 flex h-screen w-screen items-center justify-center overflow-hidden"
-      >
-        <IntelTicker />
+    <section ref={scrollSectionRef} className="relative h-[500vh] w-screen bg-ra-bg">
+      <div ref={pinnedViewportRef} className="sticky top-0 flex h-screen min-h-[600px] w-screen items-center justify-center overflow-hidden">
+        <div
+          ref={backgroundRef}
+          className="pointer-events-none absolute inset-0 z-0"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at center, transparent 0%, rgba(15, 23, 42, 0.9) 100%), linear-gradient(to right, #1e293b 1px, transparent 1px), linear-gradient(to bottom, #1e293b 1px, transparent 1px)",
+            backgroundSize: "100% 100%, 40px 40px, 40px 40px",
+            backgroundRepeat: "no-repeat, repeat, repeat",
+            backgroundPosition: "0 0, 0 0, 0 0"
+          }}
+          aria-hidden
+        >
+          {progress < 0.8 && PACKETS.map((packet, i) => (
+            <div
+              key={i}
+              className="data-packet"
+              style={{
+                left: packet.left,
+                top: packet.top,
+                animation: `${packet.anim} ${packet.dur}s linear infinite`,
+                animationDelay: `${packet.delay}s`
+              }}
+            />
+          ))}
+        </div>
 
         <div className="relative flex h-[140vh] w-[140vw] items-center justify-center">
-          <div
-            className="flex origin-center items-center justify-center"
-            style={{
-              transform: `scale(${stageScaleFactor})`,
-              transformOrigin: "center center"
-            }}
-          >
+          {progress < 0.8 && (
             <div
-              ref={worldStageRef}
-              className="world-stage h-[120vh] w-[120vw]"
+              ref={socStageRef}
+              className="absolute z-10 flex origin-center items-center justify-center"
             >
-              <WorldStage
-                className="flex h-full w-full items-center justify-center"
-                l1Ref={l1DeskRef}
-                l2Ref={l2DeskRef}
-                l3Ref={l3DeskRef}
-                ticketRef={ticketRef}
-                tracePathRef={tracePathRef}
-                tracePathL2L3Ref={tracePathL2L3Ref}
-                backgroundRef={backgroundRef}
-                scrollProgress={progress}
-              />
+              <div
+                className="flex origin-center items-center justify-center"
+                style={{ transform: `scale(${stageScaleFactor})`, transformOrigin: "center center" }}
+              >
+                <div ref={worldStageRef} className="world-stage flex h-full w-full items-center justify-center">
+                  <WorldStage
+                    className="flex h-full w-full items-center justify-center"
+                    l1Ref={l1DeskRef}
+                    l2Ref={l2DeskRef}
+                    l3Ref={l3DeskRef}
+                    l3DiskRef={l3DiskRef}
+                    scrollProgress={progress}
+                  />
+                </div>
+              </div>
             </div>
-          </div>
+          )}
+
+          {progress >= 0.75 && progress <= 0.85 && (
+            <div ref={boardroomRef} className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+              <BoardroomMeeting />
+            </div>
+          )}
 
           {progress > 0.98 && (
             <div className="pointer-events-none absolute inset-0">
@@ -372,44 +219,20 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
           )}
         </div>
 
-        <BriefingOverlay role={briefingRole} />
+        <IntelTicker />
 
-        {progress < 0.21 && <IntroOverlay progress={progress} />}
-
-        <NarrativeOverlay progress={progress} />
-
-        <StakeholderBroadcast progress={progress} />
-
-        <PlaybookHUD progress={progress} />
-
-        {progress >= 0.5 && !evidenceToastShown && (
-          <div className="pointer-events-none absolute left-6 bottom-28 z-20">
-            <NotificationToast
-              message="Evidence Locked and handed to L2."
-              variant="default"
-              onDismiss={() => setEvidenceToastShown(true)}
-            />
-          </div>
-        )}
+        {progress < 0.05 && <IntroOverlay progress={progress} />}
 
         <div className="pointer-events-none absolute inset-x-0 bottom-0 border-t border-white/10 bg-slate-950/20 px-4 py-2 backdrop-blur-sm">
           <div className="flex items-center justify-between gap-3">
-            <span className="font-sans text-[10px] text-slate-500">
-              Scroll Progress
-            </span>
-            <span className="font-mono tabular-nums text-[10px] text-slate-400">
-              {progressPercent}%
-            </span>
+            <span className="font-sans text-[10px] text-slate-500">Scroll Progress</span>
+            <span className="font-mono tabular-nums text-[10px] text-slate-400">{progressPercent}%</span>
           </div>
           <div className="mt-1.5 h-px w-full bg-white/10">
-            <div
-              className="h-full bg-ra-accent/80 transition-[width] duration-75"
-              style={{ width: `${progressPercent}%` }}
-            />
+            <div className="h-full bg-ra-accent/80 transition-[width] duration-75" style={{ width: `${progressPercent}%` }} />
           </div>
         </div>
       </div>
     </section>
   );
 };
-

@@ -22,7 +22,7 @@ body {
 .world-stage {
   will-change: transform;
   transform-origin: 0 0;
-  transform: translate3d(0, 0, 0) scale(0.9);
+  transform: scale(0.9);
 }
 
 @keyframes alert-pulse {
