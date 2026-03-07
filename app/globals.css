@@ -296,3 +296,13 @@ body {
     transform: translateX(-50%);
   }
 }
+
+@keyframes log-scroll {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-50%);
+  }
+}
