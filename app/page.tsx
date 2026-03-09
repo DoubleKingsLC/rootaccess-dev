@@ -11,7 +11,7 @@ const DOMAINS = [
     { id: "appsec", label: "DevSecOps", sub: "Application Security", desc: "Modern Secure Dev Lifecycle", color: "#a78bfa", branch: "rgba(167,139,250,0.5)", href: null, live: false },
     { id: "web", label: "Web Hacking", sub: "App Exploitation", desc: "Offense · Adversary Simulation", color: "#f43f5e", branch: "rgba(244,63,94,0.5)", href: null, live: false },
     { id: "network", label: "Network Pentesting", sub: "Infrastructure Security", desc: "Offense · Adversary Simulation", color: "#dc2626", branch: "rgba(220,38,38,0.5)", href: null, live: false },
-    { id: "ai", label: "AI Hacking", sub: "Offensive AI", desc: "Offense · Adversary Simulation", color: "#ef4444", branch: "rgba(239,68,68,0.5)", href: null, live: false },
+    { id: "ai", label: "AI Hacking", sub: "Offensive AI", desc: "Offense · Adversary Simulation", color: "#ef4444", branch: "rgba(239,68,68,0.5)", href: "/roadmaps/ai-hacking", live: true },
     { id: "cloud", label: "Cloud Sec", sub: "Cloud Security", desc: "Infra · Identity · Posture", color: "#34d399", branch: "rgba(52,211,153,0.5)", href: null, live: false },
     { id: "grc", label: "GRC", sub: "Governance & Compliance", desc: "Risk · Audit · Frameworks", color: "#fbbf24", branch: "rgba(251,191,36,0.5)", href: null, live: false },
 ] as const;

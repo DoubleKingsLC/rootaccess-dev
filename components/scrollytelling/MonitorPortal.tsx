@@ -295,6 +295,20 @@ const FileBrowserViz: React.FC<{ correlated: boolean }> = ({ correlated }) => (
                         <span className="text-slate-800">{f.name}</span>
                     </div>
                 ))}
+
+                {/* Analyst query */}
+                {correlated && (
+                    <div className="mt-3 rounded-lg border px-3 py-3 transition-all duration-700"
+                        style={{ borderColor: "rgba(245,158,11,0.45)", background: "rgba(120,53,15,0.22)", boxShadow: "0 0 18px rgba(245,158,11,0.12)" }}>
+                        <div className="flex items-center gap-2">
+                            <p className="font-mono text-base font-black leading-snug text-amber-200"
+                                style={{ textShadow: "0 0 20px rgba(245,158,11,0.6)" }}>
+                                Were any business critical files accessed?
+                            </p>
+                            <span className="blink-cursor inline-block h-4 w-0.5 shrink-0 bg-amber-400" />
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
 
@@ -408,6 +422,20 @@ const DarkWebViz: React.FC<{ correlated: boolean }> = ({ correlated }) => (
                         ))}
                     </div>
                     <p className="mt-1.5 font-mono text-[10px] font-medium text-violet-800">C2 ACTIVE — DATA EXFILTRATION POSSIBLE</p>
+                </div>
+            )}
+
+            {/* Analyst query */}
+            {correlated && (
+                <div className="rounded-lg border px-3 py-3 transition-all duration-700"
+                    style={{ borderColor: "rgba(139,92,246,0.45)", background: "rgba(46,16,101,0.25)", boxShadow: "0 0 18px rgba(139,92,246,0.12)" }}>
+                    <div className="flex items-center gap-2">
+                        <p className="font-mono text-base font-black leading-snug text-violet-200"
+                            style={{ textShadow: "0 0 20px rgba(139,92,246,0.6)" }}>
+                            Is the IP contacted linked to a known attack group?
+                        </p>
+                        <span className="blink-cursor inline-block h-4 w-0.5 shrink-0 bg-violet-400" />
+                    </div>
                 </div>
             )}
         </div>
@@ -659,7 +687,7 @@ const L3Content: React.FC = () => (
 
         {/* Finding 3: C2 network diagram */}
         <div
-            className="relative flex-1 rounded-2xl border-2 border-amber-500/40 bg-amber-950/10 p-5"
+            className="relative min-h-0 flex-1 rounded-2xl border-2 border-amber-500/40 bg-amber-950/10 p-5"
             style={{ boxShadow: "0 0 30px rgba(251,191,36,0.08)" }}
         >
             <div className="mb-2 flex items-center gap-3">
@@ -748,6 +776,18 @@ const L3Content: React.FC = () => (
                         <p className="font-mono text-[8px] text-slate-500">Moscow, Russia</p>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        {/* Critical query strip */}
+        <div className="shrink-0 rounded-xl border-2 px-5 py-4"
+            style={{ borderColor: "rgba(245,158,11,0.45)", background: "rgba(120,53,15,0.2)", boxShadow: "0 0 28px rgba(245,158,11,0.1)" }}>
+            <div className="flex items-center gap-3">
+                <p className="font-mono text-lg font-black leading-snug text-amber-200"
+                    style={{ textShadow: "0 0 24px rgba(245,158,11,0.65)" }}>
+                    Is the attack successfully contained?
+                </p>
+                <span className="blink-cursor inline-block h-5 w-0.5 shrink-0 bg-amber-400" />
             </div>
         </div>
     </div>

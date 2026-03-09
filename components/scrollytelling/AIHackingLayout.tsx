@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
+import { useRouter } from "next/navigation";
 import { HackerAvatar } from "./ai-hacking/HackerAvatar";
 import { LLMBrain } from "./ai-hacking/LLMBrain";
 import { AIChatBox } from "./ai-hacking/AIChatBox";
@@ -34,6 +35,7 @@ const PACKETS = [
 ];
 
 export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) => {
+    const router = useRouter();
     const scrollSectionRef = useRef<HTMLDivElement | null>(null);
     const pinnedViewportRef = useRef<HTMLDivElement | null>(null);
     const backgroundRef = useRef<HTMLDivElement | null>(null);
@@ -41,6 +43,9 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
     const workspaceRef = useRef<HTMLDivElement | null>(null);
 
     const [progress, setProgress] = useState(0);
+
+    // Outro card opacity — mirrors CareerRoadmap in SOC
+    const outroOpacity = progress > 0.92 ? Math.min(1, (progress - 0.92) / 0.08) : 0;
 
     useEffect(() => {
         if (!scrollSectionRef.current || !pinnedViewportRef.current) return;
@@ -132,20 +137,83 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
                     <div className="flex w-full flex-col items-center justify-between gap-8 md:flex-row md:gap-12 lg:gap-24 h-[90%] md:h-auto">
                         {/* LHS: Hacker Avatar */}
                         <div className="flex-shrink-0 md:order-1 order-1">
-                            <HackerAvatar />
+                            <HackerAvatar progress={progress} />
                         </div>
 
                         {/* Center: Chat Window */}
                         <div className="flex-grow w-full max-w-3xl flex justify-center md:order-2 order-3 max-h-full">
-                            <AIChatBox />
+                            <AIChatBox progress={progress} />
                         </div>
 
                         {/* RHS: Target LLM Brain */}
                         <div className="flex-shrink-0 md:order-3 order-2">
-                            <LLMBrain />
+                            <LLMBrain compromised={progress >= 0.78} />
                         </div>
                     </div>
                     {children}
+                </div>
+
+                {/* ── Outro Card (progress >= 0.92) ───────────────────────────────────── */}
+                <div
+                    className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center px-6"
+                    style={{ opacity: outroOpacity, pointerEvents: outroOpacity > 0.9 ? "auto" : "none" }}
+                >
+                    <div
+                        className="pointer-events-auto w-[min(560px,92vw)] rounded-2xl px-7 py-6 backdrop-blur-2xl"
+                        style={{
+                            border: "1px solid rgba(239,68,68,0.45)",
+                            background: "rgba(10,0,0,0.82)",
+                            boxShadow: "0 0 60px rgba(239,68,68,0.2), 0 0 120px rgba(239,68,68,0.08)",
+                        }}
+                    >
+                        <div className="mb-4 flex items-center gap-3">
+                            <div
+                                className="h-2.5 w-2.5 animate-pulse rounded-full bg-red-500"
+                                style={{ boxShadow: "0 0 10px rgba(239,68,68,0.9)" }}
+                            />
+                            <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-red-400">
+                                Breach Complete · What&apos;s Next?
+                            </p>
+                        </div>
+
+                        <div className="mb-4 flex items-baseline gap-3">
+                            <p
+                                className="font-mono text-5xl font-black text-red-400"
+                                style={{ textShadow: "0 0 30px rgba(239,68,68,0.6)" }}
+                            >
+                                3 attempts
+                            </p>
+                            <p className="font-mono text-xs uppercase tracking-widest text-red-900/80">
+                                recon → full exfiltration
+                            </p>
+                        </div>
+
+                        <p className="mb-2 font-sans text-base leading-relaxed text-slate-100">
+                            That&apos;s all it took to break the model. Behind every successful attack
+                            are five career levels — each building a deeper understanding of how AI systems fail.
+                        </p>
+                        <p className="mb-6 font-sans text-sm leading-relaxed text-slate-400">
+                            Explore exactly what each role does, the tools that top researchers use,
+                            and the challenges you can start breaking today.
+                        </p>
+
+                        <button
+                            type="button"
+                            onClick={() => router.push("/roadmaps/ai-hacking/career-path")}
+                            className="inline-flex items-center gap-3 rounded-xl px-5 py-3 font-mono text-xs uppercase tracking-widest text-red-300 transition-all hover:text-red-200"
+                            style={{
+                                border: "1px solid rgba(239,68,68,0.45)",
+                                background: "rgba(239,68,68,0.08)",
+                            }}
+                            onMouseEnter={e => (e.currentTarget.style.background = "rgba(239,68,68,0.18)")}
+                            onMouseLeave={e => (e.currentTarget.style.background = "rgba(239,68,68,0.08)")}
+                        >
+                            Explore the AI Hacking Career Path
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                <path d="M3 6h6M6 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
                 {/* ── Incident Timeline ──────────────────────────────────────────────── */}
