@@ -8,23 +8,25 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const DOMAINS = [
     { id: "soc", label: "SOC", sub: "Security Operations", desc: "Blue Team · Detect & Respond", color: "#22d3ee", branch: "rgba(34,211,238,0.55)", href: "/roadmaps/soc", live: true },
-    { id: "redteam", label: "Red Team", sub: "Penetration Testing", desc: "Offense · Adversary Simulation", color: "#ef4444", branch: "rgba(239,68,68,0.5)", href: null, live: false },
-    { id: "appsec", label: "AppSec", sub: "Application Security", desc: "Secure Dev · Code Review", color: "#a78bfa", branch: "rgba(167,139,250,0.5)", href: null, live: false },
+    { id: "appsec", label: "DevSecOps", sub: "Application Security", desc: "Modern Secure Dev Lifecycle", color: "#a78bfa", branch: "rgba(167,139,250,0.5)", href: null, live: false },
+    { id: "web", label: "Web Hacking", sub: "App Exploitation", desc: "Offense · Adversary Simulation", color: "#f43f5e", branch: "rgba(244,63,94,0.5)", href: null, live: false },
+    { id: "network", label: "Network Pentesting", sub: "Infrastructure Security", desc: "Offense · Adversary Simulation", color: "#dc2626", branch: "rgba(220,38,38,0.5)", href: null, live: false },
+    { id: "ai", label: "AI Hacking", sub: "Offensive AI", desc: "Offense · Adversary Simulation", color: "#ef4444", branch: "rgba(239,68,68,0.5)", href: null, live: false },
     { id: "cloud", label: "Cloud Sec", sub: "Cloud Security", desc: "Infra · Identity · Posture", color: "#34d399", branch: "rgba(52,211,153,0.5)", href: null, live: false },
     { id: "grc", label: "GRC", sub: "Governance & Compliance", desc: "Risk · Audit · Frameworks", color: "#fbbf24", branch: "rgba(251,191,36,0.5)", href: null, live: false },
 ] as const;
 
 const L1_TO_BANNER: [number, number][] = [
     [0, 0], [0, 1],
-    [1, 2],
-    [2, 3], [2, 4],
+    [1, 2], [1, 3], [1, 4],
+    [2, 5], [2, 6],
 ];
 
 const L1_LABELS = ["SYS.01", "SYS.02", "SYS.03"];
 
 // Vertical offsets per banner — deliberately irregular, no symmetric pattern
 // Kept within ±80px so larger cards still fit in the viewport
-const BANNER_Y_OFFSETS = [30, -25, -80, 20, -45];
+const BANNER_Y_OFFSETS = [30, -25, -60, -85, -40, 20, -45];
 
 // ─── Layout ───────────────────────────────────────────────────────────────────
 
@@ -52,8 +54,8 @@ function computeLayout(vw: number, vh: number): Layout {
     // Larger cards
     const bannerH = Math.min(265, vh * 0.31);
     const bannerGap = Math.max(10, vw * 0.01);
-    const bannerW = Math.min(248, (vw * 0.93 - 4 * bannerGap) / 5);
-    const totalW = 5 * bannerW + 4 * bannerGap;
+    const bannerW = Math.min(248, (vw * 0.93 - 6 * bannerGap) / 7);
+    const totalW = 7 * bannerW + 6 * bannerGap;
     const startX = (vw - totalW) / 2;
     // Raise base Y so the most-lowered banner (+30) never overflows viewport
     const maxPositiveOffset = Math.max(0, ...BANNER_Y_OFFSETS);
@@ -78,8 +80,8 @@ function computeLayout(vw: number, vh: number): Layout {
     const l1Y = legLeft.y + (bannerY - legLeft.y) * 0.36;
     const l1: Pt[] = [
         { x: (banners[0].cx + banners[1].cx) / 2, y: l1Y },
-        { x: banners[2].cx, y: l1Y },
-        { x: (banners[3].cx + banners[4].cx) / 2, y: l1Y },
+        { x: banners[3].cx, y: l1Y },
+        { x: (banners[5].cx + banners[6].cx) / 2, y: l1Y },
     ];
 
     const jR2L1 = legLeft.y + (l1Y - legLeft.y) * 0.50;
@@ -278,11 +280,11 @@ export default function HomePage() {
     const svgTreeRef = useRef<SVGSVGElement>(null);
     const r2l1Lines = useRef<(SVGPathElement | null)[]>(Array(3).fill(null));
     const r2l1Glows = useRef<(SVGPathElement | null)[]>(Array(3).fill(null));
-    const l12bLines = useRef<(SVGPathElement | null)[]>(Array(5).fill(null));
-    const l12bGlows = useRef<(SVGPathElement | null)[]>(Array(5).fill(null));
+    const l12bLines = useRef<(SVGPathElement | null)[]>(Array(7).fill(null));
+    const l12bGlows = useRef<(SVGPathElement | null)[]>(Array(7).fill(null));
     const l1DotEls = useRef<(SVGGElement | null)[]>(Array(3).fill(null));
-    const termDotEls = useRef<(SVGCircleElement | null)[]>(Array(5).fill(null));
-    const bannerRefs = useRef<(HTMLDivElement | null)[]>(Array(5).fill(null));
+    const termDotEls = useRef<(SVGCircleElement | null)[]>(Array(7).fill(null));
+    const bannerRefs = useRef<(HTMLDivElement | null)[]>(Array(7).fill(null));
 
     const [layout, setLayout] = useState<Layout | null>(null);
     const [rPos, setRPos] = useState<Pt | null>(null);
@@ -315,7 +317,7 @@ export default function HomePage() {
         gsap.set(rLetterRef.current, { transformOrigin: "50% 50%" });
 
         const L1_THRESH = [0.56, 0.59, 0.62];
-        const BAN_THRESH = [0.74, 0.77, 0.77, 0.80, 0.83];
+        const BAN_THRESH = [0.74, 0.76, 0.77, 0.78, 0.79, 0.82, 0.85];
 
         // Hide all paths via strokeDasharray/offset — set precise values in rAF
         requestAnimationFrame(() => {
@@ -388,7 +390,7 @@ export default function HomePage() {
             });
 
             // ── L1→banner branches ────────────────────────────────────────────────
-            const L12B_START = [0.58, 0.61, 0.61, 0.64, 0.67];
+            const L12B_START = [0.58, 0.60, 0.61, 0.62, 0.63, 0.65, 0.68];
             L12B_START.forEach((start, i) => {
                 tl.to(l12bLines.current[i], { strokeDashoffset: 0, duration: 0.12, ease: "none" }, start);
                 tl.to(l12bGlows.current[i], { strokeDashoffset: 0, duration: 0.12, ease: "none" }, start);
