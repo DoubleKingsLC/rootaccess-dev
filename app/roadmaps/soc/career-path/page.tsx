@@ -207,16 +207,116 @@ export default function SocCareerPathPage() {
 
   // Per-level refs (5 levels)
   const sectionRefs = useRef<(HTMLElement | null)[]>(Array(5).fill(null));
-  const hubRefs     = useRef<(HTMLDivElement | null)[]>(Array(5).fill(null));
-  const quoteRefs   = useRef<(HTMLDivElement | null)[]>(Array(5).fill(null));
-  const statsRefs   = useRef<(HTMLDivElement | null)[]>(Array(5).fill(null));
-  const toolsRefs   = useRef<(HTMLDivElement | null)[]>(Array(5).fill(null));
+  const hubRefs = useRef<(HTMLDivElement | null)[]>(Array(5).fill(null));
+
   // 5 levels × 3 cards each = 15
-  const cardRefs    = useRef<(HTMLDivElement | null)[]>(Array(15).fill(null));
+  const cardRefs = useRef<(HTMLDivElement | null)[]>(Array(15).fill(null));
   // 5 levels × 3 SVG paths each = 15
-  const pathRefs    = useRef<(SVGPathElement | null)[]>(Array(15).fill(null));
+  const pathRefs = useRef<(SVGPathElement | null)[]>(Array(15).fill(null));
+  const pathGlowRefs = useRef<(SVGPathElement | null)[]>(Array(15).fill(null));
+
+  // Tools branch (5 levels × 1)
+  const toolsCardRefs = useRef<(HTMLDivElement | null)[]>(Array(5).fill(null));
+  const toolsPathRefs = useRef<(SVGPathElement | null)[]>(Array(5).fill(null));
+  const toolsPathGlowRefs = useRef<(SVGPathElement | null)[]>(Array(5).fill(null));
 
   const [activeLevel, setActiveLevel] = useState<number>(-1);
+  const [layout, setLayout] = useState<any>(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const vh = window.innerHeight;
+      let totalWidth = window.innerWidth;
+
+      const levelsContainer = document.querySelector(".max-w-7xl") as HTMLElement;
+      if (levelsContainer) {
+        // Measure exact available width
+        const computedStyle = window.getComputedStyle(levelsContainer);
+        const pl = parseFloat(computedStyle.paddingLeft || "0");
+        const pr = parseFloat(computedStyle.paddingRight || "0");
+        totalWidth = levelsContainer.clientWidth - pl - pr;
+      }
+
+      const hub = { x: 55, y: vh * 0.22 }; // Moved up to give branches and cards more room
+
+      const toolsCardWidth = Math.max(220, Math.min(280, totalWidth * 0.22));
+      const toolsCardX = totalWidth - toolsCardWidth - 20;
+      const toolsCardY = hub.y - 35;
+      const toolsCard = { x: toolsCardX, y: toolsCardY, w: toolsCardWidth };
+
+      const cardsLeft = 140;
+      const cardsRight = totalWidth - 20; // Reverted back to full width for wide, readable cards
+      const layoutWidth = cardsRight - cardsLeft;
+      const gap = Math.min(30, layoutWidth * 0.05);
+      const cardW = (layoutWidth - gap * 2) / 3;
+      const cardY = vh * 0.55; // Pushed down just slightly more to ensure absolute vertical clearance from Tools card
+
+      const cards = [
+        { x: cardsLeft + cardW / 2, y: cardY },
+        { x: cardsLeft + cardW + gap + cardW / 2, y: cardY },
+        { x: cardsLeft + (cardW + gap) * 2 + cardW / 2, y: cardY },
+      ];
+
+      setLayout({ hub, cards, cardW, gap, cardsLeft, cardY, toolsCard });
+    };
+
+    // Slight delay on first mount to ensure the document is fully laid out
+    setTimeout(handleResize, 50);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const drawToolsBranch = (from: { x: number, y: number }, toBox: { x: number, y: number }, layout: any) => {
+    const r = 14;
+    const i = 3;
+    const startY = from.y + (i - 1) * 24;
+    const jX = 140 + i * 28; // Outer drop lane (approx 224)
+    const jY = from.y + 110; // Horizontal run immediately under the title, above bottom cards
+    const jX2 = toBox.x - 30; // Vertical run specifically for tools card
+
+    const cX = from.x + 30;
+    const endSX = from.x + 60;
+    const connectY = toBox.y + 40; // Enter the middle-left of the tools box
+
+    return [
+      `M ${from.x} ${from.y}`,
+      `C ${cX} ${from.y}, ${cX} ${startY}, ${endSX} ${startY}`,
+      `L ${jX - r} ${startY}`,
+      `Q ${jX} ${startY} ${jX} ${startY + r}`,
+      `L ${jX} ${jY - r}`,
+      `Q ${jX} ${jY} ${jX + r} ${jY}`,
+      `L ${jX2 - r} ${jY}`,
+      `Q ${jX2} ${jY} ${jX2} ${jY - r}`,
+      `L ${jX2} ${connectY + r}`,
+      `Q ${jX2} ${connectY} ${jX2 + r} ${connectY}`,
+      `L ${toBox.x} ${connectY}`
+    ].join(" ");
+  };
+
+  // Helper for orthogonal branching with beautiful S-curve fanning out the hub
+  const drawBranch = (from: { x: number, y: number }, to: { x: number, y: number }, i: number) => {
+    const r = 14;
+
+    // Spread the three lines out immediately vertically before dropping
+    const startY = from.y + (i - 1) * 24;
+    const jX = 140 + i * 28; // Staggered drop X coords
+    const jY = to.y - 70 + i * 20; // Staggered horizontal approach above cards
+
+    const cX = from.x + 30;
+    const endSX = from.x + 60; // S-curve resolves at X=115
+
+    return [
+      `M ${from.x} ${from.y}`,
+      `C ${cX} ${from.y}, ${cX} ${startY}, ${endSX} ${startY}`,
+      `L ${jX - r} ${startY}`,
+      `Q ${jX} ${startY} ${jX} ${startY + r}`,
+      `L ${jX} ${jY - r}`,
+      `Q ${jX} ${jY} ${jX + r} ${jY}`,
+      `L ${to.x - r} ${jY}`,
+      `Q ${to.x} ${jY} ${to.x} ${jY + r}`,
+      `L ${to.x} ${to.y}`
+    ].join(" ");
+  };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -251,7 +351,7 @@ export default function SocCareerPathPage() {
         const section = sectionRefs.current[i];
         if (!section) return;
 
-        // Track active level for nav dots
+        // Active level tracking
         ScrollTrigger.create({
           trigger: section,
           start: "top 55%",
@@ -260,85 +360,102 @@ export default function SocCareerPathPage() {
           onEnterBack: () => setActiveLevel(i),
         });
 
-        const triggerOpts = {
-          trigger: section,
-          start: "top 68%",
-          toggleActions: "play none none reverse",
-        };
+        // Main fade in/out for the section
+        gsap.to(section, {
+          opacity: 1,
+          duration: 0.5,
+          ease: "power2.inOut",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 65%",
+            end: "bottom 35%",
+            toggleActions: "play reverse play reverse",
+          }
+        });
+
+        // Use a Timeline to guarantee robust synchronized playback without trigger bugs
+        const sectionTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top 55%",
+            end: "bottom 35%",
+            toggleActions: "play reverse play reverse",
+          }
+        });
 
         // Hub node scale-in
         const hub = hubRefs.current[i];
         if (hub) {
-          gsap.fromTo(
-            hub,
-            { scale: 0, opacity: 0 },
-            { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.8)", scrollTrigger: triggerOpts }
-          );
-        }
-
-        // Quote
-        const quote = quoteRefs.current[i];
-        if (quote) {
-          gsap.fromTo(
-            quote,
-            { opacity: 0, y: 22 },
-            { opacity: 1, y: 0, duration: 0.65, ease: "power3.out", scrollTrigger: { ...triggerOpts, start: "top 65%" } }
-          );
-        }
-
-        // Stats + tools row
-        const stats = statsRefs.current[i];
-        const tools = toolsRefs.current[i];
-        const statItems = [stats, tools].filter(Boolean);
-        if (statItems.length) {
-          gsap.fromTo(
-            statItems,
-            { opacity: 0, y: 14 },
-            { opacity: 1, y: 0, duration: 0.5, ease: "power2.out", stagger: 0.1, delay: 0.15, scrollTrigger: triggerOpts }
-          );
+          sectionTl.fromTo(hub, { scale: 0 }, { scale: 1, duration: 0.6, ease: "back.out(2)" }, 0);
         }
 
         // SVG branch paths
         for (let j = 0; j < 3; j++) {
           const path = pathRefs.current[i * 3 + j];
-          if (!path) continue;
-          try {
-            const len = path.getTotalLength();
-            gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
-            gsap.to(path, {
+          const glow = pathGlowRefs.current[i * 3 + j];
+
+          if (path && glow) {
+            // Approximate line length (Manhattan distance) works beautifully because paths are strictly right/down
+            const toX = layout.cards[j].x;
+            const toY = layout.cards[j].y;
+            const fromX = layout.hub.x;
+            const fromY = layout.hub.y;
+            // Adding a small padding factor to absolute Manhattan to account for the S-curves
+            const len = (toX - fromX) + Math.abs(toY - fromY) + 60;
+
+            gsap.set([path, glow], { strokeDasharray: len, strokeDashoffset: len });
+            sectionTl.to([path, glow], {
               strokeDashoffset: 0,
-              duration: 0.55,
-              ease: "power2.out",
-              delay: 0.1 + j * 0.08,
-              scrollTrigger: triggerOpts,
-            });
-          } catch {
-            // SVG not yet rendered — skip
+              duration: 1.2,
+              ease: "power2.inOut",
+            }, 0.2 + (j * 0.1));
           }
         }
 
-        // Content cards
+        // Tools branch path
+        const tPath = toolsPathRefs.current[i];
+        const tGlow = toolsPathGlowRefs.current[i];
+        if (tPath && tGlow && layout.toolsCard) {
+          const len = 4000; // Manhattan approximation
+          gsap.set([tPath, tGlow], { strokeDasharray: len, strokeDashoffset: len });
+          sectionTl.to([tPath, tGlow], {
+            strokeDashoffset: 0,
+            duration: 1.5,
+            ease: "power2.inOut",
+          }, 0.35); // Stagger slightly behind main branches
+        }
+
+        // Tools Card
+        const tCard = toolsCardRefs.current[i];
+        if (tCard) {
+          sectionTl.fromTo(
+            tCard,
+            { opacity: 0, x: 30 },
+            { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" },
+            0.8
+          );
+        }
+
+        // Content cards slide-up
         for (let j = 0; j < 3; j++) {
           const card = cardRefs.current[i * 3 + j];
           if (!card) continue;
-          gsap.fromTo(
+          sectionTl.fromTo(
             card,
-            { opacity: 0, x: -18 },
+            { opacity: 0, y: 30 },
             {
               opacity: 1,
-              x: 0,
-              duration: 0.5,
-              ease: "power2.out",
-              delay: 0.18 + j * 0.1,
-              scrollTrigger: { ...triggerOpts, start: "top 62%" },
-            }
+              y: 0,
+              duration: 0.8,
+              ease: "power3.out",
+            }, 0.5 + (j * 0.1)
           );
         }
       });
     }, containerRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [layout]);
 
   return (
     <main className="min-h-screen bg-slate-950 text-white overflow-x-hidden">
@@ -402,32 +519,34 @@ export default function SocCareerPathPage() {
           />
 
           <div ref={heroRef} className="relative z-10 max-w-3xl px-8 text-center">
-            <div className="hero-anim mb-4 flex justify-center">
-              <div className="rounded border border-cyan-500/30 bg-cyan-950/20 px-4 py-1.5">
-                <p className="font-mono text-[9px] uppercase tracking-[0.55em] text-cyan-400">
-                  Security Operations Centre
+            <div className="hero-anim mb-6 flex justify-center">
+              <div className="rounded-full border border-cyan-500/30 bg-cyan-950/40 px-5 py-2 flex items-center gap-3 backdrop-blur-md">
+                <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" style={{ boxShadow: "0 0 10px #22d3ee" }}></span>
+                <p className="font-mono text-[10px] uppercase tracking-[0.55em] text-cyan-400">
+                  The Blueprint to Perfection
                 </p>
               </div>
             </div>
 
-            {/* Big stat */}
-            <div className="hero-anim mb-5 flex justify-center">
-              <p
-                className="font-mono font-black leading-none text-emerald-400"
+            {/* Big Question Hook */}
+            <div className="hero-anim mb-6 flex justify-center">
+              <h1
+                className="font-mono font-black text-emerald-400 tracking-tight"
                 style={{
-                  fontSize: "clamp(72px, 14vw, 128px)",
-                  textShadow: "0 0 80px rgba(52,211,153,0.65), 0 0 160px rgba(52,211,153,0.3)",
+                  fontSize: "clamp(48px, 8vw, 84px)",
+                  textShadow: "0 0 80px rgba(52,211,153,0.5), 0 0 160px rgba(52,211,153,0.2)",
+                  lineHeight: "1.05"
                 }}
               >
-                15m
-              </p>
+                Wondering where<br />to begin?
+              </h1>
             </div>
 
-            <p className="hero-anim mb-3 font-sans text-lg leading-relaxed text-slate-100">
-              That&apos;s how long it took to detect, triage, escalate, and contain a live ransomware attempt.
+            <p className="hero-anim mb-4 font-sans text-xl leading-relaxed text-slate-100 max-w-2xl mx-auto">
+              Stop guessing. This is the ultimate, battle-tested roadmap for your cybersecurity career.
             </p>
-            <p className="hero-anim font-sans text-base leading-relaxed text-slate-400">
-              Behind every response are five career levels — each a different set of skills, tools, and responsibility. Scroll to see exactly how you get there.
+            <p className="hero-anim font-sans text-base leading-relaxed text-slate-400 max-w-2xl mx-auto">
+              Distilled from thousands of community discussions, industry standards, and frontline experience. We&apos;ve mapped out the precise skills, tools, and certifications you need—from your first lab to leading the SOC.
             </p>
 
             <div className="hero-anim mt-10 flex justify-center">
@@ -455,209 +574,230 @@ export default function SocCareerPathPage() {
             <section
               key={level.num}
               ref={(el) => { sectionRefs.current[i] = el; }}
-              className="flex min-h-screen items-center gap-0 py-24"
+              className="relative flex h-screen w-full items-center opacity-0 overflow-hidden"
             >
-              {/* ── Left: hub column ──────────────────────────────────── */}
-              <div className="flex w-28 shrink-0 flex-col items-center">
-                <div
-                  ref={(el) => { hubRefs.current[i] = el; }}
-                  className="relative flex h-14 w-14 items-center justify-center rounded-full border-2 bg-slate-950"
-                  style={{
-                    borderColor: level.color,
-                    boxShadow: `0 0 24px ${level.glow}, 0 0 60px ${level.glow}`,
-                  }}
-                >
-                  <span
-                    className="font-mono text-base font-black"
-                    style={{ color: level.color }}
-                  >
-                    {level.num}
-                  </span>
-                  {/* Pulse ring */}
-                  <div
-                    className="absolute -inset-3 animate-pulse rounded-full border opacity-30"
-                    style={{ borderColor: level.color }}
-                  />
-                </div>
+              {layout && (
+                <>
+                  {/* ── Background SVG Branches ── */}
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
+                    <defs>
+                      <filter id={`glow-${i}`} x="-120%" y="-120%" width="340%" height="340%">
+                        <feGaussianBlur stdDeviation="3.5" result="blur" />
+                        <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                      </filter>
+                    </defs>
 
-                {/* Vertical label */}
-                <div
-                  className="mt-4"
-                  style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
-                >
-                  <span
-                    className="font-mono text-[9px] uppercase tracking-[0.4em]"
-                    style={{ color: level.color, opacity: 0.7 }}
-                  >
-                    {level.label}
-                  </span>
-                </div>
-              </div>
-
-              {/* ── SVG bridge: hub → 3 branches ──────────────────────── */}
-              <div
-                className="pointer-events-none shrink-0"
-                style={{ width: 80, height: 300, alignSelf: "center" }}
-              >
-                <svg
-                  viewBox="0 0 80 300"
-                  width="80"
-                  height="300"
-                  fill="none"
-                  overflow="visible"
-                >
-                  {/* Horizontal stub from hub center */}
-                  <line
-                    x1="0" y1="150" x2="18" y2="150"
-                    stroke={level.color} strokeWidth="1.5" opacity="0.45"
-                  />
-                  {/* Three bezier branches */}
-                  {BRANCH_Y.map((y, j) => (
-                    <path
-                      key={j}
-                      ref={(el) => { pathRefs.current[i * 3 + j] = el; }}
-                      d={`M 18 150 C 50 150 32 ${y} 80 ${y}`}
-                      stroke={level.color}
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      opacity="0.7"
-                    />
-                  ))}
-                  {/* Glowing endpoint dots */}
-                  {BRANCH_Y.map((y, j) => (
+                    {/* Trunk dot at hub */}
                     <circle
-                      key={j}
-                      cx="80"
-                      cy={y}
-                      r="3.5"
-                      fill={level.color}
-                      opacity="0.9"
-                      style={{ filter: `drop-shadow(0 0 5px ${level.color})` }}
+                      cx={layout.hub.x}
+                      cy={layout.hub.y}
+                      r="4"
+                      fill="none"
+                      stroke={level.color}
+                      strokeWidth="6"
+                      opacity="0.15"
+                      filter={`url(#glow-${i})`}
                     />
-                  ))}
-                </svg>
-              </div>
 
-              {/* ── Right: content ─────────────────────────────────────── */}
-              <div className="min-w-0 flex-1 pl-4">
-                {/* Quote */}
-                <div
-                  ref={(el) => { quoteRefs.current[i] = el; }}
-                  className="mb-6 opacity-0"
-                >
-                  <div className="mb-2">
-                    <span
-                      className="font-mono text-[10px] uppercase tracking-[0.45em]"
-                      style={{ color: level.color }}
-                    >
-                      {level.subtitle}
+                    {/* Branches */}
+                    {layout.cards.map((targetCard: any, j: number) => {
+                      const d = drawBranch(layout.hub, targetCard, j);
+                      return (
+                        <g key={`branch-${j}`}>
+                          {/* Glow path */}
+                          <path
+                            ref={(el) => { pathGlowRefs.current[i * 3 + j] = el; }}
+                            d={d}
+                            fill="none"
+                            stroke={level.color}
+                            strokeWidth={6}
+                            opacity={0.25}
+                            filter={`url(#glow-${i})`}
+                            strokeLinecap="round"
+                          />
+                          {/* Solid path */}
+                          <path
+                            ref={(el) => { pathRefs.current[i * 3 + j] = el; }}
+                            d={d}
+                            fill="none"
+                            stroke={level.color}
+                            strokeWidth={1.5}
+                            opacity={0.8}
+                            strokeLinecap="round"
+                          />
+                          {/* Terminal dot */}
+                          <circle
+                            cx={targetCard.x} cy={targetCard.y} r={3}
+                            fill={level.color}
+                            style={{ filter: `drop-shadow(0 0 5px ${level.color})` }}
+                          />
+                        </g>
+                      );
+                    })}
+
+                    {/* Tools Branch */}
+                    {layout.toolsCard && (
+                      <g>
+                        <path
+                          ref={(el) => { toolsPathGlowRefs.current[i] = el; }}
+                          d={drawToolsBranch(layout.hub, layout.toolsCard, layout)}
+                          fill="none"
+                          stroke={level.color}
+                          strokeWidth={6}
+                          opacity={0.25}
+                          filter={`url(#glow-${i})`}
+                          strokeLinecap="round"
+                        />
+                        <path
+                          ref={(el) => { toolsPathRefs.current[i] = el; }}
+                          d={drawToolsBranch(layout.hub, layout.toolsCard, layout)}
+                          fill="none"
+                          stroke={level.color}
+                          strokeWidth={1.5}
+                          opacity={0.8}
+                          strokeLinecap="round"
+                        />
+                        <circle
+                          cx={layout.toolsCard.x} cy={layout.toolsCard.y + 40} r={3}
+                          fill={level.color}
+                          style={{ filter: `drop-shadow(0 0 5px ${level.color})` }}
+                        />
+                      </g>
+                    )}
+                  </svg>
+
+                  {/* ── Left: hub node ── */}
+                  <div
+                    ref={(el) => { hubRefs.current[i] = el; }}
+                    className="absolute flex items-center justify-center rounded-full border-2 bg-slate-950 z-10"
+                    style={{
+                      left: layout.hub.x,
+                      top: layout.hub.y,
+                      width: 56,
+                      height: 56,
+                      transform: 'translate(-50%, -50%)',
+                      borderColor: level.color,
+                      boxShadow: `0 0 24px ${level.glow}, 0 0 60px ${level.glow}`,
+                    }}
+                  >
+                    <span className="font-mono text-base font-black" style={{ color: level.color }}>
+                      {level.num}
+                    </span>
+                    <div
+                      className="absolute -inset-3 animate-pulse rounded-full border opacity-30"
+                      style={{ borderColor: level.color }}
+                    />
+                  </div>
+
+                  {/* Vertical Level Label (shifted up above hub slightly) */}
+                  <div
+                    className="absolute z-10"
+                    style={{
+                      left: layout.hub.x - 5,
+                      top: layout.hub.y - 80,
+                      writingMode: "vertical-rl",
+                      transform: "rotate(180deg)"
+                    }}
+                  >
+                    <span className="font-mono text-[9px] uppercase tracking-[0.4em]" style={{ color: level.color, opacity: 0.7 }}>
+                      {level.label}
                     </span>
                   </div>
-                  <p
-                    className="font-sans text-2xl italic leading-relaxed text-slate-100"
-                    style={{ textShadow: `0 0 50px ${level.glow}` }}
-                  >
-                    &ldquo;{level.quote}&rdquo;
-                  </p>
-                </div>
 
-                {/* Stats row */}
-                <div
-                  ref={(el) => { statsRefs.current[i] = el; }}
-                  className="mb-5 flex flex-wrap gap-3 opacity-0"
-                >
-                  {[
-                    { label: "Time to Role", value: level.time },
-                    { label: "Salary Range", value: level.salary },
-                  ].map((stat) => (
-                    <div
-                      key={stat.label}
-                      className="flex items-center gap-2.5 rounded-lg border px-4 py-2"
-                      style={{ borderColor: level.border, background: level.glow }}
-                    >
-                      <span className="font-mono text-[9px] uppercase tracking-widest text-slate-500">
-                        {stat.label}
-                      </span>
-                      <span
-                        className="font-mono text-sm font-bold"
-                        style={{ color: level.color }}
-                      >
-                        {stat.value}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Tools row */}
-                <div
-                  ref={(el) => { toolsRefs.current[i] = el; }}
-                  className="mb-7 opacity-0"
-                >
-                  <p className="mb-2 font-mono text-[9px] uppercase tracking-widest text-slate-600">
-                    Tools Used
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {level.tools.map((tool) => (
-                      <div
-                        key={tool}
-                        className="rounded border px-3 py-1.5"
-                        style={{ borderColor: level.border, background: "rgba(15,23,42,0.7)" }}
-                      >
-                        <span
-                          className="font-mono text-xs"
-                          style={{ color: level.color }}
-                        >
-                          {tool}
-                        </span>
-                      </div>
-                    ))}
+                  {/* ── Title & Quote (Top Area) ── */}
+                  <div className="absolute z-10 pointer-events-none" style={{ top: layout.hub.y - 20, left: layout.hub.x + 220, right: layout.toolsCard.w + 64 }}>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.45em]" style={{ color: level.color }}>
+                      {level.subtitle}
+                    </span>
+                    <h2 className="mt-2 text-5xl font-heading font-bold text-white mb-4 drop-shadow-lg">
+                      {level.label}
+                    </h2>
+                    <p className="font-sans text-xl italic leading-relaxed text-slate-300 max-w-3xl" style={{ textShadow: `0 0 50px ${level.glow}` }}>
+                      &ldquo;{level.quote}&rdquo;
+                    </p>
                   </div>
-                </div>
 
-                {/* Three content cards: Skills | Certs | Labs */}
-                <div className="grid grid-cols-3 gap-4">
+                  {/* ── Tools Card (Top Right) ── */}
+                  {layout.toolsCard && (
+                    <div
+                      ref={(el) => { toolsCardRefs.current[i] = el; }}
+                      className="absolute rounded-xl border bg-slate-950/80 px-5 py-5 backdrop-blur-md z-10 flex flex-col"
+                      style={{
+                        left: layout.toolsCard.x,
+                        top: layout.toolsCard.y,
+                        width: layout.toolsCard.w,
+                        borderColor: level.border,
+                        boxShadow: `0 0 30px ${level.glow}, inset 0 0 20px rgba(0,0,0,0.5)`,
+                      }}
+                    >
+                      <div className="mb-4 flex items-center gap-3 border-b border-white/5 pb-3">
+                        <span className="text-xl" style={{ textShadow: `0 0 10px ${level.color}` }}>🔧</span>
+                        <p className="font-mono text-xs font-bold uppercase tracking-[0.3em]" style={{ color: level.color }}>
+                          Tools & Stack
+                        </p>
+                      </div>
+                      <div className="flex-1">
+                        <ul className="space-y-3">
+                          {level.tools.map((item) => (
+                            <li key={item} className="flex items-start gap-3">
+                              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: level.color, boxShadow: `0 0 8px ${level.color}` }} />
+                              <span className="font-sans text-[13px] leading-relaxed text-slate-300">
+                                {item}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ── Cards (Bottom Area) ── */}
                   {(
                     [
-                      { title: "Core Skills",      icon: "⚡", items: level.skills },
-                      { title: "Certifications",   icon: "🎯", items: level.certs  },
-                      { title: "Practice Labs",    icon: "🧪", items: level.labs   },
+                      { title: "Core Skills", icon: "⚡", items: level.skills },
+                      { title: "Certifications", icon: "🎯", items: level.certs },
+                      { title: "Practice Labs", icon: "🧪", items: level.labs },
                     ] as const
                   ).map((cat, j) => (
                     <div
                       key={cat.title}
                       ref={(el) => { cardRefs.current[i * 3 + j] = el; }}
-                      className="rounded-xl border bg-slate-900/60 px-4 py-5 opacity-0 backdrop-blur-sm"
+                      className="absolute rounded-xl border bg-slate-950/80 px-5 py-6 backdrop-blur-md z-10 flex flex-col"
                       style={{
+                        left: layout.cardsLeft + j * (layout.cardW + layout.gap),
+                        top: layout.cardY + 12,
+                        width: layout.cardW,
+                        height: "auto",
+                        minHeight: layout.cardY * 0.45,
                         borderColor: level.border,
-                        boxShadow: `0 0 24px ${level.glow}`,
+                        boxShadow: `0 0 30px ${level.glow}, inset 0 0 20px rgba(0,0,0,0.5)`,
                       }}
                     >
-                      <div className="mb-3 flex items-center gap-2">
-                        <span className="text-base">{cat.icon}</span>
-                        <p
-                          className="font-mono text-[9px] uppercase tracking-[0.3em]"
-                          style={{ color: level.color }}
-                        >
+                      <div className="mb-4 flex items-center gap-3 border-b border-white/5 pb-3">
+                        <span className="text-xl" style={{ textShadow: `0 0 10px ${level.color}` }}>{cat.icon}</span>
+                        <p className="font-mono text-xs font-bold uppercase tracking-[0.3em]" style={{ color: level.color }}>
                           {cat.title}
                         </p>
                       </div>
-                      <ul className="space-y-2.5">
-                        {cat.items.map((item) => (
-                          <li key={item} className="flex items-start gap-2">
-                            <span
-                              className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
-                              style={{ background: level.color }}
-                            />
-                            <span className="font-sans text-xs leading-relaxed text-slate-300">
-                              {item}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
+                      <div className="flex-1 pb-16">
+                        <ul className="space-y-4">
+                          {cat.items.map((item) => (
+                            <li key={item} className="flex items-start gap-3">
+                              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: level.color, boxShadow: `0 0 8px ${level.color}` }} />
+                              <span className="font-sans text-[13px] leading-relaxed text-slate-300">
+                                {item}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Sub-bg ambient glow inside card */}
+                      <div className="absolute inset-x-0 bottom-0 h-24 pointer-events-none rounded-b-xl" style={{ background: `linear-gradient(to top, ${level.glow}, transparent)` }} />
                     </div>
                   ))}
-                </div>
-              </div>
+                </>
+              )}
             </section>
           ))}
         </div>

@@ -1,4 +1,4 @@
-// File: /Users/aaronjjean/Documents/GitHub/rootaccess.tech/app/roadmaps/soc/page.tsx
+// File: C:\rootaccess-temp\rootaccess.tech\app\roadmaps\soc\page.tsx
 import * as entry from '../../../../../app/roadmaps/soc/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
