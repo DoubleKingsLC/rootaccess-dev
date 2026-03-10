@@ -499,58 +499,64 @@ export default function SocCareerPathPage() {
 
 
   const MobileSocCareerPath = () => (
-    <div className="min-h-screen bg-slate-950 text-white overflow-x-hidden font-sans">
+    <div className="min-h-screen bg-slate-950 text-white overflow-x-hidden font-sans pb-20">
       <div className="relative">
         {LEVELS.map((level, i) => (
-          <section key={level.num} className="relative min-h-screen pt-20 pb-32 px-6 border-b border-white/5 last:border-0">
+          <section key={level.num} className="relative pt-16 pb-20 px-6 border-b border-white/5 last:border-0 overflow-hidden">
             {/* Level Indicator Hub */}
             <div
-              className="mb-10 flex items-center justify-center rounded-full border-2 bg-slate-950 shadow-2xl"
+              className="mb-8 flex items-center justify-center rounded-full border-2 bg-slate-950 shadow-2xl"
               style={{
-                width: 64,
-                height: 64,
+                width: 48,
+                height: 48,
                 borderColor: level.color,
-                boxShadow: `0 0 30px ${level.glow}`,
+                boxShadow: `0 0 20px ${level.glow}`,
               }}
             >
-              <span className="font-mono text-xl font-black" style={{ color: level.color }}>
+              <span className="font-mono text-base font-black" style={{ color: level.color }}>
                 {level.num}
               </span>
             </div>
 
             {/* Header Content */}
-            <div className="mb-10 space-y-3">
-              <span className="font-mono text-[10px] uppercase tracking-[0.4em] text-cyan-400/80">
+            <div className="mb-10 space-y-2">
+              <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-cyan-400/60">
                 {level.subtitle}
               </span>
-              <h2 className="text-5xl font-bold tracking-tight leading-[1.1]">
+              <h2 className="text-3xl font-bold tracking-tight leading-tight">
                 {level.label}
               </h2>
-              <div className="relative pl-6 py-1">
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-white/10" />
-                <p className="text-slate-400 italic text-lg leading-relaxed max-w-lg">
+              <div className="relative pl-5 py-1 mt-4">
+                <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-white/10" />
+                <p className="text-slate-400 italic text-sm leading-relaxed max-w-md">
                   &ldquo;{level.quote}&rdquo;
                 </p>
               </div>
             </div>
 
-
-            {/* Info Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Info Cards Grid */}
+            <div className="grid grid-cols-1 gap-6">
               {[
-                { title: "SKILLS", items: level.skills },
-                { title: "CERTS", items: level.certs },
-                { title: "LABS", items: level.labs },
+                { title: "SKILLS", items: level.skills, icon: "⚡" },
+                { title: "CERTS", items: level.certs, icon: "🎯" },
+                { title: "LABS", items: level.labs, icon: "🧪" },
+                { title: "TOOLS", items: level.tools, icon: "🔧" },
               ].map((cat) => (
-                <div key={cat.title} className="space-y-4">
-                  <h3 className="font-mono text-xs font-bold tracking-widest text-slate-500">
+                <div
+                  key={cat.title}
+                  className="rounded-2xl border border-white/5 bg-slate-900/30 p-5 backdrop-blur-sm relative overflow-hidden group shadow-lg"
+                >
+                  <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none text-2xl">
+                    {cat.icon}
+                  </div>
+                  <h3 className="font-mono text-[10px] font-bold tracking-[0.3em] text-slate-500 mb-4 border-b border-white/5 pb-2">
                     {cat.title}
                   </h3>
-                  <ul className="space-y-3">
+                  <ul className="space-y-2.5">
                     {cat.items.map((item) => (
                       <li key={item} className="flex items-start gap-3">
-                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/40" />
-                        <span className="text-sm font-medium text-slate-300">
+                        <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-cyan-500/40" />
+                        <span className="text-xs font-medium text-slate-300 leading-normal">
                           {item}
                         </span>
                       </li>
@@ -563,28 +569,21 @@ export default function SocCareerPathPage() {
         ))}
       </div>
 
-      {/* Persistent Bottom Navigation */}
-      <div className="fixed bottom-0 inset-x-0 h-16 bg-slate-950/80 backdrop-blur-xl border-t border-white/5 flex items-center px-6 z-50">
-        <div className="flex-1 flex justify-between items-center max-w-lg mx-auto overflow-x-auto no-scrollbar gap-8">
-          {[
-            { label: "DETECTION", active: true },
-            { label: "TRIAGE", active: true },
-            { label: "ANALYSIS", active: false },
-            { label: "CONTAINMENT", active: false },
-            { label: "RECOVERY", active: false },
-          ].map((step, idx) => (
-            <div key={step.label} className="flex-shrink-0 flex items-center gap-3">
-              <div className={`w-2.5 h-2.5 rounded-full ${step.active ? 'bg-cyan-400' : 'border border-white/20'}`}
-                style={step.active ? { boxShadow: '0 0 10px #22d3ee' } : {}} />
-              <span className={`font-mono text-[9px] tracking-widest ${step.active ? 'text-cyan-400' : 'text-slate-600'}`}>
-                {step.label}
-              </span>
-            </div>
-          ))}
-        </div>
+      {/* Simple Footer */}
+      <div className="mt-12 mb-20 flex justify-center px-6">
+        <button
+          onClick={() => router.push("/roadmaps/soc")}
+          className="w-full max-w-xs py-4 rounded-xl border border-white/10 bg-white/5 font-mono text-[10px] uppercase tracking-widest text-slate-400 hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M19 12H5M12 19l-7-7 7-7" />
+          </svg>
+          Back to SOC Roadmap
+        </button>
       </div>
     </div>
   );
+
 
   if (isMobile) {
     return <MobileSocCareerPath />;
