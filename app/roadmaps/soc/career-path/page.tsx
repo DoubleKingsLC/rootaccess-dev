@@ -496,96 +496,61 @@ export default function SocCareerPathPage() {
   }, [layout]);
 
   // ── Mobile Components ───────────────────────────────────────────────
-  const OrientationBlocker = () => (
-    <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center bg-slate-950 px-8 text-center" style={{ width: '100vw', height: '100vh' }}>
-      <div className="mb-6 flex flex-col items-center gap-4">
-        <div className="flex h-20 w-12 items-center justify-center rounded-2xl border border-slate-700 bg-slate-900/80 shadow-[0_0_40px_rgba(15,23,42,0.9)]">
-          <div className="h-14 w-8 rounded-xl border border-slate-600/70 bg-[radial-gradient(circle_at_top,_rgba(148,163,184,0.4),_transparent_60%),linear-gradient(to_bottom,_#020617,_#020617)] flex items-center justify-center">
-            <svg className="h-6 w-6 text-cyan-400 animate-bounce" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="4" y="8" width="16" height="8" rx="2" stroke="currentColor" strokeWidth="1.5" />
-              <path d="M9 16L7 19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              <path d="M15 8L17 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              <path d="M7 10L5 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              <path d="M17 14L19 17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-          </div>
-        </div>
-        <p className="font-mono text-[10px] uppercase tracking-[0.45em] text-cyan-400">
-          Rotate Your Device
-        </p>
-      </div>
-      <div className="max-w-sm space-y-3">
-        <p className="font-sans text-sm text-slate-100">
-          The SOC career path is designed for landscape view.
-        </p>
-        <p className="font-sans text-xs text-slate-400">
-          Turn your phone horizontally to unlock the full blueprint. The path will appear automatically.
-        </p>
-      </div>
-    </div>
-  );
+
 
   const MobileSocCareerPath = () => (
-    <div className="min-h-screen bg-slate-950 text-white overflow-x-hidden overflow-y-auto font-sans">
-      <div className="relative mx-auto max-w-7xl px-8 py-20 pb-40">
-        {/* Main Trunk Line */}
-        <div
-          className="absolute left-10 top-0 bottom-0 w-[2px] bg-gradient-to-b from-cyan-500/0 via-cyan-500/40 to-cyan-500/0"
-          style={{ boxShadow: '0 0 15px rgba(34, 211, 238, 0.2)' }}
-        />
-
+    <div className="min-h-screen bg-slate-950 text-white overflow-x-hidden font-sans">
+      <div className="relative">
         {LEVELS.map((level, i) => (
-          <section key={level.num} className="relative mb-32 last:mb-0 pl-20">
-            {/* Level Hub Node Connected to Trunk */}
+          <section key={level.num} className="relative min-h-screen pt-20 pb-32 px-6 border-b border-white/5 last:border-0">
+            {/* Level Indicator Hub */}
             <div
-              className="absolute left-0 top-6 -translate-x-1/2 flex items-center justify-center rounded-full border-2 bg-slate-950 z-10"
+              className="mb-10 flex items-center justify-center rounded-full border-2 bg-slate-950 shadow-2xl"
               style={{
-                width: 44,
-                height: 44,
-                left: -2, // Aligned with the trunk line at left-10
+                width: 64,
+                height: 64,
                 borderColor: level.color,
-                boxShadow: `0 0 20px ${level.glow}`,
+                boxShadow: `0 0 30px ${level.glow}`,
               }}
             >
-              <span className="font-mono text-sm font-black" style={{ color: level.color }}>
+              <span className="font-mono text-xl font-black" style={{ color: level.color }}>
                 {level.num}
               </span>
             </div>
 
-            <div className="mb-8">
-              <span className="font-mono text-[9px] uppercase tracking-[0.4em] mb-2 block" style={{ color: level.color }}>
+            {/* Header Content */}
+            <div className="mb-10 space-y-3">
+              <span className="font-mono text-[10px] uppercase tracking-[0.4em] text-cyan-400/80">
                 {level.subtitle}
               </span>
-              <h2 className="text-4xl font-bold mb-3 tracking-tight">{level.label}</h2>
-              <p className="text-slate-400 italic text-sm max-w-2xl border-l border-white/10 pl-4 py-1">
-                &ldquo;{level.quote}&rdquo;
-              </p>
+              <h2 className="text-5xl font-bold tracking-tight leading-[1.1]">
+                {level.label}
+              </h2>
+              <div className="relative pl-6 py-1">
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-white/10" />
+                <p className="text-slate-400 italic text-lg leading-relaxed max-w-lg">
+                  &ldquo;{level.quote}&rdquo;
+                </p>
+              </div>
             </div>
 
-            {/* Horizontal Flex Container for Cards */}
-            <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
+
+            {/* Info Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
-                { title: "Core Skills", icon: "⚡", items: level.skills },
-                { title: "Certifications", icon: "🎯", items: level.certs },
-                { title: "Practice Labs", icon: "🧪", items: level.labs },
-                { title: "Tools & Stack", icon: "🔧", items: level.tools },
+                { title: "SKILLS", items: level.skills },
+                { title: "CERTS", items: level.certs },
+                { title: "LABS", items: level.labs },
               ].map((cat) => (
-                <div
-                  key={cat.title}
-                  className="min-w-[280px] rounded-xl border border-white/10 bg-slate-900/50 p-5 backdrop-blur-md"
-                  style={{ boxShadow: `inset 0 0 20px rgba(0,0,0,0.3)` }}
-                >
-                  <div className="mb-4 flex items-center gap-3 border-b border-white/5 pb-3">
-                    <span className="text-lg">{cat.icon}</span>
-                    <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                      {cat.title}
-                    </p>
-                  </div>
+                <div key={cat.title} className="space-y-4">
+                  <h3 className="font-mono text-xs font-bold tracking-widest text-slate-500">
+                    {cat.title}
+                  </h3>
                   <ul className="space-y-3">
                     {cat.items.map((item) => (
-                      <li key={item} className="flex items-start gap-2.5">
-                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: level.color }} />
-                        <span className="font-sans text-[12px] leading-relaxed text-slate-300">
+                      <li key={item} className="flex items-start gap-3">
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/40" />
+                        <span className="text-sm font-medium text-slate-300">
                           {item}
                         </span>
                       </li>
@@ -596,40 +561,35 @@ export default function SocCareerPathPage() {
             </div>
           </section>
         ))}
+      </div>
 
-        {/* Footer CTA */}
-        <div className="mt-20 pt-10 border-t border-white/5 flex justify-center">
-          <button
-            onClick={() => router.push("/roadmaps/soc")}
-            className="inline-flex items-center gap-3 rounded-xl border border-cyan-500/30 bg-cyan-950/20 px-8 py-4 font-mono text-xs uppercase tracking-widest text-cyan-300 hover:bg-cyan-900/40 transition-all"
-          >
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M9 6H3M3 6L6 3M3 6L6 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            Back to SOC Experience
-          </button>
+      {/* Persistent Bottom Navigation */}
+      <div className="fixed bottom-0 inset-x-0 h-16 bg-slate-950/80 backdrop-blur-xl border-t border-white/5 flex items-center px-6 z-50">
+        <div className="flex-1 flex justify-between items-center max-w-lg mx-auto overflow-x-auto no-scrollbar gap-8">
+          {[
+            { label: "DETECTION", active: true },
+            { label: "TRIAGE", active: true },
+            { label: "ANALYSIS", active: false },
+            { label: "CONTAINMENT", active: false },
+            { label: "RECOVERY", active: false },
+          ].map((step, idx) => (
+            <div key={step.label} className="flex-shrink-0 flex items-center gap-3">
+              <div className={`w-2.5 h-2.5 rounded-full ${step.active ? 'bg-cyan-400' : 'border border-white/20'}`}
+                style={step.active ? { boxShadow: '0 0 10px #22d3ee' } : {}} />
+              <span className={`font-mono text-[9px] tracking-widest ${step.active ? 'text-cyan-400' : 'text-slate-600'}`}>
+                {step.label}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
-      <style jsx>{`
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
     </div>
   );
 
-
-  if (isMobile && orientation === "portrait") {
-    return <OrientationBlocker />;
-  }
-
-  if (isMobile && orientation === "landscape") {
+  if (isMobile) {
     return <MobileSocCareerPath />;
   }
+
 
 
   return (
