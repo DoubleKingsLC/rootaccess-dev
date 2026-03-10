@@ -68,11 +68,10 @@ const L1Content: React.FC = () => (
                 {[...LOG_LINES, ...LOG_LINES].map((line, i) => (
                     <div
                         key={i}
-                        className={`flex items-baseline gap-4 font-mono leading-relaxed ${
-                            line.alert
-                                ? "my-2 rounded-lg border-l-4 border-red-500 bg-red-950/50 px-4 py-3"
-                                : "border-l border-transparent px-1 py-1 opacity-35"
-                        }`}
+                        className={`flex items-baseline gap-4 font-mono leading-relaxed ${line.alert
+                            ? "my-2 rounded-lg border-l-4 border-red-500 bg-red-950/50 px-4 py-3"
+                            : "border-l border-transparent px-1 py-1 opacity-35"
+                            }`}
                         style={line.alert ? {
                             boxShadow: "0 0 40px rgba(239,68,68,0.3), inset 0 0 30px rgba(239,68,68,0.08)"
                         } : undefined}
@@ -389,41 +388,16 @@ const DarkWebViz: React.FC<{ correlated: boolean }> = ({ correlated }) => (
                 </div>
             </div>
 
-            {/* DNS resolution terminal */}
-            <div className="rounded-lg bg-slate-900/80 px-3.5 py-3 font-mono"
-                style={{ border: "1px solid rgba(139,92,246,0.18)" }}>
-                <p className="mb-2 font-mono text-[9px] uppercase tracking-widest text-violet-700">DNS RESOLUTION LOG</p>
-                {[
-                    { label: "QUERY", value: "a3f2c91b.onion" },
-                    { label: "RELAY", value: "TOR circuit — 3 hops" },
-                    { label: "PROTO", value: "HTTPS tunnelled" },
-                    { label: "STATUS", value: "BEACON established ●", highlight: true },
-                ].map((row, k) => (
-                    <div key={k} className="flex items-baseline gap-3 py-0.5">
-                        <span className="w-14 shrink-0 text-[10px] text-violet-700">{row.label}</span>
-                        <span className={`text-xs transition-colors duration-700 ${row.highlight ? (correlated ? "animate-pulse text-violet-300 font-semibold" : "text-slate-700") : "text-slate-400"}`}>
-                            {row.value}
-                        </span>
-                    </div>
-                ))}
+            {/* Simplified context */}
+            <div className="flex flex-col gap-1 px-1 my-2">
+                <span className="font-mono text-[11px] text-slate-400">Target: <span className="text-violet-300">a3f2c91b.onion</span></span>
+                <span className="font-mono text-[11px] text-slate-400">Status: <span className={correlated ? "animate-pulse font-semibold text-violet-400" : "text-slate-600"}>BEACON established ●</span></span>
+                {correlated && (
+                    <span className="mt-1 font-mono text-[10px] font-bold tracking-widest text-violet-700/80">
+                        C2 ACTIVE — BEACONING EVERY 300s
+                    </span>
+                )}
             </div>
-
-            {/* Beacon frequency bar */}
-            {correlated && (
-                <div>
-                    <div className="mb-1.5 flex justify-between font-mono text-[10px] font-medium text-violet-700">
-                        <span>BEACON INTERVAL</span><span>every 300s</span>
-                    </div>
-                    <div className="relative h-2 w-full overflow-hidden rounded-full bg-slate-900">
-                        <div className="absolute inset-0 rounded-full" style={{ background: "rgba(139,92,246,0.25)", animation: "alert-pulse 2s ease-in-out infinite" }} />
-                        {Array.from({ length: 5 }, (_, k) => (
-                            <div key={k} className="absolute top-0 h-full w-1.5 rounded-sm bg-violet-500"
-                                style={{ left: `${k * 22}%`, boxShadow: "0 0 8px #8b5cf6", opacity: 0.85 }} />
-                        ))}
-                    </div>
-                    <p className="mt-1.5 font-mono text-[10px] font-medium text-violet-800">C2 ACTIVE — DATA EXFILTRATION POSSIBLE</p>
-                </div>
-            )}
 
             {/* Analyst query */}
             {correlated && (
@@ -528,11 +502,10 @@ const L2Content: React.FC<{ progress: number }> = ({ progress }) => {
                         return (
                             <div
                                 key={i}
-                                className={`flex flex-1 flex-col rounded-2xl border-2 bg-slate-900/80 p-3 transition-all duration-700 ${
-                                    correlated
-                                        ? "border-cyan-400/45 shadow-[0_0_28px_rgba(34,211,238,0.18)]"
-                                        : "border-slate-700/40"
-                                }`}
+                                className={`flex flex-1 flex-col rounded-2xl border-2 bg-slate-900/80 p-3 transition-all duration-700 ${correlated
+                                    ? "border-cyan-400/45 shadow-[0_0_28px_rgba(34,211,238,0.18)]"
+                                    : "border-slate-700/40"
+                                    }`}
                                 style={{ transitionDelay: `${i * 0.14}s`, minHeight: 0 }}
                             >
                                 {/* Event badge + title row */}
@@ -553,11 +526,10 @@ const L2Content: React.FC<{ progress: number }> = ({ progress }) => {
 
                                 {/* Risk tag */}
                                 <div
-                                    className={`shrink-0 rounded-lg border px-3 py-1.5 text-center transition-all duration-700 ${
-                                        correlated
-                                            ? "border-cyan-500/30 bg-cyan-950/30 text-cyan-400"
-                                            : "border-slate-700/20 bg-slate-800/40 text-slate-600"
-                                    }`}
+                                    className={`shrink-0 rounded-lg border px-3 py-1.5 text-center transition-all duration-700 ${correlated
+                                        ? "border-cyan-500/30 bg-cyan-950/30 text-cyan-400"
+                                        : "border-slate-700/20 bg-slate-800/40 text-slate-600"
+                                        }`}
                                     style={{ transitionDelay: `${i * 0.18}s` }}
                                 >
                                     <p className="font-mono text-[8px] font-bold uppercase tracking-widest">
@@ -572,24 +544,18 @@ const L2Content: React.FC<{ progress: number }> = ({ progress }) => {
 
             {/* Verdict strip */}
             <div
-                className={`mt-3 shrink-0 rounded-xl border-2 px-5 py-3.5 transition-all duration-700 ${
-                    correlated
-                        ? "border-cyan-500/40 bg-cyan-950/20 shadow-[0_0_30px_rgba(34,211,238,0.1)]"
-                        : "border-slate-700/20 bg-slate-900/20"
-                }`}
+                className={`mt-3 shrink-0 rounded-xl border-2 px-5 py-4 transition-all duration-700 ${correlated
+                    ? "border-cyan-500/40 bg-cyan-950/20 shadow-[0_0_28px_rgba(34,211,238,0.1)]"
+                    : "border-slate-700/20 bg-slate-900/20"
+                    }`}
             >
                 {correlated ? (
-                    <div className="flex items-center gap-4">
-                        <span className="shrink-0 text-2xl">🔗</span>
-                        <div>
-                            <p className="font-mono text-xs font-bold uppercase tracking-widest text-cyan-300">
-                                What this means in plain English
-                            </p>
-                            <p className="mt-1 font-sans text-sm leading-relaxed text-slate-200">
-                                The attacker didn&apos;t just fail to log in — they got in sideways, stole files, and phoned home.
-                                Three separate events. One coordinated attack. L3 now pulls the disk.
-                            </p>
-                        </div>
+                    <div className="flex items-center gap-3">
+                        <p className="font-mono text-lg font-black leading-snug text-cyan-200"
+                            style={{ textShadow: "0 0 24px rgba(34,211,238,0.65)" }}>
+                            Are these isolated anomalies, or one coordinated attack chain?
+                        </p>
+                        <span className="blink-cursor inline-block h-5 w-0.5 shrink-0 bg-cyan-400" />
                     </div>
                 ) : (
                     <p className="font-mono text-[10px] uppercase tracking-widest text-slate-600">
