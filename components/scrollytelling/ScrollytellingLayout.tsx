@@ -135,24 +135,24 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
       tl.to(zoomWrapperRef.current, { scale: ZOOM_SCALE, x: () => getCameraOffset(l1DeskRef).x, y: () => getCameraOffset(l1DeskRef).y, duration: 0.05, ease: "power4.out" }, 0.12);
       tl.to(workstations, { autoAlpha: 0, duration: 0.05, ease: "power4.out" }, 0.12);
       tl.fromTo(l1MonitorRef.current, { autoAlpha: 0, scale: 0.8, filter: "blur(10px)" }, { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 0.04, ease: "expo.out" }, 0.13);
-      tl.to(workstations, { autoAlpha: 1, duration: 0.04, ease: "power2.inOut", immediateRender: false }, 0.26);
-      tl.to(l1MonitorRef.current, { autoAlpha: 0, scale: 1.5, filter: "blur(20px)", duration: 0.05 }, 0.30);
+      tl.to(workstations, { autoAlpha: 1, duration: 0.04, ease: "power2.inOut", immediateRender: false }, 0.30);
+      tl.to(l1MonitorRef.current, { autoAlpha: 0, scale: 0.8, filter: "blur(10px)", duration: 0.05 }, 0.30);
       tl.to(zoomWrapperRef.current, { scale: 1, x: 0, y: 0, duration: 0.05, ease: "power2.in" }, 0.30);
 
       // ── L2 Portal ─────────────────────────────────────────────────────────
       tl.to(zoomWrapperRef.current, { scale: ZOOM_SCALE, x: () => getCameraOffset(l2DeskRef).x, y: () => getCameraOffset(l2DeskRef).y, duration: 0.05, ease: "power4.out" }, 0.38);
       tl.to(workstations, { autoAlpha: 0, duration: 0.05, ease: "power4.out" }, 0.38);
       tl.fromTo(l2MonitorRef.current, { autoAlpha: 0, scale: 0.8, filter: "blur(10px)" }, { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 0.04, ease: "expo.out" }, 0.39);
-      tl.to(workstations, { autoAlpha: 1, duration: 0.04, ease: "power2.inOut", immediateRender: false }, 0.48);
-      tl.to(l2MonitorRef.current, { autoAlpha: 0, scale: 1.5, filter: "blur(20px)", duration: 0.05 }, 0.52);
+      tl.to(workstations, { autoAlpha: 1, duration: 0.04, ease: "power2.inOut", immediateRender: false }, 0.52);
+      tl.to(l2MonitorRef.current, { autoAlpha: 0, scale: 0.8, filter: "blur(10px)", duration: 0.05 }, 0.52);
       tl.to(zoomWrapperRef.current, { scale: 1, x: 0, y: 0, duration: 0.05, ease: "power2.in" }, 0.52);
 
       // ── L3 Portal ─────────────────────────────────────────────────────────
       tl.to(zoomWrapperRef.current, { scale: ZOOM_SCALE, x: () => getCameraOffset(l3DeskRef).x, y: () => getCameraOffset(l3DeskRef).y, duration: 0.05, ease: "power4.out" }, 0.58);
       tl.to(workstations, { autoAlpha: 0, duration: 0.05, ease: "power4.out" }, 0.58);
       tl.fromTo(l3MonitorRef.current, { autoAlpha: 0, scale: 0.8, filter: "blur(10px)" }, { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 0.04, ease: "expo.out" }, 0.59);
-      tl.to(workstations, { autoAlpha: 1, duration: 0.04, ease: "power2.inOut", immediateRender: false }, 0.68);
-      tl.to(l3MonitorRef.current, { autoAlpha: 0, scale: 1.5, filter: "blur(20px)", duration: 0.05 }, 0.72);
+      tl.to(workstations, { autoAlpha: 1, duration: 0.04, ease: "power2.inOut", immediateRender: false }, 0.72);
+      tl.to(l3MonitorRef.current, { autoAlpha: 0, scale: 0.8, filter: "blur(10px)", duration: 0.05 }, 0.72);
       tl.to(zoomWrapperRef.current, { scale: 1, x: 0, y: 0, duration: 0.05, ease: "power2.in" }, 0.72);
 
       tl.to(zoomWrapperRef.current, { scale: 1, x: 0, y: 0, duration: 0.1, ease: "none" }, 0.75);
