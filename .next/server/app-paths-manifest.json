@@ -1,5 +1,4 @@
 {
-  "/roadmaps/soc/career-path/page": "app/roadmaps/soc/career-path/page.js",
-  "/roadmaps/ai-hacking/page": "app/roadmaps/ai-hacking/page.js",
-  "/page": "app/page.js"
+  "/page": "app/page.js",
+  "/roadmaps/soc/career-path/page": "app/roadmaps/soc/career-path/page.js"
 }

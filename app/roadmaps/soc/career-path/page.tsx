@@ -20,7 +20,7 @@ const LEVELS = [
       "You don't need a degree. You need curiosity and the discipline to build it. Everyone starts here.",
     time: "0–6 months",
     salary: "£25K–£35K",
-    tools: ["TryHackMe", "Wireshark", "VirtualBox", "Kali Linux", "Python"],
+    tools: ["VirtualBox", "Linux", "Terminal / PowerShell", "Python"],
     skills: [
       "Networking — TCP/IP, DNS, DHCP, subnetting",
       "OS fundamentals — Windows & Linux",
@@ -28,9 +28,9 @@ const LEVELS = [
       "Scripting basics — Python or Bash",
     ],
     certs: [
-      "CompTIA Security+",
       "Google Cybersecurity Certificate",
-      "ISC² CC — free and officially endorsed",
+      "THM · Security+ Pre-Security (SEC1)",
+      "TCM · Practical Security Fundamentals",
     ],
     labs: [
       "TryHackMe · Pre-Security learning path",
@@ -49,7 +49,7 @@ const LEVELS = [
       "07:45. You open the SIEM dashboard. 4,200 alerts overnight. Your job is to find the three that matter.",
     time: "6–18 months",
     salary: "£30K–£45K",
-    tools: ["Splunk", "Microsoft Sentinel", "CrowdStrike Falcon", "VirusTotal", "ServiceNow"],
+    tools: ["Splunk / ELK / Wazuh", "Wireshark / tcpdump", "VirusTotal", "grep / awk"],
     skills: [
       "SIEM log analysis and search query writing",
       "Alert triage, classification, and prioritisation",
@@ -58,8 +58,8 @@ const LEVELS = [
     ],
     certs: [
       "BTL1 — Blue Team Level 1",
-      "CompTIA CySA+ (Cybersecurity Analyst)",
-      "SC-200 Microsoft Security Operations",
+      "Practical SOC Analyst (PSAA)",
+      "CompTIA Security+",
     ],
     labs: [
       "LetsDefend · SOC Analyst learning path",
@@ -78,7 +78,7 @@ const LEVELS = [
       "Three events. Each harmless alone. But you see them together — and you see the attacker's hand.",
     time: "2–4 years",
     salary: "£45K–£65K",
-    tools: ["Velociraptor", "MISP", "TheHive / Cortex", "Wireshark", "Elastic SIEM"],
+    tools: ["CyberChef", "Velociraptor", "MISP", "TheHive", "MITRE ATT&CK"],
     skills: [
       "Threat correlation and attack pattern mapping",
       "Malware triage — static and dynamic analysis",
@@ -86,9 +86,8 @@ const LEVELS = [
       "SOAR automation and playbook development",
     ],
     certs: [
-      "GCIH — GIAC Certified Incident Handler",
-      "BTL2 — Blue Team Level 2",
-      "PNPT — Practical Network Penetration Testing",
+      "CCDL2 — HTB Certified Cybersecurity Defense Level 2",
+      "HTB CDSA — Certified Defensive Security Analyst",
     ],
     labs: [
       "CyberDefenders · Blue Team challenge labs",
@@ -107,7 +106,7 @@ const LEVELS = [
       "You pull the disk. You find the malware. You trace it to its first byte. This is where the story ends.",
     time: "4–7 years",
     salary: "£65K–£90K",
-    tools: ["Autopsy", "Volatility", "Ghidra", "x64dbg", "FTK Imager", "REMnux"],
+    tools: ["Volatility", "KAPE", "EZTools", "x64dbg", "FTK Imager"],
     skills: [
       "Disk and memory forensics — full acquisition",
       "Malware reverse engineering and binary analysis",
@@ -115,9 +114,9 @@ const LEVELS = [
       "APT tracking and threat intelligence production",
     ],
     certs: [
-      "GCFE — GIAC Certified Forensic Examiner",
-      "GREM — GIAC Reverse Engineering Malware",
-      "CREST CPIA — Practitioner Intrusion Analyst",
+      "BTL2 — Blue Team Level 2",
+      "GCFA — GIAC Certified Forensic Analyst",
+      "GCIH — GIAC Certified Incident Handler",
     ],
     labs: [
       "Proxmox + Wazuh — build your own SOC homelab",
@@ -144,9 +143,9 @@ const LEVELS = [
       "Executive stakeholder communication",
     ],
     certs: [
-      "CISM — Certified Information Security Manager",
       "CISSP — Certified Information Systems Security Professional",
-      "SANS MGT551 · Building and Leading SOCs",
+      "CSOM — Certified SOC Manager",
+      "CISM — Certified Information Security Manager",
     ],
     labs: [
       "Lead tabletop incident response exercises",
@@ -222,6 +221,49 @@ export default function SocCareerPathPage() {
 
   const [activeLevel, setActiveLevel] = useState<number>(-1);
   const [layout, setLayout] = useState<any>(null);
+  const [orientationBlocked, setOrientationBlocked] = useState(false);
+  const [layoutScale, setLayoutScale] = useState(1);
+
+  // Enforce landscape-only on mobile-ish devices and compute a uniform scale
+  // factor that simply shrinks the entire experience (no reflow) on small
+  // landscape screens.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const recompute = () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const isMobileish = w <= 1024;
+      const isPortrait = h > w;
+
+      // Hard-block portrait on smaller devices.
+      setOrientationBlocked(isMobileish && isPortrait);
+
+      // Only scale down on mobile-ish landscape; desktop stays at 1:1.
+      if (!isMobileish || isPortrait) {
+        setLayoutScale(1);
+        return;
+      }
+
+      // Treat ~1440px as our visual design width; anything narrower just
+      // gets a proportional "zoomed out" view, preserving relative positions.
+      const BASE_W = 1440;
+      let nextScale = w / BASE_W;
+      if (nextScale > 1) nextScale = 1;
+      if (nextScale < 0.4) nextScale = 0.4; // keep it legible
+
+      setLayoutScale(nextScale);
+    };
+
+    recompute();
+    window.addEventListener("resize", recompute);
+    window.addEventListener("orientationchange", recompute);
+
+    return () => {
+      window.removeEventListener("resize", recompute);
+      window.removeEventListener("orientationchange", recompute);
+    };
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -459,8 +501,77 @@ export default function SocCareerPathPage() {
 
   return (
     <main className="min-h-screen bg-slate-950 text-white overflow-x-hidden">
+      {orientationBlocked && (
+        <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center bg-slate-950 px-8 text-center">
+          <div className="mb-6 flex flex-col items-center gap-4">
+            <div className="flex h-20 w-12 items-center justify-center rounded-2xl border border-slate-700 bg-slate-900/80 shadow-[0_0_40px_rgba(15,23,42,0.9)]">
+              <div className="h-14 w-8 rounded-xl border border-slate-600/70 bg-[radial-gradient(circle_at_top,_rgba(148,163,184,0.4),_transparent_60%),linear-gradient(to_bottom,_#020617,_#020617)] flex items-center justify-center">
+                <svg
+                  className="h-6 w-6 text-cyan-400 animate-bounce"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                    x="4"
+                    y="8"
+                    width="16"
+                    height="8"
+                    rx="2"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                  />
+                  <path
+                    d="M9 16L7 19"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M15 8L17 5"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M7 10L5 7"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M17 14L19 17"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </div>
+            </div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.45em] text-cyan-400">
+              Rotate Your Device
+            </p>
+          </div>
+          <div className="max-w-sm space-y-3">
+            <p className="font-sans text-sm text-slate-100">
+              This SOC career map is designed for landscape view.
+            </p>
+            <p className="font-sans text-xs text-slate-400">
+              Turn your phone horizontally to unlock the full interactive layout. Once you&apos;re in
+              landscape mode, the roadmap will appear automatically.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* ── Fixed header ──────────────────────────────────────────────────── */}
-      <header className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-white/5 bg-slate-950/85 px-8 py-3.5 backdrop-blur-md">
+      <header
+        className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-white/5 bg-slate-950/85 px-8 py-3.5 backdrop-blur-md"
+        style={{
+          transform: `scale(${layoutScale})`,
+          transformOrigin: "top center",
+        }}
+      >
         <button
           onClick={() => router.push("/roadmaps/soc")}
           className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-slate-500 transition-colors hover:text-cyan-300"
@@ -477,7 +588,13 @@ export default function SocCareerPathPage() {
       </header>
 
       {/* ── Fixed level nav (right side) ──────────────────────────────────── */}
-      <nav className="pointer-events-none fixed right-6 top-1/2 z-50 -translate-y-1/2 flex flex-col items-end gap-5">
+      <nav
+        className="pointer-events-none fixed right-6 top-1/2 z-50 -translate-y-1/2 flex flex-col items-end gap-5"
+        style={{
+          transform: `scale(${layoutScale})`,
+          transformOrigin: "center right",
+        }}
+      >
         {LEVELS.map((level, i) => (
           <div key={i} className="flex items-center gap-2.5">
             <span className="font-mono text-[8px] uppercase tracking-widest text-slate-600">
@@ -495,7 +612,14 @@ export default function SocCareerPathPage() {
         ))}
       </nav>
 
-      <div ref={containerRef} className="pt-16">
+      <div
+        ref={containerRef}
+        className="pt-16"
+        style={{
+          transform: `scale(${layoutScale})`,
+          transformOrigin: "top center",
+        }}
+      >
         {/* ── Hero ────────────────────────────────────────────────────────── */}
         <section className="relative flex min-h-screen items-center justify-center overflow-hidden">
           {/* Grid */}
