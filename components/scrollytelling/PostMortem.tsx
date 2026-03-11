@@ -84,17 +84,17 @@ export const PostMortem: React.FC<PostMortemProps> = ({ opacity }) => {
             <div>
               <div className="mb-2 flex items-center gap-2">
                 <div className="h-1.5 w-1.5 rounded-full bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.8)] animate-pulse" />
-                <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-sky-400/60">
-                  Incident Report
+                <p className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-sky-400/80">
+                  INC-2024-047
                 </p>
               </div>
               <h2 className="font-mono text-3xl font-black text-white uppercase italic tracking-tighter">
-                INC-2024-047
+                Incident Report
               </h2>
             </div>
             <div className="text-right">
-              <p className="font-mono text-[8px] uppercase text-sky-500/40">Classification</p>
-              <p className="font-mono text-[10px] font-bold text-red-400">CLASS-4 // CRITICAL</p>
+              <p className="font-mono text-[9px] uppercase text-sky-500/40">Classification</p>
+              <p className="font-mono text-[11px] font-bold text-red-400">CLASS-4 // CRITICAL</p>
             </div>
           </div>
 
@@ -110,7 +110,7 @@ export const PostMortem: React.FC<PostMortemProps> = ({ opacity }) => {
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent via-sky-500/[0.03] to-transparent h-1/2 w-full animate-scanline" />
               
               <div className="flex justify-between items-center mb-6">
-                <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-sky-500/70">
+                <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-sky-500/70">
                   Analysis Summary
                 </p>
                 <div className="flex gap-1">
@@ -122,7 +122,7 @@ export const PostMortem: React.FC<PostMortemProps> = ({ opacity }) => {
                 </div>
               </div>
 
-              <div className="space-y-5">
+              <div className="space-y-6">
                 {[
                   { label: "STATUS", value: "DEFEATED", sub: "Pre-Exfiltration phase reached", color: "text-sky-400" },
                   { label: "VECTOR", value: "LATERAL PIVOT", sub: "Brute force against internal API", color: "text-amber-400" },
@@ -130,33 +130,33 @@ export const PostMortem: React.FC<PostMortemProps> = ({ opacity }) => {
                 ].map((item, idx) => (
                   <div key={idx} className="hud-data-item group/item">
                     <div className="flex justify-between items-baseline mb-1">
-                      <span className="font-mono text-[9px] text-slate-500 tracking-widest">{item.label}</span>
-                      <span className={`font-mono text-xs font-bold ${item.color}`}>{item.value}</span>
+                      <span className="font-mono text-xs text-slate-500 tracking-widest">{item.label}</span>
+                      <span className={`font-mono text-sm font-bold ${item.color}`}>{item.value}</span>
                     </div>
                     <div className="h-0.5 w-full bg-slate-800 rounded-full overflow-hidden">
                       <div className="h-full bg-current opacity-30 w-full" />
                     </div>
-                    <p className="font-mono text-[8px] text-slate-500 mt-1 uppercase tracking-wider">{item.sub}</p>
+                    <p className="font-mono text-[11px] text-slate-400/60 mt-1.5 uppercase tracking-wider">{item.sub}</p>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-8 grid grid-cols-2 gap-4 border-t border-sky-500/10 pt-6">
+              <div className="mt-10 grid grid-cols-2 gap-6 border-t border-sky-500/10 pt-6">
                 <div>
-                  <p className="font-mono text-[8px] uppercase text-slate-500 mb-1">Response Tier</p>
-                  <p className="font-mono text-xs font-bold text-sky-300">L3 FORENSIC OPS</p>
+                  <p className="font-mono text-[10px] uppercase text-slate-500 mb-1">Response Tier</p>
+                  <p className="font-mono text-sm font-bold text-sky-300">L3 FORENSIC OPS</p>
                 </div>
                 <div>
-                  <p className="font-mono text-[8px] uppercase text-slate-500 mb-1">Incident Hash</p>
-                  <p className="font-mono text-[10px] text-slate-400">0x8F2...EE1B</p>
+                  <p className="font-mono text-[10px] uppercase text-slate-500 mb-1">Incident Hash</p>
+                  <p className="font-mono text-xs text-slate-400 tracking-wider">0x8F2D...EE1B</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="opacity-40 italic flex items-center gap-3">
+          <div className="opacity-40 italic flex items-center gap-3 pt-4">
             <div className="h-px flex-1 bg-slate-800" />
-            <p className="font-mono text-[9px] text-slate-400 whitespace-nowrap">
+            <p className="font-mono text-[11px] text-slate-500 whitespace-nowrap tracking-widest">
               SECURE LOG // BOARDROOM MODE
             </p>
             <div className="h-px flex-1 bg-slate-800" />
