@@ -30,15 +30,15 @@ const LEVELS = [
       "Scripting basics — Python or Bash",
     ],
     certs: [
-      "Google Cybersecurity Certificate",
-      "THM · Security+ Pre-Security (SEC1)",
-      "TCM · Practical Security Fundamentals",
-    ],
+      { label: "THM · Security+ Pre-Security (SEC1)", link: "https://tryhackme.com/certification/pre-security", provider: "tryhackme" },
+      { label: "Google Cybersecurity Certificate", link: "https://www.coursera.org/professional-certificates/google-cybersecurity", provider: "google" },
+      { label: "TCM · Practical Security Fundamentals", link: "https://academy.tcm-sec.com/p/practical-security-fundamentals", provider: "tcm" },
+    ] as any,
     labs: [
-      "TryHackMe · Pre-Security learning path",
-      "Cybrary · Intro to IT & Cybersecurity",
-      "Professor Messer · Security+ free course",
-    ],
+      { label: "TryHackMe · Pre-Security learning path", link: "https://tryhackme.com/path/outline/presecurity", provider: "tryhackme" },
+      { label: "Learn Virtual Machines RIGHT NOW!! (Kali, Ubuntu, Windows)", link: "https://youtu.be/wX75Z-4MEoM", provider: "youtube" },
+      { label: "40 Windows Commands you NEED to know", link: "https://youtu.be/Jfvg3CS1X3A", provider: "youtube" },
+    ] as any,
   },
   {
     num: "01",
@@ -59,15 +59,16 @@ const LEVELS = [
       "Incident ticketing and escalation procedures",
     ],
     certs: [
-      "BTL1 — Blue Team Level 1",
-      "Practical SOC Analyst (PSAA)",
-      "CompTIA Security+",
-    ],
+      { label: "Practical SOC Analyst (PSAA)", link: "https://certifications.tcm-sec.com/psaa/", provider: "tcm" },
+      { label: "BTL1 — Blue Team Level 1", link: "https://www.securityblue.team/certifications/blue-team-level-1", provider: "blueteam" },
+      { label: "CompTIA Security+", link: "https://www.comptia.org/en/certifications/security/", provider: "comptia" },
+    ] as any,
     labs: [
-      "LetsDefend · SOC Analyst learning path",
-      "TryHackMe · SOC Level 1 complete track",
-      "HTB · SOC Defender career path",
-    ],
+      { label: "Cyberdefenders CyberRange - Network Forensics, Threat Hunting", link: "https://cyberdefenders.org/blue-team-labs/", provider: "cyberdefenders" },
+      { label: "HTB Sherlocks - SOC", link: "https://app.hackthebox.com/sherlocks", provider: "htb" },
+      { label: "Wazuh - you need this FREE CyberSecurity tool", link: "https://youtu.be/3CaG2GI1kn0", provider: "youtube" },
+      { label: "Splunk - Getting started guide", link: "https://youtu.be/-SXddlIZkUs", provider: "youtube" },
+    ] as any,
   },
   {
     num: "02",
@@ -539,9 +540,9 @@ export default function SocCareerPathPage() {
               {[
                 { title: "SKILLS", items: level.skills, icon: "⚡" },
                 { title: "CERTS", items: level.certs, icon: "🎯" },
-                { title: "LABS", items: level.labs, icon: "🧪" },
+                { title: "RESOURCES & LABS", items: level.labs, icon: "🧪" },
                 { title: "TOOLS", items: level.tools, icon: "🔧" },
-              ].map((cat) => (
+              ].map((cat: any) => (
                 <div
                   key={cat.title}
                   className="rounded-2xl border border-white/5 bg-slate-900/30 p-5 backdrop-blur-sm relative overflow-hidden group shadow-lg"
@@ -552,15 +553,57 @@ export default function SocCareerPathPage() {
                   <h3 className="font-mono text-[10px] font-bold tracking-[0.3em] text-slate-500 mb-4 border-b border-white/5 pb-2">
                     {cat.title}
                   </h3>
-                  <ul className="space-y-2.5">
-                    {cat.items.map((item) => (
-                      <li key={item} className="flex items-start gap-3">
-                        <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-cyan-500/40" />
-                        <span className="text-xs font-medium text-slate-300 leading-normal">
-                          {item}
-                        </span>
-                      </li>
-                    ))}
+                  <ul className="space-y-4 pt-1">
+                    {cat.items.map((item: any, idx: number) => {
+                      const isObj = typeof item === "object";
+                      const label = isObj ? item.label : item;
+                      const link = isObj ? item.link : null;
+                      const provider = isObj ? item.provider : null;
+
+                      return (
+                        <li key={idx} className="flex items-start gap-4 mb-2 last:mb-0">
+                          {/* Only show bullet if no specific provider icon is supported */}
+                          {!provider || (provider !== "youtube" && provider !== "google") ? (
+                            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-cyan-500/40" />
+                          ) : (
+                            <div className="mt-0.5 shrink-0">
+                              {provider === "youtube" && (
+                                <svg className="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24">
+                                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                                </svg>
+                              )}
+                              {provider === "google" && (
+                                <svg className="w-4 h-4 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
+                                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                                </svg>
+                              )}
+                            </div>
+                          )}
+                          <div className="flex flex-col gap-1 w-full">
+                            {link ? (
+                              <a
+                                href={link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs font-medium text-slate-300 active:text-white flex items-center justify-between group/link"
+                              >
+                                <span>{label}</span>
+                                <svg className="w-3 h-3 opacity-20 group-hover/link:opacity-60 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
+                                </svg>
+                              </a>
+                            ) : (
+                              <span className="text-xs font-medium text-slate-300 leading-normal">
+                                {label}
+                              </span>
+                            )}
+                          </div>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               ))}
@@ -884,7 +927,7 @@ export default function SocCareerPathPage() {
                       [
                         { title: "Core Skills", icon: "⚡", items: level.skills },
                         { title: "Certifications", icon: "🎯", items: level.certs },
-                        { title: "Practice Labs", icon: "🧪", items: level.labs },
+                        { title: "Resources and Labs", icon: "🧪", items: level.labs },
                       ] as const
                     ).map((cat, j) => (
                       <div
@@ -909,14 +952,60 @@ export default function SocCareerPathPage() {
                         </div>
                         <div className="flex-1 pb-16">
                           <ul className="space-y-4">
-                            {cat.items.map((item) => (
-                              <li key={item} className="flex items-start gap-3">
-                                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: level.color, boxShadow: `0 0 8px ${level.color}` }} />
-                                <span className="font-sans text-[13px] leading-relaxed text-slate-300">
-                                  {item}
-                                </span>
-                              </li>
-                            ))}
+                            {cat.items.map((item: any, idx: number) => {
+                              const isObj = typeof item === "object";
+                              const label = isObj ? item.label : item;
+                              const link = isObj ? item.link : null;
+                              const provider = isObj ? item.provider : null;
+
+                              return (
+                                <li key={idx} className="flex items-start gap-4 group/li transition-all duration-300">
+                                  {/* Replace bullet with icon only for supported providers */}
+                                  {!provider || (provider !== "youtube" && provider !== "google") ? (
+                                    <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-sm transition-transform group-hover/li:scale-125" style={{ background: level.color, boxShadow: `0 0 8px ${level.color}` }} />
+                                  ) : (
+                                    <div className="mt-1 shrink-0 transition-transform group-hover/li:scale-110">
+                                      {provider === "youtube" && (
+                                        <svg className="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24">
+                                          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                                        </svg>
+                                      )}
+                                      {provider === "google" && (
+                                        <svg className="w-4 h-4" viewBox="0 0 24 24">
+                                          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                                          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                                          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                                          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                                        </svg>
+                                      )}
+                                    </div>
+                                  )}
+                                  
+                                  <div className="flex flex-col gap-1 w-full">
+                                    {link ? (
+                                      <a
+                                        href={link}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="font-sans text-[13px] leading-relaxed text-slate-300 hover:text-white transition-all flex items-center justify-between group/link"
+                                      >
+                                        <span className="relative">
+                                          {label}
+                                          <span className="absolute left-0 -bottom-1 w-0 h-px bg-current transition-all group-hover/link:w-2/3 opacity-30" />
+                                        </span>
+                                        <svg className="w-3.5 h-3.5 opacity-10 group-hover/link:opacity-60 group-hover/link:translate-x-0.5 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
+                                        </svg>
+                                      </a>
+                                    ) : (
+                                      <span className="font-sans text-[13px] leading-relaxed text-slate-300">
+                                        {label}
+                                      </span>
+                                    )}
+                                  </div>
+                                </li>
+                              );
+                            })}
                           </ul>
                         </div>
 
