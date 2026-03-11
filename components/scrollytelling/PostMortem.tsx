@@ -15,12 +15,17 @@ export const PostMortem: React.FC<PostMortemProps> = ({ opacity }) => {
   const hasEntered = useRef(false);
 
   useGSAP(() => {
-    if (opacity > 0.95) {
+    if (opacity > 0.1) {
       if (!hasEntered.current) {
         gsap.fromTo(
           contentRef.current,
           { opacity: 0, y: 30, scale: 0.98 },
           { opacity: 1, y: 0, scale: 1, duration: 1.2, ease: "power3.out", overwrite: true }
+        );
+        gsap.fromTo(
+          ".hud-data-item",
+          { opacity: 0, x: -10 },
+          { opacity: 1, x: 0, duration: 0.6, stagger: 0.15, ease: "power2.out", delay: 0.4, overwrite: true }
         );
         hasEntered.current = true;
       }
@@ -66,12 +71,6 @@ export const PostMortem: React.FC<PostMortemProps> = ({ opacity }) => {
             className="w-full h-full scale-110"
           />
 
-          <style jsx>{`
-            .video-crisp {
-              image-rendering: -webkit-optimize-contrast;
-              image-rendering: crisp-edges;
-            }
-          `}</style>
 
           {/* Holographic Overlays */}
           <div className="absolute inset-0 pointer-events-none rounded-2xl shadow-[inset_0_0_60px_rgba(14,165,233,0.15)]" />
@@ -79,52 +78,104 @@ export const PostMortem: React.FC<PostMortemProps> = ({ opacity }) => {
           <div className="absolute bottom-0 right-0 h-10 w-10 border-b-2 border-r-2 border-sky-400/40 rounded-br-2xl" />
         </div>
 
-        {/* RIGHT: Executive Summary Panel ─────────────────────────────────── */}
-        <div className="w-80 shrink-0 space-y-8">
-          <div>
-            <div className="mb-2 flex items-center gap-2">
-              <div className="h-1.5 w-1.5 rounded-full bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
-              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-sky-400/60">
-                Case Report
-              </p>
+        {/* RIGHT: Professional Executive Summary HUD ─────────────────────────── */}
+        <div className="w-[420px] shrink-0 space-y-6">
+          <div className="flex items-end justify-between border-b border-sky-500/20 pb-4">
+            <div>
+              <div className="mb-2 flex items-center gap-2">
+                <div className="h-1.5 w-1.5 rounded-full bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.8)] animate-pulse" />
+                <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-sky-400/60">
+                  Incident Report
+                </p>
+              </div>
+              <h2 className="font-mono text-3xl font-black text-white uppercase italic tracking-tighter">
+                INC-2024-047
+              </h2>
             </div>
-            <h2 className="font-mono text-2xl font-black text-white uppercase italic tracking-tight">
-              INC-2024-047
-            </h2>
-          </div>
-
-          <div className="rounded-xl border border-sky-500/20 bg-slate-950/20 p-6 backdrop-blur-xl">
-            <p className="mb-4 font-mono text-[9px] uppercase tracking-[0.2em] text-sky-500/70">
-              Executive Summary
-            </p>
-
-            <ul className="space-y-4 font-mono text-[11px] leading-relaxed text-slate-300">
-              <li className="flex gap-2">
-                <span className="text-sky-500">◈</span>
-                <span><strong className="text-sky-400">STATUS:</strong> Thwarted Pre-Exfil</span>
-              </li>
-              <li className="flex gap-2">
-                <span className="text-sky-500">◈</span>
-                <span><strong className="text-sky-400">VECTOR:</strong> Brute Force Pivot</span>
-              </li>
-              <li className="flex gap-2">
-                <span className="text-sky-500">◈</span>
-                <span><strong className="text-sky-400">IMPACT:</strong> 0 Bytes Compromised</span>
-              </li>
-            </ul>
-
-            <div className="mt-8 border-t border-sky-500/10 pt-6">
-              <p className="font-mono text-[9px] uppercase text-slate-500 mb-1">Response Tier</p>
-              <p className="font-mono text-sm font-bold text-sky-300">L3 FORENSIC OPS</p>
+            <div className="text-right">
+              <p className="font-mono text-[8px] uppercase text-sky-500/40">Classification</p>
+              <p className="font-mono text-[10px] font-bold text-red-400">CLASS-4 // CRITICAL</p>
             </div>
           </div>
 
-          <div className="opacity-40 italic">
-            <p className="font-mono text-[9px] text-slate-400">
-              Boardroom Presentation Mode // Authorized Personnel Only
+          <div className="relative group">
+            {/* HUD Corner Brackets */}
+            <div className="absolute -top-1 -left-1 w-3 h-3 border-t border-l border-sky-400/50" />
+            <div className="absolute -top-1 -right-1 w-3 h-3 border-t border-r border-sky-400/50" />
+            <div className="absolute -bottom-1 -left-1 w-3 h-3 border-b border-l border-sky-400/50" />
+            <div className="absolute -bottom-1 -right-1 w-3 h-3 border-b border-r border-sky-400/50" />
+
+            <div className="rounded-sm border border-sky-500/10 bg-slate-950/40 p-6 backdrop-blur-2xl relative overflow-hidden">
+              {/* Scanline Effect */}
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent via-sky-500/[0.03] to-transparent h-1/2 w-full animate-scanline" />
+              
+              <div className="flex justify-between items-center mb-6">
+                <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-sky-500/70">
+                  Analysis Summary
+                </p>
+                <div className="flex gap-1">
+                  {[1, 2, 3].map(i => (
+                    <div key={i} className="w-1 h-3 bg-sky-500/20 rounded-full overflow-hidden">
+                      <div className="w-full h-full bg-sky-400 animate-pulse" style={{ animationDelay: `${i * 0.2}s` }} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-5">
+                {[
+                  { label: "STATUS", value: "DEFEATED", sub: "Pre-Exfiltration phase reached", color: "text-sky-400" },
+                  { label: "VECTOR", value: "LATERAL PIVOT", sub: "Brute force against internal API", color: "text-amber-400" },
+                  { label: "IMPACT", value: "ZERO BYTES", sub: "Encryption routines neutralized", color: "text-emerald-400" }
+                ].map((item, idx) => (
+                  <div key={idx} className="hud-data-item group/item">
+                    <div className="flex justify-between items-baseline mb-1">
+                      <span className="font-mono text-[9px] text-slate-500 tracking-widest">{item.label}</span>
+                      <span className={`font-mono text-xs font-bold ${item.color}`}>{item.value}</span>
+                    </div>
+                    <div className="h-0.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                      <div className="h-full bg-current opacity-30 w-full" />
+                    </div>
+                    <p className="font-mono text-[8px] text-slate-500 mt-1 uppercase tracking-wider">{item.sub}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8 grid grid-cols-2 gap-4 border-t border-sky-500/10 pt-6">
+                <div>
+                  <p className="font-mono text-[8px] uppercase text-slate-500 mb-1">Response Tier</p>
+                  <p className="font-mono text-xs font-bold text-sky-300">L3 FORENSIC OPS</p>
+                </div>
+                <div>
+                  <p className="font-mono text-[8px] uppercase text-slate-500 mb-1">Incident Hash</p>
+                  <p className="font-mono text-[10px] text-slate-400">0x8F2...EE1B</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="opacity-40 italic flex items-center gap-3">
+            <div className="h-px flex-1 bg-slate-800" />
+            <p className="font-mono text-[9px] text-slate-400 whitespace-nowrap">
+              SECURE LOG // BOARDROOM MODE
             </p>
+            <div className="h-px flex-1 bg-slate-800" />
           </div>
         </div>
+
+        <style jsx>{`
+          .video-crisp {
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+          }
+          @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(200%); }
+          }
+          .animate-scanline {
+            animation: scanline 4s linear infinite;
+          }
+        `}</style>
 
       </div>
     </div>
