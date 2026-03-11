@@ -11,6 +11,7 @@ import { MonitorPortal } from "./MonitorPortal";
 import { NarrativeOverlay } from "./NarrativeOverlay";
 import { PostMortem } from "./PostMortem";
 import { SOCMobileExperience } from "./SOCMobileExperience";
+import { TacticalBriefing } from "./TacticalBriefing";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import Lenis from "lenis";
 
@@ -62,6 +63,11 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
   const l3MonitorRef = useRef<HTMLDivElement | null>(null);
   const backgroundRef = useRef<HTMLDivElement | null>(null);
   const zoomWrapperRef = useRef<HTMLDivElement | null>(null);
+  const briefingL1Ref = useRef<HTMLDivElement | null>(null);
+  const briefingL2Ref = useRef<HTMLDivElement | null>(null);
+  const briefingL3Ref = useRef<HTMLDivElement | null>(null);
+  const briefingPostMortemRef = useRef<HTMLDivElement | null>(null);
+
 
   const [progress, setProgress] = useState(0);
   const [stageScaleFactor, setStageScaleFactor] = useState(1);
@@ -137,6 +143,11 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
       // ── L1 Portal ─────────────────────────────────────────────────────────
       tl.to(zoomWrapperRef.current, { scale: ZOOM_SCALE, x: () => getCameraOffset(l1DeskRef).x, y: () => getCameraOffset(l1DeskRef).y, duration: 0.05, ease: "power4.out" }, 0.12);
       tl.to(workstations, { autoAlpha: 0, duration: 0.05, ease: "power4.out" }, 0.12);
+
+      // L1 Briefing Animation
+      tl.fromTo(briefingL1Ref.current, { autoAlpha: 0, scale: 0.9 }, { autoAlpha: 1, scale: 1.0, duration: 0.02, ease: "power2.out" }, 0.11);
+      tl.to(briefingL1Ref.current, { autoAlpha: 0, scale: 1.1, duration: 0.02, ease: "power2.in" }, 0.13);
+
       tl.fromTo(l1MonitorRef.current, { autoAlpha: 0, scale: 0.8, filter: "blur(10px)" }, { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 0.04, ease: "expo.out" }, 0.13);
       tl.to(workstations, { autoAlpha: 1, duration: 0.04, ease: "power2.inOut", immediateRender: false }, 0.30);
       tl.to(l1MonitorRef.current, { autoAlpha: 0, scale: 0.8, filter: "blur(10px)", duration: 0.05 }, 0.30);
@@ -145,6 +156,11 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
       // ── L2 Portal ─────────────────────────────────────────────────────────
       tl.to(zoomWrapperRef.current, { scale: ZOOM_SCALE, x: () => getCameraOffset(l2DeskRef).x, y: () => getCameraOffset(l2DeskRef).y, duration: 0.05, ease: "power4.out" }, 0.38);
       tl.to(workstations, { autoAlpha: 0, duration: 0.05, ease: "power4.out" }, 0.38);
+
+      // L2 Briefing Animation
+      tl.fromTo(briefingL2Ref.current, { autoAlpha: 0, scale: 0.9 }, { autoAlpha: 1, scale: 1.0, duration: 0.015, ease: "power2.out" }, 0.37);
+      tl.to(briefingL2Ref.current, { autoAlpha: 0, scale: 1.1, duration: 0.015, ease: "power2.in" }, 0.385);
+
       tl.fromTo(l2MonitorRef.current, { autoAlpha: 0, scale: 0.8, filter: "blur(10px)" }, { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 0.04, ease: "expo.out" }, 0.39);
       tl.to(workstations, { autoAlpha: 1, duration: 0.04, ease: "power2.inOut", immediateRender: false }, 0.52);
       tl.to(l2MonitorRef.current, { autoAlpha: 0, scale: 0.8, filter: "blur(10px)", duration: 0.05 }, 0.52);
@@ -153,10 +169,19 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
       // ── L3 Portal ─────────────────────────────────────────────────────────
       tl.to(zoomWrapperRef.current, { scale: ZOOM_SCALE, x: () => getCameraOffset(l3DeskRef).x, y: () => getCameraOffset(l3DeskRef).y, duration: 0.05, ease: "power4.out" }, 0.58);
       tl.to(workstations, { autoAlpha: 0, duration: 0.05, ease: "power4.out" }, 0.58);
+
+      // L3 Briefing Animation
+      tl.fromTo(briefingL3Ref.current, { autoAlpha: 0, scale: 0.9 }, { autoAlpha: 1, scale: 1.0, duration: 0.015, ease: "power2.out" }, 0.57);
+      tl.to(briefingL3Ref.current, { autoAlpha: 0, scale: 1.1, duration: 0.015, ease: "power2.in" }, 0.585);
+
       tl.fromTo(l3MonitorRef.current, { autoAlpha: 0, scale: 0.8, filter: "blur(10px)" }, { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 0.04, ease: "expo.out" }, 0.59);
       tl.to(workstations, { autoAlpha: 1, duration: 0.04, ease: "power2.inOut", immediateRender: false }, 0.72);
       tl.to(l3MonitorRef.current, { autoAlpha: 0, scale: 0.8, filter: "blur(10px)", duration: 0.05 }, 0.72);
       tl.to(zoomWrapperRef.current, { scale: 1, x: 0, y: 0, duration: 0.05, ease: "power2.in" }, 0.72);
+
+      // ── Post-Mortem Transition Card ───────────────────────────────────────
+      tl.fromTo(briefingPostMortemRef.current, { autoAlpha: 0, scale: 0.9 }, { autoAlpha: 1, scale: 1.0, duration: 0.015, ease: "power2.out" }, 0.81);
+      tl.to(briefingPostMortemRef.current, { autoAlpha: 0, scale: 1.1, duration: 0.015, ease: "power2.in" }, 0.835);
 
       tl.to(zoomWrapperRef.current, { scale: 1, x: 0, y: 0, duration: 0.1, ease: "none" }, 0.75);
 
@@ -195,7 +220,7 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
   const roadmapOpacity = progress > 0.90 ? Math.min(1, (progress - 0.90) / 0.10) : 0;
   const postMortemOpacity = progress < 0.85 ? 0
     : progress < 0.88 ? (progress - 0.85) / 0.03
-      : progress > 0.91 ? Math.max(0, 1 - (progress - 0.91) / 0.02)
+      : progress > 0.89 ? Math.max(0, 1 - (progress - 0.89) / 0.03) // End at 0.92
         : 1;
 
   return (
@@ -301,6 +326,25 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
               <MonitorPortal type="L1" ref={l1MonitorRef} progress={progress} />
               <MonitorPortal type="L2" ref={l2MonitorRef} progress={progress} />
               <MonitorPortal type="L3" ref={l3MonitorRef} progress={progress} />
+
+              {/* ── Tactical Briefing Overlays ─────────────────────────────────── */}
+              <TacticalBriefing
+                ref={briefingL1Ref}
+                text="ALERT: Unusual activity detected in the network."
+              />
+              <TacticalBriefing
+                ref={briefingL2Ref}
+                text="HUNTING: Finding the source of the threat."
+              />
+              <TacticalBriefing
+                ref={briefingL3Ref}
+                text="FORENSICS: Investigating the hidden malware."
+              />
+              <TacticalBriefing
+                ref={briefingPostMortemRef}
+                text="POST-INCIDENT: DISTILLING LESSONS LEARNED."
+              />
+
 
               {/* ── Intel ticker ─────────────────────────────────────────────────── */}
               <IntelTicker />

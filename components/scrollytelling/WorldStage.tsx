@@ -44,19 +44,19 @@ const WorldStageComponent: React.FC<WorldStageProps> = ({
       <div className="relative z-[1] mx-auto h-[900px] w-full">
         <div className="flex h-full w-full flex-col items-center justify-center gap-20 px-10 md:flex-row md:justify-center md:gap-[clamp(2rem,8vw,12rem)]">
           <AnalystPOV
-            label="L1 / MONITORING"
+            label="L1 WORKSTATION"
             screens={1}
             isAlerted={p >= 0.15 && p < 0.35}
             stationRef={l1Ref}
           />
           <AnalystPOV
-            label="L2 STATION"
+            label="L2 WORKSTATION"
             screens={3}
             isAlerted={p >= 0.35 && p < 0.55}
             stationRef={l2Ref}
           />
           <AnalystPOV
-            label="L3 STATION"
+            label="L3 WORKSTATION"
             screens={1}
             isAlerted={p >= 0.55 && p < 0.80}
             stationRef={l3Ref}

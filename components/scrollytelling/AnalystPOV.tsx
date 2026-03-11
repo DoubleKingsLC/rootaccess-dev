@@ -26,14 +26,14 @@ export const AnalystPOV: React.FC<AnalystPOVProps> = ({
   return (
     <div
       ref={stationRef as React.LegacyRef<HTMLDivElement>}
-      className="overflow-hidden rounded-xl border border-white/10 bg-slate-950/40 backdrop-blur-xl"
+      className="relative rounded-xl border border-white/10 bg-slate-950/40 backdrop-blur-xl"
       style={{
         width: STATION_WIDTH,
         height: STATION_HEIGHT
       }}
     >
       <span
-        className="pointer-events-none absolute -top-5 left-0 right-0 text-center font-mono text-[10px] font-medium uppercase tracking-widest text-slate-400"
+        className="pointer-events-none absolute -top-14 left-0 right-0 text-center font-mono text-sm font-bold uppercase tracking-[0.4em] text-sky-400/70 holographic-label"
         aria-hidden
       >
         {label}
@@ -104,6 +104,11 @@ export const AnalystPOV: React.FC<AnalystPOVProps> = ({
           ))
         )}
       </svg>
+      <style jsx>{`
+        .holographic-label {
+          filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.5));
+        }
+      `}</style>
     </div>
   );
 };
