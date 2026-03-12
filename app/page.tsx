@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -10,7 +11,7 @@ const DOMAINS = [
     { id: "soc", label: "SOC", sub: "Security Operations", desc: "Blue Team · Detect & Respond", color: "#22d3ee", branch: "rgba(34,211,238,0.55)", href: "/roadmaps/soc", live: true },
     { id: "appsec", label: "DevSecOps", sub: "Application Security", desc: "Modern Secure Dev Lifecycle", color: "#a78bfa", branch: "rgba(167,139,250,0.5)", href: null, live: false },
     { id: "web", label: "Web Hacking", sub: "App Exploitation", desc: "Offense · Adversary Simulation", color: "#f43f5e", branch: "rgba(244,63,94,0.5)", href: null, live: false },
-    { id: "network", label: "Network Pentesting", sub: "Infrastructure Security", desc: "Offense · Adversary Simulation", color: "#dc2626", branch: "rgba(220,38,38,0.5)", href: null, live: false },
+    { id: "network", label: "Network Pentesting", sub: "Infrastructure Security", desc: "Offense · Adversary Simulation", color: "#dc2626", branch: "rgba(220,38,38,0.5)", href: "/roadmaps/network-pentesting", live: true },
     { id: "ai", label: "AI Hacking", sub: "Offensive AI", desc: "Offense · Adversary Simulation", color: "#ef4444", branch: "rgba(239,68,68,0.5)", href: "/roadmaps/ai-hacking", live: true },
     { id: "cloud", label: "Cloud Sec", sub: "Cloud Security", desc: "Infra · Identity · Posture", color: "#34d399", branch: "rgba(52,211,153,0.5)", href: null, live: false },
     { id: "grc", label: "GRC", sub: "Governance & Compliance", desc: "Risk · Audit · Frameworks", color: "#fbbf24", branch: "rgba(251,191,36,0.5)", href: null, live: false },
@@ -405,6 +406,41 @@ export default function HomePage() {
 
     return (
         <div ref={containerRef} style={{ height: "280vh" }}>
+            {/* Fixed top-right nav */}
+            <Link
+                href="/about"
+                style={{
+                    position: "fixed", top: 20, right: 24, zIndex: 100,
+                    display: "inline-flex", alignItems: "center", gap: 8,
+                    fontFamily: "var(--font-mono, monospace)",
+                    fontSize: 10, letterSpacing: "0.28em", textTransform: "uppercase",
+                    color: "rgba(34,211,238,0.72)",
+                    background: "rgba(2,6,23,0.75)",
+                    border: "1px solid rgba(34,211,238,0.28)",
+                    borderRadius: 8, padding: "10px 18px",
+                    textDecoration: "none", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
+                    transition: "all 0.2s ease",
+                    boxShadow: "0 0 20px rgba(34,211,238,0.06)",
+                }}
+                onMouseEnter={e => {
+                    (e.currentTarget as HTMLElement).style.color = "#22d3ee";
+                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(34,211,238,0.55)";
+                    (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.10)";
+                    (e.currentTarget as HTMLElement).style.boxShadow = "0 0 24px rgba(34,211,238,0.14)";
+                }}
+                onMouseLeave={e => {
+                    (e.currentTarget as HTMLElement).style.color = "rgba(34,211,238,0.72)";
+                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(34,211,238,0.28)";
+                    (e.currentTarget as HTMLElement).style.background = "rgba(2,6,23,0.75)";
+                    (e.currentTarget as HTMLElement).style.boxShadow = "0 0 20px rgba(34,211,238,0.06)";
+                }}
+            >
+                About
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+                    <path d="M1 4.5h7M5 1.5l3 3-3 3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+            </Link>
+
             <div
                 style={{ position: "sticky", top: 0, height: "100vh", overflow: "hidden" }}
                 className="world-grid"
