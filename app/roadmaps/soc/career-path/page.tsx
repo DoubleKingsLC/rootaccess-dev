@@ -167,10 +167,12 @@ const ACTIONS = [
     border: "rgba(34,211,238,0.25)",
     glow: "rgba(34,211,238,0.08)",
     items: [
-      "TryHackMe SOC Level 1 path — free to start",
-      "LetsDefend.io — real SOC scenario alerts",
-      "CyberDefenders — blue team challenge labs",
-    ],
+      { label: "TryHackMe SOC Level 1 path", link: "https://tryhackme.com/path/outline/soclevel1" },
+      { label: "LetsDefend.io - SOC environment", link: "https://letsdefend.io/" },
+      { label: "CyberDefenders - blue team labs", link: "https://cyberdefenders.org/blue-team-labs/" },
+      { label: "HTB Sherlocks - SOC/DFIR", link: "https://app.hackthebox.com/sherlocks" },
+      { label: "BTLO - Blue Team Labs Online", link: "https://blueteamlabs.online/" },
+    ] as any,
   },
   {
     icon: "📁",
@@ -182,18 +184,6 @@ const ACTIONS = [
       "Write lab walkthrough reports in PDF format",
       "Document your homelab with screenshots",
       "GitHub: scripts, tools, and detection rules",
-    ],
-  },
-  {
-    icon: "💼",
-    title: "Find Entry-Level Roles",
-    color: "#34d399",
-    border: "rgba(52,211,153,0.25)",
-    glow: "rgba(52,211,153,0.08)",
-    items: [
-      "CyberSecJobs.com and ClearanceJobs.com",
-      "LinkedIn: search 'SOC Analyst' + set alerts",
-      "NCSC Cyber First — UK government pathways",
     ],
   },
 ] as const;
@@ -1042,7 +1032,7 @@ export default function SocCareerPathPage() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
                 {ACTIONS.map((action) => (
                   <div
                     key={action.title}
@@ -1062,17 +1052,37 @@ export default function SocCareerPathPage() {
                       </p>
                     </div>
                     <ul className="space-y-3">
-                      {action.items.map((item) => (
-                        <li key={item} className="flex items-start gap-2.5">
-                          <span
-                            className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
-                            style={{ background: action.color }}
-                          />
-                          <span className="font-sans text-sm leading-relaxed text-slate-300">
-                            {item}
-                          </span>
-                        </li>
-                      ))}
+                      {action.items.map((item: any, idx: number) => {
+                        const isObj = typeof item === "object";
+                        const label = isObj ? item.label : item;
+                        const link = isObj ? item.link : null;
+
+                        return (
+                          <li key={idx} className="flex items-start gap-2.5">
+                            <span
+                              className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                              style={{ background: action.color }}
+                            />
+                            {link ? (
+                              <a
+                                href={link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="font-sans text-sm leading-relaxed text-slate-300 hover:text-white transition-colors flex items-center gap-1.5 group/link"
+                              >
+                                <span>{label}</span>
+                                <svg className="w-3.5 h-3.5 opacity-0 group-hover/link:opacity-60 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
+                                </svg>
+                              </a>
+                            ) : (
+                              <span className="font-sans text-sm leading-relaxed text-slate-300">
+                                {label}
+                              </span>
+                            )}
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
                 ))}
