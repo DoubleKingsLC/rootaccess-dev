@@ -218,8 +218,8 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
 
   // ── Derived opacity values ─────────────────────────────────────────────────
   const roadmapOpacity = progress > 0.90 ? Math.min(1, (progress - 0.90) / 0.10) : 0;
-  const postMortemOpacity = progress < 0.85 ? 0
-    : progress < 0.88 ? (progress - 0.85) / 0.03
+  const postMortemOpacity = progress < 0.84 ? 0
+    : progress < 0.87 ? (progress - 0.84) / 0.03
       : progress > 0.89 ? Math.max(0, 1 - (progress - 0.89) / 0.03) // End at 0.92
         : 1;
 
