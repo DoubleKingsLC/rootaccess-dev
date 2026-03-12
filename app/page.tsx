@@ -291,7 +291,10 @@ export default function HomePage() {
     const [rPos, setRPos] = useState<Pt | null>(null);
 
     useEffect(() => {
-        setLayout(computeLayout(window.innerWidth, window.innerHeight));
+        const update = () => setLayout(computeLayout(window.innerWidth, window.innerHeight));
+        update();
+        window.addEventListener('resize', update);
+        return () => window.removeEventListener('resize', update);
     }, []);
 
     useEffect(() => {

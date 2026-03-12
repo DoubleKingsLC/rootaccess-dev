@@ -9,7 +9,7 @@ const FOUNDERS = [
         name: "Aaron Joseph Jean",
         role: "Co-Founder",
         location: "Galway, Ireland",
-        color: "#22d3ee",
+        color: "#1db6ce",
         story:
             "Aaron is a cybersecurity professional with hands-on SOC operations experience — including managing security monitoring for a large-scale Government of India deployment. A Cyberdefenders Global Top 50-ranked analyst currently pursuing an MSc in Adaptive Cybersecurity at the University of Galway, he holds AWS Solutions Architect, CompTIA Security+, and Practical SOC Analyst certifications. He built RootAccess.tech to give beginners the navigable, narrative-driven entry into cybersecurity that he had to piece together himself.",
         skills: [
@@ -387,7 +387,7 @@ export default function AboutPage() {
                         lineHeight: 1.1, marginBottom: 20,
                         whiteSpace: "nowrap",
                     }}>
-                        The people building this.
+                        The story behind RootAccess.tech
                     </h1>
                     <p style={{
                         fontFamily: "var(--font-sans, sans-serif)",
@@ -395,7 +395,7 @@ export default function AboutPage() {
                         color: "rgba(100,116,139,0.72)",
                         maxWidth: 560, margin: "0 auto",
                     }}>
-                        RootAccess.tech was built on a simple conviction: cybersecurity should be navigable for anyone willing to put in the work. We&apos;re two practitioners who got tired of the noise and decided to build the resource we wish had existed when we started.
+                        We are two security engineers who have learnt together — actively pursuing cybersecurity for just over a year. Being learners ourselves, navigating the security space, we wished for a cheatsheet or a roadmap to guide us through the industry. So we decided to use our knowledge, experience, and research to build one for people just starting in cybersecurity, or those who wish to advance their skills and land the role they aim for. A community is essential, and the right guidance can go a long way.
                     </p>
                 </div>
 
