@@ -89,14 +89,14 @@ const LEVELS = [
       "SOAR automation and playbook development",
     ],
     certs: [
-      "CCDL2 — HTB Certified Cybersecurity Defense Level 2",
-      "HTB CDSA — Certified Defensive Security Analyst",
-    ],
+      { label: "CCDL2 — Threat Hunting & DFIR Certification", link: "https://cyberdefenders.org/certifications/certified-cyberdefender-level2/", provider: "cyberdefenders" },
+      { label: "HTB CDSA — Certified Defensive Security Analyst", link: "https://academy.hackthebox.com/preview/certifications/htb-certified-defensive-security-analyst", provider: "htb" },
+    ] as any,
     labs: [
-      "CyberDefenders · Blue Team challenge labs",
-      "DFIR.training · forensic scenario exercises",
-      "Malware-traffic-analysis.net pcap analysis",
-    ],
+      { label: "Cyberdefenders CyberRange - Detection Engineering, Threat Hunting", link: "https://cyberdefenders.org/blue-team-labs/", provider: "cyberdefenders" },
+      { label: "HTB Sherlocks - SOC/DFIR", link: "https://app.hackthebox.com/sherlocks", provider: "htb" },
+      { label: "Detection Engineering with Wazuh (John Hammond)", link: "https://youtu.be/nSOqU1iX5oQ", provider: "youtube" },
+    ] as any,
   },
   {
     num: "03",
@@ -117,15 +117,15 @@ const LEVELS = [
       "APT tracking and threat intelligence production",
     ],
     certs: [
-      "BTL2 — Blue Team Level 2",
-      "GCFA — GIAC Certified Forensic Analyst",
-      "GCIH — GIAC Certified Incident Handler",
-    ],
+      { label: "BTL2 — Blue Team Level 2", link: "https://www.securityblue.team/certifications/blue-team-level-2", provider: "blueteam" },
+      { label: "GCFA — GIAC Certified Forensic Analyst", link: "https://www.giac.org/certifications/certified-forensic-analyst-gcfa/", provider: "giac" },
+      { label: "OSCP+", link: "https://www.offsec.com/courses/pen-200/", provider: "offsec" },
+    ] as any,
     labs: [
-      "Proxmox + Wazuh — build your own SOC homelab",
-      "REMnux malware analysis environments",
-      "SANS FOR508 courseware — advanced DFIR",
-    ],
+      { label: "Cyberdefenders CyberRange - Endpoint Forensics, Threat Hunting", link: "https://cyberdefenders.org/blue-team-labs/", provider: "cyberdefenders" },
+      { label: "HTB Sherlocks - SOC/DFIR", link: "https://app.hackthebox.com/sherlocks", provider: "htb" },
+      { label: "Antisyphon - SOC Core Skills", link: "https://www.antisyphontraining.com/product/soc-core-skills-with-john-strand/", provider: "antisyphon" },
+    ] as any,
   },
   {
     num: "04",
@@ -146,15 +146,15 @@ const LEVELS = [
       "Executive stakeholder communication",
     ],
     certs: [
-      "CISSP — Certified Information Systems Security Professional",
-      "CSOM — Certified SOC Manager",
-      "CISM — Certified Information Security Manager",
-    ],
+      { label: "CISSP — Certified Information Systems Security Professional", link: "https://www.isc2.org/certifications/cissp", provider: "isc2" },
+      { label: "CSOM — Certified SOC Manager", link: "https://www.securityblue.team/certifications/certified-security-operations-manager", provider: "blueteam" },
+      { label: "CISM — Certified Information Security Manager", link: "https://www.isaca.org/credentialing/cism", provider: "isaca" },
+    ] as any,
     labs: [
-      "Lead tabletop incident response exercises",
-      "Build detection engineering pipelines",
-      "Design and run purple team engagements",
-    ],
+      { label: "Antisyphon - SOC Core Skills", link: "https://www.antisyphontraining.com/product/soc-core-skills-with-john-strand/", provider: "antisyphon" },
+      { label: "MITRE ATT&CK for SOC Managers", link: "https://attack.mitre.org/resources/training/cti/", provider: "mitre" },
+      { label: "NIST CSWP 29 (SOC Model)", link: "https://csrc.nist.gov/pubs/cswp/29/final", provider: "nist" },
+    ] as any,
   },
 ] as const;
 
@@ -540,7 +540,7 @@ export default function SocCareerPathPage() {
               {[
                 { title: "SKILLS", items: level.skills, icon: "⚡" },
                 { title: "CERTS", items: level.certs, icon: "🎯" },
-                { title: "RESOURCES & LABS", items: level.labs, icon: "🧪" },
+                { title: "RESOURCES", items: level.labs, icon: "🧪" },
                 { title: "TOOLS", items: level.tools, icon: "🔧" },
               ].map((cat: any) => (
                 <div
@@ -927,7 +927,7 @@ export default function SocCareerPathPage() {
                       [
                         { title: "Core Skills", icon: "⚡", items: level.skills },
                         { title: "Certifications", icon: "🎯", items: level.certs },
-                        { title: "Resources and Labs", icon: "🧪", items: level.labs },
+                        { title: "Resources", icon: "🧪", items: level.labs },
                       ] as const
                     ).map((cat, j) => (
                       <div
