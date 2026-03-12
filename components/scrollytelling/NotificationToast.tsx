@@ -23,7 +23,7 @@ export const NotificationToast: React.FC<NotificationToastProps> = ({
 
   useEffect(() => {
     const el = toastRef.current;
-    if (!el) return;
+    if (!el || typeof window === "undefined") return;
 
     const inTween = gsap.fromTo(
       el,

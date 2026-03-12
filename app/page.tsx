@@ -11,8 +11,8 @@ const DOMAINS = [
     { id: "soc", label: "SOC", sub: "Security Operations", desc: "Blue Team · Detect & Respond", color: "#22d3ee", branch: "rgba(34,211,238,0.55)", href: "/roadmaps/soc", live: true },
     { id: "appsec", label: "DevSecOps", sub: "Application Security", desc: "Modern Secure Dev Lifecycle", color: "#a78bfa", branch: "rgba(167,139,250,0.5)", href: null, live: false },
     { id: "web", label: "Web Hacking", sub: "App Exploitation", desc: "Offense · Adversary Simulation", color: "#f43f5e", branch: "rgba(244,63,94,0.5)", href: null, live: false },
-    { id: "network", label: "Network Pentesting", sub: "Infrastructure Security", desc: "Offense · Adversary Simulation", color: "#dc2626", branch: "rgba(220,38,38,0.5)", href: "/roadmaps/network-pentesting", live: true },
-    { id: "ai", label: "AI Hacking", sub: "Offensive AI", desc: "Offense · Adversary Simulation", color: "#ef4444", branch: "rgba(239,68,68,0.5)", href: "/roadmaps/ai-hacking", live: true },
+    { id: "network", label: "Network Pentesting", sub: "Infrastructure Security", desc: "Offense · Adversary Simulation", color: "#dc2626", branch: "rgba(220,38,38,0.5)", href: "/roadmaps/network-pentesting", live: false },
+    { id: "ai", label: "AI Hacking", sub: "Offensive AI", desc: "Offense · Adversary Simulation", color: "#ef4444", branch: "rgba(239,68,68,0.5)", href: "/roadmaps/ai-hacking", live: false },
     { id: "cloud", label: "Cloud Sec", sub: "Cloud Security", desc: "Infra · Identity · Posture", color: "#34d399", branch: "rgba(52,211,153,0.5)", href: null, live: false },
     { id: "grc", label: "GRC", sub: "Governance & Compliance", desc: "Risk · Audit · Frameworks", color: "#fbbf24", branch: "rgba(251,191,36,0.5)", href: null, live: false },
 ] as const;
@@ -132,18 +132,26 @@ function BannerCard({
             onMouseLeave={() => setHovered(false)}
             style={{
                 width: "100%", height: "100%",
-                background: "linear-gradient(155deg, rgba(6,10,24,0.98) 0%, rgba(3,6,16,0.99) 100%)",
-                border: `1px solid ${d.color}${hovered && d.live ? "28" : "12"}`,
-                borderLeft: `2.5px solid ${d.color}${hovered && d.live ? "dd" : "65"}`,
-                borderTop: `1px solid ${d.color}${hovered && d.live ? "22" : "0a"}`,
+                background: d.live
+                    ? "linear-gradient(155deg, rgba(6,10,24,0.98) 0%, rgba(3,6,16,0.99) 100%)"
+                    : "linear-gradient(160deg, rgba(15,23,42,0.98) 0%, rgba(15,23,42,0.96) 45%, rgba(15,23,42,0.99) 100%)",
+                border: `1px solid ${d.live ? `${d.color}${hovered ? "28" : "18"}` : "rgba(51,65,85,0.7)"}`,
+                borderLeft: d.live
+                    ? `2.5px solid ${d.color}${hovered ? "dd" : "65"}`
+                    : "2px solid rgba(51,65,85,0.9)",
+                borderTop: d.live
+                    ? `1px solid ${d.color}${hovered ? "22" : "0a"}`
+                    : "1px solid rgba(30,41,59,0.9)",
                 borderRadius: 10,
                 padding: "20px 18px 16px",
                 display: "flex", flexDirection: "column",
                 position: "relative", overflow: "hidden",
                 cursor: d.live ? "pointer" : "default",
-                boxShadow: hovered && d.live
-                    ? `0 0 0 1px ${d.color}15, inset 0 0 40px ${d.color}07, 0 28px 72px rgba(0,0,0,0.88), 0 0 60px ${d.color}0d`
-                    : `inset 0 0 24px ${d.color}04, 0 16px 48px rgba(0,0,0,0.65)`,
+                boxShadow: d.live
+                    ? (hovered
+                        ? `0 0 0 1px ${d.color}15, inset 0 0 40px ${d.color}07, 0 28px 72px rgba(0,0,0,0.88), 0 0 60px ${d.color}0d`
+                        : `inset 0 0 24px ${d.color}04, 0 16px 48px rgba(0,0,0,0.65)`)
+                    : "inset 0 0 20px rgba(15,23,42,0.9), 0 14px 32px rgba(0,0,0,0.75)",
                 transition: "all 0.24s ease",
                 transform: hovered && d.live ? "translateY(-5px)" : "none",
             }}
@@ -160,7 +168,9 @@ function BannerCard({
             {/* Ambient glow */}
             <div style={{
                 position: "absolute", top: -28, right: -28, width: 140, height: 140,
-                background: `radial-gradient(circle, ${d.color}0e 0%, transparent 65%)`,
+                background: d.live
+                    ? `radial-gradient(circle, ${d.color}0e 0%, transparent 65%)`
+                    : "radial-gradient(circle, rgba(148,163,184,0.12) 0%, transparent 65%)",
                 pointerEvents: "none",
             }} />
 
@@ -176,14 +186,16 @@ function BannerCard({
                 <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                     <div style={{
                         width: 6, height: 6, borderRadius: "50%",
-                        background: d.live ? d.color : "rgba(71,85,105,0.35)",
-                        boxShadow: d.live ? `0 0 9px ${d.color}aa` : "none",
+                        background: d.live ? d.color : "rgba(71,85,105,0.5)",
+                        boxShadow: d.live ? `0 0 9px ${d.color}aa` : "0 0 0 rgba(0,0,0,0)",
                         animation: d.live ? "alert-pulse 2s ease-in-out infinite" : "none",
                     }} />
                     <span style={{
                         fontFamily: "var(--font-mono, monospace)", fontSize: 7.5,
-                        letterSpacing: "0.25em", color: d.live ? d.color : "rgba(71,85,105,0.40)", fontWeight: 600,
-                    }}>{d.live ? "LIVE" : "SOON"}</span>
+                        letterSpacing: "0.25em",
+                        color: d.live ? d.color : "rgba(148,163,184,0.85)",
+                        fontWeight: 600,
+                    }}>{d.live ? "LIVE" : "COMING SOON"}</span>
                 </div>
                 <span style={{
                     fontFamily: "var(--font-mono, monospace)", fontSize: 7,
@@ -196,13 +208,15 @@ function BannerCard({
             {/* Title */}
             <div style={{
                 fontFamily: "var(--font-heading, sans-serif)", fontSize: 30, fontWeight: 700,
-                color: "rgba(248,250,252,0.97)", letterSpacing: -1, lineHeight: 1.02, marginBottom: 6,
+                color: d.live ? "rgba(248,250,252,0.97)" : "rgba(148,163,184,0.9)",
+                letterSpacing: -1, lineHeight: 1.02, marginBottom: 6,
             }}>{d.label}</div>
 
             {/* Subtitle */}
             <div style={{
                 fontFamily: "var(--font-sans, sans-serif)", fontSize: 11,
-                color: "rgba(148,163,184,0.44)", marginBottom: 14,
+                color: d.live ? "rgba(148,163,184,0.44)" : "rgba(148,163,184,0.65)",
+                marginBottom: 14,
             }}>{d.sub}</div>
 
             {/* Divider with left accent */}
@@ -215,7 +229,8 @@ function BannerCard({
             {/* Desc */}
             <div style={{
                 fontFamily: "var(--font-mono, monospace)", fontSize: 9.5,
-                color: `${d.color}60`, letterSpacing: "0.04em", lineHeight: 1.8, flexGrow: 1,
+                color: d.live ? `${d.color}60` : "rgba(148,163,184,0.7)",
+                letterSpacing: "0.04em", lineHeight: 1.8, flexGrow: 1,
             }}>{d.desc}</div>
 
             {/* CTA */}
@@ -241,6 +256,43 @@ function BannerCard({
                             strokeLinecap="round" strokeLinejoin="round"
                             style={{ transition: "stroke 0.22s ease" }} />
                     </svg>
+                </div>
+            )}
+
+            {/* Disabled overlay for coming-soon domains */}
+            {!d.live && (
+                <div
+                    style={{
+                        position: "absolute",
+                        inset: 0,
+                        borderRadius: 10,
+                        pointerEvents: "none",
+                        overflow: "hidden",
+                    }}
+                >
+                    <div
+                        style={{
+                            position: "absolute",
+                            top: "50%",
+                            left: "-22%",
+                            width: "144%",
+                            height: 22,
+                            transform: "rotate(-24deg)",
+                            transformOrigin: "center",
+                            background: "linear-gradient(90deg, rgba(148,163,184,0.04), rgba(148,163,184,0.5), rgba(148,163,184,0.04))",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontFamily: "var(--font-mono, monospace)",
+                            fontSize: 8,
+                            letterSpacing: "0.28em",
+                            textTransform: "uppercase",
+                            color: "rgba(15,23,42,0.95)",
+                            textShadow: "0 0 12px rgba(15,23,42,0.9)",
+                        }}
+                    >
+                        Coming Soon
+                    </div>
                 </div>
             )}
         </div>
@@ -291,6 +343,10 @@ export default function HomePage() {
     const [rPos, setRPos] = useState<Pt | null>(null);
 
     useEffect(() => {
+        if (typeof window === "undefined") {
+            return;
+        }
+
         const update = () => setLayout(computeLayout(window.innerWidth, window.innerHeight));
         update();
         window.addEventListener('resize', update);
@@ -479,7 +535,9 @@ export default function HomePage() {
 
                     <div ref={scrollIndRef} className="flex flex-col items-center gap-3" style={{ marginTop: "2.4rem" }}>
                         <span className="font-mono uppercase" style={{
-                            fontSize: 8, letterSpacing: "0.46em", color: "rgba(71,85,105,0.5)",
+                            fontSize: 11,
+                            letterSpacing: "0.40em",
+                            color: "rgba(148,163,184,0.9)",
                         }}>Scroll to explore</span>
                         <div style={{ position: "relative", width: 1, height: 38 }}>
                             <div style={{

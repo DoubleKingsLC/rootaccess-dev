@@ -9,8 +9,45 @@ import { useIsMobile } from "@/hooks/useIsMobile";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// ── Types ─────────────────────────────────────────────────────────────────────
+interface ResourceItem {
+  label: string;
+  link: string;
+  provider?: string;
+}
+
+interface Level {
+  num: string;
+  label: string;
+  subtitle: string;
+  color: string;
+  glow: string;
+  border: string;
+  quote: string;
+  time: string;
+  salary: string;
+  tools: string[];
+  skills: string[];
+  certs: ResourceItem[];
+  labs: ResourceItem[];
+}
+
+interface ActionItem {
+  label: string;
+  link?: string;
+}
+
+interface Action {
+  icon: string;
+  title: string;
+  color: string;
+  border: string;
+  glow: string;
+  items: Array<ActionItem | string>;
+}
+
 // ── Career level data ─────────────────────────────────────────────────────────
-const LEVELS = [
+const LEVELS: Level[] = [
   {
     num: "00",
     label: "Entry Point",
@@ -33,12 +70,12 @@ const LEVELS = [
       { label: "THM · Security+ Pre-Security (SEC1)", link: "https://tryhackme.com/certification/pre-security", provider: "tryhackme" },
       { label: "Google Cybersecurity Certificate", link: "https://www.coursera.org/professional-certificates/google-cybersecurity", provider: "google" },
       { label: "TCM · Practical Security Fundamentals", link: "https://academy.tcm-sec.com/p/practical-security-fundamentals", provider: "tcm" },
-    ] as any,
+    ],
     labs: [
       { label: "TryHackMe · Pre-Security learning path", link: "https://tryhackme.com/path/outline/presecurity", provider: "tryhackme" },
       { label: "Learn Virtual Machines RIGHT NOW!! (Kali, Ubuntu, Windows)", link: "https://youtu.be/wX75Z-4MEoM", provider: "youtube" },
       { label: "40 Windows Commands you NEED to know", link: "https://youtu.be/Jfvg3CS1X3A", provider: "youtube" },
-    ] as any,
+    ],
   },
   {
     num: "01",
@@ -62,13 +99,13 @@ const LEVELS = [
       { label: "Practical SOC Analyst (PSAA)", link: "https://certifications.tcm-sec.com/psaa/", provider: "tcm" },
       { label: "BTL1 — Blue Team Level 1", link: "https://www.securityblue.team/certifications/blue-team-level-1", provider: "blueteam" },
       { label: "CompTIA Security+", link: "https://www.comptia.org/en/certifications/security/", provider: "comptia" },
-    ] as any,
+    ],
     labs: [
       { label: "Cyberdefenders CyberRange - Network Forensics, Threat Hunting", link: "https://cyberdefenders.org/blue-team-labs/", provider: "cyberdefenders" },
       { label: "HTB Sherlocks - SOC", link: "https://app.hackthebox.com/sherlocks", provider: "htb" },
       { label: "Wazuh - you need this FREE CyberSecurity tool", link: "https://youtu.be/3CaG2GI1kn0", provider: "youtube" },
       { label: "Splunk - Getting started guide", link: "https://youtu.be/-SXddlIZkUs", provider: "youtube" },
-    ] as any,
+    ],
   },
   {
     num: "02",
@@ -91,12 +128,12 @@ const LEVELS = [
     certs: [
       { label: "CCDL2 — Threat Hunting & DFIR Certification", link: "https://cyberdefenders.org/certifications/certified-cyberdefender-level2/", provider: "cyberdefenders" },
       { label: "HTB CDSA — Certified Defensive Security Analyst", link: "https://academy.hackthebox.com/preview/certifications/htb-certified-defensive-security-analyst", provider: "htb" },
-    ] as any,
+    ],
     labs: [
       { label: "Cyberdefenders CyberRange - Detection Engineering, Threat Hunting", link: "https://cyberdefenders.org/blue-team-labs/", provider: "cyberdefenders" },
       { label: "HTB Sherlocks - SOC/DFIR", link: "https://app.hackthebox.com/sherlocks", provider: "htb" },
       { label: "Detection Engineering with Wazuh (John Hammond)", link: "https://youtu.be/nSOqU1iX5oQ", provider: "youtube" },
-    ] as any,
+    ],
   },
   {
     num: "03",
@@ -120,12 +157,12 @@ const LEVELS = [
       { label: "BTL2 — Blue Team Level 2", link: "https://www.securityblue.team/certifications/blue-team-level-2", provider: "blueteam" },
       { label: "GCFA — GIAC Certified Forensic Analyst", link: "https://www.giac.org/certifications/certified-forensic-analyst-gcfa/", provider: "giac" },
       { label: "OSCP+", link: "https://www.offsec.com/courses/pen-200/", provider: "offsec" },
-    ] as any,
+    ],
     labs: [
       { label: "Cyberdefenders CyberRange - Endpoint Forensics, Threat Hunting", link: "https://cyberdefenders.org/blue-team-labs/", provider: "cyberdefenders" },
       { label: "HTB Sherlocks - SOC/DFIR", link: "https://app.hackthebox.com/sherlocks", provider: "htb" },
       { label: "Antisyphon - SOC Core Skills", link: "https://www.antisyphontraining.com/product/soc-core-skills-with-john-strand/", provider: "antisyphon" },
-    ] as any,
+    ],
   },
   {
     num: "04",
@@ -149,17 +186,17 @@ const LEVELS = [
       { label: "CISSP — Certified Information Systems Security Professional", link: "https://www.isc2.org/certifications/cissp", provider: "isc2" },
       { label: "CSOM — Certified SOC Manager", link: "https://www.securityblue.team/certifications/certified-security-operations-manager", provider: "blueteam" },
       { label: "CISM — Certified Information Security Manager", link: "https://www.isaca.org/credentialing/cism", provider: "isaca" },
-    ] as any,
+    ],
     labs: [
       { label: "Antisyphon - SOC Core Skills", link: "https://www.antisyphontraining.com/product/soc-core-skills-with-john-strand/", provider: "antisyphon" },
       { label: "MITRE ATT&CK for SOC Managers", link: "https://attack.mitre.org/resources/training/cti/", provider: "mitre" },
       { label: "NIST CSWP 29 (SOC Model)", link: "https://csrc.nist.gov/pubs/cswp/29/final", provider: "nist" },
-    ] as any,
+    ],
   },
 ] as const;
 
 // ── Next action cards ─────────────────────────────────────────────────────────
-const ACTIONS = [
+const ACTIONS: Action[] = [
   {
     icon: "🧪",
     title: "Start in a Lab Today",
@@ -172,7 +209,7 @@ const ACTIONS = [
       { label: "CyberDefenders - blue team labs", link: "https://cyberdefenders.org/blue-team-labs/" },
       { label: "HTB Sherlocks - SOC/DFIR", link: "https://app.hackthebox.com/sherlocks" },
       { label: "BTLO - Blue Team Labs Online", link: "https://blueteamlabs.online/" },
-    ] as any,
+    ],
   },
   {
     icon: "📁",
@@ -245,10 +282,14 @@ export default function SocCareerPathPage() {
 
   useEffect(() => {
     const handleResize = () => {
+      if (typeof window === "undefined" || typeof document === "undefined") {
+        return;
+      }
+
       const vh = window.innerHeight;
       let totalWidth = window.innerWidth;
 
-      const levelsContainer = document.querySelector(".max-w-7xl") as HTMLElement;
+      const levelsContainer = document.querySelector(".max-w-7xl") as HTMLElement | null;
       if (levelsContainer) {
         // Measure exact available width
         const computedStyle = window.getComputedStyle(levelsContainer);
@@ -725,10 +766,24 @@ export default function SocCareerPathPage() {
               </p>
 
               <div className="hero-anim mt-10 flex justify-center">
-                <div className="flex animate-bounce flex-col items-center gap-1.5 text-slate-600">
-                  <span className="font-mono text-[9px] uppercase tracking-widest">Scroll to explore</span>
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <path d="M7 2 L7 12 M2 7 L7 12 L12 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <div className="flex animate-bounce flex-col items-center gap-2 text-slate-400">
+                  <span
+                    className="font-mono uppercase"
+                    style={{
+                      fontSize: 12,
+                      letterSpacing: "0.45em",
+                    }}
+                  >
+                    Scroll to explore
+                  </span>
+                  <svg width="18" height="18" viewBox="0 0 14 14" fill="none">
+                    <path
+                      d="M7 2 L7 12 M2 7 L7 12 L12 7"
+                      stroke="currentColor"
+                      strokeWidth="1.7"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </div>
               </div>
