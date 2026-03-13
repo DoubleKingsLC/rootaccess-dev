@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Transparent background, circular badge -->
+  <defs>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="2" flood-color="#020617" flood-opacity="0.6" />
+    </filter>
+  </defs>
+
+  <!-- Circle badge -->
+  <g filter="url(#shadow)">
+    <circle cx="32" cy="32" r="26" fill="#e5e7eb" />
+  </g>
+
+  <!-- Key / network line motif -->
+  <g transform="translate(15,30)" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Line -->
+    <path d="M2 2 H16" stroke="#0f766e" stroke-width="2.5" />
+    <!-- Node -->
+    <circle cx="2" cy="2" r="2.5" fill="#020617" stroke="#0f766e" stroke-width="1.2" />
+  </g>
+
+  <!-- 'ra' letters -->
+  <g transform="translate(29,26)" fill="#020617">
+    <path d="M3 11.8V6.6C3 5.1 2.3 4.3 1.1 4.3C0.7 4.3 0.3 4.4 0 4.5V3.3C0.4 3.1 0.9 3 1.4 3C2.5 3 3.3 3.5 3.8 4.4H3.9V3.2H5V11.8H3Z" />
+    <path d="M10.9 11.9C9.2 11.9 8 10.8 8 8.9C8 7 9.1 5.9 10.7 5.9C12.4 5.9 13.4 7.1 13.4 8.9C13.4 9.1 13.4 9.3 13.4 9.4H9.3C9.4 10.4 10.1 11 11 11C11.7 11 12.2 10.7 12.5 10.2L13.3 10.8C12.8 11.5 11.9 11.9 10.9 11.9ZM9.3 8.3H12.1C12 7.5 11.5 7.1 10.8 7.1C10.1 7.1 9.6 7.5 9.3 8.3Z" />
+  </g>
+</svg>
+

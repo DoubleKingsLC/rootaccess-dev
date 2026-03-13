@@ -19,8 +19,11 @@ export const metadata: Metadata = {
   title: "RootAccess.tech",
   description: "Interactive scrollytelling roadmaps",
   icons: {
-    icon: "/assets/ra-favicon.png"
-  }
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/assets/ra-favicon.png", sizes: "32x32" }
+    ]
+  },
 };
 
 export default function RootLayout({
