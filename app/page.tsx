@@ -341,13 +341,17 @@ export default function HomePage() {
 
     const [layout, setLayout] = useState<Layout | null>(null);
     const [rPos, setRPos] = useState<Pt | null>(null);
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
         if (typeof window === "undefined") {
             return;
         }
 
-        const update = () => setLayout(computeLayout(window.innerWidth, window.innerHeight));
+        const update = () => {
+            setIsMobile(window.innerWidth < 1024);
+            setLayout(computeLayout(window.innerWidth, window.innerHeight));
+        };
         update();
         window.addEventListener('resize', update);
         return () => window.removeEventListener('resize', update);
@@ -361,6 +365,12 @@ export default function HomePage() {
 
     useEffect(() => {
         if (!layout || !rPos || !containerRef.current || !heroRRef.current || !rLetterRef.current || !rSpacerRef.current) return;
+        
+        if (isMobile) {
+            // Un-hide elements that are hidden by default for the GSAP animation
+            if (pathLabelRef.current) pathLabelRef.current.style.opacity = "1";
+            return;
+        }
 
         gsap.registerPlugin(ScrollTrigger);
 
@@ -464,7 +474,7 @@ export default function HomePage() {
     // ─── Render ──────────────────────────────────────────────────────────────────
 
     return (
-        <div ref={containerRef} style={{ height: "280vh" }}>
+        <div ref={containerRef} style={{ height: isMobile ? "auto" : "280vh" }}>
             {/* Fixed top-right nav */}
             <Link
                 href="/about"
@@ -501,16 +511,17 @@ export default function HomePage() {
             </Link>
 
             <div
-                style={{ position: "sticky", top: 0, height: "100vh", overflow: "hidden" }}
+                style={{ position: isMobile ? "relative" : "sticky", top: 0, height: isMobile ? "auto" : "100vh", overflow: isMobile ? "visible" : "hidden" }}
                 className="world-grid"
             >
                 {/* Vignette */}
                 <div className="pointer-events-none absolute inset-0" style={{
                     background: "radial-gradient(ellipse 80% 80% at 50% 50%, transparent 28%, rgba(2,6,23,0.7) 100%)",
+                    position: isMobile ? "fixed" : "absolute"
                 }} />
 
                 {/* ── Hero text ──────────────────────────────────────────────────────── */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center" style={{ zIndex: 10 }}>
+                <div className={isMobile ? "flex flex-col items-center justify-center relative min-h-[100vh] pb-16" : "absolute inset-0 flex flex-col items-center justify-center"} style={{ zIndex: 10 }}>
                     <p ref={dotLabelRef} className="font-mono uppercase" style={{
                         fontSize: 9, letterSpacing: "0.55em", color: "rgba(34,211,238,0.45)", marginBottom: "1rem",
                     }}>rootaccess.tech</p>
@@ -519,7 +530,11 @@ export default function HomePage() {
                         display: "flex", alignItems: "baseline",
                         fontSize: "clamp(4.5rem, 13vw, 10.5rem)", fontWeight: 700, letterSpacing: "-0.04em",
                     }}>
-                        <span ref={rSpacerRef} aria-hidden="true" style={{ visibility: "hidden", color: "#22d3ee" }}>R</span>
+                        <span ref={rSpacerRef} aria-hidden="true" style={{ 
+                            visibility: isMobile ? "visible" : "hidden", 
+                            color: "#22d3ee",
+                            textShadow: isMobile ? "0 0 40px rgba(34,211,238,0.65), 0 0 80px rgba(34,211,238,0.3)" : "none"
+                        }}>R</span>
                         <span ref={ootRef}>
                             <span style={{ color: "#22d3ee" }}>oot</span>
                             <span style={{ color: "rgba(248,250,252,0.95)" }}>Access</span>
@@ -550,7 +565,7 @@ export default function HomePage() {
                 </div>
 
                 {/* ── THE R ─────────────────────────────────────────────────────────── */}
-                {rPos && (
+                {rPos && !isMobile && (
                     <div
                         ref={heroRRef}
                         style={{ position: "absolute", left: rPos.x, top: rPos.y, pointerEvents: "none", zIndex: 20 }}
@@ -574,7 +589,7 @@ export default function HomePage() {
                 )}
 
                 {/* ── SVG tree — hidden until R arrives ─────────────────────────────── */}
-                {layout && (
+                {layout && !isMobile && (
                     <svg
                         ref={svgTreeRef}
                         style={{
@@ -727,7 +742,7 @@ export default function HomePage() {
                 )}
 
                 {/* ── Banner cards ──────────────────────────────────────────────────── */}
-                {layout && DOMAINS.map((d, i) => (
+                {layout && !isMobile && DOMAINS.map((d, i) => (
                     <BannerCard
                         key={d.id}
                         domain={d}
@@ -742,8 +757,32 @@ export default function HomePage() {
                     />
                 ))}
 
-                {/* "Choose your path" */}
-                {layout && (
+                {isMobile && (
+                    <div style={{ position: "relative", zIndex: 13, display: "flex", flexDirection: "column", alignItems: "center", gap: "24px", padding: "0 20px 60px 20px" }}>
+                        <p ref={pathLabelRef} className="font-mono uppercase" style={{
+                            fontSize: 10, letterSpacing: "0.55em", color: "rgba(34,211,238,0.6)", marginBottom: "10px", marginTop: "20px"
+                        }}>Choose Your Path</p>
+                        
+                        {DOMAINS.map((d) => (
+                            <div key={d.id} style={{ width: "100%", maxWidth: "340px", height: "auto" }}>
+                                <BannerCard 
+                                    domain={d} 
+                                    bRef={() => {}} 
+                                    style={{ 
+                                        position: "relative", 
+                                        opacity: 1, 
+                                        transform: "none", 
+                                        width: "100%", 
+                                        minHeight: "240px",
+                                    }} 
+                                />
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {/* "Choose your path" (Desktop only) */}
+                {layout && !isMobile && (
                     <div
                         ref={pathLabelRef}
                         style={{

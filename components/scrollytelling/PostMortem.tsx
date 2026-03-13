@@ -104,11 +104,11 @@ export const PostMortem: React.FC<PostMortemProps> = ({ opacity }) => {
         {/* ── Attack Lifecycle Timeline ── */}
         <div className="pm-col opacity-0 rounded-xl border border-sky-500/15 bg-slate-950/50 px-6 py-4 backdrop-blur-sm relative overflow-hidden" style={{ boxShadow: "0 0 50px rgba(14,165,233,0.04)" }}>
           <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-sky-400/60 mb-4">Attack Lifecycle</p>
-          <div className="flex items-center justify-between relative">
+          <div className="flex items-center justify-between relative overflow-x-auto">
             {/* connector line */}
             <div className="absolute top-4 left-0 right-0 h-px bg-gradient-to-r from-red-500/40 via-yellow-500/40 via-sky-500/40 to-green-500/50" />
             {TIMELINE_STAGES.map((stage, i) => (
-              <div key={i} className="pm-node opacity-0 flex flex-col items-center gap-2 relative z-10" style={{ minWidth: 80 }}>
+              <div key={i} className="pm-node opacity-0 flex flex-col items-center gap-2 relative z-10" style={{ minWidth: "clamp(56px, 7.5vw, 80px)" }}>
                 <div
                   className="w-8 h-8 rounded-full border-2 flex items-center justify-center text-sm"
                   style={{
@@ -127,7 +127,7 @@ export const PostMortem: React.FC<PostMortemProps> = ({ opacity }) => {
         </div>
 
         {/* ── 3-Column Panels ── */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-4">
 
           {/* BLANK LEFT spacer replaced by spanning timeline above. Left panel = Report */}
           {/* LEFT: Incident Report */}

@@ -99,7 +99,9 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
             baseStageWidthRef.current = stageRect.width || window.innerWidth || 1;
           }
           const baseWidth = baseStageWidthRef.current || 1;
-          const scale = Math.min(1, window.innerWidth / baseWidth);
+          const scaleX = window.innerWidth / baseWidth;
+          const scaleY = window.innerHeight / 900;
+          const scale = Math.min(1, scaleX, scaleY);
           setStageScaleFactor(scale || 1);
         }
         setOrientation(window.innerWidth < 768 ? "vertical" : "horizontal");

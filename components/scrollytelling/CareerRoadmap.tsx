@@ -16,14 +16,14 @@ export const CareerRoadmap: React.FC<CareerRoadmapProps> = ({ opacity }) => {
       style={{ opacity }}
     >
       <div
-        className="pointer-events-auto w-[min(540px,92vw)] rounded-2xl border border-sky-500/20 bg-slate-950/10 px-8 py-10 backdrop-blur-3xl shadow-[0_0_80px_rgba(14,165,233,0.05)] text-center relative overflow-hidden"
+        className="pointer-events-auto w-[min(540px,92vw)] rounded-2xl border border-sky-500/20 bg-slate-950/10 px-5 py-7 md:px-8 md:py-10 backdrop-blur-3xl shadow-[0_0_80px_rgba(14,165,233,0.05)] text-center relative overflow-hidden"
         role="banner"
       >
         {/* Subtle holographic scanline */}
         <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(14,165,233,0.03)_1px,transparent_1px)] bg-[size:100%_4px] opacity-20" />
 
         {/* 15m Incident Status Badge */}
-        <div className="mb-8 flex justify-center">
+        <div className="mb-5 md:mb-8 flex justify-center">
           <div className="inline-flex items-center gap-2 rounded-lg border border-sky-400/30 bg-sky-950/40 px-3 py-1 shadow-[0_0_12px_rgba(34,211,238,0.3)]">
             <span className="h-1.5 w-1.5 rounded-full bg-sky-400 animate-pulse" />
             <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-sky-300">
@@ -36,7 +36,7 @@ export const CareerRoadmap: React.FC<CareerRoadmapProps> = ({ opacity }) => {
           Ever wondered where to start?
         </h2>
 
-        <p className="mb-8 text-base md:text-lg leading-relaxed text-slate-300 font-medium px-4">
+        <p className="mb-5 md:mb-8 text-sm md:text-base lg:text-lg leading-relaxed text-slate-300 font-medium px-2 md:px-4">
           Behind every expert response is a structured journey.
           Go through the roadmap we&apos;ve created to follow the path from entry-level to SOC Lead.
         </p>
@@ -44,7 +44,7 @@ export const CareerRoadmap: React.FC<CareerRoadmapProps> = ({ opacity }) => {
         <button
           type="button"
           onClick={() => router.push("/roadmaps/soc/career-path")}
-          className="group relative inline-flex items-center gap-4 rounded-xl border border-sky-500/40 bg-sky-500/10 px-8 py-4 font-mono text-xs font-black uppercase tracking-[0.2em] text-sky-300 transition-all hover:border-sky-300 hover:bg-sky-500/20 hover:shadow-[0_0_30px_rgba(14,165,233,0.2)]"
+          className="group relative inline-flex items-center gap-2 md:gap-4 rounded-xl border border-sky-500/40 bg-sky-500/10 px-5 py-3 md:px-8 md:py-4 font-mono text-xs font-black uppercase tracking-[0.2em] text-sky-300 transition-all hover:border-sky-300 hover:bg-sky-500/20 hover:shadow-[0_0_30px_rgba(14,165,233,0.2)]"
         >
           GO THROUGH THE ROADMAP -&gt;
         </button>

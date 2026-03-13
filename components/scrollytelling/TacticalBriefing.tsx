@@ -21,7 +21,7 @@ export const TacticalBriefing = forwardRef<HTMLDivElement, TacticalBriefingProps
             >
                 <div className="relative flex items-center justify-center">
                     {/* Deep Sea Ghost Card */}
-                    <div className="rounded-2xl border border-sky-500/30 bg-slate-950/20 px-10 py-8 backdrop-blur-xl shadow-[0_0_80px_rgba(14,165,233,0.1)] text-center max-w-[90vw] md:max-w-2xl min-w-[280px]">
+                    <div className="rounded-2xl border border-sky-500/30 bg-slate-950/20 px-5 py-5 md:px-10 md:py-8 backdrop-blur-xl shadow-[0_0_80px_rgba(14,165,233,0.1)] text-center max-w-[90vw] md:max-w-2xl min-w-[240px]">
                         <p className="font-mono text-sky-400 text-sm sm:text-lg md:text-xl lg:text-3xl font-black tracking-tight uppercase leading-tight text-glow">
                             {text}
                         </p>

@@ -171,7 +171,7 @@ const AuthFailViz: React.FC<{ correlated: boolean }> = ({ correlated }) => (
             {/* Big counter — dominant element */}
             <p className="font-mono font-black leading-none tabular-nums"
                 style={{
-                    fontSize: "clamp(52px,7vw,76px)",
+                    fontSize: "clamp(36px, 5vw, 76px)",
                     color: "#ef4444",
                     textShadow: correlated
                         ? "0 0 50px rgba(239,68,68,1), 0 0 100px rgba(239,68,68,0.7), 0 0 160px rgba(239,68,68,0.35)"
@@ -241,12 +241,12 @@ const FileBrowserViz: React.FC<{ correlated: boolean }> = ({ correlated }) => (
                     { indent: 1, icon: "📁", name: "HR/", dim: true, tag: "NO ACCESS", tagColor: "rgba(71,85,105,0.5)" },
                     { indent: 1, icon: "📁", name: "Finance/", dim: false, active: true },
                 ].map((f, k) => (
-                    <div key={k} className="flex items-center gap-2" style={{ paddingLeft: f.indent * 16 }}>
-                        <span className="text-sm">{f.icon}</span>
-                        <span style={{ color: f.active ? (correlated ? "rgba(245,158,11,0.85)" : "rgba(100,116,139,0.65)") : "rgba(71,85,105,0.45)", transition: "color 0.5s" }}>
+                    <div key={k} className="flex items-center gap-1 md:gap-2" style={{ paddingLeft: f.indent * 12 }}>
+                        <span className="text-xs md:text-sm">{f.icon}</span>
+                        <span className="text-[10px] md:text-xs" style={{ color: f.active ? (correlated ? "rgba(245,158,11,0.85)" : "rgba(100,116,139,0.65)") : "rgba(71,85,105,0.45)", transition: "color 0.5s" }}>
                             {f.name}
                         </span>
-                        {f.tag && <span className="ml-1 font-mono text-[9px]" style={{ color: f.tagColor }}>— {f.tag}</span>}
+                        {f.tag && <span className="ml-1 font-mono text-[8px] md:text-[9px]" style={{ color: f.tagColor }}>— {f.tag}</span>}
                     </div>
                 ))}
 
@@ -257,16 +257,16 @@ const FileBrowserViz: React.FC<{ correlated: boolean }> = ({ correlated }) => (
                         background: correlated ? "rgba(120,53,15,0.28)" : "rgba(15,23,42,0.4)",
                         boxShadow: correlated ? "0 0 24px rgba(245,158,11,0.22), inset 0 0 16px rgba(245,158,11,0.07)" : "none",
                     }}>
-                    <div className="flex items-center gap-2.5">
-                        <span className="text-xl">📊</span>
+                    <div className="flex flex-col xl:flex-row items-start xl:items-center gap-2.5">
+                        <span className="text-lg xl:text-xl">📊</span>
                         <div className="flex-1">
-                            <p className="font-mono text-sm font-bold transition-colors duration-500"
+                            <p className="font-mono text-xs xl:text-sm font-bold transition-colors duration-500 truncate"
                                 style={{ color: correlated ? "#fbbf24" : "rgba(100,116,139,0.6)" }}>
                                 Q4_Reports_2024.xlsx
                             </p>
-                            <p className="font-mono text-[10px] text-slate-500">Finance · Confidential · 4.2 MB</p>
+                            <p className="font-mono text-[9px] xl:text-[10px] text-slate-500">Finance · Confidential · 4.2 MB</p>
                         </div>
-                        <div className="shrink-0 text-right">
+                        <div className="shrink-0 xl:text-right">
                             <p className="animate-pulse font-mono text-xs font-black" style={{ color: "#f59e0b" }}>● OPENED</p>
                             <p className="font-mono text-[10px] text-slate-500">14:23:05</p>
                         </div>
@@ -299,12 +299,12 @@ const FileBrowserViz: React.FC<{ correlated: boolean }> = ({ correlated }) => (
                 {correlated && (
                     <div className="mt-3 rounded-lg border px-3 py-3 transition-all duration-700"
                         style={{ borderColor: "rgba(245,158,11,0.45)", background: "rgba(120,53,15,0.22)", boxShadow: "0 0 18px rgba(245,158,11,0.12)" }}>
-                        <div className="flex items-center gap-2">
-                            <p className="font-mono text-base font-black leading-snug text-amber-200"
+                        <div className="flex items-start xl:items-center gap-2">
+                            <p className="font-mono text-xs xl:text-base font-black leading-snug text-amber-200"
                                 style={{ textShadow: "0 0 20px rgba(245,158,11,0.6)" }}>
                                 Were any business critical files accessed?
                             </p>
-                            <span className="blink-cursor inline-block h-4 w-0.5 shrink-0 bg-amber-400" />
+                            <span className="blink-cursor inline-block h-4 w-0.5 shrink-0 bg-amber-400 mt-0.5 xl:mt-0" />
                         </div>
                     </div>
                 )}
@@ -345,14 +345,14 @@ const DarkWebViz: React.FC<{ correlated: boolean }> = ({ correlated }) => (
             <div className="flex items-center gap-4">
                 {/* Source */}
                 <div className="shrink-0 text-center">
-                    <div className="flex h-14 w-16 items-center justify-center rounded-xl border-2 text-3xl transition-all duration-500"
+                    <div className="flex h-10 w-12 xl:h-14 xl:w-16 items-center justify-center rounded-xl border-2 text-2xl xl:text-3xl transition-all duration-500 mx-auto"
                         style={{
                             borderColor: correlated ? "rgba(239,68,68,0.55)" : "rgba(51,65,85,0.3)",
                             background: "rgba(15,23,42,0.9)",
                             boxShadow: correlated ? "0 0 16px rgba(239,68,68,0.25)" : "none",
                         }}>💻</div>
                     <p className="mt-1.5 font-mono text-[10px] font-black text-red-400">WS-04</p>
-                    <p className="font-mono text-[9px] text-slate-500">LONDON</p>
+                    <p className="font-mono text-[8px] xl:text-[9px] text-slate-500">LONDON</p>
                 </div>
 
                 {/* Animated track — taller for impact */}
@@ -377,23 +377,23 @@ const DarkWebViz: React.FC<{ correlated: boolean }> = ({ correlated }) => (
 
                 {/* Destination */}
                 <div className="shrink-0 text-center">
-                    <div className="flex h-14 w-16 items-center justify-center rounded-xl border-2 text-3xl transition-all duration-500"
+                    <div className="flex h-10 w-12 xl:h-14 xl:w-16 items-center justify-center rounded-xl border-2 text-2xl xl:text-3xl transition-all duration-500 mx-auto"
                         style={{
                             borderColor: correlated ? "rgba(139,92,246,0.6)" : "rgba(51,65,85,0.3)",
                             background: correlated ? "rgba(46,16,101,0.35)" : "rgba(15,23,42,0.9)",
                             boxShadow: correlated ? "0 0 20px rgba(139,92,246,0.35)" : "none",
                         }}>🌑</div>
                     <p className="mt-1.5 font-mono text-[10px] font-black text-violet-400">TOR NODE</p>
-                    <p className="font-mono text-[9px] text-slate-500">.onion</p>
+                    <p className="font-mono text-[8px] xl:text-[9px] text-slate-500">.onion</p>
                 </div>
             </div>
 
             {/* Simplified context */}
             <div className="flex flex-col gap-1 px-1 my-2">
-                <span className="font-mono text-[11px] text-slate-400">Target: <span className="text-violet-300">a3f2c91b.onion</span></span>
-                <span className="font-mono text-[11px] text-slate-400">Status: <span className={correlated ? "animate-pulse font-semibold text-violet-400" : "text-slate-600"}>BEACON established ●</span></span>
+                <span className="font-mono text-[9px] xl:text-[11px] text-slate-400 truncate">Target: <span className="text-violet-300">a3f2c91b.onion</span></span>
+                <span className="font-mono text-[9px] xl:text-[11px] text-slate-400">Status: <span className={correlated ? "animate-pulse font-semibold text-violet-400" : "text-slate-600"}>BEACON established ●</span></span>
                 {correlated && (
-                    <span className="mt-1 font-mono text-[10px] font-bold tracking-widest text-violet-700/80">
+                    <span className="mt-1 font-mono text-[9px] xl:text-[10px] font-bold tracking-widest text-violet-700/80">
                         C2 ACTIVE — BEACONING EVERY 300s
                     </span>
                 )}
@@ -403,12 +403,12 @@ const DarkWebViz: React.FC<{ correlated: boolean }> = ({ correlated }) => (
             {correlated && (
                 <div className="rounded-lg border px-3 py-3 transition-all duration-700"
                     style={{ borderColor: "rgba(139,92,246,0.45)", background: "rgba(46,16,101,0.25)", boxShadow: "0 0 18px rgba(139,92,246,0.12)" }}>
-                    <div className="flex items-center gap-2">
-                        <p className="font-mono text-base font-black leading-snug text-violet-200"
+                    <div className="flex items-start xl:items-center gap-2">
+                        <p className="font-mono text-xs xl:text-base font-black leading-snug text-violet-200"
                             style={{ textShadow: "0 0 20px rgba(139,92,246,0.6)" }}>
                             Is the IP contacted linked to a known attack group?
                         </p>
-                        <span className="blink-cursor inline-block h-4 w-0.5 shrink-0 bg-violet-400" />
+                        <span className="blink-cursor inline-block h-4 w-0.5 shrink-0 bg-violet-400 mt-0.5 xl:mt-0" />
                     </div>
                 </div>
             )}
@@ -475,9 +475,9 @@ const L2Content: React.FC<{ progress: number }> = ({ progress }) => {
             </div>
 
             {/* Three evidence cards with SVG connector overlay */}
-            <div className="relative flex flex-1 items-stretch overflow-hidden" style={{ minHeight: 0 }}>
-                {/* SVG connectors between cards */}
-                <svg className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden>
+            <div className="relative flex flex-1 flex-col md:flex-row items-stretch overflow-y-auto md:overflow-hidden gap-3 md:gap-0" style={{ minHeight: 0 }}>
+                {/* SVG connectors between cards (hidden on mobile) */}
+                <svg className="pointer-events-none absolute inset-0 h-full w-full hidden md:block" aria-hidden>
                     <defs>
                         <filter id="l2-glow" x="-50%" y="-50%" width="200%" height="200%">
                             <feGaussianBlur stdDeviation="4" result="blur" />
@@ -496,7 +496,7 @@ const L2Content: React.FC<{ progress: number }> = ({ progress }) => {
                         style={{ transition: "stroke 0.7s ease 0.25s, stroke-width 0.5s ease 0.25s" }} />
                 </svg>
 
-                <div className="relative z-10 flex w-full items-stretch gap-3">
+                <div className="relative z-10 flex w-full flex-col md:flex-row items-stretch gap-3">
                     {CORR_EVENTS.map((ev, i) => {
                         const VizComp = VIZ_COMPONENTS[i];
                         return (
@@ -589,7 +589,7 @@ const L3Content: React.FC = () => (
         </div>
 
         {/* Top row: Disk imaging + Malware detection */}
-        <div className="grid shrink-0 grid-cols-2 gap-4">
+        <div className="grid shrink-0 grid-cols-1 md:grid-cols-2 gap-4">
             {/* Finding 1: Disk */}
             <div className="flex flex-col gap-3 rounded-2xl border border-slate-700/40 bg-slate-900/60 p-5">
                 <div className="flex items-center gap-3">
@@ -667,7 +667,7 @@ const L3Content: React.FC = () => (
             </p>
 
             {/* Visual diagram */}
-            <div className="flex items-center justify-around">
+            <div className="flex flex-col md:flex-row items-center justify-around gap-6 md:gap-0 mt-4 md:mt-0">
                 {/* Infected machine */}
                 <div className="flex flex-col items-center gap-3">
                     <div
@@ -793,7 +793,7 @@ export const MonitorPortal = forwardRef<HTMLDivElement, MonitorPortalProps>(
                 className="pointer-events-none absolute inset-0 z-40 flex h-full w-full items-center justify-center"
                 style={{ opacity: 0, visibility: "hidden" }}
             >
-                <div className={`relative flex h-[80vh] w-[80vw] flex-col overflow-hidden rounded-2xl border bg-slate-950/98 backdrop-blur-xl ${outerBorder}`}>
+                <div className={`relative flex h-[90vh] md:h-[80vh] max-h-[860px] w-[95vw] md:w-[80vw] max-w-[1200px] flex-col overflow-hidden rounded-2xl border bg-slate-950/98 backdrop-blur-xl ${outerBorder}`}>
                     {/* Inset border */}
                     <div className={`pointer-events-none absolute inset-0 rounded-2xl border ${insetBorder}`} />
 

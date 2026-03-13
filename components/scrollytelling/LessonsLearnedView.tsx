@@ -24,8 +24,7 @@ export const LessonsLearnedView: React.FC<LessonsLearnedViewProps> = ({
       <div className="relative mt-12 flex flex-col items-center">
         {/* Presentation screen – 1.5x scale (e.g. 360px wide) */}
         <div
-          className="flex h-[240px] w-[360px] flex-col items-center justify-center rounded-xl border border-cyan-400/50 bg-slate-950/80 shadow-[0_0_32px_rgba(34,211,238,0.3)]"
-          style={{ transform: "scale(1.5)" }}
+          className="flex h-[min(360px,52vh)] w-[min(540px,88vw)] flex-col items-center justify-center rounded-xl border border-cyan-400/50 bg-slate-950/80 shadow-[0_0_32px_rgba(34,211,238,0.3)]"
         >
           <div className="flex gap-8">
             {/* Cloud – glowing status node */}

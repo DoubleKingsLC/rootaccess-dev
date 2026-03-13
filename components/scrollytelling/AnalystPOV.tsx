@@ -9,9 +9,12 @@ type AnalystPOVProps = {
   stationRef?: React.RefObject<HTMLDivElement | null>;
 };
 
-// 1.5x scaled workstation footprint for SOC stations
-const STATION_WIDTH = 450;
-const STATION_HEIGHT = 330;
+// Responsive workstation footprint — clamps between small/large viewports
+// These are passed as inline styles so they scale with the viewport
+const stationStyle = {
+  width: "clamp(260px, 22vw, 450px)",
+  height: "clamp(190px, 16vw, 330px)",
+};
 
 /** 2D minimalist back-view: chair (#1e293b), head/shoulders (#0f172a), desk + trapezoidal monitors */
 export const AnalystPOV: React.FC<AnalystPOVProps> = ({
@@ -27,10 +30,7 @@ export const AnalystPOV: React.FC<AnalystPOVProps> = ({
     <div
       ref={stationRef as React.LegacyRef<HTMLDivElement>}
       className="relative rounded-xl border border-white/10 bg-slate-950/40 backdrop-blur-xl"
-      style={{
-        width: STATION_WIDTH,
-        height: STATION_HEIGHT
-      }}
+      style={stationStyle}
     >
       <span
         className="pointer-events-none absolute -top-14 left-0 right-0 text-center font-mono text-sm font-bold uppercase tracking-[0.4em] text-sky-400/70 holographic-label"

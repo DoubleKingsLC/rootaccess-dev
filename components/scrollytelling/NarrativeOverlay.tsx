@@ -98,10 +98,11 @@ export const NarrativeOverlay: React.FC<{ progress: number }> = ({ progress }) =
                 background: activeNotif.bg,
                 borderBottom: `2px solid ${activeNotif.borderColor}`,
                 boxShadow: `inset 0 0 60px ${activeNotif.sweep}, 0 0 40px ${activeNotif.glow}`,
-                padding: "14px 32px",
+                padding: "10px clamp(12px, 2.5vw, 32px)",
                 display: "flex",
                 alignItems: "center",
-                gap: 20,
+                flexWrap: "wrap",
+                gap: "clamp(8px, 1.5vw, 20px)",
                 position: "relative",
                 overflow: "hidden",
               }}
@@ -215,8 +216,8 @@ export const NarrativeOverlay: React.FC<{ progress: number }> = ({ progress }) =
           style={{ opacity: fade(progress, activePhase.showAt, activePhase.hideAt) }}
           aria-hidden
         >
-          <div className="rounded-xl border border-white/10 bg-slate-950/85 px-5 py-2.5 backdrop-blur-md">
-            <p className="whitespace-nowrap font-mono text-sm font-medium tracking-wide text-slate-100">
+          <div className="rounded-xl border border-white/10 bg-slate-950/85 px-4 py-2.5 backdrop-blur-md max-w-[90vw]">
+            <p className="font-mono text-xs md:text-sm font-medium tracking-wide text-slate-100 text-center">
               {activePhase.message}
             </p>
           </div>
