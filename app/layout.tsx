@@ -17,7 +17,10 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "RootAccess.tech",
-  description: "Interactive scrollytelling roadmaps"
+  description: "Interactive scrollytelling roadmaps",
+  icons: {
+    icon: "/assets/ra-favicon.png"
+  }
 };
 
 export default function RootLayout({
