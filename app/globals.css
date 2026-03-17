@@ -43,27 +43,9 @@ body {
   animation: alert-pulse 1.2s ease-in-out infinite;
 }
 
-@keyframes status-flicker {
-
-  0%,
-  90%,
-  100% {
-    opacity: 1;
-  }
-
-  92%,
-  96% {
-    opacity: 0.4;
-  }
-
-  94%,
-  98% {
-    opacity: 0.9;
-  }
-}
-
+/* SOC intro status line — keep steady to avoid distracting flicker */
 .status-flicker {
-  animation: status-flicker 2s ease-in-out infinite;
+  opacity: 0.9;
 }
 
 @keyframes blink-cursor {
