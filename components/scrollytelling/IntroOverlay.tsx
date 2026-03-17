@@ -25,6 +25,16 @@ export const IntroOverlay: React.FC<IntroOverlayProps> = ({ progress }) => {
       <p className="mt-4 font-mono text-[10px] tracking-widest text-slate-400 status-flicker">
         INITIALIZING SEC-OPS PROTOCOLS...
       </p>
+
+      {/* Scroll hint */}
+      <div className="mt-8 flex flex-col items-center gap-3">
+        <p className="font-mono text-[9px] tracking-[0.4em] text-slate-300/80 uppercase">
+          Scroll to experience the incident
+        </p>
+        <div className="h-8 w-px overflow-hidden rounded-full bg-slate-600/40">
+          <div className="h-3 w-px animate-[scrollHint_1.7s_ease-in-out_infinite] bg-cyan-400" />
+        </div>
+      </div>
     </div>
   );
 };
