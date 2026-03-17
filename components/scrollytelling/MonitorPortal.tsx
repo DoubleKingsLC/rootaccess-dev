@@ -507,7 +507,10 @@ const L2Content: React.FC<{ progress: number }> = ({ progress }) => {
 // ─── L3: Forensic results ─────────────────────────────────────────────────────
 
 const L3Content: React.FC = () => (
-    <div className="relative flex h-full flex-col gap-4 overflow-hidden p-5">
+    <div
+        className="relative overflow-hidden h-full"
+        style={{ display: "grid", gridTemplateRows: "auto auto 1fr auto", padding: "16px 20px", gap: "10px" }}
+    >
         {/* CRT scanlines */}
         <div
             className="pointer-events-none absolute inset-0 z-10 opacity-[0.02]"
@@ -515,16 +518,16 @@ const L3Content: React.FC = () => (
             aria-hidden
         />
 
-        {/* Status bar */}
-        <div className="flex shrink-0 items-center gap-3 border-b border-amber-900/40 bg-amber-950/10 pb-3">
+        {/* Row 1 — Status bar */}
+        <div className="flex items-center gap-3 border-b border-amber-900/40 bg-amber-950/10 pb-3">
             <div className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" style={{ boxShadow: "0 0 8px rgba(251,191,36,0.8)" }} />
             <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-amber-400">
                 L3 Analyst — 3 forensic findings extracted
             </span>
         </div>
 
-        {/* Top row: Disk imaging + Malware detection */}
-        <div className="grid shrink-0 grid-cols-1 xl:grid-cols-2 gap-4">
+        {/* Row 2 — Top row: Disk imaging + Malware detection */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
             {/* Finding 1: Disk */}
             <div className="flex flex-col gap-3 rounded-2xl border border-slate-700/40 bg-slate-900/60 p-5">
                 <div className="flex items-center gap-3">
@@ -586,104 +589,96 @@ const L3Content: React.FC = () => (
             </div>
         </div>
 
-        {/* Finding 3: C2 network diagram */}
+        {/* Row 3 — Finding 3: C2 network diagram (1fr — fills remaining space) */}
         <div
-            className="relative min-h-0 flex-1 rounded-2xl border-2 border-amber-500/40 bg-amber-950/10 p-5"
+            className="relative overflow-hidden rounded-2xl border-2 border-amber-500/40 bg-amber-950/10"
             style={{ boxShadow: "0 0 30px rgba(251,191,36,0.08)" }}
         >
-            <div className="mb-2 flex items-center gap-3">
-                <span className="text-xl">📡</span>
-                <p className="font-mono text-[10px] uppercase tracking-widest text-amber-400">
-                    Finding 3 — Attacker&apos;s remote control channel traced
-                </p>
-            </div>
-            <p className="mb-5 font-sans text-sm leading-relaxed text-slate-300">
-                The malware was secretly phoning home every 5 minutes — receiving orders and sending stolen data. This is called Command &amp; Control (C2).
-            </p>
-
-            {/* Visual diagram */}
-            <div className="flex flex-col xl:flex-row items-center justify-around gap-6 xl:gap-0">
-                {/* Infected machine */}
-                <div className="flex flex-col items-center gap-3">
-                    <div
-                        className="flex h-20 w-24 items-center justify-center rounded-2xl border-2 border-red-500/60 bg-slate-900"
-                        style={{ boxShadow: "0 0 24px rgba(239,68,68,0.25)" }}
-                    >
-                        <span className="text-4xl">💻</span>
-                    </div>
-                    <div className="text-center">
-                        <p className="font-mono text-xs font-bold text-red-300">WS-04</p>
-                        <p className="font-mono text-[8px] text-red-400/70">INFECTED</p>
-                        <p className="font-mono text-[8px] text-slate-500">London Office</p>
-                    </div>
-                </div>
-
-                {/* Animated connection */}
-                <div className="relative flex flex-1 w-full xl:w-auto flex-col items-center gap-2 px-6">
-                    <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-amber-300">
-                        Secret beacon every 300s
+            {/* absolute inset fills the 1fr cell — breaks flex chain for Firefox */}
+            <div className="absolute inset-0 flex flex-col p-4 overflow-hidden">
+                <div className="shrink-0 mb-2 flex items-center gap-3">
+                    <span className="text-xl">📡</span>
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-amber-400">
+                        Finding 3 — Attacker&apos;s remote control channel traced
                     </p>
-                    {/* Track */}
-                    <div className="relative h-8 w-full overflow-hidden rounded-full bg-slate-800/60">
-                        <div className="absolute inset-y-0 my-auto h-px w-full bg-amber-500/30" />
-                        <div
-                            style={{
-                                position: "absolute",
-                                top: "50%",
-                                left: "0%",
-                                transform: "translateY(-50%)",
-                                width: "10px",
-                                height: "10px",
-                                borderRadius: "50%",
-                                background: "#fbbf24",
-                                boxShadow: "0 0 12px rgba(251,191,36,1), 0 0 24px rgba(251,191,36,0.5)",
-                                animation: "packet-h 2.4s linear infinite"
-                            }}
-                        />
-                        <div
-                            style={{
-                                position: "absolute",
-                                top: "50%",
-                                left: "0%",
-                                transform: "translateY(-50%)",
-                                width: "10px",
-                                height: "10px",
-                                borderRadius: "50%",
-                                background: "#fbbf24",
-                                boxShadow: "0 0 12px rgba(251,191,36,1), 0 0 24px rgba(251,191,36,0.5)",
-                                animation: "packet-h 2.4s linear infinite",
-                                animationDelay: "1.2s"
-                            }}
-                        />
-                    </div>
-                    <p className="font-mono text-[8px] text-slate-500">HTTPS — Port 443</p>
-                    <div className="rounded-lg border border-amber-500/20 bg-amber-950/20 px-3 py-1">
-                        <p className="font-mono text-[9px] text-amber-400">Receiving instructions. Sending stolen data.</p>
-                    </div>
                 </div>
+                <p className="shrink-0 mb-3 font-sans text-sm leading-relaxed text-slate-300">
+                    The malware was secretly phoning home every 5 minutes — receiving orders and sending stolen data. This is called Command &amp; Control (C2).
+                </p>
 
-                {/* C2 server */}
-                <div className="flex flex-col items-center gap-3">
-                    <div
-                        className="flex h-20 w-24 items-center justify-center rounded-2xl border-2 border-amber-500/60 bg-slate-900"
-                        style={{ boxShadow: "0 0 24px rgba(251,191,36,0.25)" }}
-                    >
-                        <span className="text-4xl">🖥</span>
+                {/* Visual diagram */}
+                <div className="flex flex-1 min-h-0 flex-col xl:flex-row items-center justify-around gap-3 xl:gap-0">
+                    {/* Infected machine */}
+                    <div className="flex flex-col items-center gap-2">
+                        <div
+                            className="flex items-center justify-center rounded-2xl border-2 border-red-500/60 bg-slate-900"
+                            style={{
+                                width: "clamp(56px,7vw,96px)", height: "clamp(48px,6vw,80px)",
+                                fontSize: "clamp(1.5rem,3vw,2.5rem)",
+                                boxShadow: "0 0 24px rgba(239,68,68,0.25)"
+                            }}
+                        >
+                            💻
+                        </div>
+                        <div className="text-center">
+                            <p className="font-mono text-xs font-bold text-red-300">WS-04</p>
+                            <p className="font-mono text-[8px] text-red-400/70">INFECTED</p>
+                            <p className="font-mono text-[8px] text-slate-500">London Office</p>
+                        </div>
                     </div>
-                    <div className="text-center">
-                        <p className="font-mono text-xs font-bold text-amber-300">185.220.101.47</p>
-                        <p className="font-mono text-[8px] text-amber-400/70">C2 SERVER</p>
-                        <p className="font-mono text-[8px] text-slate-500">Moscow, Russia</p>
+
+                    {/* Animated connection */}
+                    <div className="relative flex flex-1 w-full xl:w-auto flex-col items-center gap-2 px-4">
+                        <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-amber-300">
+                            Secret beacon every 300s
+                        </p>
+                        <div className="relative w-full overflow-hidden rounded-full bg-slate-800/60" style={{ height: "clamp(20px,3vh,32px)" }}>
+                            <div className="absolute inset-y-0 my-auto h-px w-full bg-amber-500/30" />
+                            {[0, 1.2].map((delay, k) => (
+                                <div key={k} style={{
+                                    position: "absolute", top: "50%", left: "0%",
+                                    transform: "translateY(-50%)",
+                                    width: 10, height: 10, borderRadius: "50%",
+                                    background: "#fbbf24",
+                                    boxShadow: "0 0 12px rgba(251,191,36,1), 0 0 24px rgba(251,191,36,0.5)",
+                                    animation: "packet-h 2.4s linear infinite",
+                                    animationDelay: `${delay}s`
+                                }} />
+                            ))}
+                        </div>
+                        <p className="font-mono text-[8px] text-slate-500">HTTPS — Port 443</p>
+                        <div className="rounded-lg border border-amber-500/20 bg-amber-950/20 px-3 py-1">
+                            <p className="font-mono text-[9px] text-amber-400">Receiving instructions. Sending stolen data.</p>
+                        </div>
+                    </div>
+
+                    {/* C2 server */}
+                    <div className="flex flex-col items-center gap-2">
+                        <div
+                            className="flex items-center justify-center rounded-2xl border-2 border-amber-500/60 bg-slate-900"
+                            style={{
+                                width: "clamp(56px,7vw,96px)", height: "clamp(48px,6vw,80px)",
+                                fontSize: "clamp(1.5rem,3vw,2.5rem)",
+                                boxShadow: "0 0 24px rgba(251,191,36,0.25)"
+                            }}
+                        >
+                            🖥
+                        </div>
+                        <div className="text-center">
+                            <p className="font-mono text-xs font-bold text-amber-300">185.220.101.47</p>
+                            <p className="font-mono text-[8px] text-amber-400/70">C2 SERVER</p>
+                            <p className="font-mono text-[8px] text-slate-500">Moscow, Russia</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        {/* Critical query strip */}
-        <div className="shrink-0 rounded-xl border-2 px-5 py-4"
+        {/* Row 4 — Critical query strip */}
+        <div className="rounded-xl border-2 px-4 py-3"
             style={{ borderColor: "rgba(245,158,11,0.45)", background: "rgba(120,53,15,0.2)", boxShadow: "0 0 28px rgba(245,158,11,0.1)" }}>
             <div className="flex items-center gap-3 flex-wrap">
-                <p className="font-mono text-base font-black leading-snug text-amber-200"
+                <p className="font-mono text-sm font-black leading-snug text-amber-200"
                     style={{ textShadow: "0 0 24px rgba(245,158,11,0.65)" }}>
                     Is the attack successfully contained?
                 </p>
