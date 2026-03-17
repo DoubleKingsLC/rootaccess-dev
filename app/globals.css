@@ -333,3 +333,26 @@ body {
 .animate-pentest-fadeIn {
   animation: pentest-fadeIn 0.5s ease-out forwards;
 }
+
+/* SOC monitor portals — scale shell on constrained viewports so content stays inside frame */
+.soc-monitor-shell {
+  transform-origin: top center;
+}
+
+@media (max-height: 900px) {
+  .soc-monitor-shell {
+    transform: scale(0.95);
+  }
+}
+
+@media (max-height: 800px) {
+  .soc-monitor-shell {
+    transform: scale(0.9);
+  }
+}
+
+@media (max-height: 720px) {
+  .soc-monitor-shell {
+    transform: scale(0.85);
+  }
+}
