@@ -27,11 +27,11 @@ export const IntroOverlay: React.FC<IntroOverlayProps> = ({ progress }) => {
       </p>
 
       {/* Scroll hint */}
-      <div className="mt-8 flex flex-col items-center gap-3">
-        <p className="font-mono text-[9px] tracking-[0.4em] text-slate-300/80 uppercase">
-          Scroll to experience the incident
+      <div className="mt-10 flex flex-col items-center gap-4">
+        <p className="font-mono text-xs md:text-sm tracking-[0.5em] text-slate-100 uppercase">
+          Scroll to Begin
         </p>
-        <div className="h-8 w-px overflow-hidden rounded-full bg-slate-600/40">
+        <div className="h-9 w-px overflow-hidden rounded-full bg-slate-600/60">
           <div className="h-3 w-px animate-[scrollHint_1.7s_ease-in-out_infinite] bg-cyan-400" />
         </div>
       </div>
