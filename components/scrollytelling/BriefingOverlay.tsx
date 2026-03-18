@@ -56,10 +56,10 @@ export const BriefingOverlay: React.FC<BriefingOverlayProps> = ({ role }) => {
         className={`pointer-events-auto w-[min(480px,90vw)] max-h-[70vh] rounded-2xl border-2 bg-slate-950/80 px-6 py-6 backdrop-blur-2xl transition-transform duration-300 ease-out ${borderClass}`}
         style={{ transform: "scale(1.5)" }}
       >
-        <p className="font-mono text-[11px] uppercase tracking-[0.35em] text-cyan-400">
+        <p className="font-mono text-base md:text-xl uppercase tracking-[0.3em] font-black text-cyan-400">
           {title}
         </p>
-        <p className="mt-4 font-sans text-sm leading-relaxed text-slate-100">
+        <p className="mt-4 font-sans text-base md:text-lg leading-relaxed text-slate-100 font-medium">
           {body}
         </p>
       </div>

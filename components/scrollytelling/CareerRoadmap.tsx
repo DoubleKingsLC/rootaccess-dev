@@ -16,7 +16,9 @@ export const CareerRoadmap: React.FC<CareerRoadmapProps> = ({ opacity }) => {
       style={{ opacity }}
     >
       <div
-        className="pointer-events-auto w-[min(540px,92vw)] rounded-2xl border border-sky-500/20 bg-slate-950/10 px-5 py-7 md:px-8 md:py-10 backdrop-blur-3xl shadow-[0_0_80px_rgba(14,165,233,0.05)] text-center relative overflow-hidden"
+        className={`w-[min(540px,92vw)] rounded-2xl border border-sky-500/20 bg-slate-950/10 px-5 py-7 md:px-8 md:py-10 backdrop-blur-3xl shadow-[0_0_80px_rgba(14,165,233,0.05)] text-center relative overflow-hidden transition-all duration-300 ${
+          opacity > 0.1 ? "pointer-events-auto" : "pointer-events-none"
+        }`}
         role="banner"
       >
         {/* Subtle holographic scanline */}

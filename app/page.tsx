@@ -479,34 +479,36 @@ export default function HomePage() {
             <Link
                 href="/about"
                 style={{
-                    position: "fixed", top: 20, right: 24, zIndex: 100,
-                    display: "inline-flex", alignItems: "center", gap: 8,
+                    position: "fixed", top: 28, right: 32, zIndex: 100,
+                    display: "inline-flex", alignItems: "center", gap: 10,
                     fontFamily: "var(--font-mono, monospace)",
-                    fontSize: 10, letterSpacing: "0.28em", textTransform: "uppercase",
-                    color: "rgba(34,211,238,0.72)",
-                    background: "rgba(2,6,23,0.75)",
-                    border: "1px solid rgba(34,211,238,0.28)",
-                    borderRadius: 8, padding: "10px 18px",
-                    textDecoration: "none", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
-                    transition: "all 0.2s ease",
-                    boxShadow: "0 0 20px rgba(34,211,238,0.06)",
+                    fontSize: 12, fontWeight: 700, letterSpacing: "0.35em", textTransform: "uppercase",
+                    color: "#22d3ee",
+                    background: "rgba(34,211,238,0.06)",
+                    border: "1.5px solid rgba(34,211,238,0.45)",
+                    borderRadius: 10, padding: "12px 24px",
+                    textDecoration: "none", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+                    transition: "all 0.25s cubic-bezier(0.16,1,0.3,1)",
+                    boxShadow: "0 0 25px rgba(34,211,238,0.12), inset 0 0 10px rgba(34,211,238,0.05)",
                 }}
                 onMouseEnter={e => {
-                    (e.currentTarget as HTMLElement).style.color = "#22d3ee";
-                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(34,211,238,0.55)";
-                    (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.10)";
-                    (e.currentTarget as HTMLElement).style.boxShadow = "0 0 24px rgba(34,211,238,0.14)";
+                    (e.currentTarget as HTMLElement).style.color = "#fff";
+                    (e.currentTarget as HTMLElement).style.borderColor = "#22d3ee";
+                    (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.22)";
+                    (e.currentTarget as HTMLElement).style.boxShadow = "0 0 35px rgba(34,211,238,0.25), inset 0 0 15px rgba(34,211,238,0.1)";
+                    (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
                 }}
                 onMouseLeave={e => {
-                    (e.currentTarget as HTMLElement).style.color = "rgba(34,211,238,0.72)";
-                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(34,211,238,0.28)";
-                    (e.currentTarget as HTMLElement).style.background = "rgba(2,6,23,0.75)";
-                    (e.currentTarget as HTMLElement).style.boxShadow = "0 0 20px rgba(34,211,238,0.06)";
+                    (e.currentTarget as HTMLElement).style.color = "#22d3ee";
+                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(34,211,238,0.45)";
+                    (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.06)";
+                    (e.currentTarget as HTMLElement).style.boxShadow = "0 0 25px rgba(34,211,238,0.12), inset 0 0 10px rgba(34,211,238,0.05)";
+                    (e.currentTarget as HTMLElement).style.transform = "none";
                 }}
             >
                 About
-                <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
-                    <path d="M1 4.5h7M5 1.5l3 3-3 3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                    <path d="M1.5 5.5h8M6.5 2l3.5 3.5-3.5 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
             </Link>
 
@@ -522,8 +524,8 @@ export default function HomePage() {
 
                 {/* ── Hero text ──────────────────────────────────────────────────────── */}
                 <div className={isMobile ? "flex flex-col items-center justify-center relative min-h-[100vh] pb-16" : "absolute inset-0 flex flex-col items-center justify-center"} style={{ zIndex: 10 }}>
-                    <p ref={dotLabelRef} className="font-mono uppercase" style={{
-                        fontSize: 9, letterSpacing: "0.55em", color: "rgba(34,211,238,0.45)", marginBottom: "1rem",
+                    <p ref={dotLabelRef} className="font-mono uppercase transition-colors" style={{
+                        fontSize: 12, fontWeight: 700, letterSpacing: "0.6em", color: "rgba(34,211,238,0.75)", marginBottom: "1.2rem",
                     }}>rootaccess.tech</p>
 
                     <h1 className="font-heading leading-none" style={{
@@ -542,24 +544,32 @@ export default function HomePage() {
                     </h1>
 
                     <p ref={subtitleRef} className="font-mono uppercase" style={{
-                        fontSize: 10, letterSpacing: "0.38em", color: "rgba(100,116,139,0.6)",
-                        maxWidth: 390, lineHeight: 1.8, marginTop: "1.6rem", textAlign: "center",
+                        fontSize: 16, fontWeight: 600, letterSpacing: "0.38em", color: "#f8fafc",
+                        maxWidth: 620, lineHeight: 1.7, marginTop: "2rem", textAlign: "center",
                     }}>
                         Interactive career roadmaps for cybersecurity professionals
                     </p>
 
-                    <div ref={scrollIndRef} className="flex flex-col items-center gap-3" style={{ marginTop: "2.4rem" }}>
-                        <span className="font-mono uppercase" style={{
-                            fontSize: 11,
-                            letterSpacing: "0.40em",
-                            color: "rgba(148,163,184,0.9)",
+                    <div ref={scrollIndRef} className="flex flex-col items-center gap-4" style={{ marginTop: "3.2rem" }}>
+                        <span className="font-mono uppercase font-bold" style={{
+                            fontSize: 13,
+                            letterSpacing: "0.5em",
+                            color: "rgba(248,250,252,0.95)",
                         }}>Scroll to explore</span>
-                        <div style={{ position: "relative", width: 1, height: 38 }}>
-                            <div style={{
-                                position: "absolute", inset: 0,
-                                background: "linear-gradient(to bottom, rgba(34,211,238,0.55), transparent)",
-                                animation: "scrollPulse 2s ease-in-out infinite",
-                            }} />
+                        <div className="animate-bounce">
+                           <svg
+                              className="w-10 h-10 text-slate-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="1.5"
+                                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                              />
+                            </svg>
                         </div>
                     </div>
                 </div>

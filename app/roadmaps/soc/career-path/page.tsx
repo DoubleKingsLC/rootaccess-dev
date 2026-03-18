@@ -230,6 +230,12 @@ const BRANCH_Y = [65, 150, 235] as const;
 
 export default function SocCareerPathPage() {
   const router = useRouter();
+  const scrollToLevel = (index: number) => {
+    const section = sectionRefs.current[index];
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   const containerRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const trunkRef = useRef<HTMLDivElement>(null);
@@ -256,6 +262,20 @@ export default function SocCareerPathPage() {
   const isMobile = useIsMobile(768);
   const [orientation, setOrientation] = useState<"portrait" | "landscape">("landscape");
   const [scaleFactor, setScaleFactor] = useState(1);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const toggleVisibility = () => {
+      if (window.pageYOffset > 400) {
+        setShowScrollTop(true);
+      } else {
+        setShowScrollTop(false);
+      }
+    };
+
+    window.addEventListener("scroll", toggleVisibility);
+    return () => window.removeEventListener("scroll", toggleVisibility);
+  }, []);
 
   useEffect(() => {
     const checkOrientation = () => {
@@ -531,7 +551,24 @@ export default function SocCareerPathPage() {
 
 
   const MobileSocCareerPath = () => (
-    <div className="min-h-screen bg-slate-950 text-white overflow-x-hidden font-sans pb-20">
+    <div className="min-h-screen bg-slate-950 text-white overflow-x-hidden font-sans pb-20 pt-14">
+      <header className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-white/5 bg-slate-950/90 px-4 py-3 backdrop-blur-md">
+        <button
+          onClick={() => router.push("/")}
+          className="font-mono text-[10px] font-bold uppercase tracking-widest text-slate-400"
+        >
+          Home
+        </button>
+        <p className="font-mono text-[9px] font-black uppercase tracking-[0.3em] text-cyan-400">
+          SOC Career Path
+        </p>
+        <button
+          onClick={() => router.push("/roadmaps/soc")}
+          className="font-mono text-[10px] font-bold uppercase tracking-widest text-slate-500"
+        >
+          Back
+        </button>
+      </header>
       <div className="relative">
         {LEVELS.map((level, i) => (
           <section key={level.num} className="relative pt-16 pb-20 px-6 border-b border-white/5 last:border-0 overflow-hidden">
@@ -582,7 +619,7 @@ export default function SocCareerPathPage() {
                     {cat.icon}
                   </div>
                   <h3 className="font-mono text-[10px] font-bold tracking-[0.3em] text-slate-500 mb-4 border-b border-white/5 pb-2">
-                    {cat.title}
+                    {cat.title}{cat.title === "CERTS" ? " (ANY 1)" : ""}
                   </h3>
                   {cat.title === "CERTS" && cat.items.length > 1 ? (
                     /* ── Certifications: Recommended + Additional ── */
@@ -603,10 +640,10 @@ export default function SocCareerPathPage() {
                                   <div className="mt-0.5 shrink-0">
                                     {provider === "google" && (
                                       <svg className="w-4 h-4" viewBox="0 0 24 24">
-                                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-                                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
+                                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                                       </svg>
                                     )}
                                   </div>
@@ -630,7 +667,7 @@ export default function SocCareerPathPage() {
                         </ul>
                       </div>
                       <div>
-                        <p className="mb-2 font-mono text-[9px] font-bold uppercase tracking-[0.35em] text-slate-500">Additional</p>
+                        <p className="mb-2 font-mono text-[9px] font-bold uppercase tracking-[0.35em] text-slate-500">Alternatives</p>
                         <ul className="space-y-4">
                           {cat.items.slice(1).map((item: any, idx: number) => {
                             const isObj = typeof item === "object";
@@ -645,10 +682,10 @@ export default function SocCareerPathPage() {
                                   <div className="mt-0.5 shrink-0">
                                     {provider === "google" && (
                                       <svg className="w-4 h-4" viewBox="0 0 24 24">
-                                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-                                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
+                                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                                       </svg>
                                     )}
                                   </div>
@@ -694,10 +731,10 @@ export default function SocCareerPathPage() {
                                 )}
                                 {provider === "google" && (
                                   <svg className="w-4 h-4 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-                                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
+                                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                                   </svg>
                                 )}
                               </div>
@@ -734,17 +771,54 @@ export default function SocCareerPathPage() {
       </div>
 
       {/* Simple Footer */}
-      <div className="mt-12 mb-20 flex justify-center px-6">
+      <div className="mt-12 mb-20 flex flex-col items-center gap-4 px-6">
         <button
           onClick={() => router.push("/roadmaps/soc")}
-          className="w-full max-w-xs py-4 rounded-xl border border-white/10 bg-white/5 font-mono text-[10px] uppercase tracking-widest text-slate-400 hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+          className="w-full max-w-xs py-4 rounded-xl border border-white/10 bg-white/5 font-mono text-xs uppercase tracking-widest text-slate-400 hover:bg-white/10 transition-all flex items-center justify-center gap-2"
         >
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
           Back to SOC Roadmap
         </button>
+        <button
+          onClick={() => router.push("/")}
+          className="w-full max-w-xs py-3 font-mono text-[10px] uppercase tracking-[0.3em] text-slate-600 active:text-slate-300 transition-all"
+        >
+          Go to Homepage
+        </button>
       </div>
+      
+      {/* Scroll to Top Button */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        style={{
+          position: "fixed",
+          bottom: "32px",
+          right: "24px",
+          zIndex: 100,
+          width: "48px",
+          height: "48px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          borderRadius: "50%",
+          background: "rgba(15,23,42,0.8)",
+          backdropFilter: "blur(12px)",
+          border: "1px solid rgba(255,255,255,0.1)",
+          color: "#f8fafc",
+          cursor: "pointer",
+          opacity: showScrollTop ? 1 : 0,
+          visibility: showScrollTop ? "visible" : "hidden",
+          transform: showScrollTop ? "translateY(0)" : "translateY(20px)",
+          transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+          boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
+        }}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M18 15l-6-6-6 6" />
+        </svg>
+      </button>
     </div>
   );
 
@@ -760,21 +834,31 @@ export default function SocCareerPathPage() {
       <div style={{ transform: `scale(${scaleFactor})`, transformOrigin: "top left", width: scaleFactor !== 1 ? `${100 / scaleFactor}%` : "100%", height: scaleFactor !== 1 ? `${100 / scaleFactor}%` : "100%" }}>
 
         <header
-          className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-white/5 bg-slate-950/85 px-8 py-3.5 backdrop-blur-md"
+          className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-white/5 bg-slate-950/85 px-8 py-4 backdrop-blur-md"
         >
-          <button
-            onClick={() => router.push("/roadmaps/soc")}
-            className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-slate-500 transition-colors hover:text-cyan-300"
-          >
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M9 6H3M3 6L6 3M3 6L6 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            SOC Experience
-          </button>
-          <p className="font-mono text-[10px] uppercase tracking-[0.45em] text-cyan-400">
+          <div className="flex items-center gap-6">
+            <button
+              onClick={() => router.push("/")}
+              className="font-mono text-sm font-bold uppercase tracking-widest text-slate-400 transition-colors hover:text-white"
+            >
+              Home
+            </button>
+            <div className="h-4 w-px bg-white/10" />
+            <button
+              onClick={() => router.push("/roadmaps/soc")}
+              className="flex items-center gap-2 font-mono text-sm font-bold uppercase tracking-widest text-slate-500 transition-colors hover:text-cyan-300"
+            >
+              <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+                <path d="M9 6H3M3 6L6 3M3 6L6 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              SOC Experience
+            </button>
+          </div>
+
+          <p className="font-mono text-base font-black uppercase tracking-[0.45em] text-cyan-400">
             SOC Career Path
           </p>
-          <div className="w-32" />
+          <div className="w-64" /> {/* Balanced spacer */}
         </header>
 
         {/* ── Fixed level nav (right side) ──────────────────────────────────── */}
@@ -824,58 +908,100 @@ export default function SocCareerPathPage() {
               style={{ background: "radial-gradient(ellipse at center, rgba(52,211,153,0.04) 0%, transparent 65%)" }}
             />
 
-            <div ref={heroRef} className="relative z-10 max-w-3xl px-8 text-center">
-              <div className="hero-anim mb-6 flex justify-center">
-                <div className="rounded-full border border-cyan-500/30 bg-cyan-950/40 px-5 py-2 flex items-center gap-3 backdrop-blur-md">
-                  <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" style={{ boxShadow: "0 0 10px #22d3ee" }}></span>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.55em] text-cyan-400">
-                    The Blueprint to Perfection
+            <div className="relative z-10 flex w-full max-w-7xl items-center px-8 lg:px-12">
+              {/* Index - LHS (Desktop only) */}
+              <div className="hero-anim hidden w-80 flex-col gap-8 rounded-2xl border border-white/5 bg-slate-900/10 p-8 backdrop-blur-sm lg:flex shadow-2xl">
+                <div className="space-y-2">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.4em] text-slate-400 font-bold">
+                    Phase Index
+                  </p>
+                  <div className="h-0.5 w-12 bg-cyan-500/50" />
+                </div>
+                
+                <nav className="flex flex-col gap-7">
+                  {LEVELS.map((level, i) => (
+                    <button
+                      key={level.num}
+                      onClick={() => scrollToLevel(i)}
+                      className="group flex flex-col items-start gap-1 text-left transition-all"
+                    >
+                      <div className="flex items-center gap-4">
+                        <span className="font-mono text-sm font-black text-slate-700 transition-colors group-hover:text-white" style={{ color: activeLevel === i ? level.color : undefined }}>
+                          {level.num}
+                        </span>
+                        <span 
+                          className="font-mono text-base font-bold tracking-widest text-slate-400 transition-all group-hover:translate-x-1 uppercase"
+                          style={{ color: level.color }}
+                        >
+                          {level.label}
+                        </span>
+                      </div>
+                      <div className="ml-9 h-px w-0 bg-cyan-500/40 transition-all duration-500 group-hover:w-16" />
+                    </button>
+                  ))}
+                </nav>
+
+                <div className="mt-4">
+                  <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-slate-600 leading-relaxed">
+                    Select a role to view detailed<br />roadmap & requirements.
                   </p>
                 </div>
               </div>
 
-              {/* Big Question Hook */}
-              <div className="hero-anim mb-6 flex justify-center">
-                <h1
-                  className="font-mono font-black text-emerald-400 tracking-tight"
-                  style={{
-                    fontSize: "clamp(48px, 8vw, 84px)",
-                    textShadow: "0 0 80px rgba(52,211,153,0.5), 0 0 160px rgba(52,211,153,0.2)",
-                    lineHeight: "1.05"
-                  }}
-                >
-                  Wondering where<br />to begin?
-                </h1>
-              </div>
+              {/* Hero Content - Shifted Right */}
+              <div ref={heroRef} className="flex-1 px-8 text-center lg:pl-24 lg:text-left">
+                <div className="hero-anim mb-6 flex justify-center lg:justify-start">
+                  <div className="rounded-full border border-cyan-500/30 bg-cyan-950/40 px-5 py-2 flex items-center gap-3 backdrop-blur-md">
+                    <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" style={{ boxShadow: "0 0 10px #22d3ee" }}></span>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.55em] text-cyan-400">
+                      The Blueprint to Perfection
+                    </p>
+                  </div>
+                </div>
 
-              <p className="hero-anim mb-4 font-sans text-xl leading-relaxed text-slate-100 max-w-2xl mx-auto">
-                Stop guessing. This is the ultimate, battle-tested roadmap for your cybersecurity career.
-              </p>
-              <p className="hero-anim font-sans text-base leading-relaxed text-slate-400 max-w-2xl mx-auto">
-                Distilled from thousands of community discussions, industry standards, and frontline experience. We&apos;ve mapped out the precise skills, tools, and certifications you need—from your first lab to leading the SOC.
-              </p>
-
-              <div className="hero-anim mt-10 flex justify-center">
-                <div className="flex animate-bounce flex-col items-center gap-2 text-slate-400">
-                  <span
-                    className="font-mono uppercase"
+                {/* Big Question Hook */}
+                <div className="hero-anim mb-6 flex justify-center lg:justify-start">
+                  <h1
+                    className="font-mono font-black text-emerald-400 tracking-tight"
                     style={{
-                      fontSize: 12,
-                      letterSpacing: "0.45em",
+                      fontSize: "clamp(42px, 6vw, 76px)",
+                      textShadow: "0 0 80px rgba(52,211,153,0.5), 0 0 160px rgba(52,211,153,0.2)",
+                      lineHeight: "1.05"
                     }}
                   >
-                    Scroll to explore
-                  </span>
-                  <svg width="18" height="18" viewBox="0 0 14 14" fill="none">
-                    <path
-                      d="M7 2 L7 12 M2 7 L7 12 L12 7"
-                      stroke="currentColor"
-                      strokeWidth="1.7"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+                    Wondering where<br />to begin?
+                  </h1>
                 </div>
+
+                <p className="hero-anim mb-6 font-sans text-xl leading-relaxed text-slate-100 max-w-2xl mx-auto lg:mx-0">
+                  Stop guessing. This is the ultimate, battle-tested roadmap for your cybersecurity career.
+                </p>
+                <p className="hero-anim mb-10 font-sans text-base leading-relaxed text-slate-400 max-w-xl mx-auto lg:mx-0">
+                  Distilled from community discussions and industry standards. We&apos;ve mapped out the precise skills, tools, and certifications you need—from your first lab to leading the SOC.
+                </p>
+              </div>
+            </div>
+
+            {/* Centered Scroll Hint (Independent of flex shift) */}
+            <div className="hero-anim absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-4 text-slate-300">
+              <span
+                className="font-mono font-bold uppercase tracking-[0.6em]"
+                style={{
+                  fontSize: 11,
+                }}
+              >
+                Scroll to explore
+              </span>
+              <div className="animate-bounce">
+                <svg width="22" height="22" viewBox="0 0 14 14" fill="none">
+                  <path
+                    d="M7 2 L7 12 M2 7 L7 12 L12 7"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </div>
             </div>
           </section>
@@ -1082,7 +1208,7 @@ export default function SocCareerPathPage() {
                         <div className="mb-4 flex items-center gap-3 border-b border-white/5 pb-3">
                           <span className="text-xl" style={{ textShadow: `0 0 10px ${level.color}` }}>{cat.icon}</span>
                           <p className="font-mono text-xs font-bold uppercase tracking-[0.3em]" style={{ color: level.color }}>
-                            {cat.title}
+                            {cat.title}{cat.title === "Certifications" ? " (ANY 1)" : ""}
                           </p>
                         </div>
                         <div className="flex-1 pb-16">
@@ -1108,10 +1234,10 @@ export default function SocCareerPathPage() {
                                           <div className="mt-1 shrink-0 transition-transform group-hover/li:scale-110">
                                             {provider === "google" && (
                                               <svg className="w-4 h-4" viewBox="0 0 24 24">
-                                                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                                                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                                                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-                                                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                                                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                                                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
+                                                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                                               </svg>
                                             )}
                                           </div>
@@ -1141,7 +1267,7 @@ export default function SocCareerPathPage() {
                               {/* ADDITIONAL */}
                               <div>
                                 <p className="mb-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.35em] text-slate-500">
-                                  Additional
+                                  Alternatives
                                 </p>
                                 <ul className="space-y-4">
                                   {cat.items.slice(1).map((item: any, idx: number) => {
@@ -1157,10 +1283,10 @@ export default function SocCareerPathPage() {
                                           <div className="mt-1 shrink-0 transition-transform group-hover/li:scale-110">
                                             {provider === "google" && (
                                               <svg className="w-4 h-4" viewBox="0 0 24 24">
-                                                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                                                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                                                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-                                                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                                                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                                                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
+                                                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                                               </svg>
                                             )}
                                           </div>
@@ -1209,10 +1335,10 @@ export default function SocCareerPathPage() {
                                         )}
                                         {provider === "google" && (
                                           <svg className="w-4 h-4" viewBox="0 0 24 24">
-                                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-                                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
+                                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                                           </svg>
                                         )}
                                       </div>
@@ -1355,6 +1481,47 @@ export default function SocCareerPathPage() {
           </section>
         </div>
       </div>
+      
+      {/* Scroll to Top Button */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        style={{
+          position: "fixed",
+          bottom: "40px",
+          right: "40px",
+          zIndex: 100,
+          width: "56px",
+          height: "56px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          borderRadius: "14px",
+          background: "rgba(2,6,23,0.85)",
+          backdropFilter: "blur(12px)",
+          border: "1px solid rgba(255,255,255,0.1)",
+          color: "#f8fafc",
+          cursor: "pointer",
+          opacity: showScrollTop ? 1 : 0,
+          visibility: showScrollTop ? "visible" : "hidden",
+          transform: showScrollTop ? "translateY(0)" : "translateY(20px)",
+          transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+          boxShadow: "0 15px 40px rgba(0,0,0,0.5)",
+        }}
+        onMouseEnter={e => {
+          (e.currentTarget as HTMLElement).style.background = "rgba(15,23,42,0.95)";
+          (e.currentTarget as HTMLElement).style.borderColor = "rgba(34,211,238,0.3)";
+          (e.currentTarget as HTMLElement).style.color = "#22d3ee";
+        }}
+        onMouseLeave={e => {
+          (e.currentTarget as HTMLElement).style.background = "rgba(2,6,23,0.85)";
+          (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.1)";
+          (e.currentTarget as HTMLElement).style.color = "#f8fafc";
+        }}
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M18 15l-6-6-6 6" />
+        </svg>
+      </button>
     </main>
   );
 }

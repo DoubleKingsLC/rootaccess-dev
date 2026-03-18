@@ -73,6 +73,7 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
   const [stageScaleFactor, setStageScaleFactor] = useState(1);
   const isMobile = useIsMobile(768);
   const [orientation, setOrientation] = useState<Orientation>("horizontal");
+  const [isRedoHovered, setIsRedoHovered] = useState(false);
 
   const ZOOM_SCALE = 4.5;
 
@@ -399,6 +400,72 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
                       </React.Fragment>
                     );
                   })}
+                </div>
+              </div>
+
+              {/* Redo / Rewatch Button */}
+              <div
+                style={{
+                  position: "fixed",
+                  bottom: "100px",
+                  right: "40px",
+                  zIndex: 500,
+                  opacity: progress > 0.96 ? 1 : 0,
+                  visibility: progress > 0.96 ? "visible" : "hidden",
+                  transform: progress > 0.96 ? "scale(1)" : "scale(0.8)",
+                  transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+                }}
+              >
+                <div style={{ position: "relative" }}>
+                  {/* Label on hover */}
+                  <div style={{
+                    position: "absolute",
+                    right: "110%",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "rgba(15,23,42,0.9)",
+                    backdropFilter: "blur(8px)",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                    padding: "8px 16px",
+                    borderRadius: "8px",
+                    whiteSpace: "nowrap",
+                    fontSize: "10px",
+                    fontFamily: "var(--font-mono, monospace)",
+                    color: "#22d3ee",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    opacity: isRedoHovered ? 1 : 0,
+                    pointerEvents: "none",
+                    transition: "all 0.3s ease",
+                  }}>
+                    Rewatch the workflow
+                  </div>
+
+                  <button
+                    onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                    onMouseEnter={() => setIsRedoHovered(true)}
+                    onMouseLeave={() => setIsRedoHovered(false)}
+                    style={{
+                      width: "56px",
+                      height: "56px",
+                      borderRadius: "50%",
+                      background: "rgba(2,6,23,0.85)",
+                      backdropFilter: "blur(12px)",
+                      border: "1px solid rgba(34,211,238,0.3)",
+                      color: "#22d3ee",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      cursor: "pointer",
+                      boxShadow: "0 0 20px rgba(34,211,238,0.2)",
+                      transition: "all 0.3s ease",
+                    }}
+                  >
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+                      <path d="M21 3v5h-5" />
+                    </svg>
+                  </button>
                 </div>
               </div>
 
