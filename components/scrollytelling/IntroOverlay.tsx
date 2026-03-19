@@ -20,10 +20,10 @@ export const IntroOverlay: React.FC<IntroOverlayProps> = ({ progress }) => {
       aria-hidden={progress >= 0.10}
     >
       <h1 className="font-sans text-4xl font-bold tracking-tight text-white md:text-6xl lg:text-7xl">
-        ROOTACCESS.TECH: SOC PATHWAY
+        SOC PATHWAY
       </h1>
       <p className="mt-6 font-mono text-sm tracking-[0.3em] text-slate-400 md:text-base status-flicker uppercase">
-        INITIALIZING SEC-OPS PROTOCOLS...
+        WORKING OF SOC with An Example Incident
       </p>
 
       {/* Scroll hint */}
