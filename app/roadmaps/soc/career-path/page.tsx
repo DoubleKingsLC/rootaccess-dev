@@ -264,6 +264,19 @@ export default function SocCareerPathPage() {
   const [scaleFactor, setScaleFactor] = useState(1);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
+  // ── Ensure page starts at the top ──────────────────────────────────
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Force scroll to top on mount
+      window.scrollTo(0, 0);
+      
+      // Prevent browser from restoring scroll position
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "manual";
+      }
+    }
+  }, []);
+
   useEffect(() => {
     const toggleVisibility = () => {
       if (window.pageYOffset > 400) {
