@@ -74,6 +74,36 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
   const isMobile = useIsMobile(768);
   const [orientation, setOrientation] = useState<Orientation>("horizontal");
   const [isRedoHovered, setIsRedoHovered] = useState(false);
+  const [isAutoScrolling, setIsAutoScrolling] = useState(false);
+
+  // ── Auto-scrolling logic ───────────────────────────────────────────
+  useEffect(() => {
+    if (!isAutoScrolling) return;
+
+    let lastScrollY = window.scrollY;
+    let rafId: number;
+
+    const scrollStep = () => {
+      // Small tolerance to allow for pixel precision differences
+      const currentScrollY = window.scrollY;
+      if (Math.abs(currentScrollY - lastScrollY) > 5) {
+        setIsAutoScrolling(false);
+        return;
+      }
+
+      window.scrollBy(0, 1.5); // Slow, smooth automated scroll
+      lastScrollY = window.scrollY;
+
+      if (window.scrollY + window.innerHeight < document.documentElement.scrollHeight - 10) {
+        rafId = requestAnimationFrame(scrollStep);
+      } else {
+        setIsAutoScrolling(false);
+      }
+    };
+
+    rafId = requestAnimationFrame(scrollStep);
+    return () => cancelAnimationFrame(rafId);
+  }, [isAutoScrolling]);
 
   const ZOOM_SCALE = 4.5;
 
@@ -354,7 +384,11 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
 
               {/* ── Intro overlay ────────────────────────────────────────────────── */}
               <div className="pointer-events-none absolute inset-0 z-50">
-                <IntroOverlay progress={progress} />
+                <IntroOverlay 
+                  progress={progress} 
+                  onPlay={() => setIsAutoScrolling(true)}
+                  isAutoScrolling={isAutoScrolling}
+                />
               </div>
 
               {/* ── Narrative captions + broadcast notifications ─────────────────── */}
@@ -467,6 +501,41 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
                     </svg>
                   </button>
                 </div>
+              </div>
+
+              {/* Persistent Play/Pause Toggle */}
+              <div 
+                className="fixed top-10 right-10 z-[500] transition-all duration-700"
+                style={{ 
+                  opacity: progress > 0.01 ? 1 : 0,
+                  transform: progress > 0.01 ? "translateY(0)" : "translateY(-20px)",
+                  pointerEvents: progress > 0.01 ? "auto" : "none"
+                }}
+              >
+                <button
+                  onClick={() => setIsAutoScrolling(!isAutoScrolling)}
+                  className={`group relative flex h-12 w-12 items-center justify-center rounded-full border transition-all duration-300 ${
+                    isAutoScrolling 
+                      ? "border-cyan-500/50 bg-slate-900/80 shadow-[0_0_20px_rgba(34,211,238,0.3)]" 
+                      : "border-white/10 bg-slate-950/40 hover:border-white/30 hover:bg-slate-900/60"
+                  } text-white backdrop-blur-md`}
+                >
+                  {isAutoScrolling ? (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <rect x="6" y="4" width="4" height="16" />
+                      <rect x="14" y="4" width="4" height="16" />
+                    </svg>
+                  ) : (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="ml-0.5">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  )}
+                  
+                  {/* Tooltip-style label */}
+                  <div className="absolute right-full mr-4 whitespace-nowrap rounded-lg bg-slate-900/90 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.2em] text-cyan-400 opacity-0 transition-opacity group-hover:opacity-100 border border-white/10 backdrop-blur-sm pointer-events-none">
+                    {isAutoScrolling ? "Pause Auto-Player" : "Resume Auto-Player"}
+                  </div>
+                </button>
               </div>
 
             </div>
