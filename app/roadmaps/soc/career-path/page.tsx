@@ -619,7 +619,7 @@ export default function SocCareerPathPage() {
                     {cat.icon}
                   </div>
                   <h3 className="font-mono text-[10px] font-bold tracking-[0.3em] text-slate-500 mb-4 border-b border-white/5 pb-2">
-                    {cat.title}{cat.title === "CERTS" ? " (ANY 1)" : ""}
+                    {cat.title}
                   </h3>
                   {cat.title === "CERTS" && cat.items.length > 1 ? (
                     /* ── Certifications: Recommended + Additional ── */
@@ -667,7 +667,7 @@ export default function SocCareerPathPage() {
                         </ul>
                       </div>
                       <div>
-                        <p className="mb-2 font-mono text-[9px] font-bold uppercase tracking-[0.35em] text-slate-500">Alternatives</p>
+                        <p className="mb-2 font-mono text-[9px] font-bold uppercase tracking-[0.35em] text-slate-500">{level.num === "03" ? "Additional" : "Alternatives"}</p>
                         <ul className="space-y-4">
                           {cat.items.slice(1).map((item: any, idx: number) => {
                             const isObj = typeof item === "object";
@@ -1208,7 +1208,7 @@ export default function SocCareerPathPage() {
                         <div className="mb-4 flex items-center gap-3 border-b border-white/5 pb-3">
                           <span className="text-xl" style={{ textShadow: `0 0 10px ${level.color}` }}>{cat.icon}</span>
                           <p className="font-mono text-xs font-bold uppercase tracking-[0.3em]" style={{ color: level.color }}>
-                            {cat.title}{cat.title === "Certifications" ? " (ANY 1)" : ""}
+                            {cat.title}
                           </p>
                         </div>
                         <div className="flex-1 pb-16">
@@ -1267,7 +1267,7 @@ export default function SocCareerPathPage() {
                               {/* ADDITIONAL */}
                               <div>
                                 <p className="mb-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.35em] text-slate-500">
-                                  Alternatives
+                                  {level.num === "03" ? "Additional" : "Alternatives"}
                                 </p>
                                 <ul className="space-y-4">
                                   {cat.items.slice(1).map((item: any, idx: number) => {
