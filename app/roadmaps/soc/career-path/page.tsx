@@ -900,7 +900,7 @@ export default function SocCareerPathPage() {
           className="pt-16"
         >
           {/* ── Hero ────────────────────────────────────────────────────────── */}
-          <section className="relative flex min-h-screen items-center justify-center overflow-hidden">
+          <section className="relative flex min-h-[85vh] items-start justify-center overflow-hidden pt-24 pb-32 lg:pt-32">
             {/* Grid */}
             <div
               className="pointer-events-none absolute inset-0"
@@ -921,7 +921,7 @@ export default function SocCareerPathPage() {
               style={{ background: "radial-gradient(ellipse at center, rgba(52,211,153,0.04) 0%, transparent 65%)" }}
             />
 
-            <div className="relative z-10 flex w-full max-w-7xl items-center px-8 lg:px-12">
+            <div className="relative z-10 flex w-full max-w-7xl items-start px-8 lg:px-12">
               {/* Index - LHS (Desktop only) */}
               <div className="hero-anim hidden w-80 flex-col gap-8 rounded-2xl border border-white/5 bg-slate-900/10 p-8 backdrop-blur-sm lg:flex shadow-2xl">
                 <div className="space-y-2">
