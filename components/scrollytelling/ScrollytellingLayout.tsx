@@ -91,7 +91,7 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
         return;
       }
 
-      window.scrollBy(0, 1.5); // Slow, smooth automated scroll
+      window.scrollBy(0, 2.25); // Smooth automated scroll (speed increased by 50%)
       lastScrollY = window.scrollY;
 
       if (window.scrollY + window.innerHeight < document.documentElement.scrollHeight - 10) {
