@@ -365,7 +365,7 @@ export default function HomePage() {
 
     useEffect(() => {
         if (!layout || !rPos || !containerRef.current || !heroRRef.current || !rLetterRef.current || !rSpacerRef.current) return;
-        
+
         if (isMobile) {
             // Un-hide elements that are hidden by default for the GSAP animation
             if (pathLabelRef.current) pathLabelRef.current.style.opacity = "1";
@@ -532,8 +532,8 @@ export default function HomePage() {
                         display: "flex", alignItems: "baseline",
                         fontSize: "clamp(4.5rem, 13vw, 10.5rem)", fontWeight: 700, letterSpacing: "-0.04em",
                     }}>
-                        <span ref={rSpacerRef} aria-hidden="true" style={{ 
-                            visibility: isMobile ? "visible" : "hidden", 
+                        <span ref={rSpacerRef} aria-hidden="true" style={{
+                            visibility: isMobile ? "visible" : "hidden",
                             color: "#22d3ee",
                             textShadow: isMobile ? "0 0 40px rgba(34,211,238,0.65), 0 0 80px rgba(34,211,238,0.3)" : "none"
                         }}>R</span>
@@ -557,18 +557,18 @@ export default function HomePage() {
                             color: "rgba(248,250,252,0.95)",
                         }}>Scroll to explore</span>
                         <div className="animate-bounce">
-                           <svg
-                              className="w-10 h-10 text-slate-400"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
+                            <svg
+                                className="w-10 h-10 text-slate-400"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
                             >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="1.5"
-                                d="M19 14l-7 7m0 0l-7-7m7 7V3"
-                              />
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="1.5"
+                                    d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                                />
                             </svg>
                         </div>
                     </div>
@@ -772,19 +772,19 @@ export default function HomePage() {
                         <p ref={pathLabelRef} className="font-mono uppercase" style={{
                             fontSize: 10, letterSpacing: "0.55em", color: "rgba(34,211,238,0.6)", marginBottom: "10px", marginTop: "20px"
                         }}>Choose Your Path</p>
-                        
+
                         {DOMAINS.map((d) => (
                             <div key={d.id} style={{ width: "100%", maxWidth: "340px", height: "auto" }}>
-                                <BannerCard 
-                                    domain={d} 
-                                    bRef={() => {}} 
-                                    style={{ 
-                                        position: "relative", 
-                                        opacity: 1, 
-                                        transform: "none", 
-                                        width: "100%", 
+                                <BannerCard
+                                    domain={d}
+                                    bRef={() => { }}
+                                    style={{
+                                        position: "relative",
+                                        opacity: 1,
+                                        transform: "none",
+                                        width: "100%",
                                         minHeight: "240px",
-                                    }} 
+                                    }}
                                 />
                             </div>
                         ))}

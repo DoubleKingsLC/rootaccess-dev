@@ -14,6 +14,7 @@ import { SOCMobileExperience } from "./SOCMobileExperience";
 import { TacticalBriefing } from "./TacticalBriefing";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import Lenis from "lenis";
+import { useRouter } from "next/navigation";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -54,6 +55,7 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
   const socStageRef = useRef<HTMLDivElement | null>(null);
   const worldStageRef = useRef<HTMLDivElement | null>(null);
   const baseStageWidthRef = useRef<number | null>(null);
+  const router = useRouter();
   const l1DeskRef = useRef<HTMLDivElement | null>(null);
   const l2DeskRef = useRef<HTMLDivElement | null>(null);
   const l3DeskRef = useRef<HTMLDivElement | null>(null);
@@ -505,7 +507,7 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
 
               {/* Persistent Play/Pause Toggle */}
               <div 
-                className="fixed top-10 right-10 z-[500] transition-all duration-700"
+                className="fixed top-10 right-10 z-[1000] transition-all duration-700"
                 style={{ 
                   opacity: progress > 0.01 ? 1 : 0,
                   transform: progress > 0.01 ? "translateY(0)" : "translateY(-20px)",
@@ -534,6 +536,31 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
                   {/* Tooltip-style label */}
                   <div className="absolute right-full mr-4 whitespace-nowrap rounded-lg bg-slate-900/90 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.2em] text-cyan-400 opacity-0 transition-opacity group-hover:opacity-100 border border-white/10 backdrop-blur-sm pointer-events-none">
                     {isAutoScrolling ? "Pause Auto-Player" : "Resume Auto-Player"}
+                  </div>
+                </button>
+              </div>
+
+              {/* Persistent Home Button */}
+              <div 
+                className="fixed top-10 left-10 z-[1000] transition-all duration-700"
+                style={{ 
+                  opacity: progress > 0.01 ? 1 : 0,
+                  transform: progress > 0.01 ? "translateY(0)" : "translateY(-20px)",
+                  pointerEvents: progress > 0.01 ? "auto" : "none"
+                }}
+              >
+                <button
+                  onClick={() => router.push("/")}
+                  className="group relative flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-slate-950/40 text-white shadow-2xl backdrop-blur-md transition-all hover:scale-110 hover:border-white/30 hover:bg-slate-900/60"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                  </svg>
+                  
+                  {/* Tooltip-style label */}
+                  <div className="absolute left-full ml-4 whitespace-nowrap rounded-lg bg-slate-900/90 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.2em] text-cyan-400 opacity-0 transition-opacity group-hover:opacity-100 border border-white/10 backdrop-blur-sm pointer-events-none">
+                    Return Home
                   </div>
                 </button>
               </div>
