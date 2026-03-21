@@ -151,7 +151,7 @@ const LEVELS: Level[] = [
   {
     num: "03",
     label: "Principal AI Security Architect",
-    subtitle: "Enterprise Defence & Leadership",
+    subtitle: "Enterprise Defense, Governance & Leadership",
     color: "#a78bfa",
     glow: "rgba(167,139,250,0.2)",
     border: "rgba(167,139,250,0.25)",
@@ -159,22 +159,28 @@ const LEVELS: Level[] = [
       "You've been the attacker. Now you build the systems that make the next attacker's job impossible.",
     time: "7+ years",
     salary: "£110K–£160K+",
-    tools: ["Lakera Guard", "Protect AI", "LLM Guard", "Azure AI Content Safety", "AWS Bedrock Guardrails"],
+    tools: [
+      "Lakera Guard",
+      "Azure AI Content Safety",
+      "AWS Bedrock Guardrails",
+      "Protect AI (Guardian)"
+    ],
     skills: [
-      "AI security architecture design and guardrail deployment",
-      "NIST AI RMF and EU AI Act governance frameworks",
-      "LLM firewall implementation and red team leadership",
-      "Executive communication — translating AI risk",
+      "Defense-in-Depth Architecture — multi-layered pipelines",
+      "AI Governance & Compliance — EU AI Act, NIST AI RMF",
+      "Adversarial Tabletop Exercises — simulation leadership",
+      "Executive Risk Communication — metrics & translation",
+      "AI Red Team Management — automated portfolio testing"
     ],
     certs: [
-      { label: "CISSP — Certified Security Professional", link: "https://www.isc2.org/certifications/cissp", provider: "isc2" },
-      { label: "CISM — Certified Security Manager", link: "https://www.isaca.org/credentialing/cism", provider: "isaca" },
-      { label: "CompTIA AI+ (Launching 2024)", link: "https://www.comptia.org/en/certifications/ai-plus", provider: "comptia" },
+      { label: "CISSP — Certified Information Systems Security Professional", link: "https://www.isc2.org/certifications/cissp", provider: "isc2" },
+      { label: "CISM — Certified Information Security Manager", link: "https://www.isaca.org/credentialing/cism", provider: "isaca" }
     ],
     labs: [
-      { label: "Design enterprise guardrail pipelines", link: "https://github.com/lakeraai/lakera-guard", provider: "lakera" },
-      { label: "Run internal AI red team exercises", link: "https://github.com/microsoft/pyrit", provider: "microsoft" },
-      { label: "Build AI incident response playbooks", link: "https://github.com/OWASP/www-project-top-10-for-large-language-model-applications", provider: "owasp" },
+      { label: "NIST AI RMF Playbook", link: "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf", provider: "nist" },
+      { label: "EU AI Act 2026 Compliance Guide", link: "https://artificialintelligenceact.eu/", provider: "eu" },
+      { label: "eSecurity Planet: AI Threats Playbook", link: "https://www.esecurityplanet.com/", provider: "esecurityplanet" },
+      { label: "Lakera AI Security Hub", link: "https://www.lakera.ai/blog", provider: "lakera" }
     ],
   },
 ] as const;
@@ -1206,10 +1212,10 @@ export default function AiHackingCareerPathPage() {
                             {cat.title}
                           </p>
                         </div>
-                        <div className="flex-1 pb-16">
+                        <div className="flex-1 pb-16 relative">
                           {cat.title === "Certifications" && cat.items.length > 1 ? (
                             /* ── Certifications: Recommended + Additional sections ── */
-                            <div className="flex flex-col gap-5">
+                            <div className="flex flex-col gap-5 pt-1 pr-2">
                               {/* RECOMMENDED */}
                               <div>
                                 <p className="mb-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.35em]" style={{ color: level.color, opacity: 0.7 }}>
@@ -1310,7 +1316,7 @@ export default function AiHackingCareerPathPage() {
                             </div>
                           ) : (
                             /* ── All other categories (or single-cert): flat list ── */
-                            <ul className="space-y-4">
+                            <ul className="space-y-4 pt-1 pr-2">
                               {cat.items.map((item: any, idx: number) => {
                                 const isObj = typeof item === "object";
                                 const label = isObj ? item.label : item;
