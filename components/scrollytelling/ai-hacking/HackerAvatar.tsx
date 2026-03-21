@@ -1,20 +1,16 @@
 import React from 'react';
 
+import { getAttackerStatus } from './aiHackingModel';
+
 type HackerAvatarProps = {
     className?: string;
     progress?: number;
 };
 
 export const HackerAvatar: React.FC<HackerAvatarProps> = ({ className = "", progress = 0 }) => {
-    const isAttacking = progress >= 0.30 && progress < 0.85;
-    const isExfiltrating = progress >= 0.85;
+    const statusLabel = getAttackerStatus(progress);
     const isActive = progress >= 0.30;
-
-    const statusLabel = isExfiltrating
-        ? "EXFILTRATING"
-        : isAttacking
-            ? "INJECTING..."
-            : null;
+    const isExfiltrating = statusLabel === "EXFILTRATING";
 
     return (
         <div className={`flex flex-col items-center gap-3 ${className}`}>
@@ -66,7 +62,7 @@ export const HackerAvatar: React.FC<HackerAvatarProps> = ({ className = "", prog
                         boxShadow: "0 0 12px rgba(239,68,68,0.3)",
                     }}
                 >
-                    {statusLabel}
+                    {isExfiltrating ? "EXFILTRATING" : "INJECTING..."}
                 </div>
             )}
         </div>
