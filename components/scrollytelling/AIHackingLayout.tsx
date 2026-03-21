@@ -12,6 +12,7 @@ import { AI_CHAT_MESSAGES, AI_LLM_COMPROMISED_AT, AI_HACKING_PHASES } from "./ai
 import { AIHackingNotepad } from "./ai-hacking/AIHackingNotepad";
 import { AIHackingNotesCard } from "./ai-hacking/AIHackingNotesCard";
 import { DataFlightOverlay } from "./ai-hacking/DataFlightOverlay";
+import { AIHackingCareerRoadmap } from "./ai-hacking/AIHackingCareerRoadmap";
 import { AIIntroOverlay } from "./AIIntroOverlay";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -22,11 +23,12 @@ type AIHackingLayoutProps = {
 
 // ── Incident Timeline nodes (Thematic placeholder) ─────────────────────────────
 const TIMELINE = [
-    { label: "Recon", threshold: 0.05 },
-    { label: "Injections", threshold: 0.35 },
-    { label: "Poisoning", threshold: 0.55 },
-    { label: "Exfiltration", threshold: 0.75 },
-    { label: "Reporting / Aftermath", threshold: 0.95 },
+    { label: "Recon", threshold: 0.08 },
+    { label: "Injections", threshold: 0.30 },
+    { label: "Poisoning", threshold: 0.50 },
+    { label: "Exfiltration", threshold: 0.70 },
+    { label: "System Takeover", threshold: 0.88 },
+    { label: "Aftermath", threshold: 0.98 },
 ] as const;
 
 const PACKETS = [
@@ -50,9 +52,12 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
     const [isAutoScrolling, setIsAutoScrolling] = useState(false);
     const [isRedoHovered, setIsRedoHovered] = useState(false);
 
-    // Outro card opacity — mirrors CareerRoadmap in SOC
-    // 0.95–1.0 is the career roadmap card.
-    const outroOpacity = progress > 0.95 ? Math.min(1, (progress - 0.95) / 0.05) : 0;
+    // Staggered hand-off:
+    // 1. Dashboard fades from 1 -> 0 between 0.94 and 0.97
+    const dashboardOpacity = progress < 0.94 ? 1 : Math.max(0, 1 - (progress - 0.94) / 0.03);
+    
+    // 2. Roadmap Card fades from 0 -> 1 between 0.96 and 0.99
+    const roadmapOpacity = progress < 0.96 ? 0 : Math.min(1, (progress - 0.96) / 0.03);
 
     useEffect(() => {
         if (!scrollSectionRef.current || !pinnedViewportRef.current) return;
@@ -81,8 +86,8 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
             // Initially, intro is visible, workspace is hidden
             gsap.set(workspaceRef.current, { autoAlpha: 0, scale: 0.95, filter: "blur(10px)" });
 
-            // 0.05: Workspace fades in
-            tl.to(workspaceRef.current, { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 0.04, ease: "power3.out" }, 0.05);
+            // 0.01: Workspace fades in
+            tl.to(workspaceRef.current, { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 0.04, ease: "power3.out" }, 0.01);
 
             // Simple timeline block for pure scroll mapping to reach the end
             tl.to({}, { duration: 1 });
@@ -137,10 +142,10 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
                 {/* ── Background grid + data packets (Red Theme) ──────────────────────── */}
                 <div
                     ref={backgroundRef}
-                    className="pointer-events-none absolute inset-0 z-0 bg-[#0a0000]"
+                    className="pointer-events-none absolute inset-0 z-0 bg-[#0a0000] transition-all duration-1000"
                     style={{
                         backgroundImage:
-                            "radial-gradient(circle at center, transparent 0%, rgba(60, 5, 5, 0.9) 100%), linear-gradient(to right, rgba(239, 68, 68, 0.18) 1px, transparent 1px), linear-gradient(to bottom, rgba(239, 68, 68, 0.18) 1px, transparent 1px)",
+                            `radial-gradient(circle at center, ${progress >= 0.88 ? 'rgba(100,0,0,0.1)' : 'transparent'} 0%, rgba(60, 5, 5, 0.9) 100%), linear-gradient(to right, rgba(239, 68, 68, ${progress >= 0.88 ? '0.4' : '0.18'}) 1px, transparent 1px), linear-gradient(to bottom, rgba(239, 68, 68, ${progress >= 0.88 ? '0.4' : '0.18'}) 1px, transparent 1px)`,
                         backgroundSize: "100% 100%, 40px 40px, 40px 40px",
                         backgroundRepeat: "no-repeat, repeat, repeat",
                     }}
@@ -166,12 +171,25 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
                 <div 
                     className="pointer-events-none absolute inset-0 z-[5] bg-[#050000] transition-opacity duration-700" 
                     style={{ 
-                        opacity: AI_HACKING_PHASES.some(p => progress >= p.startAt && progress <= p.startAt + 0.02) ? 0.75 : 0 
+                        opacity: AI_HACKING_PHASES.some(p => progress >= p.startAt && progress <= p.startAt + 0.024) ? 0.75 : 0 
                     }}
                 />
 
-                {/* ── Intro Overlay (SOC-matching fonts + controls) ──────────────── */}
-                <DataFlightOverlay progress={progress} />
+                {/* ── Background Overlays (Blurred during Focus + Faded at End) ────── */}
+                <div 
+                    className="pointer-events-none absolute inset-0 z-[100] transition-all duration-700 ease-in-out"
+                    style={(() => {
+                        const isFocusing = AI_HACKING_PHASES.some(p => progress >= p.startAt && progress <= p.startAt + 0.024);
+                        const isFinalPhase = progress >= 0.94;
+                        return {
+                            filter: isFinalPhase ? "blur(30px)" : isFocusing ? "blur(8px)" : "none",
+                            opacity: dashboardOpacity,
+                            pointerEvents: "none",
+                        };
+                    })()}
+                >
+                    <DataFlightOverlay progress={progress} />
+                </div>
                 <AIIntroOverlay
                     progress={progress}
                     isAutoScrolling={isAutoScrolling}
@@ -180,95 +198,103 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
 
                 {/* ── Main Workspace ──────────────────────────────────────────────────── */}
                 <div ref={workspaceRef} className="relative z-10 flex h-full w-full max-w-[1600px] flex-col lg:flex-row items-center justify-between px-4 md:px-10 lg:px-16 py-16 gap-8 lg:gap-12">
-                    
-                    {/* Far Left: Notepad & Scratchcard */}
-                    <div className="flex-shrink-0 flex flex-col gap-10 self-start lg:self-center lg:-ml-4 xl:-ml-8 lg:-mt-12">
-                        <AIHackingNotepad progress={progress} />
-                        <div id="hacking-scratchpad">
-                            <AIHackingNotesCard progress={progress} />
-                        </div>
-                    </div>
+                    {(() => {
+                        const isFocusing = AI_HACKING_PHASES.some(p => progress >= p.startAt && progress <= p.startAt + 0.024);
+                        const isFinalPhase = progress >= 0.97;
+                        
+                        return (
+                            <>
+                                {/* Hacking Narrative Layer (Fades out at 97%) */}
+                                <div 
+                                    className="absolute inset-0 flex flex-col lg:flex-row items-center justify-between transition-all duration-700 ease-in-out"
+                                    style={{ 
+                                        opacity: isFinalPhase ? 0 : 1,
+                                        pointerEvents: isFinalPhase ? "none" : "auto",
+                                        filter: isFinalPhase ? "blur(20px)" : "none",
+                                        visibility: progress > 0.99 ? "hidden" : "visible"
+                                    }}
+                                >
+                                    {/* Far Left: Notepad & Scratchcard */}
+                                    <div 
+                                        className="flex-shrink-0 flex flex-col gap-10 self-start lg:self-center lg:-ml-4 xl:-ml-8 lg:-mt-12 transition-all duration-700"
+                                        style={{ zIndex: isFocusing ? 200 : 10 }}
+                                    >
+                                        <AIHackingNotepad progress={progress} />
+                                        <div id="hacking-scratchpad">
+                                            <AIHackingNotesCard progress={progress} />
+                                        </div>
+                                    </div>
 
-                    {/* Right side group: Avatar -> Chat -> Brain */}
-                    <div className="flex flex-1 w-full items-center justify-end gap-6 md:gap-8 lg:gap-12 xl:gap-20">
-                        <div className="flex-shrink-0">
-                            <HackerAvatar progress={progress} />
-                        </div>
+                                    {/* Right side group: Avatar -> Chat/Takeover -> Brain */}
+                                    <div 
+                                        className="flex flex-1 w-full items-center justify-end gap-6 md:gap-8 lg:gap-12 xl:gap-20 transition-all duration-700"
+                                        style={{ 
+                                            filter: isFocusing ? "blur(12px)" : "none",
+                                            opacity: isFocusing ? 0.25 : 1,
+                                            transform: isFocusing ? "scale(0.95)" : "scale(1)",
+                                        }}
+                                    >
+                                        <div className="flex-shrink-0 transition-opacity duration-700" style={{ opacity: progress >= 0.88 ? 0.2 : 1 }}>
+                                            <HackerAvatar progress={progress} />
+                                        </div>
 
-                        <div id="hacking-chatbox" className="w-full max-w-2xl flex-shrink">
-                            <AIChatBox progress={progress} />
-                        </div>
+                                        {/* Container for ChatBox OR Takeover Cinematic */}
+                                        <div className="relative w-full max-w-2xl flex-shrink">
+                                            
+                                            {/* ChatBox: Fades out at Takeover */}
+                                            <div id="hacking-chatbox" className="w-full transition-all duration-700 pointer-events-none"
+                                                 style={{
+                                                     opacity: progress >= 0.88 ? 0 : 1,
+                                                     transform: progress >= 0.88 ? "scale(0.9) translateY(20px)" : "scale(1) translateY(0)",
+                                                     filter: progress >= 0.88 ? "blur(10px)" : "none",
+                                                 }}>
+                                                <div className="pointer-events-auto">
+                                                    <AIChatBox progress={progress} />
+                                                </div>
+                                            </div>
 
-                        <div className="flex-shrink-0">
-                            <LLMBrain compromised={progress >= AI_LLM_COMPROMISED_AT} />
-                        </div>
-                    </div>
-                    {children}
+                                            {/* Takeover Cinematic: Fades in at 0.88 over the natural height of Chatbox */}
+                                            <div className="absolute inset-0 flex flex-col items-center justify-center text-center transition-all duration-1000 ease-out pointer-events-none"
+                                                 style={{
+                                                     opacity: progress >= 0.88 ? 1 : 0,
+                                                     transform: progress >= 0.88 ? "scale(1)" : "scale(1.1)",
+                                                 }}>
+                                                <div className={`${progress >= 0.88 ? 'animate-pulse' : ''}`}>
+                                                    <h2 className="font-mono text-4xl md:text-5xl lg:text-6xl font-black text-red-500 tracking-tighter" 
+                                                        style={{ textShadow: "0 0 40px rgba(239, 68, 68, 0.8), 0 0 80px rgba(239, 68, 68, 0.4)" }}>
+                                                        SYSTEM_COMPROMISED
+                                                    </h2>
+                                                    <p className="mt-4 font-mono text-xl md:text-2xl text-red-300 tracking-widest uppercase"
+                                                       style={{ textShadow: "0 0 20px rgba(239, 68, 68, 0.6)" }}>
+                                                        [ ROOT_ACCESS_GRANTED ]
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex-shrink-0 transition-all duration-1000 ease-out"
+                                             style={{
+                                                 transform: progress >= 0.88 ? "scale(1.2)" : "scale(1)",
+                                                 filter: progress >= 0.88 ? "drop-shadow(0 0 80px rgba(239, 68, 68, 1)) brightness(1.3)" : "none"
+                                             }}>
+                                            <LLMBrain compromised={progress >= AI_LLM_COMPROMISED_AT} />
+                                        </div>
+                                    </div>
+                                </div>
+                            </>
+                        );
+                    })()}
                 </div>
 
-                {/* ── Outro Card (progress >= 0.92) ───────────────────────────────────── */}
+                {/* ── Career Roadmap Hand-off ─────────────────────────────────── */}
                 <div
-                    className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center px-6"
-                    style={{ opacity: outroOpacity }}
+                    className="fixed inset-0 z-[150] flex items-center justify-center p-6 transition-all duration-1000"
+                    style={{ 
+                        opacity: roadmapOpacity,
+                        pointerEvents: roadmapOpacity > 0.9 ? "auto" : "none" 
+                    }}
                 >
-                    <div
-                        className={`w-[min(560px,92vw)] rounded-2xl px-7 py-6 backdrop-blur-2xl ${
-                            outroOpacity > 0.1 ? "pointer-events-auto" : "pointer-events-none"
-                        }`}
-                        style={{
-                            border: "1px solid rgba(239,68,68,0.45)",
-                            background: "rgba(10,0,0,0.82)",
-                            boxShadow: "0 0 60px rgba(239,68,68,0.2), 0 0 120px rgba(239,68,68,0.08)",
-                        }}
-                    >
-                        <div className="mb-4 flex items-center gap-3">
-                            <div
-                                className="h-2.5 w-2.5 animate-pulse rounded-full bg-red-500"
-                                style={{ boxShadow: "0 0 10px rgba(239,68,68,0.9)" }}
-                            />
-                            <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-red-400">
-                                Breach Complete · What&apos;s Next?
-                            </p>
-                        </div>
-
-                        <div className="mb-4 flex items-baseline gap-3">
-                            <p
-                                className="font-mono text-5xl font-black text-red-400"
-                                style={{ textShadow: "0 0 30px rgba(239,68,68,0.6)" }}
-                            >
-                                3 attempts
-                            </p>
-                            <p className="font-mono text-xs uppercase tracking-widest text-red-900/80">
-                                recon → full exfiltration
-                            </p>
-                        </div>
-
-                        <p className="mb-2 font-sans text-base leading-relaxed text-slate-100">
-                            That&apos;s all it took to break the model. Behind every successful attack
-                            are five career levels — each building a deeper understanding of how AI systems fail.
-                        </p>
-                        <p className="mb-6 font-sans text-sm leading-relaxed text-slate-400">
-                            Explore exactly what each role does, the tools that top researchers use,
-                            and the challenges you can start breaking today.
-                        </p>
-
-                        <button
-                            type="button"
-                            onClick={() => router.push("/roadmaps/ai-hacking/career-path")}
-                            className="inline-flex items-center gap-3 rounded-xl px-5 py-3 font-mono text-xs uppercase tracking-widest text-red-300 transition-all hover:text-red-200"
-                            style={{
-                                border: "1px solid rgba(239,68,68,0.45)",
-                                background: "rgba(239,68,68,0.08)",
-                            }}
-                            onMouseEnter={e => (e.currentTarget.style.background = "rgba(239,68,68,0.18)")}
-                            onMouseLeave={e => (e.currentTarget.style.background = "rgba(239,68,68,0.08)")}
-                        >
-                            Explore the AI Hacking Career Path
-                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                <path d="M3 6h6M6 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </button>
-                    </div>
+                    <AIHackingCareerRoadmap opacity={roadmapOpacity} />
                 </div>
 
                 {/* ── Incident Timeline ──────────────────────────────────────────────── */}

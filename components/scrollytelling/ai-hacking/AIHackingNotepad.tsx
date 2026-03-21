@@ -74,42 +74,48 @@ export function AIHackingNotepad({
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  // Cinematic Focus Zoom Calculation (scroll-scrubbed)
+  // Hi-Res Quality Hack: We double the base size in CSS and scale down to 0.5 normally.
+  // When we zoom to 1.0, we are at native resolution (100% sharp).
   const { focusScale, focusTranslate } = useMemo(() => {
-    const PADDING = 0.02; // duration of the "pop" in progress units
-    let scale = 1;
+    const PADDING = 0.024;
+    let scale = 0.5; // Base scale is now 0.5
     let translateX = 0;
     let translateY = 0;
 
-    if (initialPos.x === 0) return { focusScale: 1, focusTranslate: { x: 0, y: 0 } };
+    if (initialPos.x === 0) return { focusScale: 0.5, focusTranslate: { x: 0, y: 0 } };
 
     for (let i = 0; i < AI_HACKING_PHASES.length; i++) {
         const phase = AI_HACKING_PHASES[i];
         if (progress >= phase.startAt && progress <= phase.startAt + PADDING) {
             const halfway = phase.startAt + PADDING / 2;
             
-            // Calculate progress 0 -> 1 -> 0
-            let t = 0;
+            let rawT = 0;
             if (progress <= halfway) {
-                t = (progress - phase.startAt) / (PADDING / 2);
+                rawT = (progress - phase.startAt) / (PADDING / 2);
             } else {
-                t = 1 - (progress - halfway) / (PADDING / 2);
+                rawT = 1 - (progress - halfway) / (PADDING / 2);
             }
 
-            // Target center of viewport
-            const targetX = window.innerWidth / 2;
-            const targetY = window.innerHeight / 2;
+            const t = 1 - Math.pow(1 - rawT, 3); 
+
+            const targetX = typeof window !== "undefined" ? window.innerWidth / 2 : 500;
+            const targetY = typeof window !== "undefined" ? window.innerHeight / 2 : 500;
 
             const deltaX = targetX - initialPos.x;
             const deltaY = targetY - initialPos.y;
 
-            scale = 1 + (0.9 * t); // Up to 1.9x scale
+            // Zoom from 0.5 up to 1.0 (native res) 
+            scale = 0.5 + (0.6 * t); 
             translateX = deltaX * t;
             translateY = deltaY * t;
+            
             break;
         }
     }
-    return { focusScale: scale, focusTranslate: { x: translateX, y: translateY } };
+    return { 
+        focusScale: scale, 
+        focusTranslate: { x: translateX, y: translateY }
+    };
   }, [progress, initialPos]);
 
   // For the barcode at the bottom
@@ -120,41 +126,56 @@ export function AIHackingNotepad({
       ref={containerRef}
       className={className}
       style={{
-        width: 300,
-        minWidth: 280,
+        width: 700, // Increased base width for better horizontal space
+        minWidth: 600,
+        zIndex: focusScale > 0.51 ? 50 : 10,
+        margin: -175, // Scaled compensation for 0.5 scale offset
+        transform: "scale(1)", // Neutralize parent side scale
       }}
     >
       <div
-        className="relative overflow-hidden rounded-xl border bg-[#080000]/95 backdrop-blur-3xl p-6"
+        className="relative overflow-hidden rounded-[2rem] border-[2px] bg-[#080000]/95 backdrop-blur-3xl p-12 antialiased"
         style={{
-          transform: `translate(${focusTranslate.x}px, ${focusTranslate.y}px) scale(${focusScale})`,
-          transition: focusScale > 1.01 ? "none" : "transform 600ms ease, box-shadow 600ms ease, border-color 600ms ease",
-          boxShadow: focusScale > 1.01
-            ? "0 40px 100px rgba(0,0,0,0.95), 0 0 150px rgba(239,68,68,0.4)"
+          transformOrigin: "center center",
+          transform: `translate3d(${focusTranslate.x}px, ${focusTranslate.y}px, 0) scale(${focusScale})`,
+          transition: focusScale > 0.51 ? "none" : "transform 800ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 800ms ease, border-color 800ms ease",
+          boxShadow: focusScale > 0.51
+            ? "0 80px 200px rgba(0,0,0,0.95), 0 0 150px rgba(239,68,68,0.3)"
             : "0 20px 40px rgba(0,0,0,0.6), 0 0 40px rgba(239,68,68,0.05)",
-          borderColor: focusScale > 1.01 ? "rgba(239,68,68,0.8)" : "rgba(239,68,68,0.25)",
-          zIndex: focusScale > 1.01 ? 100 : 10,
+          borderColor: focusScale > 0.51 ? "rgba(239,68,68,1)" : "rgba(239,68,68,0.25)",
+          zIndex: focusScale > 0.51 ? 300 : 10,
+          backfaceVisibility: "hidden",
         }}
       >
+        {/* Premium Cinematic Glint */}
+        <div 
+            className="pointer-events-none absolute -inset-full z-[1] rotate-[35deg] transition-all duration-1000"
+            style={{
+                background: "linear-gradient(90deg, transparent, rgba(239,68,68,0.05) 45%, rgba(239,68,68,0.2) 50%, rgba(239,68,68,0.05) 55%, transparent)",
+                transform: `translateX(${focusScale > 1.05 ? "100%" : "-100%"})`,
+                opacity: focusScale > 1.05 ? 1 : 0,
+            }}
+        />
+
         {/* Spiral Binding Aesthetic */}
-        <div className="absolute -top-1 left-0 right-0 flex justify-evenly px-4 opacity-70">
+        <div className="absolute -top-2 left-0 right-0 flex justify-evenly px-8 opacity-70">
           {[...Array(9)].map((_, i) => (
-            <div key={i} className="w-1.5 h-3.5 rounded-b-sm" style={{ background: "rgba(239,68,68,0.4)" }} />
+            <div key={i} className="w-3 h-7 rounded-b-sm" style={{ background: "rgba(239,68,68,0.4)" }} />
           ))}
         </div>
 
         {/* Notepad Header */}
-        <div className="mt-3 mb-5 flex items-end justify-between border-b-2 pb-3" style={{ borderColor: "rgba(239,68,68,0.2)" }}>
+        <div className="mt-8 mb-10 flex items-end justify-between border-b-[3px] pb-6" style={{ borderColor: "rgba(239,68,68,0.2)" }}>
           <div>
-            <p className="font-mono text-[13px] font-bold uppercase tracking-[0.3em] text-red-100" style={{ textShadow: "0 0 10px rgba(239,68,68,0.5)" }}>
+            <p className="font-mono text-[30px] font-bold uppercase tracking-[0.3em] text-red-100" style={{ textShadow: "0 0 20px rgba(239,68,68,0.5)" }}>
               Field_Notes
             </p>
-            <p className="mt-1.5 font-mono text-[9px] uppercase tracking-widest text-red-500/70">
+            <p className="mt-3 font-mono text-[20px] uppercase tracking-widest text-red-500/70">
               Session // Data Capture
             </p>
           </div>
-          <div className="flex h-2 w-2 items-center justify-center">
-             <div className="h-1.5 w-1.5 rounded-sm animate-pulse bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.9)]" />
+          <div className="flex h-4 w-4 items-center justify-center">
+             <div className="h-3 w-3 rounded-sm animate-pulse bg-red-500 shadow-[0_0_15px_rgba(239,68,68,0.9)]" />
           </div>
         </div>
 
@@ -169,10 +190,10 @@ export function AIHackingNotepad({
             return (
               <div
                 key={phase.key}
-                className="group relative flex items-center gap-4 py-3.5 transition-all duration-400"
+                className="group relative flex items-center gap-8 py-7 transition-all duration-400"
                 style={{
-                  borderBottom: "1px solid rgba(239,68,68,0.15)",
-                  transform: zoomKey === phase.key ? "scale(1.02) translateX(4px)" : "none",
+                  borderBottom: "2px solid rgba(239,68,68,0.15)",
+                  transform: zoomKey === phase.key ? "scale(1.02) translateX(8px)" : "none",
                 }}
               >
                 {/* Fluid Background Highlight */}
@@ -183,30 +204,30 @@ export function AIHackingNotepad({
                         background: "linear-gradient(90deg, rgba(239,68,68,0.12) 0%, transparent 85%)",
                     }}
                 />
-
+ 
                 {/* Manual Checkbox */}
                 <div
-                  className="relative z-10 flex h-5 w-5 shrink-0 items-center justify-center rounded-[3px] transition-all duration-500"
+                  className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-[6px] transition-all duration-500"
                   style={{
-                    border: `1px solid ${done ? "rgba(239,68,68,0.7)" : active ? "rgba(239,68,68,0.6)" : "rgba(148,163,184,0.3)"}`,
+                    border: `2px solid ${done ? "rgba(239,68,68,0.7)" : active ? "rgba(239,68,68,0.6)" : "rgba(148,163,184,0.3)"}`,
                     background: done ? "rgba(239,68,68,0.15)" : "rgba(0,0,0,0.5)",
-                    boxShadow: done ? "0 0 15px rgba(239,68,68,0.3)" : active ? "inset 0 0 5px rgba(239,68,68,0.2)" : "none",
+                    boxShadow: done ? "0 0 30px rgba(239,68,68,0.3)" : active ? "inset 0 0 10px rgba(239,68,68,0.2)" : "none",
                   }}
                 >
                   {done && <CheckIcon />}
                 </div>
-
+ 
                 <div className="relative z-10 flex-1 min-w-0 flex flex-col justify-center">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-4">
                     <span 
-                        className="font-mono text-[10px] uppercase tracking-widest transition-colors duration-500"
+                        className="font-mono text-[22px] uppercase tracking-widest transition-colors duration-500"
                         style={{ color: active ? "rgba(248,113,113,1)" : "rgba(239,68,68,0.5)" }}
                     >
                         [{String(idx).padStart(2, "0")}]
                     </span>
                     <span
-                      className="font-mono text-[11px] uppercase tracking-[0.2em] whitespace-nowrap overflow-hidden text-ellipsis transition-all duration-500"
-                      style={{ color: accent, fontWeight: active ? 600 : 400, textShadow: active ? "0 0 10px rgba(239,68,68,0.4)" : "none" }}
+                      className="font-mono text-[26px] uppercase tracking-[0.2em] whitespace-nowrap overflow-hidden text-ellipsis transition-all duration-500"
+                      style={{ color: accent, fontWeight: active ? 600 : 400, textShadow: active ? "0 0 20px rgba(239,68,68,0.4)" : "none" }}
                     >
                       {phase.label}
                     </span>
@@ -214,7 +235,7 @@ export function AIHackingNotepad({
                   {/* Subtle Sub-line */}
                   {(active || done) && (
                       <div 
-                        className="mt-1 font-mono text-[8.5px] tracking-[0.25em] uppercase transition-all duration-500" 
+                        className="mt-3 font-mono text-[19px] tracking-[0.25em] uppercase transition-all duration-500" 
                         style={{ 
                             color: active ? "rgba(239,68,68,0.8)" : "rgba(239,68,68,0.4)",
                             opacity: (active || done) ? 1 : 0
@@ -230,13 +251,13 @@ export function AIHackingNotepad({
         </div>
 
         {/* Footer Barcode Line */}
-        <div className="mt-6 flex items-center justify-between pt-2">
-           <div className="flex items-end space-x-[2px] opacity-40">
+        <div className="mt-12 flex items-center justify-between pt-4">
+           <div className="flex items-end space-x-[4px] opacity-40">
                {barcodeBars.map((width, i) => (
-                   <div key={i} className="h-3 bg-red-400" style={{ width }} />
+                   <div key={i} className="h-6 bg-red-400" style={{ width: width * 2 }} />
                ))}
            </div>
-           <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-red-500/40">
+           <p className="font-mono text-[20px] uppercase tracking-[0.3em] text-red-500/40">
                // END OF RECORD
            </p>
         </div>

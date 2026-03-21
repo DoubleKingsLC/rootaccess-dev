@@ -14,9 +14,9 @@ export const AIIntroOverlay: React.FC<AIIntroOverlayProps> = ({
   onPlay,
   isAutoScrolling,
 }) => {
-  // Recon begins at progress 0.05, so the intro should fade by then.
-  const fadeOut = progress >= 0.05;
-  const opacity = fadeOut ? Math.max(0, 1 - (progress - 0.05) / 0.02) : 1;
+  // Intro should fade almost immediately once scrolling/play begins.
+  const fadeOut = progress >= 0.01;
+  const opacity = fadeOut ? Math.max(0, 1 - (progress - 0.01) / 0.015) : 1;
 
   return (
     <div
