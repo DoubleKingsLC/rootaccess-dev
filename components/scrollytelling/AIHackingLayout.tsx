@@ -51,6 +51,25 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
     const [progress, setProgress] = useState(0);
     const [isAutoScrolling, setIsAutoScrolling] = useState(false);
     const [isRedoHovered, setIsRedoHovered] = useState(false);
+    const [layoutScale, setLayoutScale] = useState(1);
+
+    useEffect(() => {
+        const updateScale = () => {
+            if (window.innerWidth < 1024) {
+                setLayoutScale(1);
+                return;
+            }
+            const BASE_WIDTH = 1600;
+            const BASE_HEIGHT = 900;
+            const widthRatio = window.innerWidth / BASE_WIDTH;
+            const heightRatio = window.innerHeight / BASE_HEIGHT;
+            const scale = Math.max(Math.min(widthRatio, heightRatio, 1), 0.5);
+            setLayoutScale(scale);
+        };
+        updateScale();
+        window.addEventListener("resize", updateScale);
+        return () => window.removeEventListener("resize", updateScale);
+    }, []);
 
     // Staggered hand-off:
     // 1. Dashboard fades from 1 -> 0 between 0.94 and 0.97
@@ -197,7 +216,7 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
                 />
 
                 {/* ── Main Workspace ──────────────────────────────────────────────────── */}
-                <div ref={workspaceRef} className="relative z-10 flex h-full w-full max-w-[1600px] flex-col lg:flex-row items-center justify-between px-4 md:px-10 lg:px-16 py-16 gap-8 lg:gap-12">
+                <div ref={workspaceRef} className="relative z-10 flex h-full w-full max-w-[1600px] flex-col lg:flex-row items-center justify-between px-4 md:px-10 lg:px-16 py-8 md:py-16 gap-4 lg:gap-12">
                     {(() => {
                         const isFocusing = AI_HACKING_PHASES.some(p => progress >= p.startAt && progress <= p.startAt + 0.024);
                         const isFinalPhase = progress >= 0.97;
@@ -211,15 +230,17 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
                                         opacity: isFinalPhase ? 0 : 1,
                                         pointerEvents: isFinalPhase ? "none" : "auto",
                                         filter: isFinalPhase ? "blur(20px)" : "none",
-                                        visibility: progress > 0.99 ? "hidden" : "visible"
+                                        visibility: progress > 0.99 ? "hidden" : "visible",
+                                        transform: `scale(${layoutScale})`,
+                                        transformOrigin: "center center"
                                     }}
                                 >
                                     {/* Far Left: Notepad & Scratchcard */}
                                     <div 
-                                        className="flex-shrink-0 flex flex-col gap-10 self-start lg:self-center lg:-ml-4 xl:-ml-8 lg:-mt-12 transition-all duration-700"
+                                        className="flex-shrink-0 flex flex-col gap-4 xl:gap-10 self-start lg:self-center lg:-ml-4 xl:-ml-8 lg:-mt-12 transition-all duration-700"
                                         style={{ zIndex: isFocusing ? 200 : 10 }}
                                     >
-                                        <AIHackingNotepad progress={progress} />
+                                        <AIHackingNotepad progress={progress} layoutScale={layoutScale} />
                                         <div id="hacking-scratchpad">
                                             <AIHackingNotesCard progress={progress} />
                                         </div>

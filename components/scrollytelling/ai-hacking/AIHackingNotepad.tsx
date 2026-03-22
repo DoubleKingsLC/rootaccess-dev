@@ -24,9 +24,11 @@ function CheckIcon() {
 export function AIHackingNotepad({
   progress,
   className,
+  layoutScale = 1,
 }: {
   progress: number;
   className?: string;
+  layoutScale?: number;
 }) {
   const phaseByKey = useMemo(() => {
     return AI_HACKING_PHASES.reduce((acc, p) => {
@@ -78,11 +80,12 @@ export function AIHackingNotepad({
   // When we zoom to 1.0, we are at native resolution (100% sharp).
   const { focusScale, focusTranslate } = useMemo(() => {
     const PADDING = 0.024;
-    let scale = 0.5; // Base scale is now 0.5
+    const baseScale = 0.5;
+    let scale = baseScale;
     let translateX = 0;
     let translateY = 0;
 
-    if (initialPos.x === 0) return { focusScale: 0.5, focusTranslate: { x: 0, y: 0 } };
+    if (initialPos.x === 0) return { focusScale: baseScale, focusTranslate: { x: 0, y: 0 } };
 
     for (let i = 0; i < AI_HACKING_PHASES.length; i++) {
         const phase = AI_HACKING_PHASES[i];
@@ -104,10 +107,10 @@ export function AIHackingNotepad({
             const deltaX = targetX - initialPos.x;
             const deltaY = targetY - initialPos.y;
 
-            // Zoom from 0.5 up to 1.0 (native res) 
-            scale = 0.5 + (0.6 * t); 
-            translateX = deltaX * t;
-            translateY = deltaY * t;
+            // Zoom from baseScale up to 1.0 (native res) 
+            scale = baseScale + ((1.0 - baseScale) * t); 
+            translateX = (deltaX / layoutScale) * t;
+            translateY = (deltaY / layoutScale) * t;
             
             break;
         }
@@ -116,7 +119,7 @@ export function AIHackingNotepad({
         focusScale: scale, 
         focusTranslate: { x: translateX, y: translateY }
     };
-  }, [progress, initialPos]);
+  }, [progress, initialPos, layoutScale]);
 
   // For the barcode at the bottom
   const barcodeBars = useMemo(() => [1.2, 3.4, 2.1, 1.8, 4.0, 1.5, 2.8, 3.1, 1.1, 2.5, 3.6, 1.9], []);
