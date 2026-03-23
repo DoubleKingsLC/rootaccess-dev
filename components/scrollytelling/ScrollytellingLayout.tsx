@@ -84,8 +84,9 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
 
     let lastScrollY = window.scrollY;
     let rafId: number;
+    let lastTime = performance.now();
 
-    const scrollStep = () => {
+    const scrollStep = (time: number) => {
       // Small tolerance to allow for pixel precision differences
       const currentScrollY = window.scrollY;
       if (Math.abs(currentScrollY - lastScrollY) > 5) {
@@ -93,7 +94,13 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
         return;
       }
 
-      window.scrollBy(0, 2.25); // Smooth automated scroll (speed increased by 50%)
+      const dt = time - lastTime;
+      lastTime = time;
+
+      // Target speed: 190 pixels per second (Hz independent)
+      const scrollAmount = 190 * (dt / 1000);
+
+      window.scrollBy(0, scrollAmount);
       lastScrollY = window.scrollY;
 
       if (window.scrollY + window.innerHeight < document.documentElement.scrollHeight - 10) {
