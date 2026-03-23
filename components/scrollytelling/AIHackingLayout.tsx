@@ -81,7 +81,12 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
     useEffect(() => {
         if (!scrollSectionRef.current || !pinnedViewportRef.current) return;
 
-        const lenis = new Lenis({ lerp: 0.05, wheelMultiplier: 0.7 });
+        // Normalize scroll speed: Chrome/Brave are too fast at 1.0, so we use 0.7.
+        // Safari feels optimal at 1.0. 
+        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        const multiplier = isSafari ? 1 : 0.7;
+
+        const lenis = new Lenis({ lerp: 0.05, wheelMultiplier: multiplier });
         lenis.on("scroll", ScrollTrigger.update);
         function update(time: number) { lenis.raf(time * 1000); }
         gsap.ticker.add(update);
