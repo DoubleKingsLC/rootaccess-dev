@@ -129,7 +129,9 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
         let lastScrollY = window.scrollY;
         let rafId: number;
         let lastTime = performance.now();
-        const PAUSE_POINTS = [0.078]; // Pause just before Recon animation (0.08)
+
+        // Check if the user is on Safari to apply the deadzone acceleration constraint
+        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
         const scrollStep = (time: number) => {
             const currentScrollY = window.scrollY;
@@ -142,26 +144,21 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
             lastTime = time;
 
             // Target speed: 190 pixels per second (Hz independent)
-            const scrollAmount = 190 * (dt / 1000);
+            let scrollAmount = 190 * (dt / 1000);
 
-            window.scrollBy(0, scrollAmount);
-            
-            const newScrollY = window.scrollY;
+            // The deadzone is located exactly between the fade-in (0.04) and Phase 1 start (0.08).
             const totalScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-            const lastProgress = lastScrollY / totalScroll;
-            const currentProgress = newScrollY / totalScroll;
-
-            // Check if we crossed a pause point
-            const crossedPausePoint = PAUSE_POINTS.some(p => lastProgress < p && currentProgress >= p);
+            const currentProgress = currentScrollY / totalScroll;
             
-            if (crossedPausePoint) {
-                setIsAutoScrolling(false);
-                return;
+            // Speed through the 4-second gap immediately on Safari
+            if (isSafari && currentProgress >= 0.04 && currentProgress < 0.08) {
+                scrollAmount *= 3.5; 
             }
 
-            lastScrollY = newScrollY;
+            window.scrollBy(0, scrollAmount);
+            lastScrollY = window.scrollY;
 
-            if (newScrollY + window.innerHeight < document.documentElement.scrollHeight - 10) {
+            if (window.scrollY + window.innerHeight < document.documentElement.scrollHeight - 10) {
                 rafId = requestAnimationFrame(scrollStep);
             } else {
                 setIsAutoScrolling(false);
