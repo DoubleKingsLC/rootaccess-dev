@@ -1053,7 +1053,7 @@ export default function AiHackingCareerPathPage() {
             {/* Continuous trunk — spans all level sections */}
             <div
               className="pointer-events-none absolute"
-              style={{ left: 55, top: 120, bottom: 0, width: 2 }}
+              style={{ left: 55, top: 240, bottom: 0, width: 2 }}
             >
               <div ref={trunkRef} className="tech-tree-trunk h-full w-full" />
             </div>
@@ -1407,8 +1407,6 @@ export default function AiHackingCareerPathPage() {
               className="pointer-events-none absolute inset-0"
               style={{ background: "radial-gradient(ellipse at center, rgba(239,68,68,0.04) 0%, transparent 70%)" }}
             />
-            {/* Top border */}
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/30 to-transparent" />
 
             <div className="relative z-10 mx-auto max-w-5xl">
               <div className="mb-12 text-center">
