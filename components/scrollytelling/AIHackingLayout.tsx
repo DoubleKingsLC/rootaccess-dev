@@ -82,9 +82,10 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
         if (!scrollSectionRef.current || !pinnedViewportRef.current) return;
 
         // Normalize scroll speed: Chrome/Brave are too fast at 1.0, so we use 0.7.
-        // Safari feels optimal at 1.0. 
+        // Safari trackpad events are extremely small, meaning 1.0 takes ~10s to scroll the intro. 
+        // We boost Safari to 3.0 to match the observed speed of Chrome at 0.7.
         const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-        const multiplier = isSafari ? 1 : 0.7;
+        const multiplier = isSafari ? 3 : 0.7;
 
         const lenis = new Lenis({ lerp: 0.05, wheelMultiplier: multiplier });
         lenis.on("scroll", ScrollTrigger.update);
