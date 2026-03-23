@@ -1021,7 +1021,8 @@ export default function AiHackingCareerPathPage() {
               <section
                 key={level.num}
                 ref={(el) => { sectionRefs.current[i] = el; }}
-                className="relative flex h-screen w-full items-center opacity-0 overflow-hidden"
+                className="relative flex h-screen w-full items-center opacity-0"
+                style={{ zIndex: 10 - i }}
               >
                 {layout && (
                   <>
