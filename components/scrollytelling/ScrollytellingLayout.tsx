@@ -85,6 +85,7 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
     let lastScrollY = window.scrollY;
     let rafId: number;
     let lastTime = performance.now();
+    const PAUSE_POINTS = [0.078]; // Pause just before Detection animation (0.08)
 
     const scrollStep = (time: number) => {
       // Small tolerance to allow for pixel precision differences
@@ -101,9 +102,23 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
       const scrollAmount = 190 * (dt / 1000);
 
       window.scrollBy(0, scrollAmount);
-      lastScrollY = window.scrollY;
+      
+      const newScrollY = window.scrollY;
+      const totalScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const lastProgress = lastScrollY / totalScroll;
+      const currentProgress = newScrollY / totalScroll;
 
-      if (window.scrollY + window.innerHeight < document.documentElement.scrollHeight - 10) {
+      // Check if we crossed a pause point
+      const crossedPausePoint = PAUSE_POINTS.some(p => lastProgress < p && currentProgress >= p);
+      
+      if (crossedPausePoint) {
+          setIsAutoScrolling(false);
+          return;
+      }
+
+      lastScrollY = newScrollY;
+
+      if (newScrollY + window.innerHeight < document.documentElement.scrollHeight - 10) {
         rafId = requestAnimationFrame(scrollStep);
       } else {
         setIsAutoScrolling(false);

@@ -129,6 +129,7 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
         let lastScrollY = window.scrollY;
         let rafId: number;
         let lastTime = performance.now();
+        const PAUSE_POINTS = [0.078]; // Pause just before Recon animation (0.08)
 
         const scrollStep = (time: number) => {
             const currentScrollY = window.scrollY;
@@ -144,9 +145,23 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
             const scrollAmount = 190 * (dt / 1000);
 
             window.scrollBy(0, scrollAmount);
-            lastScrollY = window.scrollY;
+            
+            const newScrollY = window.scrollY;
+            const totalScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+            const lastProgress = lastScrollY / totalScroll;
+            const currentProgress = newScrollY / totalScroll;
 
-            if (window.scrollY + window.innerHeight < document.documentElement.scrollHeight - 10) {
+            // Check if we crossed a pause point
+            const crossedPausePoint = PAUSE_POINTS.some(p => lastProgress < p && currentProgress >= p);
+            
+            if (crossedPausePoint) {
+                setIsAutoScrolling(false);
+                return;
+            }
+
+            lastScrollY = newScrollY;
+
+            if (newScrollY + window.innerHeight < document.documentElement.scrollHeight - 10) {
                 rafId = requestAnimationFrame(scrollStep);
             } else {
                 setIsAutoScrolling(false);
