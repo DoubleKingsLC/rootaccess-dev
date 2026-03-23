@@ -33,21 +33,65 @@ const PROVIDER_DOMAINS: Record<string, string> = {
     defcon: "aivillage.org",
     github: "github.com",
     huggingface: "huggingface.co",
+    ine: "ine.com",
+    "ec-council": "eccouncil.org",
+    portswigger: "portswigger.net",
+    isaca: "isaca.org",
+    altered: "alteredsecurity.com",
+    hackerone: "hackerone.com",
+    bugcrowd: "bugcrowd.com",
+    splunk: "splunk.com",
+    microsoft: "microsoft.com",
+    elastic: "elastic.co",
+    ibm: "ibm.com",
+    paloalto: "paloaltonetworks.com",
+    cisco: "cisco.com",
 };
 
 function ProviderFavicon({ provider, size = 18 }: { provider: string | null; size?: number }) {
-    const domain = provider ? PROVIDER_DOMAINS[provider] : null;
-    if (!domain) return null;
-    return (
-        <img
-            src={`https://www.google.com/s2/favicons?domain=${domain}&sz=64`}
-            alt={provider ?? ""}
-            width={size}
-            height={size}
-            className="rounded-sm flex-shrink-0"
-            style={{ objectFit: "contain" }}
-        />
-    );
+  const domain = provider ? PROVIDER_DOMAINS[provider] : null;
+  if (!domain) return null;
+  return (
+    <img
+      src={`https://www.google.com/s2/favicons?domain=${domain}&sz=64`}
+      alt={provider ?? ""}
+      width={size}
+      height={size}
+      className="shrink-0 rounded-sm"
+      style={{ objectFit: "contain" }}
+    />
+  );
+}
+
+function NavDot({ num, color, label, onClick, isActive }: { num: string; color: string; label: string; onClick: () => void; isActive?: boolean }) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex items-center gap-2.5 group transition-all duration-300"
+      style={{ 
+        background: "none", border: "none", cursor: "pointer", padding: 0,
+        opacity: isActive ? 1 : 0.85
+      }}
+    >
+      <span
+        className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center font-mono text-[10px] font-bold border transition-all duration-200 group-hover:scale-110"
+        style={{ 
+          borderColor: isActive ? color : `${color}aa`, 
+          color: isActive ? "#fff" : "#ffffff", 
+          background: isActive ? color : `${color}22`,
+          boxShadow: isActive ? `0 0 12px ${color}66` : "none"
+        }}
+      >
+        {num}
+      </span>
+      <span
+        className="font-mono text-[10px] uppercase tracking-[0.2em] font-medium hidden lg:block transition-colors duration-200 group-hover:text-white"
+        style={{ color: isActive ? "#fff" : "#ffffff" }}
+      >
+        {label}
+      </span>
+    </button>
+  );
 }
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -262,7 +306,13 @@ export default function AiHackingCareerPathPage() {
   const scrollToLevel = (index: number) => {
     const section = sectionRefs.current[index];
     if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
+      const top = section.getBoundingClientRect().top + window.pageYOffset;
+      // Scroll slightly past the top edge to bring content higher up (better utilization of space)
+      // Reduced from 120 to 50 to prevent clipping header elements
+      window.scrollTo({
+        top: top + 50, 
+        behavior: "smooth"
+      });
     }
   };
   const containerRef = useRef<HTMLDivElement>(null);
@@ -675,21 +725,8 @@ export default function AiHackingCareerPathPage() {
                             const link = isObj ? item.link : null;
                             const provider = isObj ? item.provider : null;
                             return (
-                              <li key={idx} className="flex items-start gap-4">
-                                {!provider || (provider !== "youtube" && provider !== "google") ? (
-                                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-red-500/40" />
-                                ) : (
-                                  <div className="mt-0.5 shrink-0">
-                                    {provider === "google" && (
-                                      <svg className="w-4 h-4" viewBox="0 0 24 24">
-                                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-                                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
-                                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                                      </svg>
-                                    )}
-                                  </div>
-                                )}
+                              <li key={idx} className="flex items-center gap-3">
+                                <ProviderFavicon provider={provider} size={18} />
                                 <div className="flex flex-col gap-1 w-full">
                                   {link ? (
                                     <a href={link} target="_blank" rel="noopener noreferrer"
@@ -717,21 +754,8 @@ export default function AiHackingCareerPathPage() {
                             const link = isObj ? item.link : null;
                             const provider = isObj ? item.provider : null;
                             return (
-                              <li key={idx} className="flex items-start gap-4 mb-2 last:mb-0">
-                                {!provider || (provider !== "youtube" && provider !== "google") ? (
-                                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-red-500/40" />
-                                ) : (
-                                  <div className="mt-0.5 shrink-0">
-                                    {provider === "google" && (
-                                      <svg className="w-4 h-4" viewBox="0 0 24 24">
-                                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-                                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
-                                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                                      </svg>
-                                    )}
-                                  </div>
-                                )}
+                              <li key={idx} className="flex items-center gap-3 mb-2 last:mb-0">
+                                <ProviderFavicon provider={provider} size={18} />
                                 <div className="flex flex-col gap-1 w-full">
                                   {link ? (
                                     <a href={link} target="_blank" rel="noopener noreferrer"
@@ -761,26 +785,8 @@ export default function AiHackingCareerPathPage() {
                         const provider = isObj ? item.provider : null;
 
                         return (
-                          <li key={idx} className="flex items-start gap-4 mb-2 last:mb-0">
-                            {!provider || (provider !== "youtube" && provider !== "google") ? (
-                              <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-red-500/40" />
-                            ) : (
-                              <div className="mt-0.5 shrink-0">
-                                {provider === "youtube" && (
-                                  <svg className="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24">
-                                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                                  </svg>
-                                )}
-                                {provider === "google" && (
-                                  <svg className="w-4 h-4 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-                                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
-                                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                                  </svg>
-                                )}
-                              </div>
-                            )}
+                          <li key={idx} className="flex items-center gap-3 mb-2 last:mb-0">
+                            <ProviderFavicon provider={provider} size={18} />
                             <div className="flex flex-col gap-1 w-full">
                               {link ? (
                                 <a
@@ -873,57 +879,46 @@ export default function AiHackingCareerPathPage() {
 
   return (
     <main className="min-h-screen bg-slate-950 text-white overflow-x-hidden">
-      <div style={{ transform: `scale(${scaleFactor})`, transformOrigin: "top left", width: scaleFactor !== 1 ? `${100 / scaleFactor}%` : "100%", height: scaleFactor !== 1 ? `${100 / scaleFactor}%` : "100%" }}>
-
-        <header
-          className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-white/5 bg-slate-950/85 px-8 py-4 backdrop-blur-md"
+      <header
+        className="fixed inset-x-0 top-0 z-[100] flex items-center gap-3 border-b border-white/5 bg-slate-950/95 px-5 py-3 backdrop-blur-md"
+      >
+        <button
+          onClick={() => router.push("/")}
+          className="font-mono text-[10px] uppercase tracking-widest font-medium flex items-center gap-1.5 transition-all duration-150 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]"
+          style={{ color: "#ffffff", background: "none", border: "none", cursor: "pointer" }}
         >
-          <div className="flex items-center gap-6">
-            <button
-              onClick={() => router.push("/")}
-              className="font-mono text-sm font-bold uppercase tracking-widest text-slate-400 transition-colors hover:text-white"
-            >
-              Home
-            </button>
-            <div className="h-4 w-px bg-white/10" />
-            <button
-              onClick={() => router.push("/roadmaps/ai-hacking")}
-              className="flex items-center gap-2 font-mono text-sm font-bold uppercase tracking-widest text-slate-500 transition-colors hover:text-red-300"
-            >
-              <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
-                <path d="M9 6H3M3 6L6 3M3 6L6 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              AI Experience
-            </button>
-          </div>
-
-          <p className="font-mono text-base font-black uppercase tracking-[0.45em] text-red-400">
-            AI Hacking Career Path
-          </p>
-          <div className="w-64" /> {/* Balanced spacer */}
-        </header>
-
-        {/* ── Fixed level nav (right side) ──────────────────────────────────── */}
-        <nav
-          className="pointer-events-none fixed right-6 top-1/2 z-50 -translate-y-1/2 flex flex-col items-end gap-5"
+          Home
+        </button>
+        <span style={{ color: "rgba(255,255,255,0.4)", fontSize: "10px" }}>/</span>
+        <button
+          onClick={() => router.push("/roadmaps/ai-hacking")}
+          className="font-mono text-[10px] uppercase tracking-widest font-medium flex items-center gap-1.5 transition-all duration-150 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]"
+          style={{ color: "#ffffff", background: "none", border: "none", cursor: "pointer" }}
         >
-          {LEVELS.map((level, i) => (
-            <div key={i} className="flex items-center gap-2.5">
-              <span className="font-mono text-[8px] uppercase tracking-widest text-slate-600">
-                {level.num}
-              </span>
-              <div
-                className="h-2.5 w-2.5 rounded-full border transition-all duration-500"
-                style={{
-                  borderColor: activeLevel >= i ? level.color : "rgba(51,65,85,0.6)",
-                  background: activeLevel >= i ? level.color : "transparent",
-                  boxShadow: activeLevel === i ? `0 0 12px ${level.color}` : "none",
-                }}
-              />
-            </div>
+          AI Experience
+        </button>
+        <span style={{ color: "rgba(255,255,255,0.4)", fontSize: "10px" }}>/</span>
+        <span className="font-mono text-[10px] uppercase tracking-widest font-medium" style={{ color: "#ffffff", opacity: 0.9 }}>
+          Career Path
+        </span>
+
+        <div className="flex-1" />
+
+        <div className="hidden sm:flex items-center gap-6">
+          {LEVELS.map((l, i) => (
+            <NavDot 
+              key={l.num} 
+              num={l.num} 
+              color={l.color} 
+              label={l.label} 
+              onClick={() => scrollToLevel(i)} 
+              isActive={activeLevel === i}
+            />
           ))}
-        </nav>
+        </div>
+      </header>
 
+      <div style={{ transform: `scale(${scaleFactor})`, transformOrigin: "top left", width: scaleFactor !== 1 ? `${100 / scaleFactor}%` : "100%", height: scaleFactor !== 1 ? `${100 / scaleFactor}%` : "100%" }}>
         <div
           ref={containerRef}
           className="pt-16"

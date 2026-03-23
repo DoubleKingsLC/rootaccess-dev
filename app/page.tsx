@@ -7,15 +7,21 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 // ─── Domains ──────────────────────────────────────────────────────────────────
 
-const DOMAINS = [
-    { id: "soc", label: "SOC", sub: "Security Operations", desc: "Blue Team · Detect & Respond", color: "#22d3ee", branch: "rgba(34,211,238,0.55)", href: "/roadmaps/soc", live: true },
-    { id: "appsec", label: "DevSecOps", sub: "Application Security", desc: "Modern Secure Dev Lifecycle", color: "#a78bfa", branch: "rgba(167,139,250,0.5)", href: null, live: false },
-    { id: "web", label: "Web Hacking", sub: "App Exploitation", desc: "Offense · Adversary Simulation", color: "#f43f5e", branch: "rgba(244,63,94,0.5)", href: null, live: false },
-    { id: "network", label: "Network Pentesting", sub: "Infrastructure Security", desc: "Offense · Adversary Simulation", color: "#dc2626", branch: "rgba(220,38,38,0.5)", href: "/roadmaps/network-pentesting", live: false },
-    { id: "ai", label: "AI Hacking", sub: "Offensive AI", desc: "Offense · Adversary Simulation", color: "#ef4444", branch: "rgba(239,68,68,0.5)", href: "/roadmaps/ai-hacking", live: true },
-    { id: "cloud", label: "Cloud Sec", sub: "Cloud Security", desc: "Infra · Identity · Posture", color: "#34d399", branch: "rgba(52,211,153,0.5)", href: null, live: false },
-    { id: "grc", label: "GRC", sub: "Governance & Compliance", desc: "Risk · Audit · Frameworks", color: "#fbbf24", branch: "rgba(251,191,36,0.5)", href: null, live: false },
-] as const;
+interface Domain {
+    id: string; label: string; sub: string; desc: string;
+    color: string; branch: string; href: string | null;
+    live: boolean; careerHref?: string;
+}
+
+const DOMAINS: Domain[] = [
+    { id: "soc",     label: "SOC",               sub: "Security Operations",     desc: "Blue Team · Detect & Respond",   color: "#22d3ee", branch: "rgba(34,211,238,0.55)", href: "/roadmaps/soc",                live: true,  careerHref: "/roadmaps/soc/career-path" },
+    { id: "appsec",  label: "DevSecOps",          sub: "Application Security",    desc: "Modern Secure Dev Lifecycle",    color: "#a78bfa", branch: "rgba(167,139,250,0.5)", href: null,                           live: false },
+    { id: "web",     label: "Web Hacking",        sub: "App Exploitation",        desc: "Offense · Adversary Simulation", color: "#f43f5e", branch: "rgba(244,63,94,0.5)",   href: "/roadmaps/web-hacking",        live: true,  careerHref: "/roadmaps/web-hacking/career-path" },
+    { id: "network", label: "Network Pentesting", sub: "Infrastructure Security", desc: "Offense · Adversary Simulation", color: "#dc2626", branch: "rgba(220,38,38,0.5)",   href: "/roadmaps/network-pentesting", live: false },
+    { id: "ai",      label: "AI Hacking",         sub: "Offensive AI",            desc: "Offense · Adversary Simulation", color: "#ef4444", branch: "rgba(239,68,68,0.5)",   href: "/roadmaps/ai-hacking",         live: true,  careerHref: "/roadmaps/ai-hacking/career-path" },
+    { id: "cloud",   label: "Cloud Sec",          sub: "Cloud Security",          desc: "Infra · Identity · Posture",     color: "#34d399", branch: "rgba(52,211,153,0.5)",  href: null,                           live: false },
+    { id: "grc",     label: "GRC",                sub: "Governance & Compliance", desc: "Risk · Audit · Frameworks",      color: "#fbbf24", branch: "rgba(251,191,36,0.5)",  href: null,                           live: false },
+];
 
 const L1_TO_BANNER: [number, number][] = [
     [0, 0], [0, 1],
@@ -113,6 +119,102 @@ function orthRounded(from: Pt, to: Pt, jY: number, r = 16): string {
     ].join(" ");
 }
 
+function NavDropdown({ 
+    label, 
+    items, 
+    color = "#22d3ee" 
+}: { 
+    label: string, 
+    items: { label: string, href: string }[],
+    color?: string
+}) {
+    const [open, setOpen] = useState(false);
+    
+    return (
+        <div 
+            style={{ position: "relative" }}
+            onMouseEnter={() => setOpen(true)}
+            onMouseLeave={() => setOpen(false)}
+        >
+            <div
+                style={{
+                    display: "inline-flex", alignItems: "center", gap: 10,
+                    fontFamily: "var(--font-mono, monospace)",
+                    fontSize: 12, fontWeight: 700, letterSpacing: "0.35em", textTransform: "uppercase",
+                    color: open ? "#fff" : color,
+                    background: open ? "rgba(34,211,238,0.22)" : "rgba(34,211,238,0.06)",
+                    border: `1.5px solid ${open ? color : "rgba(34,211,238,0.45)"}`,
+                    borderRadius: 10, padding: "12px 24px",
+                    cursor: "pointer",
+                    backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+                    transition: "all 0.25s cubic-bezier(0.16,1,0.3,1)",
+                    boxShadow: open 
+                        ? `0 0 35px rgba(34,211,238,0.25), inset 0 0 15px rgba(34,211,238,0.1)`
+                        : `0 0 25px rgba(34,211,238,0.12), inset 0 0 10px rgba(34,211,238,0.05)`,
+                    transform: open ? "translateY(-1px)" : "none",
+                }}
+            >
+                {label}
+                <svg 
+                    width="10" height="6" viewBox="0 0 10 6" fill="none" 
+                    style={{ 
+                        transform: open ? "rotate(180deg)" : "none", 
+                        transition: "transform 0.2s ease",
+                        opacity: 0.8
+                    }}
+                >
+                    <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+            </div>
+            
+            {/* Dropdown Menu Wrapper for better hover stability */}
+            <div style={{
+                position: "absolute", top: "100%", left: 0, 
+                paddingTop: 8, // Invisible gap filler
+                minWidth: 180,
+                opacity: open ? 1 : 0,
+                transform: open ? "translateY(0)" : "translateY(10px)",
+                pointerEvents: open ? "all" : "none",
+                transition: "all 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
+                zIndex: 110,
+            }}>
+                <div style={{
+                    background: "rgba(6, 10, 24, 0.95)",
+                    border: "1px solid rgba(34, 211, 238, 0.2)",
+                    borderRadius: 12, padding: "8px",
+                    backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+                    boxShadow: "0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(34,211,238,0.05)"
+                }}>
+                {items.map((item, i) => (
+                    <Link
+                        key={i}
+                        href={item.href}
+                        style={{
+                            display: "block", padding: "12px 16px",
+                            fontFamily: "var(--font-mono, monospace)",
+                            fontSize: 11, fontWeight: 600, letterSpacing: "0.1em",
+                            color: "rgba(248, 250, 252, 0.8)",
+                            textDecoration: "none", borderRadius: 8,
+                            transition: "all 0.2s ease"
+                        }}
+                        onMouseEnter={e => {
+                            e.currentTarget.style.color = "#fff";
+                            e.currentTarget.style.background = "rgba(34, 211, 238, 0.1)";
+                        }}
+                        onMouseLeave={e => {
+                            e.currentTarget.style.color = "rgba(248, 250, 252, 0.8)";
+                            e.currentTarget.style.background = "transparent";
+                        }}
+                    >
+                        {item.label}
+                    </Link>
+                ))}
+                </div>
+            </div>
+        </div>
+    );
+}
+
 // ─── Banner card ──────────────────────────────────────────────────────────────
 
 function BannerCard({
@@ -120,11 +222,12 @@ function BannerCard({
     style,
     bRef,
 }: {
-    domain: typeof DOMAINS[number];
+    domain: Domain;
     style: React.CSSProperties;
     bRef: (el: HTMLDivElement | null) => void;
 }) {
-    const [hovered, setHovered] = useState(false);
+    const [hovered, setHovered]             = useState(false);
+    const [careerHovered, setCareerHovered] = useState(false);
 
     const inner = (
         <div
@@ -233,31 +336,59 @@ function BannerCard({
                 letterSpacing: "0.04em", lineHeight: 1.8, flexGrow: 1,
             }}>{d.desc}</div>
 
-            {/* CTA */}
-            {d.live && d.href && (
+            {/* CTA row — ACCESS PATHWAY + CAREER PATH */}
+            {(d.live && d.href) || d.careerHref ? (
                 <div style={{
-                    marginTop: 14, paddingTop: 11,
-                    borderTop: `1px solid ${d.color}14`,
-                    display: "flex", alignItems: "center", gap: 6,
+                    marginTop: 14, position: "relative", zIndex: 2,
+                    display: "flex", flexDirection: "column", gap: 0,
                 }}>
-                    <div style={{
-                        width: 18, height: 1,
-                        background: hovered ? d.color : `${d.color}55`,
-                        transition: "background 0.22s ease",
-                    }} />
-                    <span style={{
-                        fontFamily: "var(--font-mono, monospace)", fontSize: 8.5,
-                        color: hovered ? d.color : `${d.color}80`, letterSpacing: "0.20em",
-                        transition: "color 0.22s ease",
-                    }}>ACCESS PATHWAY</span>
-                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                        <path d="M1 5h8M6 2l3 3-3 3"
-                            stroke={hovered ? d.color : `${d.color}80`} strokeWidth="1.1"
-                            strokeLinecap="round" strokeLinejoin="round"
-                            style={{ transition: "stroke 0.22s ease" }} />
-                    </svg>
+                    {/* ACCESS PATHWAY */}
+                    {d.live && d.href && (
+                        <div style={{
+                            paddingTop: 11, paddingBottom: d.careerHref ? 8 : 0,
+                            borderTop: `1px solid ${d.color}14`,
+                            display: "flex", alignItems: "center", gap: 6,
+                        }}>
+                            <div style={{ width: 18, height: 1, background: hovered ? d.color : `${d.color}55`, transition: "background 0.22s ease" }} />
+                            <span style={{ fontFamily: "var(--font-mono, monospace)", fontSize: 8.5, color: hovered ? d.color : `${d.color}80`, letterSpacing: "0.20em", transition: "color 0.22s ease" }}>
+                                ACCESS PATHWAY
+                            </span>
+                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                                <path d="M1 5h8M6 2l3 3-3 3" stroke={hovered ? d.color : `${d.color}80`} strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" style={{ transition: "stroke 0.22s ease" }} />
+                            </svg>
+                        </div>
+                    )}
+                    {/* CAREER PATH — visually distinct pill so it can't be confused with ACCESS PATHWAY */}
+                    {d.careerHref && (
+                        <a
+                            href={d.careerHref}
+                            onClick={e => e.stopPropagation()}
+                            onMouseEnter={() => setCareerHovered(true)}
+                            onMouseLeave={() => setCareerHovered(false)}
+                            style={{
+                                display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                                textDecoration: "none", cursor: "pointer",
+                                marginTop: d.live && d.href ? 0 : 11,
+                                padding: "7px 10px",
+                                borderRadius: 6,
+                                borderTop: d.live && d.href ? `1px dashed ${d.color}20` : `1px solid ${d.color}14`,
+                                background: careerHovered ? `${d.color}12` : `${d.color}07`,
+                                transition: "background 0.2s ease, border-color 0.2s ease",
+                            }}
+                        >
+                            <svg width="9" height="9" viewBox="0 0 12 12" fill="none">
+                                <path d="M6 1v10M1 6l5 5 5-5" stroke={careerHovered ? d.color : `${d.color}55`} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" style={{ transition: "stroke 0.2s ease" }} />
+                            </svg>
+                            <span style={{ fontFamily: "var(--font-mono, monospace)", fontSize: 8, color: careerHovered ? d.color : `${d.color}55`, letterSpacing: "0.22em", transition: "color 0.2s ease" }}>
+                                CAREER PATH
+                            </span>
+                            <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
+                                <path d="M1 5h8M6 2l3 3-3 3" stroke={careerHovered ? d.color : `${d.color}55`} strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" style={{ transition: "stroke 0.2s ease" }} />
+                            </svg>
+                        </a>
+                    )}
                 </div>
-            )}
+            ) : null}
 
             {/* Disabled overlay for coming-soon domains */}
             {!d.live && (
@@ -301,16 +432,16 @@ function BannerCard({
     return (
         <div
             ref={bRef}
+            onClick={() => { if (d.live && d.href) window.location.href = d.href; }}
             style={{
                 position: "absolute", opacity: 0,
                 transform: "translateY(14px)",
                 transition: "opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1)",
+                cursor: d.live && d.href ? "pointer" : "default",
                 ...style,
             }}
         >
-            {d.live && d.href
-                ? <a href={d.href} style={{ textDecoration: "none", display: "block", height: "100%" }}>{inner}</a>
-                : inner}
+            {inner}
         </div>
     );
 }
@@ -475,7 +606,6 @@ export default function HomePage() {
 
     return (
         <div ref={containerRef} style={{ height: isMobile ? "auto" : "280vh" }}>
-            {/* Fixed top-right nav */}
             <Link
                 href="/about"
                 style={{
@@ -511,6 +641,26 @@ export default function HomePage() {
                     <path d="M1.5 5.5h8M6.5 2l3.5 3.5-3.5 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
             </Link>
+
+            {/* Fixed top-left nav */}
+            {!isMobile && (
+                <div style={{ position: "fixed", top: 28, left: 32, zIndex: 100, display: "flex", gap: 16 }}>
+                    <NavDropdown 
+                        label="Workflows" 
+                        items={[
+                            { label: "AI Hacking", href: "/roadmaps/ai-hacking" },
+                            { label: "SOC Analyst", href: "/roadmaps/soc" }
+                        ]} 
+                    />
+                    <NavDropdown 
+                        label="Roadmaps" 
+                        items={[
+                            { label: "AI Hacking", href: "/roadmaps/ai-hacking/career-path" },
+                            { label: "SOC Analyst", href: "/roadmaps/soc/career-path" }
+                        ]} 
+                    />
+                </div>
+            )}
 
             <div
                 style={{ position: isMobile ? "relative" : "sticky", top: 0, height: isMobile ? "auto" : "100vh", overflow: isMobile ? "visible" : "hidden" }}

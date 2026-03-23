@@ -9,38 +9,28 @@ import { useIsMobile } from "@/hooks/useIsMobile";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// ── Provider → favicon domain map ─────────────────────────────────────────────
 const PROVIDER_DOMAINS: Record<string, string> = {
-    tryhackme: "tryhackme.com",
-    hackthebox: "hackthebox.com",
-    htb: "hackthebox.com",
-    google: "google.com",
-    tcm: "tcm-sec.com",
-    offsec: "offsec.com",
-    blueteam: "securityblue.team",
-    cyberdefenders: "cyberdefenders.org",
-    elearnsecurity: "elearnsecurity.com",
-    giac: "giac.org",
-    isc2: "isc2.org",
-    comptia: "comptia.org",
-    youtube: "youtube.com",
-    sans: "sans.org",
-    crest: "crest-approved.org",
-    pentesteracademy: "pentesteracademy.com",
-    coursera: "coursera.org",
-    ine: "ine.com",
-    "ec-council": "eccouncil.org",
-    portswigger: "portswigger.net",
-    isaca: "isaca.org",
-    altered: "alteredsecurity.com",
-    hackerone: "hackerone.com",
-    bugcrowd: "bugcrowd.com",
-    owasp: "owasp.org",
-    splunk: "splunk.com",
-    microsoft: "microsoft.com",
-    elastic: "elastic.co",
-    ibm: "ibm.com",
-    paloalto: "paloaltonetworks.com",
-    cisco: "cisco.com",
+  tryhackme:       "tryhackme.com",
+  google:          "google.com",
+  tcm:             "tcm-sec.com",
+  ine:             "ine.com",
+  comptia:         "comptia.org",
+  "ec-council":    "eccouncil.org",
+  offsec:          "offsec.com",
+  portswigger:     "portswigger.net",
+  isc2:            "isc2.org",
+  giac:            "giac.org",
+  isaca:           "isaca.org",
+  altered:         "alteredsecurity.com",
+  hackerone:       "hackerone.com",
+  htb:             "hackthebox.com",
+  bugcrowd:        "bugcrowd.com",
+  owasp:           "owasp.org",
+  youtube:         "youtube.com",
+  sans:            "sans.org",
+  crest:           "crest-approved.org",
+  pentesteracademy:"pentesteracademy.com",
 };
 
 function ProviderFavicon({ provider, size = 18 }: { provider: string | null; size?: number }) {
@@ -55,37 +45,6 @@ function ProviderFavicon({ provider, size = 18 }: { provider: string | null; siz
       className="rounded-sm flex-shrink-0"
       style={{ objectFit: "contain" }}
     />
-  );
-}
-
-function NavDot({ num, color, label, onClick, isActive }: { num: string; color: string; label: string; onClick: () => void; isActive?: boolean }) {
-  return (
-    <button
-      onClick={onClick}
-      className="flex items-center gap-2.5 group transition-all duration-300"
-      style={{ 
-        background: "none", border: "none", cursor: "pointer", padding: 0,
-        opacity: isActive ? 1 : 0.85
-      }}
-    >
-      <span
-        className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center font-mono text-[10px] font-bold border transition-all duration-200 group-hover:scale-110"
-        style={{ 
-          borderColor: isActive ? color : `${color}aa`, 
-          color: isActive ? "#fff" : "#ffffff", 
-          background: isActive ? color : `${color}22`,
-          boxShadow: isActive ? `0 0 12px ${color}66` : "none"
-        }}
-      >
-        {num}
-      </span>
-      <span
-        className="font-mono text-[10px] uppercase tracking-[0.2em] font-medium hidden lg:block transition-colors duration-200 group-hover:text-white"
-        style={{ color: isActive ? "#fff" : "#ffffff" }}
-      >
-        {label}
-      </span>
-    </button>
   );
 }
 
@@ -159,162 +118,161 @@ const LEVELS: Level[] = [
   },
   {
     num: "01",
-    label: "L1 Triage Analyst",
-    subtitle: "First Line of Detection",
-    color: "#22d3ee",
-    glow: "rgba(34,211,238,0.2)",
-    border: "rgba(34,211,238,0.25)",
+    label: "Junior Pentester",
+    subtitle: "First Exploits, First Reports",
+    color: "#f43f5e",
+    glow: "rgba(244,63,94,0.2)",
+    border: "rgba(244,63,94,0.25)",
     quote:
-      "07:45. You open the SIEM dashboard. 4,200 alerts overnight. Your job is to find the three that matter.",
-    time: "6–18 months",
-    salary: "£30K–£45K",
-    tools: ["Splunk / ELK / Wazuh", "Wireshark / tcpdump", "VirusTotal", "grep / awk"],
+      "You found the SQLi. Now write a report that makes the developer fix it. Both skills matter equally.",
+    time: "0–2 years",
+    salary: "£35K–£55K",
+    tools: ["Burp Suite Community", "Nmap", "SQLmap", "OWASP Juice Shop"],
     skills: [
-      "SIEM log analysis and search query writing",
-      "Alert triage, classification, and prioritisation",
-      "IOC lookup and contextual enrichment",
-      "Incident ticketing and escalation procedures",
+      "OWASP Top 10 — SQLi, XSS, broken access control",
+      "Web request interception and replay with Burp Suite",
+      "Vulnerability documentation and proof-of-concept writing",
+      "Basic Python / Bash scripting for automation",
     ],
     certs: [
-      { label: "Practical SOC Analyst (PSAA)", link: "https://certifications.tcm-sec.com/psaa/", provider: "tcm" },
-      { label: "BTL1 — Blue Team Level 1", link: "https://www.securityblue.team/certifications/blue-team-level-1", provider: "blueteam" },
-      { label: "CompTIA Security+", link: "https://www.comptia.org/en/certifications/security/", provider: "comptia" },
+      { label: "eJPT — eLearnSecurity Junior Penetration Tester", link: "https://security.ine.com/certifications/ejpt-certification/", provider: "ine" },
+      { label: "CompTIA PenTest+", link: "https://www.comptia.org/certifications/pentest", provider: "comptia" },
+      { label: "CEH v13 — Certified Ethical Hacker", link: "https://www.eccouncil.org/train-certify/certified-ethical-hacker-ceh/", provider: "ec-council" },
     ],
     labs: [
-      { label: "Cyberdefenders CyberRange - Network Forensics, Threat Hunting", link: "https://cyberdefenders.org/blue-team-labs/", provider: "cyberdefenders" },
-      { label: "HTB Sherlocks - SOC", link: "https://app.hackthebox.com/sherlocks", provider: "htb" },
-      { label: "Wazuh - you need this FREE CyberSecurity tool", link: "https://youtu.be/3CaG2GI1kn0", provider: "youtube" },
-      { label: "Splunk - Getting started guide", link: "https://youtu.be/-SXddlIZkUs", provider: "youtube" },
+      { label: "PortSwigger Web Security Academy — free web labs", link: "https://portswigger.net/web-security", provider: "portswigger" },
+      { label: "TryHackMe · Web Fundamentals path", link: "https://tryhackme.com/path/outline/web", provider: "tryhackme" },
+      { label: "OWASP Juice Shop — vulnerable practice app", link: "https://github.com/juice-shop/juice-shop", provider: "owasp" },
     ],
   },
   {
     num: "02",
-    label: "L2 Advanced Analyst",
-    subtitle: "Pattern Recognition & Correlation",
-    color: "#8b5cf6",
-    glow: "rgba(139,92,246,0.2)",
-    border: "rgba(139,92,246,0.25)",
+    label: "Security Consultant",
+    subtitle: "Full Engagements, Cloud & Chaining",
+    color: "#fb923c",
+    glow: "rgba(251,146,60,0.2)",
+    border: "rgba(251,146,60,0.25)",
     quote:
-      "Three events. Each harmless alone. But you see them together — and you see the attacker's hand.",
-    time: "2–4 years",
-    salary: "£45K–£65K",
-    tools: ["CyberChef", "Velociraptor", "MISP", "TheHive", "MITRE ATT&CK"],
+      "One XSS becomes a session hijack, becomes an IDOR, becomes a full data breach. You learn to chain.",
+    time: "2–5 years",
+    salary: "£55K–£80K",
+    tools: ["Burp Suite Pro", "Metasploit", "Gobuster / ffuf", "AWS CLI / Azure CLI"],
     skills: [
-      "Threat correlation and attack pattern mapping",
-      "Malware triage — static and dynamic analysis",
-      "MITRE ATT&CK framework and TTP identification",
-      "SOAR automation and playbook development",
+      "Cloud pentesting — IAM misconfigs, S3, Lambda",
+      "Vulnerability chaining — XSS → session hijack → IDOR → exfil",
+      "Custom Python / Golang scanner development",
+      "Client scoping, engagement management and debrief reporting",
     ],
     certs: [
-      { label: "CCDL2 — Threat Hunting & DFIR Certification", link: "https://cyberdefenders.org/certifications/certified-cyberdefender-level2/", provider: "cyberdefenders" },
-      { label: "HTB CDSA — Certified Defensive Security Analyst", link: "https://academy.hackthebox.com/preview/certifications/htb-certified-defensive-security-analyst", provider: "htb" },
+      { label: "OSCP — OffSec Certified Professional", link: "https://www.offsec.com/courses/pen-200/", provider: "offsec" },
+      { label: "BSCP — Burp Suite Certified Practitioner", link: "https://portswigger.net/web-security/certification", provider: "portswigger" },
+      { label: "PNPT — Practical Network Penetration Tester", link: "https://certifications.tcm-sec.com/pnpt/", provider: "tcm" },
     ],
     labs: [
-      { label: "Cyberdefenders CyberRange - Detection Engineering, Threat Hunting", link: "https://cyberdefenders.org/blue-team-labs/", provider: "cyberdefenders" },
-      { label: "HTB Sherlocks - SOC/DFIR", link: "https://app.hackthebox.com/sherlocks", provider: "htb" },
-      { label: "Detection Engineering with Wazuh (John Hammond)", link: "https://youtu.be/nSOqU1iX5oQ", provider: "youtube" },
+      { label: "HackerOne — public bug bounty programs", link: "https://www.hackerone.com/", provider: "hackerone" },
+      { label: "HTB Pro Labs — enterprise network simulations", link: "https://www.hackthebox.com/hacker/pro-labs", provider: "htb" },
+      { label: "Bugcrowd — bug bounty platform", link: "https://www.bugcrowd.com/", provider: "bugcrowd" },
     ],
   },
   {
     num: "03",
-    label: "L3 Forensic Analyst",
-    subtitle: "Deep Forensics & Incident Lead",
-    color: "#f59e0b",
-    glow: "rgba(245,158,11,0.2)",
-    border: "rgba(245,158,11,0.25)",
+    label: "Senior Pentester",
+    subtitle: "Red Teaming & Adversary Simulation",
+    color: "#a78bfa",
+    glow: "rgba(167,139,250,0.2)",
+    border: "rgba(167,139,250,0.25)",
     quote:
-      "You pull the disk. You find the malware. You trace it to its first byte. This is where the story ends.",
-    time: "4–7 years",
-    salary: "£65K–£90K",
-    tools: ["Volatility", "KAPE", "EZTools", "x64dbg", "FTK Imager"],
+      "It's not a test anymore. It's a simulation of a real APT. Your job: think like the adversary.",
+    time: "5–8 years",
+    salary: "£80K–£110K",
+    tools: ["Cobalt Strike / Sliver", "BloodHound / Mimikatz", "Havoc C2", "OSINT Framework"],
     skills: [
-      "Disk and memory forensics — full acquisition",
-      "Malware reverse engineering and binary analysis",
-      "C2 infrastructure profiling and attribution",
-      "APT tracking and threat intelligence production",
+      "Red team TTPs — APT simulation with C2 frameworks",
+      "Threat modeling — STRIDE, PASTA frameworks",
+      "Active Directory attacks and privilege escalation",
+      "Social engineering — phishing simulation and vishing",
     ],
     certs: [
-      { label: "BTL2 — Blue Team Level 2", link: "https://www.securityblue.team/certifications/blue-team-level-2", provider: "blueteam" },
-      { label: "GCFA — GIAC Certified Forensic Analyst", link: "https://www.giac.org/certifications/certified-forensic-analyst-gcfa/", provider: "giac" },
-      { label: "OSCP+", link: "https://www.offsec.com/courses/pen-200/", provider: "offsec" },
+      { label: "OSWE — OffSec Web Expert", link: "https://www.offsec.com/courses/web-300/", provider: "offsec" },
+      { label: "OSEP — OffSec Experienced Penetration Tester", link: "https://www.offsec.com/courses/pen-300/", provider: "offsec" },
+      { label: "CRTP — Certified Red Team Professional", link: "https://www.alteredsecurity.com/redteamlab", provider: "altered" },
     ],
     labs: [
-      { label: "Cyberdefenders CyberRange - Endpoint Forensics, Threat Hunting", link: "https://cyberdefenders.org/blue-team-labs/", provider: "cyberdefenders" },
-      { label: "HTB Sherlocks - SOC/DFIR", link: "https://app.hackthebox.com/sherlocks", provider: "htb" },
-      { label: "Antisyphon - SOC Core Skills", link: "https://www.antisyphontraining.com/product/soc-core-skills-with-john-strand/", provider: "antisyphon" },
+      { label: "HTB Pro Labs — Offshore & RastaLabs APT simulations", link: "https://www.hackthebox.com/hacker/pro-labs", provider: "htb" },
+      { label: "Pentester Academy — Active Directory Attack Labs", link: "https://www.pentesteracademy.com/", provider: "pentesteracademy" },
+      { label: "SANS SEC542 — Web App Penetration Testing & Ethical Hacking", link: "https://www.sans.org/cyber-security-courses/web-app-penetration-testing-ethical-hacking/", provider: "sans" },
     ],
   },
   {
     num: "04",
-    label: "SOC Lead",
-    subtitle: "Operations Command",
+    label: "Pentest Lead",
+    subtitle: "Program Ownership & Strategy",
     color: "#34d399",
     glow: "rgba(52,211,153,0.2)",
     border: "rgba(52,211,153,0.25)",
     quote:
-      "The team responds as fast as the system you built for them. Your job: make the next incident take 10 minutes, not 15.",
-    time: "7+ years",
-    salary: "£90K–£130K+",
-    tools: ["Palo Alto XSOAR", "PowerBI", "ServiceNow SecOps", "Confluence / Jira"],
+      "You don't just find vulnerabilities. You design the program that finds them at scale, across every product.",
+    time: "8+ years",
+    salary: "£110K–£160K+",
+    tools: ["Dradis / Plextrac", "Confluence / Jira", "PowerBI", "Threat intel platforms"],
     skills: [
-      "SOC architecture design and tool strategy",
-      "MTTD / MTTR KPI definition and reporting",
-      "Analyst mentoring and career development",
-      "Executive stakeholder communication",
+      "Pentest program design, tooling strategy and methodology ownership",
+      "CREST / PTES / OWASP Testing Guide compliance",
+      "Team hiring, mentoring and career development",
+      "Executive risk communication and board-level reporting",
     ],
     certs: [
       { label: "CISSP — Certified Information Systems Security Professional", link: "https://www.isc2.org/certifications/cissp", provider: "isc2" },
-      { label: "CSOM — Certified SOC Manager", link: "https://www.securityblue.team/certifications/certified-security-operations-manager", provider: "blueteam" },
+      { label: "GXPN — GIAC Exploit Researcher & Advanced Penetration Tester", link: "https://www.giac.org/certifications/exploit-researcher-advanced-penetration-tester-gxpn/", provider: "giac" },
       { label: "CISM — Certified Information Security Manager", link: "https://www.isaca.org/credentialing/cism", provider: "isaca" },
     ],
     labs: [
-      { label: "Antisyphon - SOC Core Skills", link: "https://www.antisyphontraining.com/product/soc-core-skills-with-john-strand/", provider: "antisyphon" },
-      { label: "MITRE ATT&CK for SOC Managers", link: "https://attack.mitre.org/resources/training/cti/", provider: "mitre" },
-      { label: "NIST CSWP 29 (SOC Model)", link: "https://csrc.nist.gov/pubs/cswp/29/final", provider: "nist" },
+      { label: "CREST CPSA / CRT certification pathway", link: "https://www.crest-approved.org/certifications/", provider: "crest" },
+      { label: "SANS MGT512 — Security Leadership Essentials", link: "https://www.sans.org/cyber-security-courses/security-leadership-essentials-for-managers/", provider: "sans" },
+      { label: "HackerOne — run a private bug bounty program", link: "https://www.hackerone.com/", provider: "hackerone" },
     ],
   },
-] as const;
+];
 
 // ── Next action cards ─────────────────────────────────────────────────────────
 const ACTIONS: Action[] = [
   {
     icon: "🧪",
     title: "Start in a Lab Today",
-    color: "#22d3ee",
-    border: "rgba(34,211,238,0.25)",
-    glow: "rgba(34,211,238,0.08)",
+    color: "#f43f5e",
+    border: "rgba(244,63,94,0.25)",
+    glow: "rgba(244,63,94,0.08)",
     items: [
-      { label: "TryHackMe SOC Level 1 path", link: "https://tryhackme.com/path/outline/soclevel1" },
-      { label: "LetsDefend.io - SOC environment", link: "https://letsdefend.io/" },
-      { label: "CyberDefenders - blue team labs", link: "https://cyberdefenders.org/blue-team-labs/" },
-      { label: "HTB Sherlocks - SOC/DFIR", link: "https://app.hackthebox.com/sherlocks" },
-      { label: "BTLO - Blue Team Labs Online", link: "https://blueteamlabs.online/" },
+      { label: "PortSwigger Web Security Academy", link: "https://portswigger.net/web-security" },
+      { label: "TryHackMe · Web Fundamentals path", link: "https://tryhackme.com/path/outline/web" },
+      { label: "Hack The Box — web challenges", link: "https://www.hackthebox.com/" },
+      { label: "OWASP Juice Shop — local practice app", link: "https://github.com/juice-shop/juice-shop" },
+      { label: "HackerOne — bug bounty programs", link: "https://www.hackerone.com/" },
     ],
   },
   {
     icon: "📁",
     title: "Build a Portfolio",
-    color: "#8b5cf6",
-    border: "rgba(139,92,246,0.25)",
-    glow: "rgba(139,92,246,0.08)",
+    color: "#a78bfa",
+    border: "rgba(167,139,250,0.25)",
+    glow: "rgba(167,139,250,0.08)",
     items: [
-      "Write lab walkthrough reports in PDF format",
-      "Document your homelab with screenshots",
-      "GitHub: scripts, tools, and detection rules",
+      "Write HTB / THM writeups as professional pentest reports",
+      "Document your lab findings with screenshots and PoCs",
+      "GitHub: custom scripts, recon tools, and automation",
     ],
   },
-] as const;
+];
 
 // ── Bezier branch Y positions (SVG viewBox 0 0 100 300) ──────────────────────
 const BRANCH_Y = [65, 150, 235] as const;
 
-export default function SocCareerPathPage() {
+export default function WebHackingCareerPathPage() {
   const router = useRouter();
   const scrollToLevel = (index: number) => {
     const section = sectionRefs.current[index];
     if (section) {
-      const top = section.getBoundingClientRect().top + window.pageYOffset - 50;
-      window.scrollTo({ top, behavior: "smooth" });
+      section.scrollIntoView({ behavior: "smooth" });
     }
   };
   const containerRef = useRef<HTMLDivElement>(null);
@@ -350,7 +308,7 @@ export default function SocCareerPathPage() {
     if (typeof window !== "undefined") {
       // Force scroll to top on mount
       window.scrollTo(0, 0);
-      
+
       // Prevent browser from restoring scroll position
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
@@ -644,7 +602,7 @@ export default function SocCareerPathPage() {
   // ── Mobile Components ───────────────────────────────────────────────
 
 
-  const MobileSocCareerPath = () => (
+  const MobileWebHackingCareerPath = () => (
     <div className="min-h-screen bg-slate-950 text-white overflow-x-hidden font-sans pb-20 pt-14">
       <header className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-white/5 bg-slate-950/90 px-4 py-3 backdrop-blur-md">
         <button
@@ -653,11 +611,11 @@ export default function SocCareerPathPage() {
         >
           Home
         </button>
-        <p className="font-mono text-[9px] font-black uppercase tracking-[0.3em] text-cyan-400">
-          SOC Career Path
+        <p className="font-mono text-[9px] font-black uppercase tracking-[0.3em] text-rose-400">
+          Web Hacking Career Path
         </p>
         <button
-          onClick={() => router.push("/roadmaps/soc")}
+          onClick={() => router.push("/roadmaps/web-hacking")}
           className="font-mono text-[10px] font-bold uppercase tracking-widest text-slate-500"
         >
           Back
@@ -683,7 +641,7 @@ export default function SocCareerPathPage() {
 
             {/* Header Content */}
             <div className="mb-10 space-y-2">
-              <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-cyan-400/60">
+              <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-rose-400/60">
                 {level.subtitle}
               </span>
               <h2 className="text-3xl font-bold tracking-tight leading-tight">
@@ -719,7 +677,7 @@ export default function SocCareerPathPage() {
                     /* ── Certifications: Recommended + Additional ── */
                     <div className="flex flex-col gap-5 pt-1">
                       <div>
-                        <p className="mb-2 font-mono text-[9px] font-bold uppercase tracking-[0.35em] text-cyan-500/60">Recommended</p>
+                        <p className="mb-2 font-mono text-[9px] font-bold uppercase tracking-[0.35em] text-rose-500/60">Recommended</p>
                         <ul>
                           {[cat.items[0]].map((item: any, idx: number) => {
                             const isObj = typeof item === "object";
@@ -727,8 +685,21 @@ export default function SocCareerPathPage() {
                             const link = isObj ? item.link : null;
                             const provider = isObj ? item.provider : null;
                             return (
-                              <li key={idx} className="flex items-center gap-3">
-                                <ProviderFavicon provider={provider} size={18} />
+                              <li key={idx} className="flex items-start gap-4">
+                                {!provider || (provider !== "youtube" && provider !== "google") ? (
+                                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-rose-500/40" />
+                                ) : (
+                                  <div className="mt-0.5 shrink-0">
+                                    {provider === "google" && (
+                                      <svg className="w-4 h-4" viewBox="0 0 24 24">
+                                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
+                                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                                      </svg>
+                                    )}
+                                  </div>
+                                )}
                                 <div className="flex flex-col gap-1 w-full">
                                   {link ? (
                                     <a href={link} target="_blank" rel="noopener noreferrer"
@@ -756,8 +727,21 @@ export default function SocCareerPathPage() {
                             const link = isObj ? item.link : null;
                             const provider = isObj ? item.provider : null;
                             return (
-                              <li key={idx} className="flex items-center gap-3 mb-2 last:mb-0">
-                                <ProviderFavicon provider={provider} size={18} />
+                              <li key={idx} className="flex items-start gap-4 mb-2 last:mb-0">
+                                {!provider || (provider !== "youtube" && provider !== "google") ? (
+                                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-rose-500/40" />
+                                ) : (
+                                  <div className="mt-0.5 shrink-0">
+                                    {provider === "google" && (
+                                      <svg className="w-4 h-4" viewBox="0 0 24 24">
+                                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
+                                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                                      </svg>
+                                    )}
+                                  </div>
+                                )}
                                 <div className="flex flex-col gap-1 w-full">
                                   {link ? (
                                     <a href={link} target="_blank" rel="noopener noreferrer"
@@ -787,8 +771,26 @@ export default function SocCareerPathPage() {
                         const provider = isObj ? item.provider : null;
 
                         return (
-                          <li key={idx} className="flex items-center gap-3 mb-2 last:mb-0">
-                            <ProviderFavicon provider={provider} size={18} />
+                          <li key={idx} className="flex items-start gap-4 mb-2 last:mb-0">
+                            {!provider || (provider !== "youtube" && provider !== "google") ? (
+                              <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-rose-500/40" />
+                            ) : (
+                              <div className="mt-0.5 shrink-0">
+                                {provider === "youtube" && (
+                                  <svg className="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24">
+                                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                                  </svg>
+                                )}
+                                {provider === "google" && (
+                                  <svg className="w-4 h-4 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
+                                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                                  </svg>
+                                )}
+                              </div>
+                            )}
                             <div className="flex flex-col gap-1 w-full">
                               {link ? (
                                 <a
@@ -823,13 +825,13 @@ export default function SocCareerPathPage() {
       {/* Simple Footer */}
       <div className="mt-12 mb-20 flex flex-col items-center gap-4 px-6">
         <button
-          onClick={() => router.push("/roadmaps/soc")}
+          onClick={() => router.push("/roadmaps/web-hacking")}
           className="w-full max-w-xs py-4 rounded-xl border border-white/10 bg-white/5 font-mono text-xs uppercase tracking-widest text-slate-400 hover:bg-white/10 transition-all flex items-center justify-center gap-2"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
-          Back to SOC Roadmap
+          Back to Web Hacking Roadmap
         </button>
         <button
           onClick={() => router.push("/")}
@@ -838,7 +840,7 @@ export default function SocCareerPathPage() {
           Go to Homepage
         </button>
       </div>
-      
+
       {/* Scroll to Top Button */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -874,7 +876,7 @@ export default function SocCareerPathPage() {
 
 
   if (isMobile) {
-    return <MobileSocCareerPath />;
+    return <MobileWebHackingCareerPath />;
   }
 
 
@@ -884,45 +886,53 @@ export default function SocCareerPathPage() {
       <div style={{ transform: `scale(${scaleFactor})`, transformOrigin: "top left", width: scaleFactor !== 1 ? `${100 / scaleFactor}%` : "100%", height: scaleFactor !== 1 ? `${100 / scaleFactor}%` : "100%" }}>
 
         <header
-          className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-white/5 px-8 pt-4 pb-4 backdrop-blur-md"
-          style={{ background: "rgba(9,13,20,0.9)" }}
+          className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-white/5 bg-slate-950/85 px-8 py-4 backdrop-blur-md"
         >
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-6">
             <button
               onClick={() => router.push("/")}
-              className="font-mono text-[10px] uppercase tracking-widest font-medium flex items-center gap-1.5 transition-all duration-150 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]"
-              style={{ color: "#ffffff", background: "none", border: "none", cursor: "pointer" }}
+              className="font-mono text-sm font-bold uppercase tracking-widest text-slate-400 transition-colors hover:text-white"
             >
               Home
             </button>
-            <span style={{ color: "rgba(255,255,255,0.4)", fontSize: "10px" }}>/</span>
+            <div className="h-4 w-px bg-white/10" />
             <button
-              onClick={() => router.push("/roadmaps/soc")}
-              className="font-mono text-[10px] uppercase tracking-widest font-medium flex items-center gap-1.5 transition-all duration-150 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]"
-              style={{ color: "#ffffff", background: "none", border: "none", cursor: "pointer" }}
+              onClick={() => router.push("/roadmaps/web-hacking")}
+              className="flex items-center gap-2 font-mono text-sm font-bold uppercase tracking-widest text-slate-500 transition-colors hover:text-rose-300"
             >
-              SOC Experience
+              <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+                <path d="M9 6H3M3 6L6 3M3 6L6 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              Web Hacking Experience
             </button>
-            <span style={{ color: "rgba(255,255,255,0.4)", fontSize: "10px" }}>/</span>
-            <span className="font-mono text-[10px] uppercase tracking-widest font-medium" style={{ color: "#ffffff", opacity: 0.9 }}>
-              Career Path
-            </span>
           </div>
 
-          <div className="flex items-center gap-8">
-            {LEVELS.map((level, i) => (
-              <NavDot
-                key={level.num}
-                num={level.num}
-                label={level.label}
-                color={level.color}
-                isActive={activeLevel === i}
-                onClick={() => scrollToLevel(i)}
-              />
-            ))}
-          </div>
+          <p className="font-mono text-base font-black uppercase tracking-[0.45em] text-rose-400">
+            Web Hacking Career Path
+          </p>
+          <div className="w-64" /> {/* Balanced spacer */}
         </header>
 
+        {/* ── Fixed level nav (right side) ──────────────────────────────────── */}
+        <nav
+          className="pointer-events-none fixed right-6 top-1/2 z-50 -translate-y-1/2 flex flex-col items-end gap-5"
+        >
+          {LEVELS.map((level, i) => (
+            <div key={i} className="flex items-center gap-2.5">
+              <span className="font-mono text-[8px] uppercase tracking-widest text-slate-600">
+                {level.num}
+              </span>
+              <div
+                className="h-2.5 w-2.5 rounded-full border transition-all duration-500"
+                style={{
+                  borderColor: activeLevel >= i ? level.color : "rgba(51,65,85,0.6)",
+                  background: activeLevel >= i ? level.color : "transparent",
+                  boxShadow: activeLevel === i ? `0 0 12px ${level.color}` : "none",
+                }}
+              />
+            </div>
+          ))}
+        </nav>
 
         <div
           ref={containerRef}
@@ -944,10 +954,10 @@ export default function SocCareerPathPage() {
               className="pointer-events-none absolute inset-0"
               style={{ background: "radial-gradient(circle at center, transparent 35%, rgba(2,6,23,0.96) 100%)" }}
             />
-            {/* Emerald ambient */}
+            {/* Rose ambient */}
             <div
               className="pointer-events-none absolute inset-0"
-              style={{ background: "radial-gradient(ellipse at center, rgba(52,211,153,0.04) 0%, transparent 65%)" }}
+              style={{ background: "radial-gradient(ellipse at center, rgba(244,63,94,0.04) 0%, transparent 65%)" }}
             />
 
             <div className="relative z-10 flex w-full max-w-7xl items-start px-8 lg:px-12">
@@ -957,9 +967,9 @@ export default function SocCareerPathPage() {
                   <p className="font-mono text-[11px] uppercase tracking-[0.4em] text-slate-400 font-bold">
                     Phase Index
                   </p>
-                  <div className="h-0.5 w-12 bg-cyan-500/50" />
+                  <div className="h-0.5 w-12 bg-rose-500/50" />
                 </div>
-                
+
                 <nav className="flex flex-col gap-7">
                   {LEVELS.map((level, i) => (
                     <button
@@ -971,14 +981,14 @@ export default function SocCareerPathPage() {
                         <span className="font-mono text-sm font-black text-slate-700 transition-colors group-hover:text-white" style={{ color: activeLevel === i ? level.color : undefined }}>
                           {level.num}
                         </span>
-                        <span 
+                        <span
                           className="font-mono text-base font-bold tracking-widest text-slate-400 transition-all group-hover:translate-x-1 uppercase"
                           style={{ color: level.color }}
                         >
                           {level.label}
                         </span>
                       </div>
-                      <div className="ml-9 h-px w-0 bg-cyan-500/40 transition-all duration-500 group-hover:w-16" />
+                      <div className="ml-9 h-px w-0 bg-rose-500/40 transition-all duration-500 group-hover:w-16" />
                     </button>
                   ))}
                 </nav>
@@ -993,10 +1003,10 @@ export default function SocCareerPathPage() {
               {/* Hero Content - Shifted Right */}
               <div ref={heroRef} className="flex-1 px-8 text-center lg:pl-24 lg:text-left">
                 <div className="hero-anim mb-6 flex justify-center lg:justify-start">
-                  <div className="rounded-full border border-cyan-500/30 bg-cyan-950/40 px-5 py-2 flex items-center gap-3 backdrop-blur-md">
-                    <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" style={{ boxShadow: "0 0 10px #22d3ee" }}></span>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.55em] text-cyan-400">
-                      The Blueprint to Perfection
+                  <div className="rounded-full border border-rose-500/30 bg-rose-950/40 px-5 py-2 flex items-center gap-3 backdrop-blur-md">
+                    <span className="h-1.5 w-1.5 rounded-full bg-rose-400 animate-pulse" style={{ boxShadow: "0 0 10px #f43f5e" }}></span>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.55em] text-rose-400">
+                      The Blueprint to Exploitation
                     </p>
                   </div>
                 </div>
@@ -1004,22 +1014,22 @@ export default function SocCareerPathPage() {
                 {/* Big Question Hook */}
                 <div className="hero-anim mb-6 flex justify-center lg:justify-start">
                   <h1
-                    className="font-mono font-black text-emerald-400 tracking-tight"
+                    className="font-mono font-black text-rose-400 tracking-tight"
                     style={{
                       fontSize: "clamp(42px, 6vw, 76px)",
-                      textShadow: "0 0 80px rgba(52,211,153,0.5), 0 0 160px rgba(52,211,153,0.2)",
+                      textShadow: "0 0 80px rgba(244,63,94,0.5), 0 0 160px rgba(244,63,94,0.2)",
                       lineHeight: "1.05"
                     }}
                   >
-                    Wondering where<br />to begin?
+                    From recon<br />to red team.
                   </h1>
                 </div>
 
                 <p className="hero-anim mb-6 font-sans text-xl leading-relaxed text-slate-100 max-w-2xl mx-auto lg:mx-0">
-                  Stop guessing. This is the ultimate, battle-tested roadmap for your cybersecurity career.
+                  Stop guessing. This is the ultimate, battle-tested roadmap for your web hacking career.
                 </p>
                 <p className="hero-anim mb-10 font-sans text-base leading-relaxed text-slate-400 max-w-xl mx-auto lg:mx-0">
-                  Distilled from community discussions and industry standards. We&apos;ve mapped out the precise skills, tools, and certifications you need—from your first lab to leading the SOC.
+                  Distilled from the best offensive security resources available. We&apos;ve mapped the precise skills, tools, and certifications you need — from your first Burp Suite proxy to leading red team engagements.
                 </p>
               </div>
             </div>
@@ -1180,10 +1190,29 @@ export default function SocCareerPathPage() {
 
 
                     {/* ── Title & Quote (Top Area) ── */}
-                    <div className="absolute z-10 pointer-events-none" style={{ top: layout.hub.y - 20, left: layout.hub.x + 220, right: layout.toolsCard.w + 64 }}>
-                      <span className="font-mono text-[10px] uppercase tracking-[0.45em]" style={{ color: level.color }}>
-                        {level.subtitle}
-                      </span>
+                    <div className="absolute z-30" style={{ top: layout.hub.y - 20, left: layout.hub.x + 220, right: layout.toolsCard.w + 64 }}>
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-[10px] uppercase tracking-[0.45em]" style={{ color: level.color }}>
+                          {level.subtitle}
+                        </span>
+                        <button
+                          onClick={() => router.push(`/roadmaps/web-hacking/career-path/detailed#level-${level.num}`)}
+                          className="flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-widest transition-all duration-200 cursor-pointer"
+                          style={{
+                            background: `${level.color}14`,
+                            border: `1px solid ${level.color}38`,
+                            color: `${level.color}cc`,
+                          }}
+                          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = `${level.color}28`; (e.currentTarget as HTMLElement).style.color = level.color; }}
+                          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = `${level.color}14`; (e.currentTarget as HTMLElement).style.color = `${level.color}cc`; }}
+                        >
+                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1.2" />
+                            <path d="M6 5.5v3M6 4h.01" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+                          </svg>
+                          Deep dive
+                        </button>
+                      </div>
                       <h2 className="mt-2 text-5xl font-heading font-bold text-white mb-4 drop-shadow-lg">
                         {level.label}
                       </h2>
@@ -1306,14 +1335,8 @@ export default function SocCareerPathPage() {
                                     const link = isObj ? item.link : null;
                                     const provider = isObj ? item.provider : null;
                                     return (
-                                      <li key={idx} className="flex items-start gap-4 group/li transition-all duration-300">
-                                        {!provider ? (
-                                          <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-sm transition-transform group-hover/li:scale-125" style={{ background: level.color, boxShadow: `0 0 8px ${level.color}` }} />
-                                        ) : (
-                                          <div className="mt-1 shrink-0 transition-transform group-hover/li:scale-110">
-                                            <ProviderFavicon provider={provider} size={18} />
-                                          </div>
-                                        )}
+                                      <li key={idx} className="flex items-center gap-3 group/li transition-all duration-300">
+                                        <ProviderFavicon provider={provider} size={18} />
                                         <div className="flex flex-col gap-1 w-full">
                                           {link ? (
                                             <a href={link} target="_blank" rel="noopener noreferrer"
@@ -1347,11 +1370,23 @@ export default function SocCareerPathPage() {
 
                                 return (
                                   <li key={idx} className="flex items-start gap-4 group/li transition-all duration-300">
-                                    {!provider ? (
+                                    {!provider || (provider !== "youtube" && provider !== "google") ? (
                                       <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-sm transition-transform group-hover/li:scale-125" style={{ background: level.color, boxShadow: `0 0 8px ${level.color}` }} />
                                     ) : (
                                       <div className="mt-1 shrink-0 transition-transform group-hover/li:scale-110">
-                                        <ProviderFavicon provider={provider} size={18} />
+                                        {provider === "youtube" && (
+                                          <svg className="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24">
+                                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                                          </svg>
+                                        )}
+                                        {provider === "google" && (
+                                          <svg className="w-4 h-4" viewBox="0 0 24 24">
+                                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
+                                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                                          </svg>
+                                        )}
                                       </div>
                                     )}
 
@@ -1399,21 +1434,21 @@ export default function SocCareerPathPage() {
             {/* Ambient */}
             <div
               className="pointer-events-none absolute inset-0"
-              style={{ background: "radial-gradient(ellipse at center, rgba(34,211,238,0.04) 0%, transparent 70%)" }}
+              style={{ background: "radial-gradient(ellipse at center, rgba(244,63,94,0.04) 0%, transparent 70%)" }}
             />
             {/* Top border */}
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent" />
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-rose-500/30 to-transparent" />
 
             <div className="relative z-10 mx-auto max-w-5xl">
               <div className="mb-12 text-center">
-                <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.55em] text-cyan-400">
+                <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.55em] text-rose-400">
                   Begin
                 </p>
                 <h2 className="font-mono text-3xl font-black uppercase tracking-widest text-white">
                   Next Actions
                 </h2>
                 <p className="mt-3 font-sans text-slate-400">
-                  Every SOC analyst started somewhere. Here&apos;s your first move.
+                  Every pentester started somewhere. Here&apos;s your first move.
                 </p>
               </div>
 
@@ -1476,23 +1511,23 @@ export default function SocCareerPathPage() {
               {/* Footer CTA */}
               <div className="mt-16 flex flex-col items-center gap-5 text-center">
                 <p className="max-w-lg font-sans text-sm leading-relaxed text-slate-500">
-                  The SOC isn&apos;t just a career — it&apos;s the team that keeps the rest of us safe.
+                  Web hacking isn&apos;t just a career — it&apos;s the discipline that keeps software honest.
                 </p>
                 <button
-                  onClick={() => router.push("/roadmaps/soc")}
-                  className="inline-flex items-center gap-3 rounded-xl border border-cyan-500/35 bg-cyan-950/20 px-8 py-3.5 font-mono text-sm uppercase tracking-widest text-cyan-300 transition-all hover:border-cyan-400/60 hover:bg-cyan-950/40"
+                  onClick={() => router.push("/roadmaps/web-hacking")}
+                  className="inline-flex items-center gap-3 rounded-xl border border-rose-500/35 bg-rose-950/20 px-8 py-3.5 font-mono text-sm uppercase tracking-widest text-rose-300 transition-all hover:border-rose-400/60 hover:bg-rose-950/40"
                 >
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                     <path d="M9 6H3M3 6L6 3M3 6L6 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
-                  Back to SOC Experience
+                  Back to Web Hacking Experience
                 </button>
               </div>
             </div>
           </section>
         </div>
       </div>
-      
+
       {/* Scroll to Top Button */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -1520,8 +1555,8 @@ export default function SocCareerPathPage() {
         }}
         onMouseEnter={e => {
           (e.currentTarget as HTMLElement).style.background = "rgba(15,23,42,0.95)";
-          (e.currentTarget as HTMLElement).style.borderColor = "rgba(34,211,238,0.3)";
-          (e.currentTarget as HTMLElement).style.color = "#22d3ee";
+          (e.currentTarget as HTMLElement).style.borderColor = "rgba(244,63,94,0.3)";
+          (e.currentTarget as HTMLElement).style.color = "#f43f5e";
         }}
         onMouseLeave={e => {
           (e.currentTarget as HTMLElement).style.background = "rgba(2,6,23,0.85)";
@@ -1536,5 +1571,3 @@ export default function SocCareerPathPage() {
     </main>
   );
 }
-
-

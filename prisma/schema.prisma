@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Profile {
+  id              String         @id @db.Uuid
+  username        String         @unique
+  displayName     String
+  title           String?
+  bio             String?
+  avatarUrl       String?
+  location        String?
+  website         String?
+  memberSince     DateTime       @default(now())
+  
+  // RootAccess Internal Rank
+  rankTier        String         @default("Beginner")
+  rankPoints      Int            @default(0)
+  globalRank      Int?
+  
+  // Relationships
+  skills          Skill[]
+  platforms       PlatformStat[]
+  certifications  Certification[]
+  reports         Report[]
+
+  @@map("profiles")
+}
+
+model Skill {
+  id        String   @id @default(cuid())
+  profileId String   @db.Uuid
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  name      String
+  value     Int      // 0-100
+  
+  @@unique([profileId, name])
+  @@map("skills")
+}
+
+model PlatformStat {
+  id            String   @id @default(cuid())
+  profileId     String   @db.Uuid
+  profile       Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  platform      String   // "tryhackme", "hackthebox", etc.
+  username      String
+  rank          String
+  points        Int?
+  badges        Int?
+  userOwned     Int?
+  rootOwned     Int?
+  percentile    String?
+  lastUpdated   DateTime @default(now())
+
+  @@unique([profileId, platform])
+  @@map("platform_stats")
+}
+
+model Certification {
+  id        String   @id @default(cuid())
+  profileId String   @db.Uuid
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  name      String
+  issuer    String
+  date      String
+  verifyUrl String
+  
+  @@map("certifications")
+}
+
+model Report {
+  id          String   @id @default(cuid())
+  profileId   String   @db.Uuid
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  title       String
+  date        String
+  type        String   // "Pentest", "Research", etc.
+  fileUrl     String
+  description String?
+  
+  @@map("reports")
+}
