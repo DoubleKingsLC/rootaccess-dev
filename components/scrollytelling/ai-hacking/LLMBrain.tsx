@@ -76,7 +76,7 @@ export const LLMBrain: React.FC<LLMBrainProps> = ({ className = "", compromised 
                 transition: "all 1.4s ease",
             }}
         >
-            {compromised ? "COMPROMISED" : "TARGET_LLM"}
+            {compromised ? "COMPROMISED" : "SkyLink AI Support"}
         </div>
 
         {/* Breach badge — only when compromised */}

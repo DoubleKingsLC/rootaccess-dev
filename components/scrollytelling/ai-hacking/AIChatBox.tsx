@@ -189,7 +189,7 @@ export const AIChatBox: React.FC<AIChatBoxProps> = ({ className = "", progress }
                                             }}
                                         >
                                             <span className="mb-2 block text-right text-[10px] tracking-widest text-cyan-500">
-                                                TARGET_LLM
+                                                SkyLink AI Support
                                             </span>
                                             {renderHighlightedContent(msg.llm, msg.llmStart, msg.llmEnd, msg.highlights)}
                                             {progress >= msg.llmStart && progress < msg.llmEnd && (
@@ -211,7 +211,7 @@ export const AIChatBox: React.FC<AIChatBoxProps> = ({ className = "", progress }
                                             }}
                                         >
                                             <span className="mb-3 block text-right text-[10px] tracking-widest text-red-400">
-                                                TARGET_LLM · COMPROMISED
+                                                SkyLink AI Support · COMPROMISED
                                             </span>
                                             <div className="flex flex-col gap-2 text-xs leading-relaxed">
                                                 <span className="text-red-400">
@@ -251,7 +251,7 @@ export const AIChatBox: React.FC<AIChatBoxProps> = ({ className = "", progress }
                                             }}
                                         >
                                             <span className="mb-3 block text-right text-[10px] tracking-widest text-red-400">
-                                                TARGET_LLM · COMPROMISED
+                                                SkyLink AI Support · COMPROMISED
                                             </span>
                                             <div className="flex flex-col gap-2 text-xs">
                                                 <span className="font-mono text-red-400">

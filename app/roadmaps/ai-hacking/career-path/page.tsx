@@ -1053,7 +1053,7 @@ export default function AiHackingCareerPathPage() {
             {/* Continuous trunk — spans all level sections */}
             <div
               className="pointer-events-none absolute"
-              style={{ left: 55, top: 0, bottom: 0, width: 2 }}
+              style={{ left: 55, top: 120, bottom: 0, width: 2 }}
             >
               <div ref={trunkRef} className="tech-tree-trunk h-full w-full" />
             </div>
