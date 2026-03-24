@@ -270,12 +270,13 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
                                 >
                                     {/* Far Left: Notepad & Scratchcard (Fades away during takeover) */}
                                     <div 
-                                        className="flex-shrink-0 flex flex-col gap-4 xl:gap-10 self-start lg:self-center lg:-ml-4 xl:-ml-8 lg:-mt-12 transition-all duration-700"
+                                        className="flex-shrink-0 flex flex-col gap-4 xl:gap-10 self-start lg:self-center lg:-ml-4 xl:-ml-8 lg:-mt-12"
                                         style={{ 
                                             zIndex: isFocusing ? 200 : 10,
                                             opacity: 1 - takeoverProgress,
-                                            transform: `translateX(${takeoverProgress * -200 * layoutScale}px)`,
-                                            pointerEvents: takeoverProgress > 0.5 ? "none" : "auto"
+                                            transform: `translate3d(${takeoverProgress * -400 * layoutScale}px, 0, 0)`,
+                                            pointerEvents: takeoverProgress > 0.5 ? "none" : "auto",
+                                            willChange: "transform, opacity"
                                         }}
                                     >
                                         <AIHackingNotepad progress={progress} layoutScale={layoutScale} />
@@ -286,11 +287,12 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
  
                                     {/* Right side group: Avatar -> Chat/Takeover -> Brain */}
                                     <div 
-                                        className="flex flex-1 w-full items-center justify-end gap-6 md:gap-8 lg:gap-12 xl:gap-20 transition-all duration-700 ease-out"
+                                        className="flex flex-1 w-full items-center justify-end gap-6 md:gap-8 lg:gap-12 xl:gap-20"
                                         style={{ 
                                             filter: isFocusing ? "blur(12px)" : "none",
                                             opacity: isFocusing ? 0.25 : 1,
-                                            transform: `translateX(${centeringShift}%) scale(${isFocusing ? 0.95 : 1})`,
+                                            transform: `translate3d(${centeringShift}%, 0, 0) scale(${isFocusing ? 0.95 : 1})`,
+                                            willChange: "transform"
                                         }}
                                     >
                                         <div className="flex-shrink-0 transition-all duration-1000 ease-out"
