@@ -84,8 +84,7 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
         // Normalize scroll speed: Chrome/Brave are too fast at 1.0, so we use 0.7.
         // Safari trackpad events are extremely small, meaning 1.0 takes ~10s to scroll the intro. 
         // We boost Safari to 3.0 to match the observed speed of Chrome at 0.7.
-        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-        const multiplier = isSafari ? 3 : 0.7;
+        const multiplier = 1.0;
 
         const lenis = new Lenis({ lerp: 0.05, wheelMultiplier: multiplier });
         lenis.on("scroll", ScrollTrigger.update);
@@ -150,8 +149,8 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
             const totalScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
             const currentProgress = currentScrollY / totalScroll;
             
-            // Speed through the 4-second gap immediately on Safari
-            if (isSafari && currentProgress >= 0.04 && currentProgress < 0.08) {
+            // Accelerate through the "deadzone" between the intro fade-out (0.01) and the first phase start (0.08).
+            if (currentProgress >= 0.01 && currentProgress < 0.08) {
                 scrollAmount *= 3.5; 
             }
 
@@ -237,7 +236,12 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
                 <AIIntroOverlay
                     progress={progress}
                     isAutoScrolling={isAutoScrolling}
-                    onPlay={() => setIsAutoScrolling(true)}
+                    onPlay={() => {
+                        setIsAutoScrolling(true);
+                        // Skip the initial 5-second linear scroll delay by jumping directly to the intro fade-out threshold.
+                        const totalScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+                        window.scrollTo({ top: totalScroll * 0.012, behavior: "smooth" });
+                    }}
                 />
 
                 {/* ── Main Workspace ──────────────────────────────────────────────────── */}

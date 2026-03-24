@@ -33,6 +33,7 @@ const PROVIDER_DOMAINS: Record<string, string> = {
     defcon: "aivillage.org",
     github: "github.com",
     huggingface: "huggingface.co",
+    isaca: "isaca.org",
 };
 
 function ProviderFavicon({ provider, size = 18 }: { provider: string | null; size?: number }) {
@@ -262,7 +263,15 @@ export default function AiHackingCareerPathPage() {
   const scrollToLevel = (index: number) => {
     const section = sectionRefs.current[index];
     if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
+      // Land precisely at the section top, minus the fixed header height
+      const headerHeight = 84; 
+      const rect = section.getBoundingClientRect();
+      const scrollTarget = window.pageYOffset + rect.top - headerHeight;
+      
+      window.scrollTo({
+        top: scrollTarget,
+        behavior: "smooth"
+      });
     }
   };
   const containerRef = useRef<HTMLDivElement>(null);
@@ -324,9 +333,11 @@ export default function AiHackingCareerPathPage() {
       if (typeof window !== "undefined") {
         setOrientation(window.innerHeight > window.innerWidth ? "portrait" : "landscape");
 
-        // Calculate scale factor for smaller landscape screens
-        if (window.innerWidth < 1100 && window.innerWidth > window.innerHeight) {
-          const s = Math.min(1, window.innerWidth / 1200);
+        // Calculate scale factor for smaller laptops or tablets (landscape)
+        if (window.innerWidth < 1400 && window.innerWidth > window.innerHeight) {
+          const sWidth = window.innerWidth / 1300;
+          const sHeight = window.innerHeight / 850;
+          const s = Math.min(1, sWidth, sHeight);
           setScaleFactor(s);
         } else {
           setScaleFactor(1);
@@ -360,11 +371,11 @@ export default function AiHackingCareerPathPage() {
         totalWidth = levelsContainer.clientWidth - pl - pr;
       }
 
-      const hub = { x: 55, y: vh * 0.22 }; // Moved up to give branches and cards more room
+      const hub = { x: 55, y: vh * 0.07 }; // Tight to header — eliminates the gap
 
       const toolsCardWidth = Math.max(220, Math.min(280, totalWidth * 0.22));
       const toolsCardX = totalWidth - toolsCardWidth - 20;
-      const toolsCardY = hub.y - 35;
+      const toolsCardY = hub.y - 10;
       const toolsCard = { x: toolsCardX, y: toolsCardY, w: toolsCardWidth };
 
       const cardsLeft = 140;
@@ -381,7 +392,7 @@ export default function AiHackingCareerPathPage() {
       // Ensure cards fit within screen if calculatedWidth is less than min width
       const finalCardW = (cardW * 3 + gap * 2 > layoutWidth) ? (layoutWidth - gap * 2) / 3 : cardW;
 
-      const cardY = vh * 0.55; // Pushed down just slightly more to ensure absolute vertical clearance from Tools card
+      const cardY = vh * 0.38; // Pulled up so skill cards aren't cut off at the bottom
 
       const cards = [
         { x: cardsLeft + finalCardW / 2, y: cardY },
@@ -486,8 +497,8 @@ export default function AiHackingCareerPathPage() {
         // Active level tracking
         ScrollTrigger.create({
           trigger: section,
-          start: "top 55%",
-          end: "bottom 45%",
+          start: "top 25%",
+          end: "bottom 35%",
           onEnter: () => setActiveLevel(i),
           onEnterBack: () => setActiveLevel(i),
         });
@@ -873,61 +884,83 @@ export default function AiHackingCareerPathPage() {
 
   return (
     <main className="min-h-screen bg-slate-950 text-white overflow-x-hidden">
+      {/* ── Fixed header (Outside scaled container for stickiness) ──────────────── */}
+      <header
+        className="fixed inset-x-0 top-0 z-[100] flex items-center justify-between border-b border-white/5 bg-slate-950/95 px-8 py-4 backdrop-blur-md"
+      >
+        {/* Breadcrumb Left side */}
+        <div className="flex items-center gap-2 font-mono text-[11px] font-black uppercase tracking-[0.25em] text-slate-400">
+          <button
+            onClick={() => router.push("/")}
+            className="transition-colors hover:text-white"
+          >
+            HOME
+          </button>
+          <span className="opacity-30 mx-1 text-slate-600">/</span>
+          <button
+            onClick={() => router.push("/roadmaps/ai-hacking")}
+            className="transition-colors hover:text-red-400"
+          >
+            AI EXPERIENCE
+          </button>
+          <span className="opacity-30 mx-1 text-slate-600">/</span>
+          <span className="text-white font-black">CAREER PATH</span>
+        </div>
+
+        {/* Role Nav Right side */}
+        <div className="flex items-center gap-10">
+          {LEVELS.map((level, i) => {
+            const isActive = activeLevel === i;
+            const navLabel = i === 0 ? "ENTRY POINT" : 
+                             i === 1 ? "AI RED TEAM OPERATOR" : 
+                             i === 2 ? "AI SECURITY RESEARCHER" : 
+                             "PRINCIPAL AI SECURITY ARCHITECT";
+
+            return (
+              <button
+                key={i}
+                onClick={() => scrollToLevel(i)}
+                className="group flex items-center gap-3.5 transition-all"
+              >
+                <div
+                  className={`flex h-6 w-6 items-center justify-center rounded-full border text-[11px] font-black transition-all duration-500 ${
+                    isActive ? "scale-110" : "opacity-40 group-hover:opacity-100"
+                  }`}
+                  style={{
+                    borderColor: level.color,
+                    color: level.color,
+                    boxShadow: isActive ? `0 0 18px ${level.glow}` : "none",
+                    background: isActive ? `${level.color}25` : "transparent",
+                  }}
+                >
+                  {level.num}
+                </div>
+                <span
+                  className={`font-mono text-[11.5px] font-bold uppercase tracking-[0.18em] transition-all whitespace-nowrap ${
+                    isActive ? "text-white opacity-100" : "text-slate-300 opacity-60 group-hover:opacity-100 group-hover:text-white"
+                  }`}
+                >
+                  {navLabel}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </header>
+
       <div style={{ transform: `scale(${scaleFactor})`, transformOrigin: "top left", width: scaleFactor !== 1 ? `${100 / scaleFactor}%` : "100%", height: scaleFactor !== 1 ? `${100 / scaleFactor}%` : "100%" }}>
 
-        <header
-          className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-white/5 bg-slate-950/85 px-8 py-4 backdrop-blur-md"
-        >
-          <div className="flex items-center gap-6">
-            <button
-              onClick={() => router.push("/")}
-              className="font-mono text-sm font-bold uppercase tracking-widest text-slate-400 transition-colors hover:text-white"
-            >
-              Home
-            </button>
-            <div className="h-4 w-px bg-white/10" />
-            <button
-              onClick={() => router.push("/roadmaps/ai-hacking")}
-              className="flex items-center gap-2 font-mono text-sm font-bold uppercase tracking-widest text-slate-500 transition-colors hover:text-red-300"
-            >
-              <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
-                <path d="M9 6H3M3 6L6 3M3 6L6 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              AI Experience
-            </button>
-          </div>
-
-          <p className="font-mono text-base font-black uppercase tracking-[0.45em] text-red-400">
-            AI Hacking Career Path
-          </p>
-          <div className="w-64" /> {/* Balanced spacer */}
-        </header>
+        {/* ── Fixed level nav (REMOVED - INTEGRATED INTO HEADER) ── */}
 
         {/* ── Fixed level nav (right side) ──────────────────────────────────── */}
-        <nav
-          className="pointer-events-none fixed right-6 top-1/2 z-50 -translate-y-1/2 flex flex-col items-end gap-5"
-        >
-          {LEVELS.map((level, i) => (
-            <div key={i} className="flex items-center gap-2.5">
-              <span className="font-mono text-[8px] uppercase tracking-widest text-slate-600">
-                {level.num}
-              </span>
-              <div
-                className="h-2.5 w-2.5 rounded-full border transition-all duration-500"
-                style={{
-                  borderColor: activeLevel >= i ? level.color : "rgba(51,65,85,0.6)",
-                  background: activeLevel >= i ? level.color : "transparent",
-                  boxShadow: activeLevel === i ? `0 0 12px ${level.color}` : "none",
-                }}
-              />
-            </div>
-          ))}
-        </nav>
+
 
         <div
           ref={containerRef}
           className="pt-16"
         >
+
+
           {/* ── Hero ────────────────────────────────────────────────────────── */}
           <section className="relative flex min-h-[85vh] items-start justify-center overflow-hidden pt-24 pb-32 lg:pt-32">
             {/* Grid */}
@@ -1053,7 +1086,7 @@ export default function AiHackingCareerPathPage() {
             {/* Continuous trunk — spans all level sections */}
             <div
               className="pointer-events-none absolute"
-              style={{ left: 55, top: 240, bottom: 0, width: 2 }}
+              style={{ left: 55, top: 100, bottom: 0, width: 2 }}
             >
               <div ref={trunkRef} className="tech-tree-trunk h-full w-full" />
             </div>
@@ -1271,13 +1304,24 @@ export default function AiHackingCareerPathPage() {
                                     const provider = isObj ? item.provider : null;
                                     return (
                                       <li key={idx} className="flex items-start gap-4 group/li transition-all duration-300">
-                                        {!provider ? (
-                                          <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-sm transition-transform group-hover/li:scale-125" style={{ background: level.color, boxShadow: `0 0 8px ${level.color}` }} />
-                                        ) : (
-                                          <div className="mt-1 shrink-0 transition-transform group-hover/li:scale-110">
+                                        <div className="mt-1 shrink-0 transition-transform group-hover/li:scale-110">
+                                          {provider === "google" ? (
+                                            <svg className="w-4 h-4" viewBox="0 0 24 24">
+                                              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                                              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
+                                              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                                            </svg>
+                                          ) : provider === "youtube" ? (
+                                            <svg className="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24">
+                                              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                                            </svg>
+                                          ) : provider && PROVIDER_DOMAINS[provider] ? (
                                             <ProviderFavicon provider={provider} size={18} />
-                                          </div>
-                                        )}
+                                          ) : (
+                                            <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-sm transition-transform group-hover/li:scale-125" style={{ background: level.color, boxShadow: `0 0 8px ${level.color}` }} />
+                                          )}
+                                        </div>
                                         <div className="flex flex-col gap-1 w-full">
                                           {link ? (
                                             <a href={link} target="_blank" rel="noopener noreferrer"
@@ -1313,13 +1357,24 @@ export default function AiHackingCareerPathPage() {
                                     const provider = isObj ? item.provider : null;
                                     return (
                                       <li key={idx} className="flex items-start gap-4 group/li transition-all duration-300">
-                                        {!provider ? (
-                                          <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-sm transition-transform group-hover/li:scale-125" style={{ background: level.color, boxShadow: `0 0 8px ${level.color}` }} />
-                                        ) : (
-                                          <div className="mt-1 shrink-0 transition-transform group-hover/li:scale-110">
+                                        <div className="mt-1 shrink-0 transition-transform group-hover/li:scale-110">
+                                          {provider === "google" ? (
+                                            <svg className="w-4 h-4" viewBox="0 0 24 24">
+                                              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                                              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
+                                              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                                            </svg>
+                                          ) : provider === "youtube" ? (
+                                            <svg className="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24">
+                                              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                                            </svg>
+                                          ) : provider && PROVIDER_DOMAINS[provider] ? (
                                             <ProviderFavicon provider={provider} size={18} />
-                                          </div>
-                                        )}
+                                          ) : (
+                                            <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-sm transition-transform group-hover/li:scale-125" style={{ background: level.color, boxShadow: `0 0 8px ${level.color}` }} />
+                                          )}
+                                        </div>
                                         <div className="flex flex-col gap-1 w-full">
                                           {link ? (
                                             <a href={link} target="_blank" rel="noopener noreferrer"
@@ -1353,13 +1408,24 @@ export default function AiHackingCareerPathPage() {
 
                                 return (
                                   <li key={idx} className="flex items-start gap-4 group/li transition-all duration-300">
-                                    {!provider ? (
-                                      <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-sm transition-transform group-hover/li:scale-125" style={{ background: level.color, boxShadow: `0 0 8px ${level.color}` }} />
-                                    ) : (
-                                      <div className="mt-1 shrink-0 transition-transform group-hover/li:scale-110">
+                                    <div className="mt-1 shrink-0 transition-transform group-hover/li:scale-110">
+                                      {provider === "google" ? (
+                                        <svg className="w-4 h-4" viewBox="0 0 24 24">
+                                          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                                          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
+                                          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                                        </svg>
+                                      ) : provider === "youtube" ? (
+                                        <svg className="w-4 h-4 text-red-500 fill-current" viewBox="0 0 24 24">
+                                          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                                        </svg>
+                                      ) : provider && PROVIDER_DOMAINS[provider] ? (
                                         <ProviderFavicon provider={provider} size={18} />
-                                      </div>
-                                    )}
+                                      ) : (
+                                        <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-sm transition-transform group-hover/li:scale-125" style={{ background: level.color, boxShadow: `0 0 8px ${level.color}` }} />
+                                      )}
+                                    </div>
 
                                     <div className="flex flex-col gap-1 w-full">
                                       {link ? (
