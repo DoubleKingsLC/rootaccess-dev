@@ -363,7 +363,14 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
                 </div>
 
                 {/* ── Incident Timeline ──────────────────────────────────────────────── */}
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 border-t border-red-900/30 bg-black/40 px-8 py-3 backdrop-blur-sm">
+                <div 
+                    className="pointer-events-none absolute inset-x-0 bottom-0 z-30 border-t border-red-900/30 bg-black/40 px-8 py-3 backdrop-blur-sm transition-all duration-700"
+                    style={{ 
+                        opacity: progress > 0.05 ? 1 : 0,
+                        visibility: progress > 0.05 ? "visible" : "hidden",
+                        transform: progress > 0.05 ? "translateY(0)" : "translateY(20px)"
+                    }}
+                >
                     <div className="flex items-center justify-center gap-0">
                         {TIMELINE.map((phase, i) => {
                             const isActive = progress >= phase.threshold;
