@@ -340,6 +340,7 @@ export default function HomePage() {
     const bannerRefs = useRef<(HTMLDivElement | null)[]>(Array(7).fill(null));
 
     const [layout, setLayout] = useState<Layout | null>(null);
+    const [hoveredMenu, setHoveredMenu] = useState<'workflows' | 'roadmaps' | null>(null);
     const [rPos, setRPos] = useState<Pt | null>(null);
     const [isMobile, setIsMobile] = useState(false);
 
@@ -475,6 +476,165 @@ export default function HomePage() {
 
     return (
         <div ref={containerRef} style={{ height: isMobile ? "auto" : "280vh" }}>
+            {/* Fixed top-left nav */}
+            {!isMobile && (
+                <div style={{ position: "fixed", top: 28, left: 32, zIndex: 100, display: "flex", gap: 16 }}>
+                    {/* Workflows Dropdown */}
+                    <div 
+                        onMouseEnter={() => setHoveredMenu('workflows')}
+                        onMouseLeave={() => setHoveredMenu(null)}
+                        style={{ position: "relative" }}
+                    >
+                        <button
+                            style={{
+                                display: "inline-flex", alignItems: "center", gap: 10,
+                                fontFamily: "var(--font-mono, monospace)",
+                                fontSize: 12, fontWeight: 700, letterSpacing: "0.35em", textTransform: "uppercase",
+                                color: hoveredMenu === 'workflows' ? "#fff" : "#22d3ee",
+                                background: hoveredMenu === 'workflows' ? "rgba(34,211,238,0.22)" : "rgba(34,211,238,0.06)",
+                                border: "1.5px solid",
+                                borderColor: hoveredMenu === 'workflows' ? "#22d3ee" : "rgba(34,211,238,0.45)",
+                                borderRadius: 10, padding: "12px 24px",
+                                backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+                                transition: "all 0.25s cubic-bezier(0.16,1,0.3,1)",
+                                boxShadow: hoveredMenu === 'workflows' 
+                                    ? "0 0 35px rgba(34,211,238,0.25), inset 0 0 15px rgba(34,211,238,0.1)"
+                                    : "0 0 25px rgba(34,211,238,0.12), inset 0 0 10px rgba(34,211,238,0.05)",
+                                transform: hoveredMenu === 'workflows' ? "translateY(-1px)" : "none",
+                                cursor: "pointer",
+                            }}
+                        >
+                            Workflows
+                            <svg 
+                                width="10" height="6" viewBox="0 0 10 6" fill="none"
+                                style={{ transform: hoveredMenu === 'workflows' ? "rotate(180deg)" : "none", transition: "transform 0.3s ease" }}
+                            >
+                                <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </button>
+
+                        {/* Workflows Menu */}
+                        <div style={{
+                            position: "absolute", top: "115%", left: 0, width: 260,
+                            padding: "8px", borderRadius: 12,
+                            background: "rgba(2,6,23,0.85)", backdropFilter: "blur(16px)",
+                            border: "1px solid rgba(34,211,238,0.2)",
+                            boxShadow: "0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(34,211,238,0.05)",
+                            opacity: hoveredMenu === 'workflows' ? 1 : 0,
+                            visibility: hoveredMenu === 'workflows' ? "visible" : "hidden",
+                            transform: hoveredMenu === 'workflows' ? "translateY(0)" : "translateY(10px)",
+                            transition: "all 0.3s cubic-bezier(0.16,1,0.3,1)",
+                            zIndex: 110,
+                        }}>
+                            {[
+                                { label: "SOC Experience", href: "/roadmaps/soc" },
+                                { label: "AI Hacking Experience", href: "/roadmaps/ai-hacking" }
+                            ].map((item) => (
+                                <Link 
+                                    key={item.href} href={item.href}
+                                    style={{
+                                        display: "block", width: "100%", padding: "12px 16px",
+                                        borderRadius: 8, textDecoration: "none",
+                                        fontFamily: "var(--font-mono, monospace)",
+                                        fontSize: 11, fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase",
+                                        color: "rgba(248,250,252,0.8)", transition: "all 0.2s ease",
+                                    }}
+                                    onMouseEnter={e => {
+                                        (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.12)";
+                                        (e.currentTarget as HTMLElement).style.color = "#22d3ee";
+                                        (e.currentTarget as HTMLElement).style.paddingLeft = "20px";
+                                    }}
+                                    onMouseLeave={e => {
+                                        (e.currentTarget as HTMLElement).style.background = "transparent";
+                                        (e.currentTarget as HTMLElement).style.color = "rgba(248,250,252,0.8)";
+                                        (e.currentTarget as HTMLElement).style.paddingLeft = "16px";
+                                    }}
+                                >
+                                    {item.label}
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Roadmaps Dropdown */}
+                    <div 
+                        onMouseEnter={() => setHoveredMenu('roadmaps')}
+                        onMouseLeave={() => setHoveredMenu(null)}
+                        style={{ position: "relative" }}
+                    >
+                        <button
+                            style={{
+                                display: "inline-flex", alignItems: "center", gap: 10,
+                                fontFamily: "var(--font-mono, monospace)",
+                                fontSize: 12, fontWeight: 700, letterSpacing: "0.35em", textTransform: "uppercase",
+                                color: hoveredMenu === 'roadmaps' ? "#fff" : "#22d3ee",
+                                background: hoveredMenu === 'roadmaps' ? "rgba(34,211,238,0.22)" : "rgba(34,211,238,0.06)",
+                                border: "1.5px solid",
+                                borderColor: hoveredMenu === 'roadmaps' ? "#22d3ee" : "rgba(34,211,238,0.45)",
+                                borderRadius: 10, padding: "12px 24px",
+                                backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+                                transition: "all 0.25s cubic-bezier(0.16,1,0.3,1)",
+                                boxShadow: hoveredMenu === 'roadmaps' 
+                                    ? "0 0 35px rgba(34,211,238,0.25), inset 0 0 15px rgba(34,211,238,0.1)"
+                                    : "0 0 25px rgba(34,211,238,0.12), inset 0 0 10px rgba(34,211,238,0.05)",
+                                transform: hoveredMenu === 'roadmaps' ? "translateY(-1px)" : "none",
+                                cursor: "pointer",
+                            }}
+                        >
+                            Roadmaps
+                            <svg 
+                                width="10" height="6" viewBox="0 0 10 6" fill="none"
+                                style={{ transform: hoveredMenu === 'roadmaps' ? "rotate(180deg)" : "none", transition: "transform 0.3s ease" }}
+                            >
+                                <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </button>
+
+                        {/* Roadmaps Menu */}
+                        <div style={{
+                            position: "absolute", top: "115%", left: 0, width: 260,
+                            padding: "8px", borderRadius: 12,
+                            background: "rgba(2,6,23,0.85)", backdropFilter: "blur(16px)",
+                            border: "1px solid rgba(34,211,238,0.2)",
+                            boxShadow: "0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(34,211,238,0.05)",
+                            opacity: hoveredMenu === 'roadmaps' ? 1 : 0,
+                            visibility: hoveredMenu === 'roadmaps' ? "visible" : "hidden",
+                            transform: hoveredMenu === 'roadmaps' ? "translateY(0)" : "translateY(10px)",
+                            transition: "all 0.3s cubic-bezier(0.16,1,0.3,1)",
+                            zIndex: 110,
+                        }}>
+                            {[
+                                { label: "SOC Pathway", href: "/roadmaps/soc/career-path" },
+                                { label: "AI Hacking Pathway", href: "/roadmaps/ai-hacking/career-path" }
+                            ].map((item) => (
+                                <Link 
+                                    key={item.href} href={item.href}
+                                    style={{
+                                        display: "block", width: "100%", padding: "12px 16px",
+                                        borderRadius: 8, textDecoration: "none",
+                                        fontFamily: "var(--font-mono, monospace)",
+                                        fontSize: 11, fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase",
+                                        color: "rgba(248,250,252,0.8)", transition: "all 0.2s ease",
+                                    }}
+                                    onMouseEnter={e => {
+                                        (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.12)";
+                                        (e.currentTarget as HTMLElement).style.color = "#22d3ee";
+                                        (e.currentTarget as HTMLElement).style.paddingLeft = "20px";
+                                    }}
+                                    onMouseLeave={e => {
+                                        (e.currentTarget as HTMLElement).style.background = "transparent";
+                                        (e.currentTarget as HTMLElement).style.color = "rgba(248,250,252,0.8)";
+                                        (e.currentTarget as HTMLElement).style.paddingLeft = "16px";
+                                    }}
+                                >
+                                    {item.label}
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Fixed top-right nav */}
             <Link
                 href="/about"
