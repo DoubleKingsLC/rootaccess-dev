@@ -896,14 +896,14 @@ export default function AiHackingCareerPathPage() {
           >
             HOME
           </button>
-          <span className="opacity-30 mx-1 text-slate-600">/</span>
+          <span className="opacity-50 mx-1 text-slate-200">/</span>
           <button
             onClick={() => router.push("/roadmaps/ai-hacking")}
             className="transition-colors hover:text-red-400"
           >
             AI EXPERIENCE
           </button>
-          <span className="opacity-30 mx-1 text-slate-600">/</span>
+          <span className="opacity-50 mx-1 text-slate-200">/</span>
           <span className="text-white font-black">CAREER PATH</span>
         </div>
 
