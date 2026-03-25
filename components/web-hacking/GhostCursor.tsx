@@ -16,17 +16,18 @@ const WAYPOINTS = [
   { x: 50, y: 48  }, // Hero CTA
 ] as const;
 
-// Appears at localProgress 0.60, fully visible by 0.68
+// Appears at localProgress 0.76, fully visible by 0.84
+// ─ After WappalyzerPopup fully shows (0.74) ─
 const cursorOpacity = (local: number): number => {
-  if (local < 0.60) return 0;
-  if (local < 0.68) return (local - 0.60) / 0.08;
+  if (local < 0.76) return 0;
+  if (local < 0.84) return (local - 0.76) / 0.08;
   return 1;
 };
 
-// Map localProgress 0.60–1.0 → waypoint interpolation
+// Map localProgress 0.76–1.0 → waypoint interpolation
 const getCursorPos = (local: number): { x: number; y: number } => {
-  if (local < 0.60) return WAYPOINTS[0];
-  const t = (local - 0.60) / 0.40; // 0–1 over the visible range
+  if (local < 0.76) return WAYPOINTS[0];
+  const t = (local - 0.76) / 0.24; // 0–1 over the visible range
   const segCount = WAYPOINTS.length - 1;
   const seg = Math.min(Math.floor(t * segCount), segCount - 1);
   const segT = (t * segCount) - seg;
@@ -46,7 +47,7 @@ export const GhostCursor: React.FC<GhostCursorProps> = ({ localProgress }) => {
 
   const pos = getCursorPos(localProgress);
   // Is cursor near the Get Started button? Add a hover glow ring
-  const nearCTA = localProgress > 0.78 && localProgress < 0.92;
+  const nearCTA = localProgress > 0.90 && localProgress < 0.98;
 
   return (
     <div

@@ -7,24 +7,25 @@ type PassiveReconSceneProps = {
   progress: number; // global 0–1
 };
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-// Scene lives at 0.125–0.20 (fade in 0.125–0.135, full 0.135–0.165, fade out 0.165–0.20)
+// ── Helpers ────────────────────────────────────────────────────────────────────
+// Scene lives at 0.245–0.360 (fade in 0.245–0.275, full 0.275–0.330, fade out 0.330–0.360)
 const sceneOpacity = (p: number): number => {
-  if (p < 0.125) return 0;
-  if (p < 0.135) return (p - 0.125) / 0.010;
-  if (p <= 0.165) return 1;
-  if (p < 0.200) return 1 - (p - 0.165) / 0.035;
+  if (p < 0.245) return 0;
+  if (p < 0.275) return (p - 0.245) / 0.030;
+  if (p <= 0.330) return 1;
+  if (p < 0.360) return 1 - (p - 0.330) / 0.030;
   return 0;
 };
 
-// Local 0–1 across 0.125–0.175
-const local = (p: number): number => Math.max(0, Math.min(1, (p - 0.125) / 0.05));
+
+// Local 0–1 across 0.245–0.350
+const local = (p: number): number => Math.max(0, Math.min(1, (p - 0.245) / 0.105));
 
 const captionOpacity = (p: number): number => {
-  if (p < 0.135) return 0;
-  if (p < 0.148) return (p - 0.135) / 0.013;
-  if (p <= 0.165) return 1;
-  if (p < 0.180) return 1 - (p - 0.165) / 0.015;
+  if (p < 0.275) return 0;
+  if (p < 0.295) return (p - 0.275) / 0.020;
+  if (p <= 0.340) return 1;
+  if (p < 0.360) return 1 - (p - 0.340) / 0.020;
   return 0;
 };
 

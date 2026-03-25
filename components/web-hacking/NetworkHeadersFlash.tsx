@@ -4,40 +4,41 @@ import React from "react";
 
 type Props = { localProgress: number };
 
-// Slides up at 0.36, fully visible 0.42–0.50, fades out 0.50–0.57
+// Slides up at 0.30, fully visible 0.38–0.48, fades out 0.48–0.55
+// ─ Deliberately separated from WappalyzerPopup which starts at 0.50 ─
 const panel = (lp: number): { opacity: number; ty: number } => {
-  if (lp < 0.36) return { opacity: 0, ty: 100 };
-  if (lp < 0.42) {
-    const t = (lp - 0.36) / 0.06;
+  if (lp < 0.30) return { opacity: 0, ty: 100 };
+  if (lp < 0.38) {
+    const t = (lp - 0.30) / 0.08;
     const e = 1 - Math.pow(1 - t, 3);
     return { opacity: e, ty: 100 * (1 - e) };
   }
-  if (lp <= 0.50) return { opacity: 1, ty: 0 };
-  if (lp < 0.57) {
-    const t = (lp - 0.50) / 0.07;
+  if (lp <= 0.48) return { opacity: 1, ty: 0 };
+  if (lp < 0.55) {
+    const t = (lp - 0.48) / 0.07;
     return { opacity: 1 - t, ty: 0 };
   }
   return { opacity: 0, ty: 0 };
 };
 
-// "Added ↑" badge pulses in at 0.46
+// "Added ↑" badge pulses in at 0.43
 const badgeOp = (lp: number) => {
-  if (lp < 0.46) return 0;
-  if (lp < 0.50) return (lp - 0.46) / 0.04;
+  if (lp < 0.43) return 0;
+  if (lp < 0.47) return (lp - 0.43) / 0.04;
   return 1;
 };
 
-// Underline sweep on nginx/1.18.0 — lp 0.44–0.50
+// Underline sweep on nginx/1.18.0 — lp 0.40–0.47
 const underlineProg = (lp: number): number => {
-  if (lp < 0.44) return 0;
-  if (lp < 0.50) return (lp - 0.44) / 0.06;
+  if (lp < 0.40) return 0;
+  if (lp < 0.47) return (lp - 0.40) / 0.07;
   return 1;
 };
 
-// Rising particle for nginx — lp 0.48–0.56 → returns 0–1 progress, or null if outside range
+// Rising particle for nginx — lp 0.44–0.54
 const nginxParticle = (lp: number): number | null => {
-  if (lp < 0.48 || lp >= 0.56) return null;
-  return (lp - 0.48) / 0.08; // 0→1
+  if (lp < 0.44 || lp >= 0.54) return null;
+  return (lp - 0.44) / 0.10;
 };
 
 export const NetworkHeadersFlash: React.FC<Props> = ({ localProgress }) => {

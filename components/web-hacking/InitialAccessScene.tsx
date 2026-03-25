@@ -7,26 +7,26 @@ type InitialAccessSceneProps = {
   progress: number; // global 0–1
 };
 
-// ── Scene window: 0.30–0.40 ───────────────────────────────────────────────────
-// Fade in  0.300–0.312
-// Full     0.312–0.400  (no fade-out — SQLiScene continues on the same login page)
+// ── Scene window: 0.48–0.60 ───────────────────────────────────────────────────
+// Fade in  0.480–0.510 (3% = 240vh!)
+// Full     0.510–0.620  (no fade-out — SQLiScene continues on the same login page)
 const sceneOpacity = (p: number): number => {
-  if (p < 0.300) return 0;
-  if (p < 0.312) return (p - 0.300) / 0.012;
-  if (p <= 0.400) return 1;
+  if (p < 0.480) return 0;
+  if (p < 0.510) return (p - 0.480) / 0.030;
+  if (p <= 0.620) return 1;
   return 0;
 };
 
-// Local 0–1 across 0.300–0.390
+// Local 0–1 across 0.480–0.610
 const local = (p: number): number =>
-  Math.max(0, Math.min(1, (p - 0.300) / 0.090));
+  Math.max(0, Math.min(1, (p - 0.480) / 0.130));
 
-// Caption: in at 0.340, out at 0.388
+// Caption: in at 0.520, out at 0.590
 const captionOpacity = (p: number): number => {
-  if (p < 0.340) return 0;
-  if (p < 0.352) return (p - 0.340) / 0.012;
-  if (p <= 0.382) return 1;
-  if (p < 0.392) return 1 - (p - 0.382) / 0.010;
+  if (p < 0.520) return 0;
+  if (p < 0.540) return (p - 0.520) / 0.020;
+  if (p <= 0.575) return 1;
+  if (p < 0.595) return 1 - (p - 0.575) / 0.020;
   return 0;
 };
 

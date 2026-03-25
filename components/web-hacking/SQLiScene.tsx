@@ -9,19 +9,19 @@ type SQLiSceneProps = {
   progress: number; // global 0–1
 };
 
-// ── Scene window: 0.40–0.60 ───────────────────────────────────────────────────
-// Full     0.400–0.585  (no fade-in — continues from InitialAccessScene seamlessly)
-// Fade out 0.585–0.600
+// ── Scene window: 0.60–0.785 ──────────────────────────────────────────────────
+// Full     0.600–0.755  (no fade-in — continues from InitialAccessScene seamlessly)
+// Fade out 0.755–0.785 (3% = 240vh!)
 const sceneOpacity = (p: number): number => {
-  if (p < 0.400) return 0;
-  if (p <= 0.585) return 1;
-  if (p < 0.600) return 1 - (p - 0.585) / 0.015;
+  if (p < 0.600) return 0;
+  if (p <= 0.755) return 1;
+  if (p < 0.785) return 1 - (p - 0.755) / 0.030;
   return 0;
 };
 
-// Local 0–1 across 0.400–0.595
+// Local 0–1 across 0.600–0.775
 const local = (p: number): number =>
-  Math.max(0, Math.min(1, (p - 0.400) / 0.195));
+  Math.max(0, Math.min(1, (p - 0.600) / 0.175));
 
 // ── Phase 1 — probe: type `'` into password (local 0.06–0.18) ────────────────
 const PROBE = "'";
@@ -97,12 +97,12 @@ const resultColsVisible = (lp: number): number => {
 // ── Dashboard visible after local 0.82 ───────────────────────────────────────
 const showDashboard = (lp: number): boolean => lp >= 0.82;
 
-// Caption: in at 0.495, out at 0.585 global
+// Caption: in at 0.650, out at 0.770 global
 const captionOpacity = (p: number): number => {
-  if (p < 0.495) return 0;
-  if (p < 0.507) return (p - 0.495) / 0.012;
-  if (p <= 0.578) return 1;
-  if (p < 0.590) return 1 - (p - 0.578) / 0.012;
+  if (p < 0.650) return 0;
+  if (p < 0.670) return (p - 0.650) / 0.020;
+  if (p <= 0.760) return 1;
+  if (p < 0.780) return 1 - (p - 0.760) / 0.020;
   return 0;
 };
 

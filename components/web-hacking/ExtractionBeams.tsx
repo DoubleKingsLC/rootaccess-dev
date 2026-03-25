@@ -5,12 +5,12 @@ import React from "react";
 type Props = { localProgress: number };
 
 const BEAMS = [
-  // Nginx: from bottom-center of browser (network headers area) to Nginx chip
-  { srcX: 42, srcY: 84, dstX: 42, dstY: 3.5, color: "#f43f5e", startLp: 0.48, peakLp: 0.52, endLp: 0.56 },
-  // React: from Wappalyzer popup (top-right browser) to React chip
-  { srcX: 80, srcY: 16, dstX: 58, dstY: 3.5, color: "#61dafb", startLp: 0.63, peakLp: 0.66, endLp: 0.70 },
-  // Cloudflare: from Wappalyzer popup to Cloudflare chip
-  { srcX: 80, srcY: 20, dstX: 68, dstY: 3.5, color: "#f48120", startLp: 0.69, peakLp: 0.72, endLp: 0.76 },
+  // Nginx: from bottom-center of browser (network tab) to Nginx chip — matches NetworkHeaders peak
+  { srcX: 42, srcY: 84, dstX: 42, dstY: 3.5, color: "#f43f5e", startLp: 0.44, peakLp: 0.49, endLp: 0.54 },
+  // React: from Wappalyzer popup (top-right browser) to React chip — after React row appears
+  { srcX: 80, srcY: 16, dstX: 58, dstY: 3.5, color: "#61dafb", startLp: 0.64, peakLp: 0.68, endLp: 0.72 },
+  // Cloudflare: from Wappalyzer popup to Cloudflare chip — after Cloudflare row appears
+  { srcX: 80, srcY: 20, dstX: 68, dstY: 3.5, color: "#f48120", startLp: 0.71, peakLp: 0.75, endLp: 0.79 },
 ] as const;
 
 type Beam = typeof BEAMS[number];

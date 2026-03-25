@@ -22,11 +22,11 @@ gsap.registerPlugin(ScrollTrigger);
 // Early phases (0–0.75 raw) map to 0–0.60 of old scene scale (2× more scroll).
 // Late phases (0.75–1.0 raw) map to 0.60–1.0 unchanged (same abs distance as before).
 const TIMELINE = [
-  { label: "Recon",        threshold: 0.10 },
-  { label: "Scanning",     threshold: 0.31 },
-  { label: "Exploit",      threshold: 0.56 },
-  { label: "Post-Exploit", threshold: 0.78 },
-  { label: "Report",       threshold: 0.89 },
+  { label: "Recon",        threshold: 0.15 },
+  { label: "Scanning",     threshold: 0.35 },
+  { label: "Exploit",      threshold: 0.55 },
+  { label: "Post-Exploit", threshold: 0.75 },
+  { label: "Report",       threshold: 0.92 },
 ] as const;
 
 // Theme accent
@@ -58,14 +58,8 @@ export const WebHackingLayout: React.FC = () => {
 
   const [progress, setProgress]           = useState(0);
 
-  // Remap raw scroll progress so recon/exploit phases get 2× more scroll
-  // while ExfilScene (60–78%) and ReportScene (78–100%) keep the same
-  // absolute scroll distance they had at 1000vh total.
-  // Raw 0–0.75 → scene 0–0.60  (early phases, doubled)
-  // Raw 0.75–1.0 → scene 0.60–1.0 (late phases, unchanged)
-  const sceneProgress = progress <= 0.75
-    ? progress * (0.60 / 0.75)
-    : 0.60 + (progress - 0.75) * (0.40 / 0.25);
+  // Linear progress across 8000vh for a calm, premium reading experience
+  const sceneProgress = progress;
   const [isAutoScrolling, setIsAutoScrolling] = useState(false);
   const [isRedoHovered, setIsRedoHovered] = useState(false);
 
@@ -89,7 +83,7 @@ export const WebHackingLayout: React.FC = () => {
         setIsAutoScrolling(false);
         return;
       }
-      lenis.scrollTo(window.scrollY + 2, { immediate: true });
+      lenis.scrollTo(window.scrollY + 0.6, { immediate: true });
       rafId = requestAnimationFrame(scrollStep);
     };
 
@@ -105,7 +99,7 @@ export const WebHackingLayout: React.FC = () => {
   useEffect(() => {
     if (!scrollSectionRef.current || !pinnedViewportRef.current) return;
 
-    const lenis = new Lenis({ lerp: 0.05, wheelMultiplier: 0.7 });
+    const lenis = new Lenis({ lerp: 0.05, wheelMultiplier: 0.5 });
     lenisRef.current = lenis;
     lenis.on("scroll", ScrollTrigger.update);
 
@@ -139,7 +133,7 @@ export const WebHackingLayout: React.FC = () => {
   }, []);
 
   return (
-    <section ref={scrollSectionRef} className="relative h-[1600vh] w-screen bg-slate-950">
+    <section ref={scrollSectionRef} className="relative h-[4000vh] w-screen bg-slate-950">
       <div
         ref={pinnedViewportRef}
         className="sticky top-0 flex h-screen min-h-[600px] w-screen items-center justify-center overflow-hidden"
@@ -345,9 +339,9 @@ export const WebHackingLayout: React.FC = () => {
             bottom:     "100px",
             right:      "40px",
             zIndex:     500,
-            opacity:    progress > 0.96 ? 1 : 0,
-            visibility: progress > 0.96 ? "visible" : "hidden",
-            transform:  progress > 0.96 ? "scale(1)" : "scale(0.8)",
+            opacity:    progress > 0.985 ? 1 : 0,
+            visibility: progress > 0.985 ? "visible" : "hidden",
+            transform:  progress > 0.985 ? "scale(1)" : "scale(0.8)",
             transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
           }}
         >

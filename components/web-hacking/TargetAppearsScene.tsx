@@ -14,32 +14,32 @@ type TargetAppearsSceneProps = {
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-// Scene lives at 0.05–0.12 (fades in 0.05–0.07, full 0.07–0.10, fades out 0.10–0.12)
+// Scene lives at 0.05–0.16 (fades in 0.05–0.075, full 0.075–0.135, fades out 0.135–0.16)
 const sceneOpacity = (p: number): number => {
-  if (p < 0.05) return 0;
-  if (p < 0.07) return (p - 0.05) / 0.02;
-  if (p <= 0.10) return 1;
-  if (p < 0.12) return 1 - (p - 0.10) / 0.02;
+  if (p < 0.050) return 0;
+  if (p < 0.075) return (p - 0.050) / 0.025;
+  if (p <= 0.135) return 1;
+  if (p < 0.160) return 1 - (p - 0.135) / 0.025;
   return 0;
 };
 
-// Local progress: 0–1 across 0.05–0.10
-const local = (p: number): number => Math.max(0, Math.min(1, (p - 0.05) / 0.05));
+// Local progress: 0–1 across 0.05–0.155
+const local = (p: number): number => Math.max(0, Math.min(1, (p - 0.05) / 0.105));
 
-// Browser scales/fades in 0.0–0.35 of local progress
+// Browser scales/fades in 0.0–0.22 of local progress — plenty of time to read the site
 const browserScale = (lp: number): number => {
-  if (lp < 0.35) return 0.92 + 0.08 * (lp / 0.35);
+  if (lp < 0.22) return 0.92 + 0.08 * (lp / 0.22);
   return 1;
 };
 const browserOpacity = (lp: number): number => {
-  if (lp < 0.35) return lp / 0.35;
+  if (lp < 0.22) return lp / 0.22;
   return 1;
 };
 
-// URL types from local 0.30–0.55
+// URL types from local 0.18–0.40
 const urlProgress = (lp: number): number => {
-  if (lp < 0.30) return 0;
-  if (lp < 0.55) return (lp - 0.30) / 0.25;
+  if (lp < 0.18) return 0;
+  if (lp < 0.40) return (lp - 0.18) / 0.22;
   return 1;
 };
 
@@ -47,13 +47,17 @@ const urlProgress = (lp: number): number => {
 const CAPTION_EARLY = "The target: a fintech platform. 14 million accounts. You start by watching.";
 const CAPTION_CHIPS = "Nginx. React. Cloudflare WAF. The stack is already visible — you haven't sent a packet.";
 
+// Narrative caption: 0.075–0.145 (huge window to read)
 const captionOpacity = (p: number): number => {
-  if (p < 0.065) return 0;
-  if (p < 0.08)  return (p - 0.065) / 0.015;
-  if (p <= 0.10) return 1;
-  if (p < 0.115) return 1 - (p - 0.10) / 0.015;
+  if (p < 0.075) return 0;
+  if (p < 0.095) return (p - 0.075) / 0.020;
+  if (p <= 0.130) return 1;
+  if (p < 0.150) return 1 - (p - 0.130) / 0.020;
   return 0;
 };
+
+// At what local progress to switch caption text
+const CAPTION_SWITCH_LP = 0.54;
 
 export const TargetAppearsScene: React.FC<TargetAppearsSceneProps> = ({ progress }) => {
   const op = sceneOpacity(progress);
@@ -106,7 +110,7 @@ export const TargetAppearsScene: React.FC<TargetAppearsSceneProps> = ({ progress
       >
         <div className="rounded-xl border border-white/10 bg-slate-950/85 px-5 py-2.5 backdrop-blur-md max-w-[90vw]">
           <p className="font-mono text-xs font-medium tracking-wide text-slate-100 text-center md:text-sm">
-            {lp >= 0.50 ? CAPTION_CHIPS : CAPTION_EARLY}
+            {lp >= CAPTION_SWITCH_LP ? CAPTION_CHIPS : CAPTION_EARLY}
           </p>
         </div>
       </div>

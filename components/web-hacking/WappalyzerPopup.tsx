@@ -4,17 +4,18 @@ import React from "react";
 
 type Props = { localProgress: number };
 
-// Slides down from top-right at 0.57, visible 0.62–0.70, fades 0.70–0.76
+// Slides down from top-right at 0.54, visible 0.62–0.74, fades 0.74–0.80
+// ─ Starts after NetworkHeadersFlash fully fades (0.55) ─
 const popup = (lp: number): { opacity: number; ty: number } => {
-  if (lp < 0.57) return { opacity: 0, ty: -16 };
-  if (lp < 0.63) {
-    const t = (lp - 0.57) / 0.06;
+  if (lp < 0.54) return { opacity: 0, ty: -16 };
+  if (lp < 0.62) {
+    const t = (lp - 0.54) / 0.08;
     const e = 1 - Math.pow(1 - t, 3);
     return { opacity: e, ty: -16 * (1 - e) };
   }
-  if (lp <= 0.70) return { opacity: 1, ty: 0 };
-  if (lp < 0.76) {
-    const t = (lp - 0.70) / 0.06;
+  if (lp <= 0.74) return { opacity: 1, ty: 0 };
+  if (lp < 0.80) {
+    const t = (lp - 0.74) / 0.06;
     return { opacity: 1 - t, ty: 0 };
   }
   return { opacity: 0, ty: 0 };
@@ -34,21 +35,21 @@ const underlineProg = (lp: number, threshold: number): number => {
   return 1;
 };
 
-// Rising particle for React — lp 0.63–0.70
+// Rising particle for React — lp 0.63–0.72
 const reactParticle = (lp: number): number | null => {
-  if (lp < 0.63 || lp >= 0.70) return null;
-  return (lp - 0.63) / 0.07;
+  if (lp < 0.63 || lp >= 0.72) return null;
+  return (lp - 0.63) / 0.09;
 };
 
-// Rising particle for Cloudflare — lp 0.69–0.76
+// Rising particle for Cloudflare — lp 0.70–0.79
 const cloudflareParticle = (lp: number): number | null => {
-  if (lp < 0.69 || lp >= 0.76) return null;
-  return (lp - 0.69) / 0.07;
+  if (lp < 0.70 || lp >= 0.79) return null;
+  return (lp - 0.70) / 0.09;
 };
 
 const TECHS = [
-  { icon: "⚛", label: "React",      version: "18.2.0", color: "#61dafb", threshold: 0.61 },
-  { icon: "☁", label: "Cloudflare", version: "CDN / WAF", color: "#f48120", threshold: 0.66 },
+  { icon: "⚛", label: "React",      version: "18.2.0",   color: "#61dafb", threshold: 0.61 },
+  { icon: "☁", label: "Cloudflare", version: "CDN / WAF", color: "#f48120", threshold: 0.67 },
 ];
 
 export const WappalyzerPopup: React.FC<Props> = ({ localProgress }) => {

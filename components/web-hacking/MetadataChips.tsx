@@ -7,11 +7,11 @@ type MetadataChipsProps = {
 };
 
 const CHIPS = [
-  { label: "nexuspay.io",  sub: "DNS lookup",        icon: "🌐", threshold: 0.42 },
-  { label: "Nginx/1.18",  sub: "HTTP Server header", icon: "⚡", threshold: 0.52 },
-  { label: "React 18",    sub: "Wappalyzer",         icon: "⚛", threshold: 0.60 },
-  { label: "Cloudflare",  sub: "Response headers",   icon: "☁", threshold: 0.68 },
-  { label: "PostgreSQL",  sub: "Error fingerprint",  icon: "🗄", threshold: 0.76 },
+  { label: "nexuspay.io",  sub: "DNS lookup",        icon: "🌐", threshold: 0.15 }, // Browser loads URL
+  { label: "Nginx/1.18",  sub: "HTTP Server header", icon: "⚡", threshold: 0.44 }, // NetworkHeaders shows nginx row
+  { label: "React 18",    sub: "Wappalyzer",         icon: "⚛", threshold: 0.63 }, // Wappalyzer React row visible
+  { label: "Cloudflare",  sub: "Response headers",   icon: "☁", threshold: 0.70 }, // Wappalyzer Cloudflare row visible
+  { label: "PostgreSQL",  sub: "Error fingerprint",  icon: "🗄", threshold: 0.88 }, // InspectFlicker shows error hint
 ] as const;
 
 const chipFade = (local: number, threshold: number): number => {
@@ -41,7 +41,7 @@ const chipGlow = (local: number, threshold: number): number => {
 
 export const MetadataChips: React.FC<MetadataChipsProps> = ({ localProgress }) => {
   // Row fades in when first chip starts appearing
-  const rowOpacity = chipFade(localProgress, 0.42);
+  const rowOpacity = chipFade(localProgress, 0.15);
   if (rowOpacity === 0) return null;
 
   return (

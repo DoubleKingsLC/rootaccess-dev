@@ -13,24 +13,28 @@ type ExfilSceneProps = {
 // Fade in  0.600–0.612
 // Full     0.612–0.765
 // Fade out 0.765–0.780
+// ── Scene window: 0.785–0.900 ──────────────────────────────────────────────────
+// Fade in  0.785–0.815 (3% = 240vh!)
+// Full     0.815–0.870
+// Fade out 0.870–0.900 (3% = 240vh!)
 const sceneOpacity = (p: number): number => {
-  if (p < 0.600) return 0;
-  if (p < 0.612) return (p - 0.600) / 0.012;
-  if (p <= 0.765) return 1;
-  if (p < 0.780) return 1 - (p - 0.765) / 0.015;
+  if (p < 0.785) return 0;
+  if (p < 0.815) return (p - 0.785) / 0.030;
+  if (p <= 0.870) return 1;
+  if (p < 0.900) return 1 - (p - 0.870) / 0.030;
   return 0;
 };
 
-// Local 0–1 across 0.600–0.780
+// Local 0–1 across 0.785–0.895
 const local = (p: number): number =>
-  Math.max(0, Math.min(1, (p - 0.600) / 0.180));
+  Math.max(0, Math.min(1, (p - 0.785) / 0.110));
 
-// Caption: 0.700–0.765
+// Caption: 0.815–0.890
 const captionOpacity = (p: number): number => {
-  if (p < 0.700) return 0;
-  if (p < 0.712) return (p - 0.700) / 0.012;
-  if (p <= 0.755) return 1;
-  if (p < 0.765) return 1 - (p - 0.755) / 0.010;
+  if (p < 0.815) return 0;
+  if (p < 0.835) return (p - 0.815) / 0.020;
+  if (p <= 0.865) return 1;
+  if (p < 0.885) return 1 - (p - 0.865) / 0.020;
   return 0;
 };
 

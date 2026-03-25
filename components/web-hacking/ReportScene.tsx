@@ -12,19 +12,19 @@ type ReportSceneProps = {
 // Full     0.792–0.950
 // Career card takes over 0.950–1.000
 const sceneOpacity = (p: number): number => {
-  if (p < 0.780) return 0;
-  if (p < 0.792) return (p - 0.780) / 0.012;
+  if (p < 0.900) return 0;
+  if (p < 0.930) return (p - 0.900) / 0.030;
   return 1;
 };
 
-// Local 0–1 across 0.780–0.950 (report content, before career card)
+// Local 0–1 across 0.900–0.985 (report content, before career card)
 const local = (p: number): number =>
-  Math.max(0, Math.min(1, (p - 0.780) / 0.170));
+  Math.max(0, Math.min(1, (p - 0.900) / 0.085));
 
-// Career card opacity 0.950–1.000
+// Career card opacity 0.975–1.000
 const careerOpacity = (p: number): number => {
-  if (p < 0.950) return 0;
-  if (p < 0.965) return (p - 0.950) / 0.015;
+  if (p < 0.975) return 0;
+  if (p < 0.988) return (p - 0.975) / 0.013;
   return 1;
 };
 
@@ -44,10 +44,10 @@ const dialFill = (lp: number): number => {
 
 // Caption local 0.72–0.95
 const captionOpacity = (p: number): number => {
-  if (p < 0.870) return 0;
-  if (p < 0.882) return (p - 0.870) / 0.012;
-  if (p <= 0.940) return 1;
-  if (p < 0.950) return 1 - (p - 0.940) / 0.010;
+  if (p < 0.920) return 0;
+  if (p < 0.940) return (p - 0.920) / 0.020;
+  if (p <= 0.965) return 1;
+  if (p < 0.985) return 1 - (p - 0.965) / 0.020;
   return 0;
 };
 
