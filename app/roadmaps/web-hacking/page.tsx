@@ -1,4 +1,4 @@
-import { WebHackingLayout } from "../../../components/scrollytelling/WebHackingLayout";
+import { WebHackingLayout } from "@/components/web-hacking/WebHackingLayout";
 
 export const metadata = {
   title: "Web Hacking | rootaccess",
