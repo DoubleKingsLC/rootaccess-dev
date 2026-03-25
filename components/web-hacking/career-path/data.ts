@@ -1,0 +1,203 @@
+import type { Action, Level } from "./types";
+
+export const PROVIDER_DOMAINS: Record<string, string> = {
+  tryhackme: "tryhackme.com",
+  google: "google.com",
+  tcm: "tcm-sec.com",
+  ine: "ine.com",
+  comptia: "comptia.org",
+  "ec-council": "eccouncil.org",
+  offsec: "offsec.com",
+  portswigger: "portswigger.net",
+  isc2: "isc2.org",
+  giac: "giac.org",
+  isaca: "isaca.org",
+  altered: "alteredsecurity.com",
+  hackerone: "hackerone.com",
+  htb: "hackthebox.com",
+  bugcrowd: "bugcrowd.com",
+  owasp: "owasp.org",
+  youtube: "youtube.com",
+  sans: "sans.org",
+  crest: "crest-approved.org",
+  pentesteracademy: "pentesteracademy.com",
+};
+
+export const LEVELS: Level[] = [
+  {
+    num: "00",
+    label: "Entry Point",
+    subtitle: "No Experience Required",
+    color: "#94a3b8",
+    glow: "rgba(148,163,184,0.2)",
+    border: "rgba(148,163,184,0.25)",
+    quote:
+      "You don't need a degree. You need curiosity and the discipline to build it. Everyone starts here.",
+    time: "0–6 months",
+    salary: "£25K–£35K",
+    tools: ["VirtualBox", "Linux", "Terminal / PowerShell", "Python"],
+    skills: [
+      "Networking — TCP/IP, DNS, DHCP, subnetting",
+      "OS fundamentals — Windows & Linux",
+      "Security concepts — CIA triad, common threats",
+      "Scripting basics — Python or Bash",
+    ],
+    certs: [
+      { label: "THM · Security+ Pre-Security (SEC1)", link: "https://tryhackme.com/certification/pre-security", provider: "tryhackme" },
+      { label: "Google Cybersecurity Certificate", link: "https://www.coursera.org/professional-certificates/google-cybersecurity", provider: "google" },
+      { label: "TCM · Practical Security Fundamentals", link: "https://academy.tcm-sec.com/p/practical-security-fundamentals", provider: "tcm" },
+    ],
+    labs: [
+      { label: "TryHackMe · Pre-Security learning path", link: "https://tryhackme.com/path/outline/presecurity", provider: "tryhackme" },
+      { label: "Learn Virtual Machines RIGHT NOW!! (Kali, Ubuntu, Windows)", link: "https://youtu.be/wX75Z-4MEoM", provider: "youtube" },
+      { label: "40 Windows Commands you NEED to know", link: "https://youtu.be/Jfvg3CS1X3A", provider: "youtube" },
+    ],
+  },
+  {
+    num: "01",
+    label: "Junior Pentester",
+    subtitle: "First Exploits, First Reports",
+    color: "#f43f5e",
+    glow: "rgba(244,63,94,0.2)",
+    border: "rgba(244,63,94,0.25)",
+    quote:
+      "You found the SQLi. Now write a report that makes the developer fix it. Both skills matter equally.",
+    time: "0–2 years",
+    salary: "£35K–£55K",
+    tools: ["Burp Suite Community", "Nmap", "SQLmap", "OWASP Juice Shop"],
+    skills: [
+      "OWASP Top 10 — SQLi, XSS, broken access control",
+      "Web request interception and replay with Burp Suite",
+      "Vulnerability documentation and proof-of-concept writing",
+      "Basic Python / Bash scripting for automation",
+    ],
+    certs: [
+      { label: "eJPT — eLearnSecurity Junior Penetration Tester", link: "https://security.ine.com/certifications/ejpt-certification/", provider: "ine" },
+      { label: "CompTIA PenTest+", link: "https://www.comptia.org/certifications/pentest", provider: "comptia" },
+      { label: "CEH v13 — Certified Ethical Hacker", link: "https://www.eccouncil.org/train-certify/certified-ethical-hacker-ceh/", provider: "ec-council" },
+    ],
+    labs: [
+      { label: "PortSwigger Web Security Academy — free web labs", link: "https://portswigger.net/web-security", provider: "portswigger" },
+      { label: "TryHackMe · Web Fundamentals path", link: "https://tryhackme.com/path/outline/web", provider: "tryhackme" },
+      { label: "OWASP Juice Shop — vulnerable practice app", link: "https://github.com/juice-shop/juice-shop", provider: "owasp" },
+    ],
+  },
+  {
+    num: "02",
+    label: "Security Consultant",
+    subtitle: "Full Engagements, Cloud & Chaining",
+    color: "#fb923c",
+    glow: "rgba(251,146,60,0.2)",
+    border: "rgba(251,146,60,0.25)",
+    quote:
+      "One XSS becomes a session hijack, becomes an IDOR, becomes a full data breach. You learn to chain.",
+    time: "2–5 years",
+    salary: "£55K–£80K",
+    tools: ["Burp Suite Pro", "Metasploit", "Gobuster / ffuf", "AWS CLI / Azure CLI"],
+    skills: [
+      "Cloud pentesting — IAM misconfigs, S3, Lambda",
+      "Vulnerability chaining — XSS → session hijack → IDOR → exfil",
+      "Custom Python / Golang scanner development",
+      "Client scoping, engagement management and debrief reporting",
+    ],
+    certs: [
+      { label: "OSCP — OffSec Certified Professional", link: "https://www.offsec.com/courses/pen-200/", provider: "offsec" },
+      { label: "BSCP — Burp Suite Certified Practitioner", link: "https://portswigger.net/web-security/certification", provider: "portswigger" },
+      { label: "PNPT — Practical Network Penetration Tester", link: "https://certifications.tcm-sec.com/pnpt/", provider: "tcm" },
+    ],
+    labs: [
+      { label: "HackerOne — public bug bounty programs", link: "https://www.hackerone.com/", provider: "hackerone" },
+      { label: "HTB Pro Labs — enterprise network simulations", link: "https://www.hackthebox.com/hacker/pro-labs", provider: "htb" },
+      { label: "Bugcrowd — bug bounty platform", link: "https://www.bugcrowd.com/", provider: "bugcrowd" },
+    ],
+  },
+  {
+    num: "03",
+    label: "Senior Pentester",
+    subtitle: "Red Teaming & Adversary Simulation",
+    color: "#a78bfa",
+    glow: "rgba(167,139,250,0.2)",
+    border: "rgba(167,139,250,0.25)",
+    quote:
+      "It's not a test anymore. It's a simulation of a real APT. Your job: think like the adversary.",
+    time: "5–8 years",
+    salary: "£80K–£110K",
+    tools: ["Cobalt Strike / Sliver", "BloodHound / Mimikatz", "Havoc C2", "OSINT Framework"],
+    skills: [
+      "Red team TTPs — APT simulation with C2 frameworks",
+      "Threat modeling — STRIDE, PASTA frameworks",
+      "Active Directory attacks and privilege escalation",
+      "Social engineering — phishing simulation and vishing",
+    ],
+    certs: [
+      { label: "OSWE — OffSec Web Expert", link: "https://www.offsec.com/courses/web-300/", provider: "offsec" },
+      { label: "OSEP — OffSec Experienced Penetration Tester", link: "https://www.offsec.com/courses/pen-300/", provider: "offsec" },
+      { label: "CRTP — Certified Red Team Professional", link: "https://www.alteredsecurity.com/redteamlab", provider: "altered" },
+    ],
+    labs: [
+      { label: "HTB Pro Labs — Offshore & RastaLabs APT simulations", link: "https://www.hackthebox.com/hacker/pro-labs", provider: "htb" },
+      { label: "Pentester Academy — Active Directory Attack Labs", link: "https://www.pentesteracademy.com/", provider: "pentesteracademy" },
+      { label: "SANS SEC542 — Web App Penetration Testing & Ethical Hacking", link: "https://www.sans.org/cyber-security-courses/web-app-penetration-testing-ethical-hacking/", provider: "sans" },
+    ],
+  },
+  {
+    num: "04",
+    label: "Pentest Lead",
+    subtitle: "Program Ownership & Strategy",
+    color: "#34d399",
+    glow: "rgba(52,211,153,0.2)",
+    border: "rgba(52,211,153,0.25)",
+    quote:
+      "You don't just find vulnerabilities. You design the program that finds them at scale, across every product.",
+    time: "8+ years",
+    salary: "£110K–£160K+",
+    tools: ["Dradis / Plextrac", "Confluence / Jira", "PowerBI", "Threat intel platforms"],
+    skills: [
+      "Pentest program design, tooling strategy and methodology ownership",
+      "CREST / PTES / OWASP Testing Guide compliance",
+      "Team hiring, mentoring and career development",
+      "Executive risk communication and board-level reporting",
+    ],
+    certs: [
+      { label: "CISSP — Certified Information Systems Security Professional", link: "https://www.isc2.org/certifications/cissp", provider: "isc2" },
+      { label: "GXPN — GIAC Exploit Researcher & Advanced Penetration Tester", link: "https://www.giac.org/certifications/exploit-researcher-advanced-penetration-tester-gxpn/", provider: "giac" },
+      { label: "CISM — Certified Information Security Manager", link: "https://www.isaca.org/credentialing/cism", provider: "isaca" },
+    ],
+    labs: [
+      { label: "CREST CPSA / CRT certification pathway", link: "https://www.crest-approved.org/certifications/", provider: "crest" },
+      { label: "SANS MGT512 — Security Leadership Essentials", link: "https://www.sans.org/cyber-security-courses/security-leadership-essentials-for-managers/", provider: "sans" },
+      { label: "HackerOne — run a private bug bounty program", link: "https://www.hackerone.com/", provider: "hackerone" },
+    ],
+  },
+];
+
+export const ACTIONS: Action[] = [
+  {
+    icon: "🧪",
+    title: "Start in a Lab Today",
+    color: "#f43f5e",
+    border: "rgba(244,63,94,0.25)",
+    glow: "rgba(244,63,94,0.08)",
+    items: [
+      { label: "PortSwigger Web Security Academy", link: "https://portswigger.net/web-security" },
+      { label: "TryHackMe · Web Fundamentals path", link: "https://tryhackme.com/path/outline/web" },
+      { label: "Hack The Box — web challenges", link: "https://www.hackthebox.com/" },
+      { label: "OWASP Juice Shop — local practice app", link: "https://github.com/juice-shop/juice-shop" },
+      { label: "HackerOne — bug bounty programs", link: "https://www.hackerone.com/" },
+    ],
+  },
+  {
+    icon: "📁",
+    title: "Build a Portfolio",
+    color: "#a78bfa",
+    border: "rgba(167,139,250,0.25)",
+    glow: "rgba(167,139,250,0.08)",
+    items: [
+      "Write HTB / THM writeups as professional pentest reports",
+      "Document your lab findings with screenshots and PoCs",
+      "GitHub: custom scripts, recon tools, and automation",
+    ],
+  },
+];
+
+export const BRANCH_Y = [65, 150, 235] as const;
