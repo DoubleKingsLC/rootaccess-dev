@@ -109,7 +109,7 @@ export const PassiveReconScene: React.FC<PassiveReconSceneProps> = ({ progress }
       >
         <div className="rounded-xl border border-white/10 bg-slate-950/85 px-5 py-2.5 backdrop-blur-md max-w-[90vw]">
           <p className="font-mono text-xs font-medium tracking-wide text-slate-100 text-center md:text-sm">
-            You haven&apos;t touched the server. But it&apos;s already talking.
+            Subdomains, exposed endpoints, no auth on staging — all gathered without touching the server.
           </p>
         </div>
       </div>

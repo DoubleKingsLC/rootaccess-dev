@@ -310,7 +310,7 @@ export default function WebHackingDetailedPage() {
               subtitle="No experience required — but curiosity is mandatory"
               time="0–6 months" salary="£25K–£35K"
             />
-            <div className="space-y-6 text-lg leading-relaxed mb-14 max-w-3xl" style={{ color: "rgba(203,213,225,0.75)" }}>
+            <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>
                 Most people waste their first six months. They start watching YouTube videos, jump between random
                 tutorials, and buy three courses they never finish. The Entry Point phase is about preventing that.
@@ -356,7 +356,7 @@ export default function WebHackingDetailedPage() {
               subtitle="First exploits, first reports — the year everything clicks"
               time="0–2 years" salary="£35K–£55K"
             />
-            <div className="space-y-6 text-lg leading-relaxed mb-14 max-w-3xl" style={{ color: "rgba(203,213,225,0.75)" }}>
+            <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>
                 This is the level where theory becomes technique. You will spend most of your time here in two
                 places: PortSwigger Web Security Academy (free, browser-based labs targeting every OWASP Top 10
@@ -405,7 +405,7 @@ export default function WebHackingDetailedPage() {
               subtitle="Full engagements, cloud, and the art of chaining vulnerabilities"
               time="2–5 years" salary="£55K–£80K"
             />
-            <div className="space-y-6 text-lg leading-relaxed mb-14 max-w-3xl" style={{ color: "rgba(203,213,225,0.75)" }}>
+            <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>
                 The jump from Junior to Consultant is the biggest technical leap in the career path. At Level 01
                 you found individual vulnerabilities. At Level 02 you learn to chain them. A reflected XSS becomes
@@ -457,7 +457,7 @@ export default function WebHackingDetailedPage() {
               subtitle="Red teaming, adversary simulation, and thinking like an APT"
               time="5–8 years" salary="£80K–£110K"
             />
-            <div className="space-y-6 text-lg leading-relaxed mb-14 max-w-3xl" style={{ color: "rgba(203,213,225,0.75)" }}>
+            <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>
                 Red teaming is not penetration testing with a fancier name. The objective is different. In a
                 pentest you find and document vulnerabilities. In a red team engagement you simulate a specific
@@ -506,7 +506,7 @@ export default function WebHackingDetailedPage() {
               subtitle="Program ownership, team strategy, and executive risk communication"
               time="8+ years" salary="£110K–£160K+"
             />
-            <div className="space-y-6 text-lg leading-relaxed mb-14 max-w-3xl" style={{ color: "rgba(203,213,225,0.75)" }}>
+            <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>
                 The transition to Pentest Lead is primarily a mindset shift rather than a technical one. You will
                 still do technical work — the best leads stay hands-on — but your primary output is now the

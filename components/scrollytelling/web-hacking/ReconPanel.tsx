@@ -50,33 +50,33 @@ export const ReconPanel: React.FC<ReconPanelProps> = ({
       style={{
         opacity: panelT,
         transform: `translate(${tx}, ${ty})`,
-        background: "rgba(8,12,24,0.92)",
-        border: "1px solid rgba(244,63,94,0.2)",
-        boxShadow: "0 0 40px rgba(244,63,94,0.08), 0 24px 48px rgba(0,0,0,0.5)",
-        minWidth: 300,
-        maxWidth: 400,
+        background: "rgba(8,12,24,0.95)",
+        border: "1px solid rgba(244,63,94,0.28)",
+        boxShadow: "0 0 60px rgba(244,63,94,0.12), 0 32px 64px rgba(0,0,0,0.6)",
+        minWidth: 480,
+        maxWidth: 620,
       }}
     >
       {/* Header */}
       <div
-        className="flex items-center justify-between border-b px-4 py-3"
-        style={{ borderColor: "rgba(244,63,94,0.12)", background: "rgba(15,20,35,0.98)" }}
+        className="flex items-center justify-between border-b px-6 py-5"
+        style={{ borderColor: "rgba(244,63,94,0.15)", background: "rgba(15,20,35,0.98)" }}
       >
-        <div className="flex items-center gap-2.5">
-          <span className="text-base leading-none">{icon}</span>
+        <div className="flex items-center gap-3">
+          <span className="text-2xl leading-none">{icon}</span>
           <div>
-            <p className="font-mono text-[11px] font-bold text-white">{title}</p>
-            <p className="font-mono text-[9px] uppercase tracking-widest" style={{ color: "rgba(244,63,94,0.6)" }}>
+            <p className="font-mono text-base font-bold text-white">{title}</p>
+            <p className="font-mono text-[11px] uppercase tracking-widest" style={{ color: "rgba(244,63,94,0.65)" }}>
               via {source}
             </p>
           </div>
         </div>
         {/* Live count badge */}
         <div
-          className="rounded-md px-2 py-1"
-          style={{ background: "rgba(244,63,94,0.1)", border: "1px solid rgba(244,63,94,0.25)" }}
+          className="rounded-md px-3 py-1.5"
+          style={{ background: "rgba(244,63,94,0.12)", border: "1px solid rgba(244,63,94,0.3)" }}
         >
-          <span className="font-mono text-[9px] font-bold" style={{ color: "#f43f5e" }}>
+          <span className="font-mono text-xs font-bold" style={{ color: "#f43f5e" }}>
             {Math.min(itemsVisible, items.length)}/{items.length} {count}
           </span>
         </div>
@@ -92,30 +92,30 @@ export const ReconPanel: React.FC<ReconPanelProps> = ({
           return (
             <div
               key={i}
-              className="flex items-center justify-between gap-3 px-4 py-2.5"
+              className="flex items-center justify-between gap-4 px-6 py-4"
               style={{
-                background: item.flag ? "rgba(244,63,94,0.06)" : "transparent",
-                borderBottom: "1px solid rgba(255,255,255,0.03)",
+                background: item.flag ? "rgba(244,63,94,0.08)" : "transparent",
+                borderBottom: "1px solid rgba(255,255,255,0.04)",
               }}
             >
-              <div className="flex items-center gap-2 min-w-0">
+              <div className="flex items-center gap-3 min-w-0">
                 {/* Status dot */}
                 <div
-                  className="h-1.5 w-1.5 shrink-0 rounded-full"
+                  className="h-2 w-2 shrink-0 rounded-full"
                   style={{
-                    background: item.flag ? "#f43f5e" : "rgba(34,197,94,0.8)",
-                    boxShadow: item.flag ? "0 0 6px rgba(244,63,94,0.8)" : "0 0 6px rgba(34,197,94,0.6)",
+                    background: item.flag ? "#f43f5e" : "rgba(34,197,94,0.9)",
+                    boxShadow: item.flag ? "0 0 8px rgba(244,63,94,0.9)" : "0 0 8px rgba(34,197,94,0.7)",
                   }}
                 />
                 <div className="min-w-0">
                   <p
-                    className="truncate font-mono text-[11px] font-medium"
-                    style={{ color: item.flag ? "#f87171" : "rgba(226,232,240,0.85)" }}
+                    className="truncate font-mono text-[15px] font-semibold"
+                    style={{ color: item.flag ? "#fca5a5" : "rgba(241,245,249,0.95)" }}
                   >
                     {item.text}
                   </p>
                   {item.sub && (
-                    <p className="font-mono text-[9px]" style={{ color: "rgba(148,163,184,0.45)" }}>
+                    <p className="font-mono text-[11px] mt-0.5" style={{ color: "rgba(148,163,184,0.6)" }}>
                       {item.sub}
                     </p>
                   )}
@@ -124,14 +124,14 @@ export const ReconPanel: React.FC<ReconPanelProps> = ({
               <div className="flex shrink-0 items-center gap-2">
                 {item.ip && (
                   <span
-                    className="font-mono text-[9px] tabular-nums"
-                    style={{ color: item.flag ? "rgba(251,113,133,0.6)" : "rgba(148,163,184,0.4)" }}
+                    className="font-mono text-xs tabular-nums"
+                    style={{ color: item.flag ? "rgba(251,113,133,0.7)" : "rgba(148,163,184,0.5)" }}
                   >
                     {item.ip}
                   </span>
                 )}
                 {item.flag && (
-                  <span className="font-mono text-[8px] font-bold uppercase tracking-widest" style={{ color: "#f43f5e" }}>
+                  <span className="font-mono text-sm font-bold" style={{ color: "#f43f5e" }}>
                     ⚠
                   </span>
                 )}

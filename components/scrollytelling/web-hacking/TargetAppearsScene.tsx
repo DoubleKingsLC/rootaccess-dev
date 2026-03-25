@@ -1,10 +1,13 @@
 "use client";
 
 import React from "react";
-import { MockBrowser }    from "./MockBrowser";
-import { MetadataChips }  from "./MetadataChips";
-import { GhostCursor }    from "./GhostCursor";
-import { InspectFlicker } from "./InspectFlicker";
+import { MockBrowser }          from "./MockBrowser";
+import { MetadataChips }        from "./MetadataChips";
+import { GhostCursor }          from "./GhostCursor";
+import { InspectFlicker }       from "./InspectFlicker";
+import { NetworkHeadersFlash }  from "./NetworkHeadersFlash";
+import { WappalyzerPopup }      from "./WappalyzerPopup";
+import { ExtractionBeams }      from "./ExtractionBeams";
 
 type TargetAppearsSceneProps = {
   progress: number; // global scroll progress 0–1
@@ -40,8 +43,9 @@ const urlProgress = (lp: number): number => {
   return 1;
 };
 
-// Narrative caption
-const CAPTION = "The target: a fintech platform. 14 million accounts. You start by watching.";
+// Narrative caption — two phases
+const CAPTION_EARLY = "The target: a fintech platform. 14 million accounts. You start by watching.";
+const CAPTION_CHIPS = "Nginx. React. Cloudflare WAF. The stack is already visible — you haven't sent a packet.";
 
 const captionOpacity = (p: number): number => {
   if (p < 0.065) return 0;
@@ -61,31 +65,36 @@ export const TargetAppearsScene: React.FC<TargetAppearsSceneProps> = ({ progress
     <>
       {/* ── Main scene ──────────────────────────────────────────────────────── */}
       <div
-        className="absolute inset-0 flex items-center justify-center"
+        className="absolute inset-0 flex items-center justify-center px-6"
         style={{ opacity: op, zIndex: 15 }}
       >
-        {/* Outer container — gives relative positioning for chips */}
+        {/* Relative canvas — chips + beams + browser all share same coordinate space */}
         <div
-          className="relative"
-          style={{
-            width: "clamp(560px, 78vw, 1100px)",
-            height: "clamp(380px, 62vh, 700px)",
-            transform: `scale(${browserScale(lp)})`,
-            opacity: browserOpacity(lp),
-            transition: "none", // driven by scroll, not CSS transitions
-          }}
+          className="relative flex flex-col items-center gap-5"
+          style={{ width: "clamp(560px, 78vw, 1100px)" }}
         >
-          {/* Browser */}
-          <MockBrowser urlProgress={urlProgress(lp)} />
-
-          {/* Metadata chips — absolutely positioned relative to browser container */}
+          {/* Chip row */}
           <MetadataChips localProgress={lp} />
 
-          {/* Ghost cursor — over the browser */}
-          <GhostCursor localProgress={lp} />
+          {/* Extraction beams — spans full canvas height */}
+          <ExtractionBeams localProgress={lp} />
 
-          {/* Inspect flicker panel — overlays bottom of browser */}
-          <InspectFlicker localProgress={lp} />
+          {/* Browser */}
+          <div
+            className="relative w-full"
+            style={{
+              height: "clamp(340px, 56vh, 640px)",
+              transform: `scale(${browserScale(lp)})`,
+              opacity: browserOpacity(lp),
+              transition: "none",
+            }}
+          >
+            <MockBrowser urlProgress={urlProgress(lp)} />
+            <GhostCursor localProgress={lp} />
+            <NetworkHeadersFlash localProgress={lp} />
+            <WappalyzerPopup localProgress={lp} />
+            <InspectFlicker localProgress={lp} />
+          </div>
         </div>
       </div>
 
@@ -97,7 +106,7 @@ export const TargetAppearsScene: React.FC<TargetAppearsSceneProps> = ({ progress
       >
         <div className="rounded-xl border border-white/10 bg-slate-950/85 px-5 py-2.5 backdrop-blur-md max-w-[90vw]">
           <p className="font-mono text-xs font-medium tracking-wide text-slate-100 text-center md:text-sm">
-            {CAPTION}
+            {lp >= 0.50 ? CAPTION_CHIPS : CAPTION_EARLY}
           </p>
         </div>
       </div>

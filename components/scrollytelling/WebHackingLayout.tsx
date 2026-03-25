@@ -195,8 +195,8 @@ export const WebHackingLayout: React.FC = () => {
         </div>
 
         {/* ── Intro overlay (0 – 5%) ─────────────────────────────────────── */}
-        {/* No pointer-events-none here — the overlay itself disables events after fade */}
-        <div className="absolute inset-0 z-20">
+        {/* pointer-events-none on wrapper so career card button (z-10) isn't blocked */}
+        <div className="pointer-events-none absolute inset-0 z-20">
           <WebHackingIntroOverlay
             progress={sceneProgress}
             onPlay={() => setIsAutoScrolling(true)}
@@ -206,8 +206,12 @@ export const WebHackingLayout: React.FC = () => {
 
         {/* ── Timeline nav — bottom bar ──────────────────────────────────── */}
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-30 border-t px-8 py-3 backdrop-blur-sm"
-          style={{ borderColor: "rgba(244,63,94,0.12)", background: "rgba(2,6,23,0.45)" }}
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-30 border-t px-8 py-3 backdrop-blur-sm transition-opacity duration-500"
+          style={{
+            borderColor: "rgba(244,63,94,0.12)",
+            background: "rgba(2,6,23,0.45)",
+            opacity: progress >= 0.08 ? 1 : 0,
+          }}
         >
           <div className="flex items-center justify-center gap-0">
             {TIMELINE.map((phase, i) => {
