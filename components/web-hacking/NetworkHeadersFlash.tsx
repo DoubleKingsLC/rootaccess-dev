@@ -4,18 +4,18 @@ import React from "react";
 
 type Props = { localProgress: number };
 
-// Slides up at 0.30, fully visible 0.38–0.48, fades out 0.48–0.55
-// ─ Deliberately separated from WappalyzerPopup which starts at 0.50 ─
+// Slides up at 0.20, fully visible 0.28–0.43, fades out 0.43–0.50
+// ─ Expanded for longer showcase ─
 const panel = (lp: number): { opacity: number; ty: number } => {
-  if (lp < 0.30) return { opacity: 0, ty: 100 };
-  if (lp < 0.38) {
-    const t = (lp - 0.30) / 0.08;
+  if (lp < 0.20) return { opacity: 0, ty: 100 };
+  if (lp < 0.28) {
+    const t = (lp - 0.20) / 0.08;
     const e = 1 - Math.pow(1 - t, 3);
     return { opacity: e, ty: 100 * (1 - e) };
   }
-  if (lp <= 0.48) return { opacity: 1, ty: 0 };
-  if (lp < 0.55) {
-    const t = (lp - 0.48) / 0.07;
+  if (lp <= 0.43) return { opacity: 1, ty: 0 };
+  if (lp < 0.50) {
+    const t = (lp - 0.43) / 0.07;
     return { opacity: 1 - t, ty: 0 };
   }
   return { opacity: 0, ty: 0 };
@@ -28,17 +28,12 @@ const badgeOp = (lp: number) => {
   return 1;
 };
 
-// Underline sweep on nginx/1.18.0 — lp 0.40–0.47
-const underlineProg = (lp: number): number => {
-  if (lp < 0.40) return 0;
-  if (lp < 0.47) return (lp - 0.40) / 0.07;
-  return 1;
-};
+// Underline sweep on nginx/1.18.0 row removed as requested.
 
-// Rising particle for nginx — lp 0.44–0.54
+// Rising particle for nginx — lp 0.35–0.48
 const nginxParticle = (lp: number): number | null => {
-  if (lp < 0.44 || lp >= 0.54) return null;
-  return (lp - 0.44) / 0.10;
+  if (lp < 0.35 || lp >= 0.48) return null;
+  return (lp - 0.35) / 0.13;
 };
 
 export const NetworkHeadersFlash: React.FC<Props> = ({ localProgress }) => {
@@ -46,7 +41,6 @@ export const NetworkHeadersFlash: React.FC<Props> = ({ localProgress }) => {
   if (opacity === 0) return null;
 
   const badge = badgeOp(localProgress);
-  const ulProg = underlineProg(localProgress);
 
   return (
     <>
@@ -115,20 +109,6 @@ export const NetworkHeadersFlash: React.FC<Props> = ({ localProgress }) => {
                 <span className="shrink-0" style={{ color: "rgba(244,63,94,0.8)" }}>Server:</span>
                 <span className="relative" style={{ color: "#fca5a5", fontWeight: 600 }}>
                   nginx/1.18.0 (Ubuntu)
-                  {/* Underline sweep */}
-                  <span
-                    style={{
-                      position: "absolute",
-                      bottom: -1,
-                      left: 0,
-                      height: 2,
-                      width: `${ulProg * 100}%`,
-                      background: "linear-gradient(to right, #f43f5e, #fb7185)",
-                      boxShadow: "0 0 6px rgba(244,63,94,0.8)",
-                      borderRadius: 2,
-                      transition: "none",
-                    }}
-                  />
                 </span>
               </div>
               {/* Other rows */}

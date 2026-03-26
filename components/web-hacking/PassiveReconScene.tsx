@@ -8,24 +8,24 @@ type PassiveReconSceneProps = {
 };
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
-// Scene lives at 0.245–0.360 (fade in 0.245–0.275, full 0.275–0.330, fade out 0.330–0.360)
+// Scene lives at 0.317–0.410 (fade in 0.317–0.337, full 0.337–0.395, fade out 0.395–0.410)
 const sceneOpacity = (p: number): number => {
-  if (p < 0.245) return 0;
-  if (p < 0.275) return (p - 0.245) / 0.030;
-  if (p <= 0.330) return 1;
-  if (p < 0.360) return 1 - (p - 0.330) / 0.030;
+  if (p < 0.317) return 0;
+  if (p < 0.337) return (p - 0.317) / 0.020;
+  if (p <= 0.395) return 1;
+  if (p < 0.410) return 1 - (p - 0.395) / 0.015;
   return 0;
 };
 
 
-// Local 0–1 across 0.245–0.350
-const local = (p: number): number => Math.max(0, Math.min(1, (p - 0.245) / 0.105));
+// Local 0–1 across 0.317–0.410
+const local = (p: number): number => Math.max(0, Math.min(1, (p - 0.317) / 0.093));
 
 const captionOpacity = (p: number): number => {
-  if (p < 0.275) return 0;
-  if (p < 0.295) return (p - 0.275) / 0.020;
-  if (p <= 0.340) return 1;
-  if (p < 0.360) return 1 - (p - 0.340) / 0.020;
+  if (p < 0.277) return 0;
+  if (p < 0.297) return (p - 0.277) / 0.020;
+  if (p <= 0.380) return 1;
+  if (p < 0.395) return 1 - (p - 0.380) / 0.015;
   return 0;
 };
 
@@ -83,7 +83,7 @@ export const PassiveReconScene: React.FC<PassiveReconSceneProps> = ({ progress }
           items={SUBDOMAINS}
           localProgress={lp}
           appearAt={0.05}
-          itemsStartAt={0.20}
+          itemsStartAt={0.15}
           slideFrom="left"
           count="hosts"
         />
@@ -95,8 +95,8 @@ export const PassiveReconScene: React.FC<PassiveReconSceneProps> = ({ progress }
           icon="🔍"
           items={ENDPOINTS}
           localProgress={lp}
-          appearAt={0.42}
-          itemsStartAt={0.55}
+          appearAt={0.35}
+          itemsStartAt={0.45}
           slideFrom="right"
           count="routes"
         />
@@ -105,7 +105,7 @@ export const PassiveReconScene: React.FC<PassiveReconSceneProps> = ({ progress }
       {/* ── Narrative caption ───────────────────────────────────────────────── */}
       <div
         className="pointer-events-none absolute bottom-[72px] left-1/2 z-[35] -translate-x-1/2"
-        style={{ opacity: captionOpacity(progress) }}
+        style={{ opacity: lp > 0.1 ? 1 : 0, transition: "opacity 0.3s" }}
         aria-hidden
       >
         <div className="rounded-xl border border-white/10 bg-slate-950/85 px-5 py-2.5 backdrop-blur-md max-w-[90vw]">

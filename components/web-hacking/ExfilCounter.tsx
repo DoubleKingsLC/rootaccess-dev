@@ -12,17 +12,17 @@ const TOTAL = 14_200_000;
 const ease = (t: number) => 1 - Math.pow(1 - t, 3);
 
 const countValue = (lp: number): number => {
-  if (lp < 0.20) return 0;
-  const t = Math.min((lp - 0.20) / 0.65, 1);
+  if (lp < 0.15) return 0;
+  const t = Math.min((lp - 0.15) / 0.50, 1);
   return Math.floor(ease(t) * TOTAL);
 };
 
 const PII_BADGES = [
-  { label: "Email Address", delay: 0.22 },
-  { label: "Full Name",     delay: 0.30 },
-  { label: "Card Number",   delay: 0.38 },
-  { label: "Balance",       delay: 0.46 },
-  { label: "Home Address",  delay: 0.54 },
+  { label: "Email Address", delay: 0.18 },
+  { label: "Full Name",     delay: 0.24 },
+  { label: "Card Number",   delay: 0.30 },
+  { label: "Balance",       delay: 0.36 },
+  { label: "Home Address",  delay: 0.42 },
 ];
 
 const fmt = (n: number): string =>

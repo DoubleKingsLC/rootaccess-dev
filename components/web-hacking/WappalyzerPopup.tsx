@@ -4,18 +4,18 @@ import React from "react";
 
 type Props = { localProgress: number };
 
-// Slides down from top-right at 0.54, visible 0.62–0.74, fades 0.74–0.80
-// ─ Starts after NetworkHeadersFlash fully fades (0.55) ─
+// Slides down from top-right at 0.50, visible 0.58–0.75, fades 0.75–0.80
+// ─ Expanded for longer tech showcase ─
 const popup = (lp: number): { opacity: number; ty: number } => {
-  if (lp < 0.54) return { opacity: 0, ty: -16 };
-  if (lp < 0.62) {
-    const t = (lp - 0.54) / 0.08;
+  if (lp < 0.50) return { opacity: 0, ty: -16 };
+  if (lp < 0.58) {
+    const t = (lp - 0.50) / 0.08;
     const e = 1 - Math.pow(1 - t, 3);
     return { opacity: e, ty: -16 * (1 - e) };
   }
-  if (lp <= 0.74) return { opacity: 1, ty: 0 };
+  if (lp <= 0.75) return { opacity: 1, ty: 0 };
   if (lp < 0.80) {
-    const t = (lp - 0.74) / 0.06;
+    const t = (lp - 0.75) / 0.05;
     return { opacity: 1 - t, ty: 0 };
   }
   return { opacity: 0, ty: 0 };
@@ -27,13 +27,7 @@ const itemOp = (lp: number, threshold: number) => {
   return 1;
 };
 
-// Underline sweep per tech label
-const underlineProg = (lp: number, threshold: number): number => {
-  const start = threshold + 0.02;
-  if (lp < start) return 0;
-  if (lp < start + 0.04) return (lp - start) / 0.04;
-  return 1;
-};
+// Underline sweep removed as requested.
 
 // Rising particle for React — lp 0.63–0.72
 const reactParticle = (lp: number): number | null => {
@@ -48,8 +42,8 @@ const cloudflareParticle = (lp: number): number | null => {
 };
 
 const TECHS = [
-  { icon: "⚛", label: "React",      version: "18.2.0",   color: "#61dafb", threshold: 0.61 },
-  { icon: "☁", label: "Cloudflare", version: "CDN / WAF", color: "#f48120", threshold: 0.67 },
+  { icon: "⚛", label: "React",      version: "18.2.0",   color: "#61dafb", threshold: 0.57 },
+  { icon: "☁", label: "Cloudflare", version: "CDN / WAF", color: "#f48120", threshold: 0.65 },
 ];
 
 export const WappalyzerPopup: React.FC<Props> = ({ localProgress }) => {
@@ -99,7 +93,6 @@ export const WappalyzerPopup: React.FC<Props> = ({ localProgress }) => {
         <div className="px-2 py-2 space-y-1">
           {TECHS.map((tech) => {
             const op = itemOp(localProgress, tech.threshold);
-            const ulProg = underlineProg(localProgress, tech.threshold);
             return (
               <div
                 key={tech.label}
@@ -116,20 +109,6 @@ export const WappalyzerPopup: React.FC<Props> = ({ localProgress }) => {
                 <div className="flex-1 min-w-0">
                   <span className="relative inline-block">
                     <p className="font-mono text-[11px] font-bold text-white leading-tight">{tech.label}</p>
-                    {/* Underline sweep */}
-                    <span
-                      style={{
-                        position: "absolute",
-                        bottom: -1,
-                        left: 0,
-                        height: 2,
-                        width: `${ulProg * 100}%`,
-                        background: `linear-gradient(to right, ${tech.color}, ${tech.color}aa)`,
-                        boxShadow: `0 0 6px ${tech.color}cc`,
-                        borderRadius: 2,
-                        transition: "none",
-                      }}
-                    />
                   </span>
                   <p className="font-mono text-[9px]" style={{ color: `${tech.color}88` }}>{tech.version}</p>
                 </div>

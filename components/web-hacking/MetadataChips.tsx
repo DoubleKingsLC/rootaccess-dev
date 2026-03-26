@@ -7,11 +7,10 @@ type MetadataChipsProps = {
 };
 
 const CHIPS = [
-  { label: "nexuspay.io",  sub: "DNS lookup",        icon: "🌐", threshold: 0.15 }, // Browser loads URL
-  { label: "Nginx/1.18",  sub: "HTTP Server header", icon: "⚡", threshold: 0.44 }, // NetworkHeaders shows nginx row
-  { label: "React 18",    sub: "Wappalyzer",         icon: "⚛", threshold: 0.63 }, // Wappalyzer React row visible
-  { label: "Cloudflare",  sub: "Response headers",   icon: "☁", threshold: 0.70 }, // Wappalyzer Cloudflare row visible
-  { label: "PostgreSQL",  sub: "Error fingerprint",  icon: "🗄", threshold: 0.88 }, // InspectFlicker shows error hint
+  { label: "nexuspay.io",  sub: "DNS lookup",        icon: "🌐", threshold: 0.18 }, // After URL typing
+  { label: "Nginx/1.18",  sub: "HTTP Server header", icon: "⚡", threshold: 0.40 }, // NetworkHeaders fully open
+  { label: "React 18",    sub: "Wappalyzer",         icon: "⚛", threshold: 0.65 }, // Wappalyzer React reveal
+  { label: "Cloudflare",  sub: "Response headers",   icon: "☁", threshold: 0.75 }, // Wappalyzer Cloudflare reveal
 ] as const;
 
 const chipFade = (local: number, threshold: number): number => {
@@ -24,8 +23,8 @@ const chipFade = (local: number, threshold: number): number => {
 const chipPop = (local: number, threshold: number): number => {
   const t = local - threshold;
   if (t < 0) return 1;
-  if (t < 0.015) return 1 + 0.08 * (t / 0.015);
-  if (t < 0.035) return 1.08 - 0.08 * ((t - 0.015) / 0.020);
+  if (t < 0.010) return 1 + 0.08 * (t / 0.010);
+  if (t < 0.025) return 1.08 - 0.08 * ((t - 0.010) / 0.015);
   return 1;
 };
 
@@ -41,7 +40,7 @@ const chipGlow = (local: number, threshold: number): number => {
 
 export const MetadataChips: React.FC<MetadataChipsProps> = ({ localProgress }) => {
   // Row fades in when first chip starts appearing
-  const rowOpacity = chipFade(localProgress, 0.15);
+const rowOpacity = chipFade(localProgress, 0.15);
   if (rowOpacity === 0) return null;
 
   return (

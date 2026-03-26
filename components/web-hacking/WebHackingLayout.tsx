@@ -22,11 +22,11 @@ gsap.registerPlugin(ScrollTrigger);
 // Early phases (0–0.75 raw) map to 0–0.60 of old scene scale (2× more scroll).
 // Late phases (0.75–1.0 raw) map to 0.60–1.0 unchanged (same abs distance as before).
 const TIMELINE = [
-  { label: "Recon",        threshold: 0.15 },
-  { label: "Scanning",     threshold: 0.35 },
-  { label: "Exploit",      threshold: 0.55 },
-  { label: "Post-Exploit", threshold: 0.75 },
-  { label: "Report",       threshold: 0.92 },
+  { label: "Recon",        threshold: 0.12 },
+  { label: "Scanning",     threshold: 0.32 },
+  { label: "Exploit",      threshold: 0.52 },
+  { label: "Post-Exploit", threshold: 0.72 },
+  { label: "Report",       threshold: 0.89 },
 ] as const;
 
 // Theme accent
@@ -133,7 +133,7 @@ export const WebHackingLayout: React.FC = () => {
   }, []);
 
   return (
-    <section ref={scrollSectionRef} className="relative h-[4000vh] w-screen bg-slate-950">
+    <section ref={scrollSectionRef} className="relative h-[2000vh] w-screen bg-slate-950">
       <div
         ref={pinnedViewportRef}
         className="sticky top-0 flex h-screen min-h-[600px] w-screen items-center justify-center overflow-hidden"
@@ -204,7 +204,7 @@ export const WebHackingLayout: React.FC = () => {
           style={{
             borderColor: "rgba(244,63,94,0.12)",
             background: "rgba(2,6,23,0.45)",
-            opacity: progress >= 0.08 ? 1 : 0,
+            opacity: progress >= 0.05 ? 1 : 0,
           }}
         >
           <div className="flex items-center justify-center gap-0">
@@ -339,9 +339,9 @@ export const WebHackingLayout: React.FC = () => {
             bottom:     "100px",
             right:      "40px",
             zIndex:     500,
-            opacity:    progress > 0.985 ? 1 : 0,
-            visibility: progress > 0.985 ? "visible" : "hidden",
-            transform:  progress > 0.985 ? "scale(1)" : "scale(0.8)",
+            opacity:    progress > 0.955 ? 1 : 0,
+            visibility: progress > 0.955 ? "visible" : "hidden",
+            transform:  progress > 0.955 ? "scale(1)" : "scale(0.8)",
             transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
           }}
         >

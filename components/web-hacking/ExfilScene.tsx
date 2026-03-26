@@ -9,32 +9,28 @@ type ExfilSceneProps = {
   progress: number; // global 0–1
 };
 
-// ── Scene window: 0.600–0.780 ─────────────────────────────────────────────────
-// Fade in  0.600–0.612
-// Full     0.612–0.765
-// Fade out 0.765–0.780
-// ── Scene window: 0.785–0.900 ──────────────────────────────────────────────────
-// Fade in  0.785–0.815 (3% = 240vh!)
-// Full     0.815–0.870
-// Fade out 0.870–0.900 (3% = 240vh!)
+// ── Scene window: 0.870–0.950 ──────────────────────────────────────────────────
+// Fade in  0.870–0.875
+// Full     0.875–0.945
+// Fade out 0.945–0.950
 const sceneOpacity = (p: number): number => {
-  if (p < 0.785) return 0;
-  if (p < 0.815) return (p - 0.785) / 0.030;
-  if (p <= 0.870) return 1;
-  if (p < 0.900) return 1 - (p - 0.870) / 0.030;
+  if (p < 0.870) return 0;
+  if (p < 0.875) return (p - 0.870) / 0.005;
+  if (p <= 0.945) return 1;
+  if (p < 0.950) return 1 - (p - 0.945) / 0.005;
   return 0;
 };
 
-// Local 0–1 across 0.785–0.895
+// Local 0–1 across 0.870 – 0.950
 const local = (p: number): number =>
-  Math.max(0, Math.min(1, (p - 0.785) / 0.110));
+  Math.max(0, Math.min(1, (p - 0.870) / 0.080));
 
-// Caption: 0.815–0.890
+// Caption: 0.877–0.940
 const captionOpacity = (p: number): number => {
-  if (p < 0.815) return 0;
-  if (p < 0.835) return (p - 0.815) / 0.020;
-  if (p <= 0.865) return 1;
-  if (p < 0.885) return 1 - (p - 0.865) / 0.020;
+  if (p < 0.877) return 0;
+  if (p < 0.897) return (p - 0.877) / 0.020;
+  if (p <= 0.935) return 1;
+  if (p < 0.945) return 1 - (p - 0.935) / 0.010;
   return 0;
 };
 
@@ -71,7 +67,7 @@ export const ExfilScene: React.FC<ExfilSceneProps> = ({ progress }) => {
         {/* ── Content stack ────────────────────────────────────────────────── */}
         <div
           className="flex flex-col gap-3"
-          style={{ width: "clamp(560px, 70vw, 860px)" }}
+          style={{ width: "clamp(660px, 82vw, 920px)" }}
         >
           {/* Database → packets → terminal SVG */}
           <DataFlowViz localProgress={lp} />

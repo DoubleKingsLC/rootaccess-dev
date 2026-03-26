@@ -6,12 +6,12 @@ type DirbustPanelProps = {
   localProgress: number; // 0–1 within ActiveReconScene
 };
 
-// Panel slides in from right at local 0.72, items stream after 0.78
+// Panel slides in from right at local 0.55, items stream after 0.68
 const ease = (t: number) => 1 - Math.pow(1 - t, 3);
 
 const panelSlide = (lp: number): number => {
-  if (lp < 0.72) return 0;
-  if (lp < 0.84) return ease((lp - 0.72) / 0.12);
+  if (lp < 0.55) return 0;
+  if (lp < 0.65) return ease((lp - 0.55) / 0.10);
   return 1;
 };
 
@@ -24,8 +24,8 @@ const ROUTES: { path: string; status: number; note: string; flag: boolean; next?
 ];
 
 const routesVisible = (lp: number): number => {
-  if (lp < 0.78) return 0;
-  return Math.floor(((lp - 0.78) / 0.20) * (ROUTES.length + 1));
+  if (lp < 0.68) return 0;
+  return Math.floor(((lp - 0.68) / 0.20) * (ROUTES.length + 1));
 };
 
 const ROSE = "#f43f5e";

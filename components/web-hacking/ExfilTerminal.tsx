@@ -8,11 +8,11 @@ type ExfilTerminalProps = {
 
 const ROSE = "#f43f5e";
 
-// Command types from local 0.06 to 0.22
+// Command types from local 0.05 to 0.15
 const CMD = `curl -sH "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9..." https://admin.nexuspay.io/api/v1/users`;
 const cmdTyped = (lp: number): string => {
-  if (lp < 0.06) return "";
-  const t = Math.min((lp - 0.06) / 0.16, 1);
+  if (lp < 0.05) return "";
+  const t = Math.min((lp - 0.05) / 0.10, 1);
   return CMD.slice(0, Math.round(t * CMD.length));
 };
 
@@ -28,8 +28,8 @@ const RECORDS = [
 ];
 
 const linesVisible = (lp: number): number => {
-  if (lp < 0.24) return 0;
-  return Math.floor(((lp - 0.24) / 0.62) * (RECORDS.length + 1));
+  if (lp < 0.17) return 0;
+  return Math.floor(((lp - 0.17) / 0.48) * (RECORDS.length + 1));
 };
 
 export const ExfilTerminal: React.FC<ExfilTerminalProps> = ({ localProgress }) => {

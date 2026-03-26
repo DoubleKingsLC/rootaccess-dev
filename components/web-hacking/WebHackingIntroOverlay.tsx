@@ -14,17 +14,17 @@ export const WebHackingIntroOverlay: React.FC<WebHackingIntroOverlayProps> = ({
   onPlay,
   isAutoScrolling,
 }) => {
-  const fadeOut = progress >= 0.05;
-  const opacity = fadeOut ? Math.max(0, 1 - (progress - 0.05) / 0.02) : 1;
+  const fadeOut = progress >= 0.02;
+  const opacity = fadeOut ? Math.max(0, 1 - (progress - 0.02) / 0.02) : 1;
 
   return (
     <div
       className="absolute inset-0 z-20 flex flex-col items-center justify-center border border-rose-400/10 bg-rose-950/40 backdrop-blur-xl"
       style={{
         opacity,
-        pointerEvents: progress >= 0.08 ? "none" : "auto",
+        pointerEvents: progress >= 0.05 ? "none" : "auto",
       }}
-      aria-hidden={progress >= 0.10}
+      aria-hidden={progress >= 0.07}
     >
       {/* Eyebrow */}
       <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.45em]" style={{ color: "rgba(251,113,133,0.6)" }}>
