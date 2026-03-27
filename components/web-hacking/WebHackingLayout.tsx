@@ -387,7 +387,7 @@ export const WebHackingLayout: React.FC = () => {
           </button>
         </div>
 
-        {/* ── Home button + Career Path pill — top left ───────────────────── */}
+        {/* ── Home button — top left ───────────────────── */}
         <div
           className="fixed top-10 left-10 z-[1000] flex items-center gap-3 transition-all duration-700"
           style={{
@@ -409,34 +409,6 @@ export const WebHackingLayout: React.FC = () => {
               style={{ color: ROSE }}>
               Return Home
             </div>
-          </button>
-
-          {/* Career Path pill */}
-          <button
-            onClick={() => router.push("/roadmaps/web-hacking/career-path")}
-            className="flex items-center gap-2 rounded-full border backdrop-blur-md transition-all duration-300 hover:scale-105"
-            style={{
-              height: 40,
-              padding: "0 16px",
-              background: "rgba(244,63,94,0.08)",
-              border: "1px solid rgba(244,63,94,0.28)",
-              color: ROSE,
-            }}
-            onMouseEnter={e => {
-              (e.currentTarget as HTMLElement).style.background = "rgba(244,63,94,0.18)";
-              (e.currentTarget as HTMLElement).style.borderColor = "rgba(244,63,94,0.55)";
-            }}
-            onMouseLeave={e => {
-              (e.currentTarget as HTMLElement).style.background = "rgba(244,63,94,0.08)";
-              (e.currentTarget as HTMLElement).style.borderColor = "rgba(244,63,94,0.28)";
-            }}
-          >
-            <span className="font-mono text-[9px] font-bold uppercase tracking-[0.25em]" style={{ color: ROSE }}>
-              Career Path
-            </span>
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-              <path d="M1 5h8M6 2l3 3-3 3" stroke={ROSE} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
           </button>
         </div>
 
