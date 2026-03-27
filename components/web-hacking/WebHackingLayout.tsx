@@ -61,7 +61,32 @@ export const WebHackingLayout: React.FC = () => {
   // Linear progress across 8000vh for a calm, premium reading experience
   const sceneProgress = progress;
   const [isAutoScrolling, setIsAutoScrolling] = useState(false);
+  const [scrollSpeed, setScrollSpeed] = useState(1.0);
+  const scrollSpeedRef = useRef(1.0);
+  const [isSpeedControlOpen, setIsSpeedControlOpen] = useState(false);
+  const speedTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isRedoHovered, setIsRedoHovered] = useState(false);
+
+  // Sync state to ref for animation loop
+  useEffect(() => {
+    scrollSpeedRef.current = scrollSpeed;
+  }, [scrollSpeed]);
+
+  const handleSpeedInteraction = () => {
+    if (speedTimeoutRef.current) clearTimeout(speedTimeoutRef.current);
+    speedTimeoutRef.current = setTimeout(() => {
+      setIsSpeedControlOpen(false);
+    }, 3000);
+  };
+
+  useEffect(() => {
+    if (isSpeedControlOpen) {
+      handleSpeedInteraction();
+    }
+    return () => {
+      if (speedTimeoutRef.current) clearTimeout(speedTimeoutRef.current);
+    };
+  }, [isSpeedControlOpen, scrollSpeed]);
 
   // ── Auto-scroll via Lenis ──────────────────────────────────────────────────
   useEffect(() => {
@@ -69,6 +94,7 @@ export const WebHackingLayout: React.FC = () => {
 
     let userInterrupted = false;
     let rafId: number;
+    let currentVirtualScroll = window.scrollY; // Accumulator for fractional pixel scrolls
 
     const onWheel     = () => { userInterrupted = true; setIsAutoScrolling(false); };
     const onTouchMove = () => { userInterrupted = true; setIsAutoScrolling(false); };
@@ -83,7 +109,10 @@ export const WebHackingLayout: React.FC = () => {
         setIsAutoScrolling(false);
         return;
       }
-      lenis.scrollTo(window.scrollY + 0.6, { immediate: true });
+      
+      currentVirtualScroll += (0.6 * scrollSpeedRef.current);
+      lenis.scrollTo(currentVirtualScroll, { immediate: true });
+      
       rafId = requestAnimationFrame(scrollStep);
     };
 
@@ -244,18 +273,97 @@ export const WebHackingLayout: React.FC = () => {
           </div>
         </div>
 
-        {/* ── Persistent play / pause toggle — top right ─────────────────── */}
+        {/* ── Persistent play / pause toggle + Speed Control — top right ────────────── */}
         <div
-          className="fixed top-10 right-10 z-[1000] transition-all duration-700"
+          className="fixed top-10 right-10 z-[1000] flex items-center gap-4 transition-all duration-700"
           style={{
             opacity:       progress > 0.01 ? 1 : 0,
             transform:     progress > 0.01 ? "translateY(0)" : "translateY(-20px)",
             pointerEvents: progress > 0.01 ? "auto" : "none",
           }}
         >
+          {/* Speed Control Wrapper */}
+          <div className="relative flex items-center" onMouseMove={handleSpeedInteraction} onTouchMove={handleSpeedInteraction}>
+            {/* Expanded Slider Panel */}
+            <div
+              className="absolute right-6 flex items-center justify-between rounded-l-full border-y border-l pl-5 pr-8 h-12 backdrop-blur-md transition-all duration-300 overflow-hidden"
+              style={{
+                borderColor: "rgba(255,255,255,0.1)",
+                background: "rgba(2,6,23,0.75)",
+                opacity: isSpeedControlOpen ? 1 : 0,
+                pointerEvents: isSpeedControlOpen ? "auto" : "none",
+                transform: isSpeedControlOpen ? "translateX(0)" : "translateX(20px)",
+                width: isSpeedControlOpen ? "180px" : "0px",
+              }}
+            >
+              <input
+                type="range"
+                min="0.5"
+                max="2"
+                step="0.1"
+                value={scrollSpeed}
+                onChange={(e) => {
+                  setScrollSpeed(parseFloat(e.target.value));
+                  handleSpeedInteraction();
+                }}
+                className="w-full accent-rose-500 cursor-pointer"
+                style={{
+                  height: "2px",
+                  background: "rgba(255,255,255,0.2)",
+                  appearance: "none",
+                  outline: "none",
+                  borderRadius: "2px",
+                }}
+              />
+              <button 
+                onClick={() => setIsSpeedControlOpen(false)}
+                className="ml-3 flex h-6 w-6 shrink-0 items-center justify-center rounded-full hover:bg-white/10 transition-colors text-slate-400 hover:text-white"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Toggle Button */}
+            <button
+              onClick={() => {
+                setIsSpeedControlOpen(!isSpeedControlOpen);
+                if (!isSpeedControlOpen) handleSpeedInteraction();
+              }}
+              className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border backdrop-blur-md transition-all duration-300"
+              style={{
+                borderColor: isSpeedControlOpen ? "rgba(244,63,94,0.5)" : "rgba(255,255,255,0.1)",
+                background: isSpeedControlOpen ? "rgba(15,3,7,0.8)" : "rgba(2,6,23,0.4)",
+                boxShadow: isSpeedControlOpen ? `0 0 15px ${ROSE_GLOW}` : "none",
+              }}
+            >
+              <span className="font-mono text-[10px] font-bold" style={{ color: ROSE }}>
+                {scrollSpeed.toFixed(1)}x
+              </span>
+            </button>
+
+            <style>{`
+              input[type=range]::-webkit-slider-thumb {
+                appearance: none;
+                width: 12px;
+                height: 12px;
+                background: ${ROSE};
+                border-radius: 50%;
+                cursor: pointer;
+                box-shadow: 0 0 10px ${ROSE_GLOW};
+                transition: transform 0.1s;
+              }
+              input[type=range]::-webkit-slider-thumb:hover {
+                transform: scale(1.2);
+              }
+            `}</style>
+          </div>
+
+          {/* Play/Pause Button */}
           <button
             onClick={() => setIsAutoScrolling(!isAutoScrolling)}
-            className="group relative flex h-12 w-12 items-center justify-center rounded-full border text-white backdrop-blur-md transition-all duration-300"
+            className="group relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border text-white backdrop-blur-md transition-all duration-300"
             style={{
               borderColor: isAutoScrolling ? "rgba(244,63,94,0.5)" : "rgba(255,255,255,0.1)",
               background:  isAutoScrolling ? "rgba(15,3,7,0.8)"    : "rgba(2,6,23,0.4)",
@@ -272,9 +380,9 @@ export const WebHackingLayout: React.FC = () => {
                 <path d="M8 5v14l11-7z" />
               </svg>
             )}
-            <div className="absolute right-full mr-4 whitespace-nowrap rounded-lg border border-white/10 bg-slate-900/90 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.2em] opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none backdrop-blur-sm"
+            <div className="absolute top-[120%] mr-0 whitespace-nowrap rounded-lg border border-white/10 bg-slate-900/90 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.2em] opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none backdrop-blur-sm"
               style={{ color: ROSE }}>
-              {isAutoScrolling ? "Pause Auto-Player" : "Resume Auto-Player"}
+              {isAutoScrolling ? "Pause" : "Resume"}
             </div>
           </button>
         </div>

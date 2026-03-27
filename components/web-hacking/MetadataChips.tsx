@@ -50,10 +50,10 @@ const rowOpacity = chipFade(localProgress, 0.15);
     >
       {/* Label */}
       <div className="shrink-0 mr-2 text-right">
-        <p className="font-mono text-[9px] uppercase tracking-[0.35em]" style={{ color: "rgba(244,63,94,0.55)" }}>
+        <p className="font-mono text-[11px] uppercase tracking-[0.35em]" style={{ color: "rgba(226,232,240,0.85)" }}>
           Fingerprinted
         </p>
-        <p className="font-mono text-[8px] uppercase tracking-[0.2em]" style={{ color: "rgba(148,163,184,0.3)" }}>
+        <p className="font-mono text-[9px] uppercase tracking-[0.2em]" style={{ color: "rgba(226,232,240,0.45)" }}>
           no packets sent
         </p>
       </div>
@@ -65,7 +65,7 @@ const rowOpacity = chipFade(localProgress, 0.15);
         return (
           <div
             key={chip.label}
-            className="flex items-center gap-2 rounded-xl px-3 py-2 backdrop-blur-md"
+            className="flex items-center gap-2.5 rounded-xl px-4 py-2.5 backdrop-blur-md"
             style={{
               opacity: op,
               transform: `translateY(${(1 - op) * 14}px) scale(${pop})`,
@@ -78,10 +78,10 @@ const rowOpacity = chipFade(localProgress, 0.15);
               whiteSpace: "nowrap",
             }}
           >
-            <span className="text-sm leading-none">{chip.icon}</span>
+            <span className="text-base leading-none">{chip.icon}</span>
             <div>
-              <p className="font-mono text-[12px] font-bold text-white leading-tight">{chip.label}</p>
-              <p className="font-mono text-[9px] uppercase tracking-widest" style={{ color: "rgba(244,63,94,0.6)" }}>
+              <p className="font-mono text-[15px] font-bold text-white leading-tight">{chip.label}</p>
+              <p className="font-mono text-[10px] uppercase tracking-widest" style={{ color: "rgba(244,63,94,0.6)" }}>
                 {chip.sub}
               </p>
             </div>

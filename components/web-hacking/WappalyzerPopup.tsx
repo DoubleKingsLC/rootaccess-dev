@@ -136,7 +136,7 @@ export const WappalyzerPopup: React.FC<Props> = ({ localProgress }) => {
       {(() => {
         const prog = reactParticle(localProgress);
         if (prog === null) return null;
-        const translateY = -prog * 160;
+        const translateY = -prog * 200;
         const opacity2 = prog < 0.15 ? prog / 0.15 : prog > 0.85 ? 1 - (prog - 0.85) / 0.15 : 1;
         return (
           <div
@@ -150,19 +150,19 @@ export const WappalyzerPopup: React.FC<Props> = ({ localProgress }) => {
               pointerEvents: "none",
               display: "flex",
               alignItems: "center",
-              gap: 5,
+              gap: 6,
               background: "rgba(97,218,251,0.12)",
               border: "1px solid rgba(97,218,251,0.4)",
-              borderRadius: 8,
-              padding: "3px 8px",
+              borderRadius: 10,
+              padding: "5px 12px",
               backdropFilter: "blur(8px)",
               whiteSpace: "nowrap",
-              boxShadow: "0 0 16px rgba(97,218,251,0.3)",
+              boxShadow: "0 0 20px rgba(97,218,251,0.3)",
             }}
           >
-            <span style={{ fontSize: 11 }}>⚛</span>
-            <span style={{ fontFamily: "monospace", fontSize: 10, fontWeight: 700, color: "#61dafb" }}>React 18</span>
-            <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+            <span style={{ fontSize: 16 }}>⚛</span>
+            <span style={{ fontFamily: "monospace", fontSize: 14, fontWeight: 700, color: "#61dafb" }}>React 18</span>
+            <svg width="10" height="10" viewBox="0 0 8 8" fill="none">
               <path d="M4 7V1M1 4l3-3 3 3" stroke="#61dafb" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
@@ -173,7 +173,7 @@ export const WappalyzerPopup: React.FC<Props> = ({ localProgress }) => {
       {(() => {
         const prog = cloudflareParticle(localProgress);
         if (prog === null) return null;
-        const translateY = -prog * 160;
+        const translateY = -prog * 200;
         const opacity2 = prog < 0.15 ? prog / 0.15 : prog > 0.85 ? 1 - (prog - 0.85) / 0.15 : 1;
         return (
           <div
@@ -187,19 +187,19 @@ export const WappalyzerPopup: React.FC<Props> = ({ localProgress }) => {
               pointerEvents: "none",
               display: "flex",
               alignItems: "center",
-              gap: 5,
+              gap: 6,
               background: "rgba(244,129,32,0.12)",
               border: "1px solid rgba(244,129,32,0.4)",
-              borderRadius: 8,
-              padding: "3px 8px",
+              borderRadius: 10,
+              padding: "5px 12px",
               backdropFilter: "blur(8px)",
               whiteSpace: "nowrap",
-              boxShadow: "0 0 16px rgba(244,129,32,0.3)",
+              boxShadow: "0 0 20px rgba(244,129,32,0.3)",
             }}
           >
-            <span style={{ fontSize: 11 }}>☁</span>
-            <span style={{ fontFamily: "monospace", fontSize: 10, fontWeight: 700, color: "#f48120" }}>Cloudflare</span>
-            <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+            <span style={{ fontSize: 16 }}>☁</span>
+            <span style={{ fontFamily: "monospace", fontSize: 14, fontWeight: 700, color: "#f48120" }}>Cloudflare</span>
+            <svg width="10" height="10" viewBox="0 0 8 8" fill="none">
               <path d="M4 7V1M1 4l3-3 3 3" stroke="#f48120" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>

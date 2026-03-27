@@ -123,8 +123,12 @@ export const ReportScene: React.FC<ReportSceneProps> = ({ progress }) => {
 
         {/* Top label */}
         <div
-          className="absolute top-12 left-1/2 -translate-x-1/2 font-mono text-[9px] uppercase tracking-[0.45em]"
-          style={{ color: "rgba(244,63,94,0.4)" }}
+          className="absolute top-12 left-1/2 -translate-x-1/2 font-mono text-[11px] uppercase tracking-[0.35em]"
+          style={{
+            color: "rgba(226,232,240,0.65)",
+            opacity: lp > 0.5 ? 1 : 0, // Appears after summary
+            transition: "opacity 0.3s",
+          }}
         >
           Penetration test report · NexusPay
         </div>

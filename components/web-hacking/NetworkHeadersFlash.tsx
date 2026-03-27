@@ -28,7 +28,12 @@ const badgeOp = (lp: number) => {
   return 1;
 };
 
-// Underline sweep on nginx/1.18.0 row removed as requested.
+// Underline sweep: grows from left to right
+const underlineSweep = (lp: number, start: number, dur: number): number => {
+  if (lp < start) return 0;
+  if (lp < start + dur) return (lp - start) / dur;
+  return 1;
+};
 
 // Rising particle for nginx — lp 0.35–0.48
 const nginxParticle = (lp: number): number | null => {
@@ -109,20 +114,41 @@ export const NetworkHeadersFlash: React.FC<Props> = ({ localProgress }) => {
                 <span className="shrink-0" style={{ color: "rgba(244,63,94,0.8)" }}>Server:</span>
                 <span className="relative" style={{ color: "#fca5a5", fontWeight: 600 }}>
                   nginx/1.18.0 (Ubuntu)
+                  {/* Underline sweep */}
+                  <span
+                    className="absolute bottom-0 left-0 h-[1.5px]"
+                    style={{
+                      width: `${underlineSweep(localProgress, 0.30, 0.08) * 100}%`,
+                      background: "linear-gradient(90deg, rgba(244,63,94,0.9), rgba(244,63,94,0.3))",
+                      boxShadow: "0 0 6px rgba(244,63,94,0.5)",
+                      transition: "none",
+                    }}
+                  />
                 </span>
               </div>
               {/* Other rows */}
               {[
-                ["X-Powered-By",    "Express",               false],
-                ["Content-Type",    "text/html; charset=utf-8", false],
-                ["X-Frame-Options", "SAMEORIGIN",            false],
-              ].map(([k, v]) => (
+                ["X-Powered-By",    "Express",               true,  0.33],
+                ["Content-Type",    "text/html; charset=utf-8", false, 0],
+                ["X-Frame-Options", "SAMEORIGIN",            false, 0],
+              ].map(([k, v, hasUnderline, sweepStart]) => (
                 <div key={String(k)} className="flex gap-3 font-mono text-[11px]">
                   <span className="shrink-0" style={{ color: "rgba(100,116,139,0.7)" }}>
                     {k}:
                   </span>
-                  <span style={{ color: "rgba(148,163,184,0.6)" }}>
+                  <span className="relative" style={{ color: hasUnderline ? "#fca5a5" : "rgba(148,163,184,0.6)", fontWeight: hasUnderline ? 600 : 400 }}>
                     {String(v)}
+                    {hasUnderline && (
+                      <span
+                        className="absolute bottom-0 left-0 h-[1.5px]"
+                        style={{
+                          width: `${underlineSweep(localProgress, Number(sweepStart), 0.08) * 100}%`,
+                          background: "linear-gradient(90deg, rgba(244,63,94,0.7), rgba(244,63,94,0.2))",
+                          boxShadow: "0 0 4px rgba(244,63,94,0.4)",
+                          transition: "none",
+                        }}
+                      />
+                    )}
                   </span>
                 </div>
               ))}
@@ -135,7 +161,7 @@ export const NetworkHeadersFlash: React.FC<Props> = ({ localProgress }) => {
       {(() => {
         const prog = nginxParticle(localProgress);
         if (prog === null) return null;
-        const translateY = -prog * 160;
+        const translateY = -prog * 200;
         const opacity2 = prog < 0.55 ? 1 : 1 - (prog - 0.55) / 0.45;
         return (
           <div
@@ -149,19 +175,19 @@ export const NetworkHeadersFlash: React.FC<Props> = ({ localProgress }) => {
               pointerEvents: "none",
               display: "flex",
               alignItems: "center",
-              gap: 5,
+              gap: 6,
               background: "rgba(244,63,94,0.18)",
               border: "1px solid rgba(244,63,94,0.5)",
-              borderRadius: 8,
-              padding: "3px 8px",
+              borderRadius: 10,
+              padding: "5px 12px",
               backdropFilter: "blur(8px)",
               whiteSpace: "nowrap",
-              boxShadow: "0 0 16px rgba(244,63,94,0.4)",
+              boxShadow: "0 0 20px rgba(244,63,94,0.4)",
             }}
           >
-            <span style={{ fontSize: 11 }}>⚡</span>
-            <span style={{ fontFamily: "monospace", fontSize: 10, fontWeight: 700, color: "#fca5a5" }}>nginx/1.18</span>
-            <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+            <span style={{ fontSize: 16 }}>⚡</span>
+            <span style={{ fontFamily: "monospace", fontSize: 14, fontWeight: 700, color: "#fca5a5" }}>nginx/1.18</span>
+            <svg width="10" height="10" viewBox="0 0 8 8" fill="none">
               <path d="M4 7V1M1 4l3-3 3 3" stroke="#f43f5e" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>

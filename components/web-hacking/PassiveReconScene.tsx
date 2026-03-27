@@ -69,8 +69,8 @@ export const PassiveReconScene: React.FC<PassiveReconSceneProps> = ({ progress }
 
         {/* Source label — top center */}
         <div
-          className="absolute top-12 left-1/2 -translate-x-1/2 font-mono text-[9px] uppercase tracking-[0.45em]"
-          style={{ color: "rgba(244,63,94,0.4)", opacity: lp > 0.1 ? 1 : 0, transition: "opacity 0.3s" }}
+          className="absolute top-12 left-1/2 -translate-x-1/2 font-mono text-[11px] uppercase tracking-[0.35em]"
+          style={{ color: "rgba(226,232,240,0.65)", opacity: lp > 0.1 ? 1 : 0, transition: "opacity 0.3s" }}
         >
           Passive intelligence — no packets sent
         </div>
