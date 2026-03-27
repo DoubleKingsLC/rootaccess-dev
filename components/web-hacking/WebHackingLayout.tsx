@@ -6,14 +6,14 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import { useRouter } from "next/navigation";
 import { WebHackingIntroOverlay } from "./WebHackingIntroOverlay";
-import { TargetAppearsScene }    from "./web-hacking/TargetAppearsScene";
-import { OsintToolScene }       from "./web-hacking/OsintToolScene";
-import { PassiveReconScene }    from "./web-hacking/PassiveReconScene";
-import { ActiveReconScene }     from "./web-hacking/ActiveReconScene";
-import { InitialAccessScene }   from "./web-hacking/InitialAccessScene";
-import { SQLiScene }            from "./web-hacking/SQLiScene";
-import { ExfilScene }          from "./web-hacking/ExfilScene";
-import { ReportScene }         from "./web-hacking/ReportScene";
+import { TargetAppearsScene }    from "./TargetAppearsScene";
+import { OsintToolScene }       from "./OsintToolScene";
+import { PassiveReconScene }    from "./PassiveReconScene";
+import { ActiveReconScene }     from "./ActiveReconScene";
+import { InitialAccessScene }   from "./InitialAccessScene";
+import { SQLiScene }            from "./SQLiScene";
+import { ExfilScene }          from "./ExfilScene";
+import { ReportScene }         from "./ReportScene";
 
 gsap.registerPlugin(ScrollTrigger);
 
