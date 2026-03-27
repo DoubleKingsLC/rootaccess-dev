@@ -43,9 +43,9 @@ export const LEVELS: Level[] = [
       "Scripting basics — Python or Bash",
     ],
     certs: [
-      { label: "THM · Security+ Pre-Security (SEC1)", link: "https://tryhackme.com/certification/pre-security", provider: "tryhackme" },
       { label: "Google Cybersecurity Certificate", link: "https://www.coursera.org/professional-certificates/google-cybersecurity", provider: "google" },
       { label: "TCM · Practical Security Fundamentals", link: "https://academy.tcm-sec.com/p/practical-security-fundamentals", provider: "tcm" },
+      { label: "THM · Security+ Pre-Security (SEC1)", link: "https://tryhackme.com/certification/pre-security", provider: "tryhackme" },
     ],
     labs: [
       { label: "TryHackMe · Pre-Security learning path", link: "https://tryhackme.com/path/outline/presecurity", provider: "tryhackme" },
@@ -73,8 +73,7 @@ export const LEVELS: Level[] = [
     ],
     certs: [
       { label: "eJPT — eLearnSecurity Junior Penetration Tester", link: "https://security.ine.com/certifications/ejpt-certification/", provider: "ine" },
-      { label: "CompTIA PenTest+", link: "https://www.comptia.org/certifications/pentest", provider: "comptia" },
-      { label: "CEH v13 — Certified Ethical Hacker", link: "https://www.eccouncil.org/train-certify/certified-ethical-hacker-ceh/", provider: "ec-council" },
+      { label: "PJPT — Practical Junior Penetration Tester", link: "https://certifications.tcm-sec.com/pjpt/", provider: "tcm" },
     ],
     labs: [
       { label: "PortSwigger Web Security Academy — free web labs", link: "https://portswigger.net/web-security", provider: "portswigger" },
@@ -131,7 +130,6 @@ export const LEVELS: Level[] = [
     ],
     certs: [
       { label: "OSWE — OffSec Web Expert", link: "https://www.offsec.com/courses/web-300/", provider: "offsec" },
-      { label: "OSEP — OffSec Experienced Penetration Tester", link: "https://www.offsec.com/courses/pen-300/", provider: "offsec" },
       { label: "CRTP — Certified Red Team Professional", link: "https://www.alteredsecurity.com/redteamlab", provider: "altered" },
     ],
     labs: [
