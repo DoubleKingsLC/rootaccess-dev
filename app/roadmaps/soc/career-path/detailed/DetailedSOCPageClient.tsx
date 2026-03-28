@@ -330,57 +330,122 @@ function SectionHeader({ num, label, color, time, salary, subtitle }: {
   );
 }
 
-function RootAccessAnimation() {
-  const [terminalState, setTerminalState] = useState(0);
-  const steps = [
-    "> INITIATING_NETWORK_SCAN...",
-    "> BYPASSING_FIREWALL_v4.2...",
-    "> ESCALATING_PRIVILEGES...",
-    "> ROOT_ACCESS: GRANTED."
+function SOCHeroAnimation() {
+  const [phase, setPhase] = useState(0);
+  const [visibleLogs, setVisibleLogs] = useState<{id: number, text: string}[]>([]);
+
+  const bgLogs = [
+    "192.168.1.10 - - [GET /api/v1/health] 200",
+    "WARN: CPU usage exceeding 85% on db-04",
+    "10.0.0.5 - - [POST /auth/login] 401 Unauthorized",
+    "SYSLOG: Connection established from 192.168.1.22",
+    "172.16.0.4 - - [GET /static/main.css] 200",
+    "INFO: TLS handshake successful with peer",
+    "10.0.0.8 - - [GET /admin/settings] 403 Forbidden",
+    "SYSLOG: Service iptables restarted",
+    "192.168.1.15 - - [GET /images/logo.png] 200",
   ];
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTerminalState((prev) => (prev < steps.length - 1 ? prev + 1 : prev));
-    }, 1500);
-    return () => clearInterval(timer);
+    // Rapid background logs
+    if (phase < 2) {
+      const interval = setInterval(() => {
+        setVisibleLogs(prev => {
+          const newLog = { id: Date.now() + Math.random(), text: bgLogs[Math.floor(Math.random() * bgLogs.length)] };
+          return [...prev.slice(-4), newLog];
+        });
+      }, 250);
+      return () => clearInterval(interval);
+    }
+  }, [phase]);
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setPhase(1), 2000); // User search appears
+    const t2 = setTimeout(() => setPhase(2), 3500); // Alert pulse begins (logs stop)
+    const t3 = setTimeout(() => setPhase(3), 5500); // System redirects
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, []);
 
   return (
-    <div className="relative w-full max-w-[500px] h-[320px] rounded-2xl overflow-hidden bg-black/60 border border-white/5 font-mono text-[11px] p-8">
-      {/* Background Matrix-like glow */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent pointer-events-none" />
+    <div className="relative w-full max-w-[500px] h-[380px] rounded-2xl overflow-hidden bg-[#090d14] border border-blue-500/20 font-mono text-[11px] p-6 flex flex-col shadow-2xl">
+      {/* Background Glow */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent pointer-events-none" />
       
       {/* Window Controls */}
-      <div className="flex items-center gap-2 mb-6 border-b border-white/10 pb-4">
+      <div className="flex items-center gap-2 mb-4 border-b border-white/10 pb-4 flex-shrink-0 relative z-10">
         <div className="w-2.5 h-2.5 rounded-full bg-red-500/40" />
         <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/40" />
         <div className="w-2.5 h-2.5 rounded-full bg-green-500/40" />
-        <span className="ml-3 text-white/20 text-[10px] uppercase tracking-[0.4em] font-bold">root@rootaccess:~#</span>
+        <span className="ml-3 text-white/20 text-[10px] uppercase tracking-[0.4em] font-bold">soc@rootaccess:~# tail -f /var/log/syslog</span>
       </div>
 
-      <div className="space-y-3 relative z-10">
+      <div className="flex-1 overflow-hidden relative z-10 flex flex-col justify-end gap-1.5">
+        {/* Background Logs */}
         <AnimatePresence mode="popLayout">
-          {steps.slice(0, terminalState + 1).map((step, i) => (
-            <motion.p
-              key={i}
+          {visibleLogs.slice(phase >= 2 ? -2 : -4).map((log) => (
+            <motion.div
+              layout
+              key={log.id}
               initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              className={i === steps.length - 1 ? "text-green-400 font-bold" : "text-blue-400/80"}
+              animate={{ opacity: 0.3, x: 0 }}
+              exit={{ opacity: 0 }}
+              className="text-blue-200/50 whitespace-nowrap overflow-hidden text-ellipsis"
             >
-              {step}
-            </motion.p>
+              System Info: {log.text}
+            </motion.div>
           ))}
         </AnimatePresence>
 
-        {terminalState === steps.length - 1 && (
+        {/* Phase 1: The query injection */}
+        {phase >= 1 && (
           <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="mt-10 p-6 border border-green-500/30 bg-green-500/5 text-green-400 text-center rounded-xl"
+            layout
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            className="text-white bg-white/5 border-l-2 border-white/40 pl-3 py-1.5 mt-2 flex items-center gap-2"
           >
-            <div className="text-[10px] uppercase tracking-[0.5em] mb-2 opacity-50">System Compromised</div>
-            <div className="text-lg font-bold tracking-[0.2em]">ROOT_ACCESS_LEVEL_0</div>
+            <span className="text-blue-300 font-bold">[14:02:05]</span> 
+            <span className="opacity-70">USER_QUERY:</span> 
+            <span className="font-semibold">"What is cybersecurity"</span>
+          </motion.div>
+        )}
+
+        {/* Phase 2: The Alert Pulse */}
+        {phase >= 2 && (
+          <motion.div
+            layout
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className="mt-3 p-3 border border-yellow-500/40 bg-yellow-500/10 text-yellow-400 rounded-lg flex items-center gap-3 shadow-[0_0_15px_rgba(234,179,8,0.1)]"
+          >
+             <motion.div 
+               animate={{ opacity: [1, 0.2, 1], scale: [1, 1.2, 1] }} 
+               transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+               className="w-2.5 h-2.5 rounded-full bg-yellow-400 flex-shrink-0 shadow-[0_0_8px_rgba(234,179,8,0.8)]"
+             />
+             <div>
+               <div className="font-bold tracking-widest text-[10px] uppercase mb-0.5 text-yellow-300">Intent Match Initiated</div>
+               <div className="text-yellow-200/70 text-[10px]">Processing curiosity vector... assessing path...</div>
+             </div>
+          </motion.div>
+        )}
+
+        {/* Phase 3: The Automated Response */}
+        {phase >= 3 && (
+          <motion.div
+            layout
+            initial={{ opacity: 0, scale: 0.9, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className="mt-3 p-4 border border-green-500/30 bg-green-500/10 rounded-xl text-center relative overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-green-500/0 via-green-500/10 to-green-500/0 opacity-50" />
+            <div className="text-[10px] font-bold tracking-[0.25em] text-green-400 mb-2 relative z-10">
+              [SYSTEM_RESPONSE_GENERATED]
+            </div>
+            <div className="tracking-wide text-[12px] text-green-100 relative z-10 leading-relaxed">
+              Training sequence approved.<br/>
+              Action: <span className="font-bold text-white bg-green-500/20 px-2 py-0.5 rounded ml-1 border border-green-500/30">visit rootaccess.tech</span>
+            </div>
           </motion.div>
         )}
       </div>
@@ -388,8 +453,8 @@ function RootAccessAnimation() {
       {/* Decorative scanning line */}
       <motion.div
         animate={{ top: ["0%", "100%"] }}
-        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-        className="absolute left-0 right-0 h-px bg-blue-500/20 z-0 pointer-events-none"
+        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+        className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-400/20 to-transparent z-0 pointer-events-none"
       />
     </div>
   );
@@ -476,7 +541,7 @@ export default function DetailedSOCPageClient() {
           </div>
           
           <div className="hidden lg:flex justify-end">
-            <RootAccessAnimation />
+            <SOCHeroAnimation />
           </div>
         </div>
       </div>

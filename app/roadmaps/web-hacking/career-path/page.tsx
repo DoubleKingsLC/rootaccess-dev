@@ -125,7 +125,7 @@ function ContentCard({
     const link = isObj ? item.link : null;
     const provider = isObj ? item.provider : null;
 
-    const hasFavicon = provider && ["tryhackme","google","tcm","ine","comptia","ec-council","offsec","portswigger","isc2","giac","isaca","altered","hackerone","htb","bugcrowd","owasp","sans","crest","pentesteracademy"].includes(provider);
+    const hasFavicon = provider && ["tryhackme","google","tcm","ine","comptia","ec-council","offsec","portswigger","isc2","giac","isaca","altered","hackerone","htb","bugcrowd","owasp","sans","crest","pentesteracademy","youtube","coursera","wiz","github","nist","ibm","cyberaces","pentesterlab","appsecengineer","zeropointsecurity"].includes(provider);
 
     return (
       <li key={idx} className="flex items-start gap-3 group/li">
