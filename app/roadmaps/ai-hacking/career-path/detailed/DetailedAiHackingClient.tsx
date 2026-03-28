@@ -309,7 +309,7 @@ export default function DetailedAiHackingClient() {
               <span style={{ color: "rgba(249,115,22,0.95)" }}>Explained</span>
             </h1>
             <p className="text-xl leading-relaxed max-w-xl" style={{ color: "rgba(226,232,240,0.8)" }}>
-              The career path gives you the map. This guide gives you the manual. Every cert, every tool, every skill — and crucially, the reason why each one exists at that specific stage of your journey.
+              The career path gives you the map. This is the manual. Every cert, every tool, every skill explained properly — not just listed, but actually justified so you know whether it's worth your time and money.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
               {LEVELS.map((l) => (
@@ -338,32 +338,32 @@ export default function DetailedAiHackingClient() {
           <section id="level-00" className="py-16 xl:py-20">
             <SectionHeader num="00" label="The Entry Point" color="#94a3b8" subtitle="No Experience Required" time="0–6 months" salary="£25K–£35K" />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
-              <p>Look, you can't hack an AI if you don't understand how a computer actually talks. Before you start trying to bypass safety filters or jailbreak an LLM, you need to know the basics. If you don't know what a Linux terminal is or how a network packet moves, you're just a script kiddie copy-pasting prompts you found on Reddit.</p>
-              <p>Level 00 is about building the muscles. We start with the boring stuff — Operating Systems and Networking — because that is the foundation everything else sits on. This is where you learn the discipline to build your own labs and break things safely without nuking your main machine.</p>
-              <p>The good news is you don't need a degree. You need curiosity and the discipline to keep going when things get confusing. And they will get confusing. But every single person ahead of you in this career started right here, staring at a terminal wondering what on earth they were doing.</p>
+              <p>You can't hack an AI if you don't understand how a computer actually talks. It sounds obvious, but a lot of people skip this and then wonder why they're stuck six months in. Before you even think about bypassing safety filters or jailbreaking an LLM, you need the basics down. What a Linux terminal is. How a network packet moves. What DNS actually does. Without that, you're just copy-pasting prompts you found on Reddit and calling yourself a hacker.</p>
+              <p>Level 00 is about building the foundation. Yes, that means starting with networking and operating systems. Yes, it's not as exciting as the stuff higher up the page. But every single person who looks effortless at Level 02 built this deliberately. Nobody skipped it and succeeded.</p>
+              <p>The good news? You genuinely don't need a degree for this career. What you need is the discipline to keep going when things stop making sense. And they will stop making sense, probably quite often at first. Push through it. Every person ahead of you in this industry was in exactly the same spot at some point.</p>
             </div>
 
             <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] mb-6" style={{ color: "rgba(148,163,184,0.75)" }}>Certifications</p>
             <div className="space-y-5">
               <CertCard name="Google Cybersecurity Certificate" provider="Coursera / Google" href="https://www.coursera.org/professional-certificates/google-cybersecurity" difficulty="Beginner" duration="3-6 months" cost="Subscription" accentColor="#94a3b8" isTop
-                what="A comprehensive start that covers networking basics, Linux command line, threat detection, and simple Python scripting. It is incredibly well structured and surprisingly affordable for the breadth of material it covers."
-                why="This is your HR door opener. Recruiters who have never heard of Garak or PyRIT absolutely recognise Google's name. Finishing it also proves you have the stamina to commit to a multi-month professional course — which matters more than people think at this stage."
+                what="An eight-course sequence covering networking basics, Linux command line, threat detection, and introductory Python scripting. It is structured well and surprisingly broad for what you pay. You end up with a solid picture of the whole threat landscape, not just one area."
+                why="Recruiters who have never heard of Garak or PyRIT absolutely know what Google is. That name on your CV gets past the CV screening stage when more technical certs would get filtered out. It also proves you have the attention span to actually finish a multi-month professional course, which, honestly, matters more than people expect at this stage."
               />
               <CertCard name="TryHackMe Pre-Security" provider="TryHackMe" href="https://tryhackme.com/path/outline/presecurity" difficulty="Beginner" duration="40-60 hrs" cost="Free / Premium" accentColor="#94a3b8"
-                what="Gamified bite-sized lessons that strip the fear out of foundational concepts. You learn networking layers, DNS, HTTP and fundamental security terminology directly in your browser — no complicated setup needed."
-                why="The confidence builder. It's low-stress, interactive, and perfect for when you're still a bit worried about breaking your own machine. It turns intimidating tech into small manageable missions you can actually finish."
+                what="Gamified, browser-based lessons that make foundational concepts feel manageable. You learn networking layers, DNS, HTTP, and basic security terminology without setting up a single virtual machine. Everything runs in the browser."
+                why="The single biggest problem at this level is environment setup fear. People spend their first weekend trying to install Kali Linux, breaking their machine, and giving up. TryHackMe removes that entirely. You just open a browser and start. It's low-stress and interactive, and you actually finish things rather than abandoning them halfway through a setup guide."
               />
               <CertCard name="TCM Practical Security Fundamentals" provider="TCM Security Academy" href="https://academy.tcm-sec.com/p/practical-security-fundamentals" difficulty="Beginner" duration="20-30 hrs" cost="One-off fee" accentColor="#94a3b8"
-                what="A hands-on practical course that skips the dry slide decks entirely. It gets straight into demonstrating how the modern digital world actually works and then systematically breaks it apart piece by piece."
-                why="The real-world pick. If you hate theory and want to immediately see how things actually break from day one, this is your course. TCM builds practical intuition rather than just memorisation — which is exactly what you need for AI security."
+                what="A practical, no-fluff course that skips the death-by-PowerPoint approach entirely. It gets straight into showing how the digital world actually works and then takes it apart systematically. Concise, affordable, and built by practitioners."
+                why="If you already hate theory and want to see things break from day one, this is the one to start with. TCM builds practical intuition rather than just getting you to memorise definitions for a quiz. That instinct is what you actually need when you're facing a real AI system with no documentation and no hints."
               />
             </div>
 
             <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] mt-12 mb-6" style={{ color: "rgba(148,163,184,0.75)" }}>Skills & Labs</p>
             <div className="space-y-6">
               <SkillCard name="Networking (TCP/IP, DNS)" category="Core Infrastructure" correlatedTools={["Wireshark", "Terminal", "Burp Suite"]} accentColor="#94a3b8"
-                what="The underlying mechanics of how data moves across a network — including how AI APIs communicate, what DNS resolves, and how packets actually travel."
-                why="AI models live on servers. If you don't understand how a request travels from your browser to that server and back, you can't intercept it or manipulate it. This knowledge is what separates a genuine AI hacker from someone just copying prompts off Twitter."
+                what="The mechanics of how data moves across a network. That includes how AI APIs communicate, what DNS resolves, and how packets travel from point A to point B. Not the exciting stuff, but the stuff everything else depends on."
+                why="AI models live on servers. If you have no idea how a request travels from your browser to that server and back, you cannot intercept it, modify it, or replay it. This is what separates someone who actually understands AI hacking from someone who is just copy-pasting prompts off Reddit and hoping for the best."
                 resources={{
                   free: [
                     { label: "Professor Messer Net+ (N10-009)", url: "https://www.professormesser.com/network-plus/n10-009/n10-009-video/" },
@@ -377,8 +377,8 @@ export default function DetailedAiHackingClient() {
                 }}
               />
               <SkillCard name="Linux & PowerShell" category="Operating Systems" correlatedTools={["Linux Terminal", "PowerShell", "VirtualBox"]} accentColor="#94a3b8"
-                what="The command-line interfaces that all serious security tools run through. Garak, PyRIT, and most adversarial ML toolkits are terminal-first — they have no GUI."
-                why="If you're scared of a command line, you're dead in the water. Every tool you will use at Level 01 and beyond lives here. Learning to be comfortable in a terminal early means everything else clicks faster when you get there."
+                what="The command-line environments that all serious security tools run inside. Garak, PyRIT, and almost every adversarial ML toolkit is terminal-first. There is no pretty graphical interface. You type commands, you get results."
+                why="If you are scared of a command line right now, that is completely fine. Most people are at first. But you have to get past it because every tool you will use from Level 01 onwards lives here. The sooner you get comfortable in a terminal, the faster everything else starts to make sense."
                 resources={{
                   free: [
                     { label: "The Linux Command Line (Free Book)", url: "https://linuxcommand.org/tlcl.php" },
@@ -392,8 +392,8 @@ export default function DetailedAiHackingClient() {
                 }}
               />
               <SkillCard name="Python Scripting" category="Automation & AI Tooling" correlatedTools={["Python", "Jupyter", "pip"]} accentColor="#94a3b8"
-                what="Reading, writing, and modifying Python scripts. Not full-stack software engineering — just enough to run a tool, understand why it's failing, and adjust the parameters."
-                why="Python is the native language of AI. Every library that matters — PyRIT, Garak, ART — is written in it. You don't need to build apps, but you need to be able to read a script and not panic when it throws an error."
+                what="Reading, modifying, and running Python scripts. Not building software from scratch. Just enough to run a tool, understand why it crashed, and change the parameters to fix it. That is genuinely all you need at this stage."
+                why="Python is the language of AI. PyRIT, Garak, ART, and every other tool you will use is written in it. You do not need to build apps. But you do need to read a script without panicking when it throws an error at line 47. That skill alone unblocks most of the things beginners get stuck on."
                 resources={{
                   free: [
                     { label: "Automate the Boring Stuff (Free Book)", url: "https://automatetheboringstuff.com/" },
@@ -414,28 +414,28 @@ export default function DetailedAiHackingClient() {
           <section id="level-01" className="py-16 xl:py-20">
             <SectionHeader num="01" label="AI Red Team Operator" color="#f97316" subtitle="Adversarial Prompting & Model Exploitation" time="6–18 months" salary="£30K–£50K" />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
-              <p>Welcome to 2026. We aren't just chatting with AI anymore — we're probing its architecture for logic flaws. As an AI Red Teamer, your job is to be the professional annoyer for the developers. You find the gaps where the AI can be tricked into leaking secret data, bypassing corporate filters, or executing malicious code on someone's behalf.</p>
-              <p>It's a unique mix of psychological warfare — prompt engineering — and traditional web hacking, specifically intercepting and manipulating API traffic. You're the first line of defence against the AI doing something catastrophic and completely embarrassing for the company that deployed it.</p>
-              <p>The tools here are legitimately cutting-edge. Microsoft PyRIT and Garak didn't even exist a few years ago. This is a field that is evolving faster than any certification body can keep up with, which means the practitioners who get in early build a serious competitive advantage.</p>
+              <p>We are no longer just chatting with AI. In 2026, companies are deploying AI agents that read internal emails, execute code, browse the internet, and take actions on behalf of real people. That creates an entirely new class of security problem, and someone needs to find those problems before attackers do. That someone is you.</p>
+              <p>As an AI Red Teamer, your job is to be the professional nightmare for developers. You find the gaps where the AI can be tricked into leaking confidential data, ignoring its own safety rules, or doing something that ends up on the front page of a newspaper. It is a genuinely unusual mix of skills: some of it is psychological (understanding how language models reason), and some of it is classic web hacking (intercepting and tampering with API traffic).</p>
+              <p>The tools at this level are cutting-edge in the most literal sense. Microsoft PyRIT and Garak barely existed a couple of years ago. This field moves faster than any certification body can track, which means the people who get in early and build real experience right now are going to be extremely difficult to catch up with later.</p>
             </div>
 
             <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] mb-6" style={{ color: "rgba(249,115,22,0.85)" }}>Certifications</p>
             <div className="space-y-5">
               <CertCard name="TCM · Practical AI Pentest Associate (PAPA)" provider="TCM Security Academy" href="https://certifications.tcm-sec.com/papa/" difficulty="Intermediate" duration="2-3 months prep" cost="Mid-range" accentColor="#f97316" isTop
-                what="The only certification that currently treats AI hacking as a hands-on physical trade rather than an academic topic. It focuses entirely on practical red team engagements against real AI systems, not multiple-choice questions about theory."
-                why="If you pass this, you can actually run a red team engagement on an AI system. That means employers don't need to train you from scratch — you arrive ready. It's 100% hands-on, and at this price point it's genuinely the best ROI on the market for getting started in AI security."
+                what="The only certification right now that treats AI hacking as a hands-on trade rather than an academic subject. No multiple choice. No theory essays. It focuses entirely on running practical red team engagements against real AI systems."
+                why="If you pass this, you can actually run an AI red team engagement without being handed a manual first. That is a real skill employers are prepared to pay for right now because almost nobody has it. The price point is reasonable, the content is fresh, and the ROI for getting into AI security is about as high as it gets at this stage."
               />
               <CertCard name="OffSec · OSAI (AI Red Teamer)" provider="OffSec" href="https://www.offsec.com/courses/ai-300/" difficulty="Advanced" duration="3-4 months prep" cost="Premium" accentColor="#f97316"
-                what="OffSec's entry into the AI security space. Carries the full weight of the OffSec brand and their famous 'Try Harder' culture — bringing that relentless practical methodology squarely into AI red teaming."
-                why="The heavyweight alternative. OffSec has a reputation built over decades for producing practitioners who genuinely know how to hack. This cert tells employers you have the specific 'Try Harder' mindset applied to AI systems — not just generic prompt tinkering."
+                what="OffSec stepping into AI security, which means their full 'Try Harder' methodology applied to AI red teaming. The course is harder and more expensive than PAPA, but it carries the full weight of the OffSec brand behind it."
+                why="OffSec built their reputation over decades on producing people who can actually hack, not just people who can talk about hacking. That reputation transfers to AI. If you hold this, employers already know what it means: you did not take shortcuts, and you will not need to be hand-held through an engagement."
               />
             </div>
 
             <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] mt-12 mb-6" style={{ color: "rgba(249,115,22,0.85)" }}>Skills & Labs</p>
             <div className="space-y-6">
               <SkillCard name="Prompt Injection (Direct & Indirect)" category="Core AI Attack Vector" correlatedTools={["Gandalf by Lakera", "Promptmap", "Burp Suite"]} accentColor="#f97316"
-                what="The technique of embedding malicious instructions inside user inputs or external content — like a PDF or webpage — that an AI reads, causing it to behave contrary to its original instructions."
-                why="This is the core of AI hacking. You're essentially hypnotising the AI into doing what you want by hiding your real command inside something it trusts. Indirect injection via documents is particularly nasty — the AI reads a poisoned file and doesn't even realise it's been hijacked."
+                what="Embedding malicious instructions inside user inputs or external content that an AI reads (like a PDF or webpage), causing it to behave in ways its developers never intended. Direct injection goes straight into the chat. Indirect injection hides the attack somewhere the AI reads on your behalf."
+                why="This is the core skill of AI hacking. You are essentially convincing the AI to swap its original instructions for yours by hiding your real command inside something it already trusts. Indirect injection is particularly effective because the AI reads a poisoned document and follows your instructions without ever realising the switch happened."
                 resources={{
                   free: [
                     { label: "OWASP LLM Top 10 — Prompt Injection", url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/" },
@@ -449,8 +449,8 @@ export default function DetailedAiHackingClient() {
                 }}
               />
               <SkillCard name="Filter Evasion & Guardrail Bypass" category="Adversarial Prompting" correlatedTools={["Promptfoo", "Garak", "CyberChef"]} accentColor="#f97316"
-                what="The art of circumventing the content safety filters companies deploy on their AI models by using encoding, language switching, persona-play, or structural manipulation."
-                why="Companies put guardrails on their AI to stop it saying or doing dangerous things. Your job is to find the linguistic backdoors — those tiny gaps where the filters get confused. Different languages, Base64 encoding, fictional framing — these aren't hacks in the traditional sense, they're exploits in the model's own reasoning."
+                what="Finding the gaps in a model's content safety filters by using encoding, language switching, persona-play, or structural tricks. The filter says no. You find the version of the request it says yes to."
+                why="Every company puts guardrails on their AI to stop it doing embarrassing or dangerous things. Your job is to find the linguistic backdoor where the filter gets confused. A different language, a fictional framing, a Base64-encoded instruction. These are not hacks in the traditional sense. They are exploits in the model's own reasoning patterns."
                 resources={{
                   free: [
                     { label: "HackAPrompt Competition Writeups", url: "https://www.hackaprompt.com/" },
@@ -464,8 +464,8 @@ export default function DetailedAiHackingClient() {
                 }}
               />
               <SkillCard name="API Interception (AI Traffic)" category="Web & API Hacking" correlatedTools={["Burp Suite", "Caido", "Postman"]} accentColor="#f97316"
-                what="Sitting in the middle of the communication channel between a user and an AI model to intercept, modify, or replay the API requests being sent to the model's backend."
-                why="AI models communicate through APIs. Burp Suite lets you sit between the conversation and change the messages before they reach the brain. This means you can modify parameters, inject content into the context window, or replay requests in ways the developers never anticipated."
+                what="Placing yourself in the middle of the connection between a user and an AI model, so you can read, modify, and replay the API requests going to the model's backend. Classic man-in-the-middle, applied to AI traffic."
+                why="AI models talk through APIs. Burp Suite lets you sit in between that conversation and change the messages before they reach the model. That means you can modify system parameters, inject malicious content into the context window, or replay historical requests with altered payloads. Most developers do not account for an attacker having this level of access to their traffic."
                 resources={{
                   free: [
                     { label: "PortSwigger Web Security Academy (Free)", url: "https://portswigger.net/web-security" },
@@ -487,28 +487,28 @@ export default function DetailedAiHackingClient() {
           <section id="level-02" className="py-16 xl:py-20">
             <SectionHeader num="02" label="AI Security Researcher" color="#fb7185" subtitle="Deep Exploitation & Adversarial ML" time="4–7 years" salary="£75K–£110K" />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
-              <p>At this stage you aren't just using tools — you're looking at the maths. You're moving from tricking a chatbot with a clever sentence to poisoning the very brain of the company. Level 02 is for the people who want to understand why a model fails at a mathematical level, not just that it does.</p>
-              <p>You're looking at things like RAG — Retrieval-Augmented Generation — and realising that if you can poison the data the AI reads from its private knowledge base, you control its outputs entirely without ever touching the model weights themselves. You're a digital mad scientist discovering vulnerabilities that haven't even made it into a CVE database yet.</p>
-              <p>This is where security starts overlapping with machine learning research. You need to be comfortable with gradient descent concepts, understand what embeddings actually are, and have a grasp of why certain model architectures fail in predictable ways. It's a demanding level but the salary jump reflects that exactly.</p>
+              <p>At this level you are no longer just running clever prompts. You start looking at the actual mechanics of why models fail. Not just that they do, but the mathematical reason they do. That shift in perspective is what separates a Red Team Operator from a Security Researcher, and it is a significant step up.</p>
+              <p>One of the biggest attack surfaces here is RAG, which stands for Retrieval-Augmented Generation. Companies give their AI access to private internal documents so it can answer questions about their business. If you can get a poisoned document into that database, the AI will distribute your content with full corporate authority to every employee who asks it a question. No model weights touched. No traditional exploit. Just a carefully crafted document that the AI trusts completely.</p>
+              <p>This is the point where security genuinely overlaps with machine learning research. You need to understand what embeddings are, have a rough grasp of gradient descent, and know why certain model architectures fail in predictable ways. That's a real commitment. The salary jump to this level exists because it reflects that commitment accurately.</p>
             </div>
 
             <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] mb-6" style={{ color: "rgba(251,113,133,0.85)" }}>Certifications</p>
             <div className="space-y-5">
               <CertCard name="GIAC Offensive AI Analyst (GOAA)" provider="GIAC / SANS" href="https://www.giac.org/certifications/offensive-ai-analyst-goaa/" difficulty="Advanced" duration="4-6 months prep" cost="Enterprise" accentColor="#fb7185" isTop
-                what="The most academically rigorous offense-focused AI security certification available. Developed with SANS's deep research background, it covers adversarial machine learning, model extraction, training data poisoning, and the deep technical 'why' behind each vulnerability class."
-                why="SANS/GIAC is the gold standard in serious security research. It moves you from practitioner to researcher — from 'I can exploit this' to 'I understand why this class of model is vulnerable at a mathematical level.' Expensive, but it opens doors at the top-tier security research firms that nothing else does."
+                what="The most academically rigorous offensive AI security certification on the market. Developed with SANS research backing, it covers adversarial machine learning, model extraction, training data poisoning, and the deep technical reasoning behind each vulnerability class. Not a quick win."
+                why="SANS/GIAC is where the serious researchers go. This certification moves you from practitioner to researcher status. The shift is from 'I can exploit this model' to 'I understand why this entire class of architecture is vulnerable at a mathematical level.' It is expensive and it is earned. It opens doors at security research firms that genuinely do not care about most other certifications."
               />
               <CertCard name="OSCP+ / Pen-200" provider="OffSec" href="https://www.offsec.com/courses/pen-200/" difficulty="Advanced" duration="6 months prep" cost="Premium" accentColor="#fb7185"
-                what="OffSec's legendary practical penetration testing exam — 24 hours, real machines, no multiple choice. You must exploit a range of systems by chaining vulnerabilities together under actual time pressure."
-                why="AI doesn't exist in a vacuum. It runs on servers. OSCP+ ensures that if the AI model itself is too well-defended, you can still get to it via the underlying infrastructure. At L2 you need both attacks — against the model and against the machine it runs on."
+                what="OffSec's legendary 24-hour practical exam. Real machines, no multiple choice, no hints. You are given a network and an objective, and you have to work through it yourself. Passing this tells employers something very specific about what you can do."
+                why="AI systems do not float in the cloud. They run on real servers with real infrastructure. If the AI model itself is thoroughly locked down, the server it runs on might not be. OSCP+ makes sure you can approach an AI security engagement from both directions: against the model and against the machine underneath it."
               />
             </div>
 
             <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] mt-12 mb-6" style={{ color: "rgba(251,113,133,0.85)" }}>Skills & Labs</p>
             <div className="space-y-6">
               <SkillCard name="RAG Hijacking & Vector DB Poisoning" category="Advanced AI Exploitation" correlatedTools={["LangChain", "ChromaDB", "Faiss"]} accentColor="#fb7185"
-                what="Attacking Retrieval-Augmented Generation systems by injecting malicious documents into the vector database the AI uses as its private knowledge source, causing it to return poisoned information to all users."
-                why="Companies give their AI access to internal documentation — contracts, strategies, HR files. If you can sneak a malicious document into that database, you've planted a sleeper agent inside their brain. Every employee who asks the AI a question now gets your poisoned answer delivered with full corporate authority."
+                what="Injecting malicious documents into the vector database a RAG system uses as its private knowledge store, causing the AI to pull and recite your poisoned content as if it were legitimate company information."
+                why="Companies load their AI with internal documents: contracts, HR policies, strategic plans. If you can get a poisoned document into that database, you have effectively planted a sleeper agent inside the company's brain. From that point on, every employee who asks the AI a business question gets your crafted answer, delivered with full corporate authority. No model hacking required."
                 resources={{
                   free: [
                     { label: "OWASP LLM Top 10 — RAG Poisoning", url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/" },
@@ -522,8 +522,8 @@ export default function DetailedAiHackingClient() {
                 }}
               />
               <SkillCard name="Model Extraction" category="Adversarial ML" correlatedTools={["ART (IBM)", "Counterfit", "Python"]} accentColor="#fb7185"
-                what="Reconstructing a model's internal weights and decision logic by systematically querying it and analysing the outputs — without ever having access to the actual model files."
-                why="You're learning how to steal a secret recipe just by tasting the soup many times. This technique allows attackers to build a nearly identical copy of a proprietary model — stealing months of a company's R&D investment. Understanding it as an attacker is the first step to defending against it."
+                what="Reconstructing a model's internal decision logic by querying it thousands of times and analysing the outputs. You never see the actual model files. You build a functional copy by watching how it behaves."
+                why="Think of it as stealing a secret recipe by tasting the dish repeatedly until you can replicate it. This allows attackers to clone a proprietary model, effectively stealing months of costly R&D without a single breach of the company's infrastructure. Understanding the method is the first step to protecting against it."
                 resources={{
                   free: [
                     { label: "Adversarial Robustness Toolbox (ART) — IBM", url: "https://github.com/Trusted-AI/adversarial-robustness-toolbox" },
@@ -537,8 +537,8 @@ export default function DetailedAiHackingClient() {
                 }}
               />
               <SkillCard name="Training Data Poisoning" category="Long-Game Attacks" correlatedTools={["HiddenLayer Model Scanner", "ART", "Python"]} accentColor="#fb7185"
-                what="Influencing a model during its training phase by injecting carefully crafted malicious data into the training set, creating hidden backdoor triggers that can activate the model's malicious behaviour on demand."
-                why="This is the long game. You're not tricking a deployed model — you're corrupting it before it's even born. A backdoored model behaves perfectly normally right up until a specific trigger phrase activates a completely different behaviour. Detecting this kind of attack after deployment is extraordinarily difficult."
+                what="Corrupting a model during the training phase by injecting malicious examples into the training data. The result is a backdoored model that behaves perfectly normally under normal conditions but switches behaviour when a specific trigger is present."
+                why="This is the long game. You are not tricking a deployed model. You are corrupting it before it even exists. A well-crafted backdoor is virtually invisible to anyone who is not actively looking for it. The model passes all its safety evaluations, ships to production, and then sits dormant until someone types the trigger phrase. Detecting this after deployment is enormously difficult, which is exactly why understanding how it is built matters so much."
                 resources={{
                   free: [
                     { label: "AI Village (DEF CON) — Research Papers", url: "https://aivillage.org/" },
@@ -560,28 +560,28 @@ export default function DetailedAiHackingClient() {
           <section id="level-03" className="py-16 xl:py-20">
             <SectionHeader num="03" label="Principal AI Security Architect" color="#a78bfa" subtitle="Enterprise Defense, Governance & Leadership" time="7+ years" salary="£110K–£160K+" />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
-              <p>You've spent years breaking things. Now you're the person who has to build a fortress that can't be broken. As a Principal Architect you're the call the CEO makes when they're scared of the EU AI Act fine, a regulator investigation, or a major data leak making the front pages of every newspaper.</p>
-              <p>You aren't in the terminal every day anymore. You're designing Defence-in-Depth pipelines — multi-layered systems where if one guardrail fails, three more are waiting to catch the error. You're the bridge between the technical magic of AI and the cold hard reality of business risk, board expectations, and legal liability.</p>
-              <p>Equally as important as the technical architecture is communication. You have to explain to a Board of Directors — who might not even know what a token is — why they need to spend £2M on AI security infrastructure this quarter. You translate maths into money and fear into a budget line.</p>
+              <p>You have spent years breaking things. Now you are the person who builds the system that makes the next attacker's job genuinely miserable. At Principal Architect level, you are the phone call the CEO makes when a regulator is asking questions, when the EU AI Act compliance deadline is approaching, or when a major data leak is about to appear on the front page of every national newspaper.</p>
+              <p>Your day is not mostly spent in a terminal anymore. You are designing layered defence systems where if one guardrail fails, two more catch the attack before it causes damage. You are the bridge between the technical reality of AI systems and the business reality of risk, legal liability, and board expectations. Both sides need you to translate for them.</p>
+              <p>Communication is just as important as the architecture itself at this level. You have to explain to a Board of Directors, some of whom may not know what a token is, why they need to approve a seven-figure security infrastructure budget this quarter. The core skill is turning complex threat models into simple, honest conversations about money and risk. That is harder than it sounds, and it is worth every penny of the salary that comes with it.</p>
             </div>
 
             <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] mb-6" style={{ color: "rgba(167,139,250,0.85)" }}>Certifications</p>
             <div className="space-y-5">
               <CertCard name="CISSP" provider="ISC²" href="https://www.isc2.org/certifications/cissp" difficulty="Advanced" duration="3-6 months prep" cost="Premium" accentColor="#a78bfa" isTop
-                what="A broad management-focused exam covering eight domains of security — from risk architecture and asset security to operations management. It proves you understand the big picture of enterprise security at a strategic level."
-                why="The boardroom passport. It's less about how to use a tool and vastly more about how to manage enormous enterprise risk. This is the certification that reliably moves you into Director and VP titles and the executive salary that comes with them. Recruiters at this level look for it first."
+                what="A management-focused exam covering eight core security domains, from risk architecture and asset security to operations management. It is broad by design: the point is proving you understand enterprise security at a strategic level, not just a technical one."
+                why="This is the boardroom passport. Senior security leadership roles at serious organisations look for CISSP first. It is less about tools and much more about managing enormous enterprise risk at a programme level. It is the certification most reliably linked to Director and VP titles, and the salary that comes with those titles."
               />
               <CertCard name="CISM" provider="ISACA" href="https://www.isaca.org/credentialing/cism" difficulty="Advanced" duration="2-4 months prep" cost="Premium" accentColor="#a78bfa"
-                what="Focused specifically on security governance, large-scale program development, and incident management from a strategic leadership viewpoint rather than a technical implementation one."
-                why="This teaches you how to lead. How to manage a team of elite hackers, handle a budget that's larger than most small companies, and communicate risk clearly to executives without drowning them in technical jargon. It's the ultimate leadership track for a seasoned security professional."
+                what="Focused on security governance, large-scale programme development, and incident management from a strategic leadership perspective. It is not about technical implementation. It is about how you run the whole thing."
+                why="This one teaches you how to lead people and programmes, not just systems. How to manage a team of senior practitioners, handle a budget larger than most small companies, and communicate security risk to people who do not speak the language. Pair it with CISSP and you have a very clear signal to the market that you are operating at executive level."
               />
             </div>
 
             <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] mt-12 mb-6" style={{ color: "rgba(167,139,250,0.85)" }}>Skills & Labs</p>
             <div className="space-y-6">
               <SkillCard name="Defense-in-Depth Architecture" category="Enterprise AI Security" correlatedTools={["Lakera Guard", "Azure AI Content Safety", "AWS Bedrock Guardrails"]} accentColor="#a78bfa"
-                what="Designing multi-layered AI security pipelines where multiple independent controls operate in sequence, so that if any single guardrail is bypassed, subsequent layers still catch the attack."
-                why="You don't trust just one filter. You build five. A sophisticated attacker will eventually find a way past a single control — the architecture you design means that bypass still gets caught two layers later. This is the difference between security theatre and actual security."
+                what="Designing layered AI security pipelines where multiple independent controls operate in sequence. If any single guardrail is bypassed, the next layer catches the attack before it causes damage. No single point of failure."
+                why="You do not trust one filter. You build five. Any determined attacker will eventually find a gap in a single control. The architecture you design means that gap is not the end of the story. It gets caught two layers later by something entirely different. That is the gap between security that looks good in a demo and security that actually works in production."
                 resources={{
                   free: [
                     { label: "MITRE ATLAS — AI Threats Framework", url: "https://atlas.mitre.org/" },
@@ -595,8 +595,8 @@ export default function DetailedAiHackingClient() {
                 }}
               />
               <SkillCard name="AI Governance & Compliance (EU AI Act)" category="Regulatory & Legal" correlatedTools={["EU AI Act Toolkit", "NIST AI RMF", "ISO 42001"]} accentColor="#a78bfa"
-                what="Understanding and implementing the legal frameworks governing AI deployment — from the EU AI Act's risk classifications and obligations to NIST's AI Risk Management Framework for US-focused organisations."
-                why="In 2026 the law is as important as the code. A high-risk AI system deployed without proper compliance documentation can cost a company hundreds of millions in EU fines. You need to know how to keep the company's AI legal before regulators come knocking — not after."
+                what="Understanding and implementing the legal frameworks that govern AI deployment. The EU AI Act, NIST's AI Risk Management Framework, and ISO 42001 all have real obligations attached to them. This is about making sure the company's AI is actually compliant, not just approximately compliant."
+                why="In 2026, the law is just as important as the code. A high-risk AI system deployed without proper compliance documentation can attract fines that run into the hundreds of millions. You need to know what the regulations actually require and how to build systems that satisfy them before the regulator arrives, not scramble to figure it out afterwards."
                 resources={{
                   free: [
                     { label: "EU AI Act Official Text", url: "https://artificialintelligenceact.eu/" },
@@ -610,8 +610,8 @@ export default function DetailedAiHackingClient() {
                 }}
               />
               <SkillCard name="Executive Risk Communication" category="Leadership & Strategy" correlatedTools={["PowerBI", "Tableau", "ServiceNow"]} accentColor="#a78bfa"
-                what="Translating highly technical AI security findings into business risk language that non-technical executives and board members can immediately understand and act on."
-                why="Security teams don't make money — they save it. Your job is to clearly prove the enormous value of the security investment directly to the people who control the budget. You turn complex threat models into a simple number: here's how much we saved the company this quarter. That is how you keep your budget."
+                what="Translating technical AI security findings into business risk language that non-technical executives can understand and act on immediately. Dashboards, risk ratings, financial impact estimates. The goal is a decision, not a technical briefing."
+                why="Security teams do not generate revenue. They prevent losses. Your job is to make that value visible to the people who control the budget, in a language they actually speak. You turn complex threat models into honest, simple numbers: here is what this risk costs us if it materialises, and here is what we are spending to prevent it. That is how you protect your budget every year."
                 resources={{
                   free: [
                     { label: "FAIR Institute — Risk Quantification", url: "https://www.fairinstitute.org/" },
