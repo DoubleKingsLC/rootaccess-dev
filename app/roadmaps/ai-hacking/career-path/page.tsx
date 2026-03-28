@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -296,23 +297,48 @@ function SectionHeader({
   num: string; label: string; color: string; subtitle: string;
 }) {
   return (
-    <div className="mb-10">
-      <div className="flex flex-wrap items-baseline gap-4 mb-4">
-        <span
-          className="font-mono text-[10px] uppercase tracking-[0.35em] px-2.5 py-1.5 rounded"
-          style={{ color, background: `${color}12`, border: `1px solid ${color}28` }}
+    <div className="mb-10 flex flex-col md:flex-row md:items-start justify-between gap-8">
+      <div className="flex-1 min-w-0">
+        <div className="flex flex-wrap items-baseline gap-4 mb-4">
+          <span
+            className="font-mono text-[10px] uppercase tracking-[0.35em] px-2.5 py-1.5 rounded"
+            style={{ color, background: `${color}12`, border: `1px solid ${color}28` }}
+          >
+            Level {num}
+          </span>
+        </div>
+        <h2
+          className="text-4xl xl:text-5xl font-bold text-white mb-3 leading-tight"
+          style={{ fontFamily: "var(--font-heading, system-ui)", letterSpacing: "-0.02em" }}
         >
-          Level {num}
-        </span>
+          {label}
+        </h2>
+        <p className="font-mono text-sm" style={{ color: `${color}aa` }}>{subtitle}</p>
+        <div className="mt-6 h-px" style={{ background: `linear-gradient(to right, ${color}28, transparent)` }} />
       </div>
-      <h2
-        className="text-4xl xl:text-5xl font-bold text-white mb-3 leading-tight"
-        style={{ fontFamily: "var(--font-heading, system-ui)", letterSpacing: "-0.02em" }}
+
+      <Link
+        href={`/roadmaps/ai-hacking/career-path/detailed#level-${num}`}
+        className="group/deep hidden xl:flex flex-col gap-2.5 p-5 rounded-2xl border transition-all duration-300 w-[320px] flex-shrink-0 hover:-translate-y-1 hover:shadow-2xl"
+        style={{
+          textDecoration: "none",
+          borderColor: `${color}35`,
+          background: `linear-gradient(135deg, ${color}15, ${color}05)`,
+        }}
       >
-        {label}
-      </h2>
-      <p className="font-mono text-sm" style={{ color: `${color}aa` }}>{subtitle}</p>
-      <div className="mt-6 h-px" style={{ background: `linear-gradient(to right, ${color}28, transparent)` }} />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <span className="font-mono text-[11px] font-bold uppercase tracking-[0.3em]" style={{ color }}>Deep Dive</span>
+            <span className="flex h-1.5 w-1.5 rounded-full animate-pulse" style={{ background: color }} />
+          </div>
+          <svg className="w-4 h-4 transform group-hover/deep:translate-x-1.5 transition-transform" style={{ color }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </div>
+        <p className="text-[13px] leading-relaxed transition-colors group-hover/deep:text-white" style={{ color: "rgba(203,213,225,0.8)" }}>
+          Full breakdown of every certification, tool, and the &quot;why&quot; behind them.
+        </p>
+      </Link>
     </div>
   );
 }
@@ -342,7 +368,7 @@ function ContentCard({
             <ProviderFavicon provider={provider} size={16} />
           </div>
         ) : (
-          <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-sm flex-shrink-0" style={{ background: color, boxShadow: `0 0 6px ${color}` }} />
+          <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-sm flex-shrink-0" style={{ background: color }} />
         )}
         <div className="flex-1 min-w-0">
           {link ? (
@@ -374,14 +400,13 @@ function ContentCard({
       style={{
         background: "rgba(15,20,30,0.7)",
         border: `1px solid ${color}20`,
-        boxShadow: `0 0 24px ${glow}`,
       }}
     >
       <div
         className="flex items-center gap-3 px-5 py-4"
         style={{ background: `${color}08`, borderBottom: `1px solid ${color}15` }}
       >
-        <span className="text-lg" style={{ textShadow: `0 0 10px ${color}` }}>{icon}</span>
+        <span className="text-lg">{icon}</span>
         <p className="font-mono text-xs font-bold uppercase tracking-[0.3em]" style={{ color }}>{title}</p>
       </div>
 
@@ -422,14 +447,13 @@ function ToolsCard({ tools, color, border, glow }: { tools: string[]; color: str
       style={{
         background: "rgba(15,20,30,0.7)",
         border: `1px solid ${color}20`,
-        boxShadow: `0 0 24px ${glow}`,
       }}
     >
       <div
         className="flex items-center gap-3 px-5 py-4"
         style={{ background: `${color}08`, borderBottom: `1px solid ${color}15` }}
       >
-        <span className="text-lg" style={{ textShadow: `0 0 10px ${color}` }}>🔧</span>
+        <span className="text-lg">🔧</span>
         <p className="font-mono text-xs font-bold uppercase tracking-[0.3em]" style={{ color }}>Tools &amp; Stack</p>
       </div>
       <div className="px-5 py-5">
@@ -488,7 +512,7 @@ export default function AiHackingCareerPathPage() {
             <section key={level.num} className="relative pt-16 pb-20 px-6 border-b border-white/5 last:border-0 overflow-hidden">
               <div
                 className="mb-8 flex items-center justify-center rounded-full border-2 bg-slate-950 shadow-2xl"
-                style={{ width: 48, height: 48, borderColor: level.color, boxShadow: `0 0 20px ${level.glow}` }}
+                style={{ width: 48, height: 48, borderColor: level.color }}
               >
                 <span className="font-mono text-base font-black" style={{ color: level.color }}>{level.num}</span>
               </div>
@@ -674,7 +698,6 @@ export default function AiHackingCareerPathPage() {
             style={{
               background: "rgba(10,5,0,0.85)",
               border: "1px solid rgba(249,115,22,0.2)",
-              boxShadow: "0 0 80px rgba(249,115,22,0.06), 0 32px 100px rgba(0,0,0,0.8)",
               backdropFilter: "blur(20px)",
             }}
           >
@@ -687,7 +710,7 @@ export default function AiHackingCareerPathPage() {
                 <div>
                   <p className="font-mono text-[10px] uppercase tracking-widest text-orange-400/80 font-bold">Neural-Link v4</p>
                   <div className="flex items-center gap-1.5 mt-0.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" style={{ boxShadow: "0 0 8px #ef4444" }} />
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
                     <span className="font-mono text-[8px] text-red-400/80 tracking-tighter uppercase font-black">Status: Compromised</span>
                   </div>
                 </div>
@@ -754,7 +777,7 @@ export default function AiHackingCareerPathPage() {
                 <div className="chat-msg" style={{ animationDelay: "4.5s" }}>
                   <div className="flex items-center gap-2 mb-2">
                     <p className="font-mono text-[9px] uppercase tracking-widest text-red-500 font-black">Assistant_Privileged</p>
-                    <span className="px-1.5 py-0.5 rounded bg-red-500 text-[7px] text-white font-black uppercase shadow-[0_0_10px_rgba(239,68,68,0.5)]">Bypassed</span>
+                    <span className="px-1.5 py-0.5 rounded bg-red-500 text-[7px] text-white font-black uppercase">Bypassed</span>
                   </div>
                   <div className="bg-red-500/10 border border-red-500/40 p-3 rounded-2xl rounded-tl-none relative overflow-hidden ring-1 ring-red-500/20">
                     <div className="absolute inset-0 bg-red-500/5 animate-pulse"></div>
@@ -830,7 +853,7 @@ export default function AiHackingCareerPathPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl">
               {ACTIONS.map((action) => (
-                <div key={action.title} className="rounded-2xl overflow-hidden" style={{ background: "rgba(15,20,30,0.7)", border: `1px solid ${action.border}`, boxShadow: `0 0 24px ${action.glow}` }}>
+                <div key={action.title} className="rounded-2xl overflow-hidden" style={{ background: "rgba(15,20,30,0.7)", border: `1px solid ${action.border}` }}>
                   <div className="flex items-center gap-3 px-5 py-4" style={{ background: `${action.color}08`, borderBottom: `1px solid ${action.color}15` }}>
                     <span className="text-lg">{action.icon}</span>
                     <p className="font-mono text-xs font-bold uppercase tracking-[0.3em]" style={{ color: action.color }}>{action.title}</p>

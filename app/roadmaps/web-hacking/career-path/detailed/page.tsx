@@ -39,7 +39,7 @@ function Sidebar() {
           key={l.num}
           href={`#level-${l.num}`}
           className="group flex items-start gap-3 rounded-lg px-3 py-3 transition-all duration-150"
-          style={{ textDecoration: "none" }}
+          style={{ textDecoration: "underline" }}
         >
           <span
             className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-mono text-[11px] font-bold border mt-0.5 transition-all duration-200 group-hover:scale-110"
@@ -65,7 +65,7 @@ function Sidebar() {
         <Link
           href="/roadmaps/web-hacking/career-path"
           className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest transition-colors duration-150"
-          style={{ color: "rgba(244,63,94,0.45)", textDecoration: "none" }}
+          style={{ color: "rgba(244,63,94,0.45)", textDecoration: "underline" }}
         >
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
             <path d="M7 1L3 5L7 9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
@@ -99,7 +99,6 @@ function CertCard({ name, provider, href, difficulty, duration, cost, accentColo
       style={{
         background: "rgba(15,20,30,0.7)",
         border: `1px solid ${accentColor}25`,
-        boxShadow: isTop ? `0 0 32px ${accentColor}0e` : "none",
       }}
     >
       {/* Header */}
@@ -169,7 +168,7 @@ function CertCard({ name, provider, href, difficulty, duration, cost, accentColo
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest transition-colors duration-150"
-          style={{ color: `${accentColor}99`, textDecoration: "none" }}
+          style={{ color: `${accentColor}99`, textDecoration: "underline" }}
         >
           Official page
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
@@ -230,7 +229,7 @@ export default function WebHackingDetailedPage() {
         <Link
           href="/roadmaps/web-hacking/career-path"
           className="font-mono text-[10px] uppercase tracking-widest flex items-center gap-1.5 transition-colors duration-150"
-          style={{ color: "rgba(148,163,184,0.4)", textDecoration: "none" }}
+          style={{ color: "rgba(148,163,184,0.4)", textDecoration: "underline" }}
         >
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
             <path d="M7 1L3 5L7 9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
@@ -281,12 +280,12 @@ export default function WebHackingDetailedPage() {
               key={l.num}
               href={`#level-${l.num}`}
               className="flex items-center gap-2 px-4 py-2 rounded-full font-mono text-[11px] uppercase tracking-widest transition-all duration-200 hover:scale-105"
-              style={{
-                background: `${l.color}0f`,
-                border: `1px solid ${l.color}25`,
-                color: `${l.color}cc`,
-                textDecoration: "none",
-              }}
+                style={{
+                  background: `${l.color}0f`,
+                  border: `1px solid ${l.color}25`,
+                  color: `${l.color}cc`,
+                  textDecoration: "underline",
+                }}
             >
               <span style={{ opacity: 0.6 }}>{l.num}</span>
               <span>{l.label}</span>
@@ -553,7 +552,7 @@ export default function WebHackingDetailedPage() {
               <Link
                 href="/roadmaps/web-hacking/career-path"
                 className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest transition-colors duration-150"
-                style={{ color: "rgba(244,63,94,0.55)", textDecoration: "none" }}
+                style={{ color: "rgba(244,63,94,0.55)", textDecoration: "underline" }}
               >
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                   <path d="M8 2L4 6L8 10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
@@ -564,7 +563,7 @@ export default function WebHackingDetailedPage() {
                 {LEVELS.map((l) => (
                   <a key={l.num} href={`#level-${l.num}`}
                     className="font-mono text-[9px] uppercase tracking-widest"
-                    style={{ color: `${l.color}44`, textDecoration: "none" }}
+                    style={{ color: `${l.color}44`, textDecoration: "underline" }}
                   >
                     {l.num} {l.label}
                   </a>

@@ -39,7 +39,6 @@ export function MobileWebHackingCareerPath({ showScrollTop }: MobileWebHackingCa
                 width: 48,
                 height: 48,
                 borderColor: level.color,
-                boxShadow: `0 0 20px ${level.glow}`,
               }}
             >
               <span className="font-mono text-base font-black" style={{ color: level.color }}>
@@ -71,7 +70,7 @@ export function MobileWebHackingCareerPath({ showScrollTop }: MobileWebHackingCa
               ].map((cat: { title: string; items: unknown[]; icon: string }) => (
                 <div
                   key={cat.title}
-                  className="rounded-2xl border border-white/5 bg-slate-900/30 p-5 backdrop-blur-sm relative overflow-hidden group shadow-lg"
+                  className="rounded-2xl border border-white/5 bg-slate-900/30 p-5 backdrop-blur-sm relative overflow-hidden group"
                 >
                   <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none text-2xl">
                     {cat.icon}

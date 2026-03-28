@@ -33,7 +33,7 @@ function Sidebar() {
           style={{ textDecoration: "none" }}
         >
           <span
-            className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-mono text-[12px] font-bold border mt-0.5 transition-all duration-300 group-hover:scale-110 shadow-lg"
+            className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-mono text-[12px] font-bold border mt-0.5 transition-all duration-300 group-hover:scale-110"
             style={{ borderColor: `${l.color}88`, color: l.color, background: `${l.color}1a` }}
           >
             {l.num}
@@ -56,7 +56,7 @@ function Sidebar() {
         <Link
           href="/roadmaps/soc/career-path"
           className="flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-widest transition-colors duration-150 hover:text-white"
-          style={{ color: "rgba(59,130,246,0.85)", textDecoration: "none" }}
+          style={{ color: "rgba(59,130,246,0.85)", textDecoration: "underline" }}
         >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
             <path d="M8 2L4 6L8 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -97,7 +97,6 @@ function CertCard({ name, provider, href, difficulty, duration, cost, accentColo
       style={{
         background: "rgba(15,20,30,0.7)",
         border: `1px solid ${accentColor}35`,
-        boxShadow: isTop ? `0 0 40px ${accentColor}14` : "none",
       }}
     >
       <div
@@ -164,7 +163,7 @@ function CertCard({ name, provider, href, difficulty, duration, cost, accentColo
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-widest transition-colors duration-150 hover:opacity-100"
-          style={{ color: `${accentColor}cc`, textDecoration: "none" }}
+          style={{ color: `${accentColor}cc`, textDecoration: "underline" }}
         >
           Official page
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
@@ -270,7 +269,7 @@ function SkillCard({ name, category, correlatedTools, accentColor, what, why, re
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group flex items-center gap-2 text-[12px] hover:text-white transition-colors py-1"
-                    style={{ color: "rgba(203,213,225,0.8)" }}
+                    style={{ color: "rgba(203,213,225,0.8)", textDecoration: "underline" }}
                   >
                     <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 group-hover:bg-blue-400" style={{ background: "rgba(96,165,250,0.6)" }} />
                     {res.label}
@@ -288,7 +287,7 @@ function SkillCard({ name, category, correlatedTools, accentColor, what, why, re
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group flex items-center gap-2 text-[12px] hover:text-white transition-colors py-1"
-                    style={{ color: "rgba(203,213,225,0.8)" }}
+                    style={{ color: "rgba(203,213,225,0.8)", textDecoration: "underline" }}
                   >
                     <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 group-hover:bg-amber-400" style={{ background: "rgba(251,191,36,0.6)" }} />
                     {res.label}
@@ -348,7 +347,7 @@ function RootAccessAnimation() {
   }, []);
 
   return (
-    <div className="relative w-full max-w-[500px] h-[320px] rounded-2xl overflow-hidden bg-black/60 border border-white/5 font-mono text-[11px] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+    <div className="relative w-full max-w-[500px] h-[320px] rounded-2xl overflow-hidden bg-black/60 border border-white/5 font-mono text-[11px] p-8">
       {/* Background Matrix-like glow */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent pointer-events-none" />
       
@@ -378,7 +377,7 @@ function RootAccessAnimation() {
           <motion.div
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="mt-10 p-6 border border-green-500/30 bg-green-500/5 text-green-400 text-center rounded-xl shadow-[0_0_30px_rgba(34,197,94,0.1)]"
+            className="mt-10 p-6 border border-green-500/30 bg-green-500/5 text-green-400 text-center rounded-xl"
           >
             <div className="text-[10px] uppercase tracking-[0.5em] mb-2 opacity-50">System Compromised</div>
             <div className="text-lg font-bold tracking-[0.2em]">ROOT_ACCESS_LEVEL_0</div>
@@ -414,7 +413,7 @@ export default function DetailedSOCPageClient() {
         <Link
           href="/roadmaps/soc/career-path"
           className="font-mono text-[11px] uppercase tracking-widest flex items-center gap-1.5 transition-colors duration-150 hover:text-white"
-          style={{ color: "rgba(148,163,184,0.75)", textDecoration: "none" }}
+          style={{ color: "rgba(148,163,184,0.75)", textDecoration: "underline" }}
         >
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
             <path d="M7 1L3 5L7 9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
@@ -870,7 +869,7 @@ export default function DetailedSOCPageClient() {
               <Link
                 href="/roadmaps/soc/career-path"
                 className="flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-widest transition-colors duration-150 hover:text-white"
-                style={{ color: "rgba(59,130,246,0.85)", textDecoration: "none" }}
+                style={{ color: "rgba(59,130,246,0.85)", textDecoration: "underline" }}
               >
                 <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
                   <path d="M8 2L4 6L8 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -881,7 +880,7 @@ export default function DetailedSOCPageClient() {
                 {LEVELS.map((l) => (
                   <a key={l.num} href={`#level-${l.num}`}
                     className="font-mono text-[9px] uppercase tracking-widest"
-                    style={{ color: `${l.color}44`, textDecoration: "none" }}
+                    style={{ color: `${l.color}44`, textDecoration: "underline" }}
                   >
                     {l.num} {l.label}
                   </a>

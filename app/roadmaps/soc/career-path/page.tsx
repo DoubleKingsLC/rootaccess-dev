@@ -325,18 +325,17 @@ function SectionHeader({
 
       <Link
         href={`/roadmaps/soc/career-path/detailed#level-${num}`}
-        className="group/deep hidden xl:flex flex-col gap-2.5 p-5 rounded-2xl border transition-all duration-300 w-[320px] flex-shrink-0 hover:-translate-y-1 hover:shadow-2xl"
+        className="group/deep hidden xl:flex flex-col gap-2.5 p-5 rounded-2xl border transition-all duration-300 w-[320px] flex-shrink-0 hover:-translate-y-1"
         style={{
           textDecoration: "none",
           borderColor: `${color}35`,
           background: `linear-gradient(135deg, ${color}15, ${color}05)`,
-          boxShadow: `0 4px 20px ${color}0a`,
         }}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <span className="font-mono text-[11px] font-bold uppercase tracking-[0.3em]" style={{ color }}>Deep Dive</span>
-            <span className="flex h-1.5 w-1.5 rounded-full animate-pulse" style={{ background: color, boxShadow: `0 0 8px ${color}aa` }} />
+            <span className="flex h-1.5 w-1.5 rounded-full animate-pulse" style={{ background: color }} />
           </div>
           <svg className="w-4 h-4 transform group-hover/deep:translate-x-1.5 transition-transform" style={{ color }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M5 12h14M12 5l7 7-7 7" />
@@ -375,7 +374,7 @@ function ContentCard({
             <ProviderFavicon provider={provider} size={16} />
           </div>
         ) : (
-          <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-sm flex-shrink-0" style={{ background: color, boxShadow: `0 0 6px ${color}` }} />
+          <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-sm flex-shrink-0" style={{ background: color }} />
         )}
         <div className="flex-1 min-w-0">
           {link ? (
@@ -414,7 +413,7 @@ function ContentCard({
         className="flex items-center gap-3 px-5 py-4"
         style={{ background: `${color}08`, borderBottom: `1px solid ${color}15` }}
       >
-        <span className="text-lg" style={{ textShadow: `0 0 10px ${color}` }}>{icon}</span>
+        <span className="text-lg">{icon}</span>
         <p className="font-mono text-xs font-bold uppercase tracking-[0.3em]" style={{ color }}>{title}</p>
       </div>
 
@@ -455,14 +454,13 @@ function ToolsCard({ tools, color, border, glow }: { tools: string[]; color: str
       style={{
         background: "rgba(15,20,30,0.7)",
         border: `1px solid ${color}20`,
-        boxShadow: `0 0 24px ${glow}`,
       }}
     >
       <div
         className="flex items-center gap-3 px-5 py-4"
         style={{ background: `${color}08`, borderBottom: `1px solid ${color}15` }}
       >
-        <span className="text-lg" style={{ textShadow: `0 0 10px ${color}` }}>🔧</span>
+        <span className="text-lg">🔧</span>
         <p className="font-mono text-xs font-bold uppercase tracking-[0.3em]" style={{ color }}>Tools &amp; Stack</p>
       </div>
       <div className="px-5 py-5">
@@ -521,7 +519,7 @@ export default function SocCareerPathPage() {
             <section key={level.num} className="relative pt-16 pb-20 px-6 border-b border-white/5 last:border-0 overflow-hidden">
               <div
                 className="mb-8 flex items-center justify-center rounded-full border-2 bg-slate-950 shadow-2xl"
-                style={{ width: 48, height: 48, borderColor: level.color, boxShadow: `0 0 20px ${level.glow}` }}
+                style={{ width: 48, height: 48, borderColor: level.color }}
               >
                 <span className="font-mono text-base font-black" style={{ color: level.color }}>{level.num}</span>
               </div>
@@ -674,7 +672,6 @@ export default function SocCareerPathPage() {
             className="font-mono font-black text-cyan-400 mb-7 leading-[1.05] tracking-tight"
             style={{
               fontSize: "clamp(42px, 5.5vw, 72px)",
-              textShadow: "0 0 80px rgba(34,211,238,0.5), 0 0 160px rgba(34,211,238,0.2)",
             }}
           >
             Protect.<br />Detect.<br />Respond.
@@ -707,7 +704,6 @@ export default function SocCareerPathPage() {
             style={{
               background: "rgba(6,14,22,0.85)",
               border: "1px solid rgba(34,211,238,0.18)",
-              boxShadow: "0 0 60px rgba(34,211,238,0.08), 0 24px 80px rgba(0,0,0,0.6)",
             }}
           >
             {/* Terminal title bar */}
@@ -720,7 +716,7 @@ export default function SocCareerPathPage() {
               <span className="font-mono text-[10px] ml-2" style={{ color: "rgba(34,211,238,0.5)" }}>SIEM · Live Alerts</span>
               <div className="flex-1" />
               <div className="flex items-center gap-1.5">
-                <span className="inline-block w-1.5 h-1.5 rounded-full" style={{ background: "#22d3ee", boxShadow: "0 0 6px #22d3ee", animation: "soc-pulse 1.2s infinite" }} />
+                <span className="inline-block w-1.5 h-1.5 rounded-full" style={{ background: "#22d3ee", animation: "soc-pulse 1.2s infinite" }} />
                 <span className="font-mono text-[9px]" style={{ color: "rgba(34,211,238,0.55)" }}>LIVE</span>
               </div>
             </div>
@@ -825,7 +821,7 @@ export default function SocCareerPathPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl">
               {ACTIONS.map((action) => (
-                <div key={action.title} className="rounded-2xl overflow-hidden" style={{ background: "rgba(15,20,30,0.7)", border: `1px solid ${action.border}`, boxShadow: `0 0 24px ${action.glow}` }}>
+                <div key={action.title} className="rounded-2xl overflow-hidden" style={{ background: "rgba(15,20,30,0.7)", border: `1px solid ${action.border}` }}>
                   <div className="flex items-center gap-3 px-5 py-4" style={{ background: `${action.color}08`, borderBottom: `1px solid ${action.color}15` }}>
                     <span className="text-lg">{action.icon}</span>
                     <p className="font-mono text-xs font-bold uppercase tracking-[0.3em]" style={{ color: action.color }}>{action.title}</p>
