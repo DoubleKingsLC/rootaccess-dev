@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
@@ -302,23 +303,49 @@ function SectionHeader({
   num: string; label: string; color: string; subtitle: string;
 }) {
   return (
-    <div className="mb-10">
-      <div className="flex flex-wrap items-baseline gap-4 mb-4">
-        <span
-          className="font-mono text-[10px] uppercase tracking-[0.35em] px-2.5 py-1.5 rounded"
-          style={{ color, background: `${color}12`, border: `1px solid ${color}28` }}
+    <div className="mb-10 flex flex-col md:flex-row md:items-start justify-between gap-8 group/header transition-all duration-300">
+      <div className="flex-1 min-w-0">
+        <div className="flex flex-wrap items-baseline gap-4 mb-4">
+          <span
+            className="font-mono text-[10px] uppercase tracking-[0.35em] px-2.5 py-1.5 rounded"
+            style={{ color, background: `${color}12`, border: `1px solid ${color}28` }}
+          >
+            Level {num}
+          </span>
+        </div>
+        <h2
+          className="text-4xl xl:text-5xl font-bold text-white mb-3 leading-tight"
+          style={{ fontFamily: "var(--font-heading, system-ui)", letterSpacing: "-0.02em" }}
         >
-          Level {num}
-        </span>
+          {label}
+        </h2>
+        <p className="font-mono text-sm" style={{ color: `${color}aa` }}>{subtitle}</p>
+        <div className="mt-6 h-px" style={{ background: `linear-gradient(to right, ${color}28, transparent)` }} />
       </div>
-      <h2
-        className="text-4xl xl:text-5xl font-bold text-white mb-3 leading-tight"
-        style={{ fontFamily: "var(--font-heading, system-ui)", letterSpacing: "-0.02em" }}
+
+      <Link
+        href={`/roadmaps/soc/career-path/detailed#level-${num}`}
+        className="group/deep hidden xl:flex flex-col gap-2.5 p-5 rounded-2xl border transition-all duration-300 w-[320px] flex-shrink-0 hover:-translate-y-1 hover:shadow-2xl"
+        style={{
+          textDecoration: "none",
+          borderColor: `${color}35`,
+          background: `linear-gradient(135deg, ${color}15, ${color}05)`,
+          boxShadow: `0 4px 20px ${color}0a`,
+        }}
       >
-        {label}
-      </h2>
-      <p className="font-mono text-sm" style={{ color: `${color}aa` }}>{subtitle}</p>
-      <div className="mt-6 h-px" style={{ background: `linear-gradient(to right, ${color}28, transparent)` }} />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <span className="font-mono text-[11px] font-bold uppercase tracking-[0.3em]" style={{ color }}>Deep Dive</span>
+            <span className="flex h-1.5 w-1.5 rounded-full animate-pulse" style={{ background: color, boxShadow: `0 0 8px ${color}aa` }} />
+          </div>
+          <svg className="w-4 h-4 transform group-hover/deep:translate-x-1.5 transition-transform" style={{ color }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </div>
+        <p className="text-[13px] leading-relaxed transition-colors group-hover/deep:text-white" style={{ color: "rgba(203,213,225,0.8)" }}>
+          Full breakdown of every certification, tool, and the "why" behind them.
+        </p>
+      </Link>
     </div>
   );
 }
