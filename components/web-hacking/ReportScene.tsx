@@ -297,71 +297,66 @@ export const ReportScene: React.FC<ReportSceneProps> = ({ progress }) => {
 
       {/* ── Career path card (95–100%) ───────────────────────────────────────── */}
       <div
-        className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center px-6"
-        style={{ opacity: careerOp }}
+        className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center px-6 transition-all duration-700"
+        style={{ 
+          opacity: careerOp, 
+          transform: `scale(${0.9 + careerOp * 0.1}) translateY(${20 - careerOp * 20}px)`,
+          filter: `blur(${(1 - careerOp) * 20}px)`
+        }}
       >
         <div
-          className={`w-[min(560px,92vw)] rounded-2xl px-7 py-6 backdrop-blur-2xl ${
+          className={`w-[min(580px,94vw)] rounded-3xl border border-rose-500/30 bg-black/80 px-6 py-8 md:px-10 md:py-12 backdrop-blur-3xl shadow-[0_0_80px_rgba(244,63,94,0.15)] text-center relative overflow-hidden transition-all duration-300 ${
             careerOp > 0.1 ? "pointer-events-auto" : "pointer-events-none"
           }`}
-          style={{
-            border: "1px solid rgba(244,63,94,0.45)",
-            background: "rgba(6,2,4,0.88)",
-            boxShadow: "0 0 60px rgba(244,63,94,0.18), 0 0 120px rgba(244,63,94,0.07)",
-          }}
+          role="banner"
         >
-          {/* Header */}
-          <div className="mb-4 flex items-center gap-3">
-            <div
-              className="h-2.5 w-2.5 rounded-full"
-              style={{ background: ROSE, boxShadow: `0 0 10px rgba(244,63,94,0.9)`, animation: "pulse 1s infinite" }}
-            />
-            <p className="font-mono text-[10px] uppercase tracking-[0.4em]" style={{ color: ROSE }}>
-              Report Delivered · What&apos;s Next?
-            </p>
+          {/* Subtle rose holographic scanline */}
+          <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(244,63,94,0.05)_1px,transparent_1px)] bg-[size:100%_4px] opacity-30" />
+          
+          {/* Core Glow Background */}
+          <div className="absolute -inset-24 bg-rose-500/5 blur-[120px] rounded-full pointer-events-none" />
+
+          {/* Breach Status Badge */}
+          <div className="mb-6 md:mb-10 flex justify-center">
+            <div className="inline-flex items-center gap-2.5 rounded-full border border-rose-400/40 bg-rose-950/60 px-4 py-1.5 shadow-[0_0_20px_rgba(244,63,94,0.4)]">
+              <span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse shadow-[0_0_8px_rgba(244,63,94,1)]" />
+              <span className="font-mono text-[11px] font-black uppercase tracking-[0.25em] text-rose-100">
+                BREACH STATUS: 100% EXFILTRATED
+              </span>
+            </div>
           </div>
 
-          {/* Stat */}
-          <div className="mb-4 flex items-baseline gap-3">
-            <p
-              className="font-mono text-5xl font-black"
-              style={{ color: ROSE, textShadow: "0 0 30px rgba(244,63,94,0.5)" }}
-            >
-              4 vulns
-            </p>
-            <p className="font-mono text-xs uppercase tracking-widest" style={{ color: "rgba(244,63,94,0.5)" }}>
-              recon → 14.2M records
-            </p>
+          <h2 className="mb-5 font-sans text-3xl md:text-5xl font-black tracking-tight text-white uppercase leading-none"
+              style={{ textShadow: "0 0 40px rgba(255,255,255,0.2)" }}>
+            MISSION <span className="text-rose-500">ACCOMPLISHED</span>
+          </h2>
+
+          <p className="mb-8 text-sm md:text-base lg:text-lg leading-relaxed text-slate-300 font-medium px-2 md:px-6">
+            Behind every line of code is a vulnerability. 
+            You&apos;ve seen the exploit — now master the defense. 
+            Explore the professional path from Researcher to Lead security Architect.
+          </p>
+
+          <div className="flex flex-col items-center gap-6">
+              <button
+                type="button"
+                onClick={() => router.push("/roadmaps/web-hacking/career-path")}
+                className="group relative w-full max-w-sm overflow-hidden rounded-2xl border border-rose-500/50 bg-rose-500/10 px-8 py-5 font-mono text-sm font-black uppercase tracking-[0.3em] text-rose-400 transition-all hover:border-rose-400 hover:bg-rose-500/20 hover:text-white hover:shadow-[0_0_40px_rgba(244,63,94,0.3)]"
+              >
+                <div className="relative z-10 flex items-center justify-center gap-3">
+                  GO THROUGH THE ROADMAP
+                  <svg className="transition-transform group-hover:translate-x-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </div>
+                <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-rose-500 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+              </button>
+              
+              <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-rose-900/60 font-bold">
+                [ SECURE CONNECTION ESTABLISHED ]
+              </p>
           </div>
-
-          {/* Body */}
-          <p className="mb-2 font-sans text-base leading-relaxed text-slate-100">
-            Every finding in this engagement was preventable. Behind every successful pentest are
-            professionals who know exactly where to look — and how to fix what they find.
-          </p>
-          <p className="mb-6 font-sans text-sm leading-relaxed text-slate-400">
-            Explore the web hacking career path — the roles, the tools, and the certifications
-            that take you from recon to red team lead.
-          </p>
-
-          {/* CTA */}
-          <button
-            type="button"
-            onClick={() => router.push("/roadmaps/web-hacking/career-path")}
-            className="inline-flex items-center gap-3 rounded-xl px-5 py-3 font-mono text-xs uppercase tracking-widest transition-all"
-            style={{
-              border: "1px solid rgba(244,63,94,0.45)",
-              background: "rgba(244,63,94,0.08)",
-              color: ROSE,
-            }}
-            onMouseEnter={e => (e.currentTarget.style.background = "rgba(244,63,94,0.18)")}
-            onMouseLeave={e => (e.currentTarget.style.background = "rgba(244,63,94,0.08)")}
-          >
-            Explore the Web Hacking Career Path
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M3 6h6M6 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
         </div>
       </div>
 
