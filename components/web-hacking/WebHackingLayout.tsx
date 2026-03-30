@@ -110,7 +110,14 @@ export const WebHackingLayout: React.FC = () => {
         return;
       }
       
-      currentVirtualScroll += (0.6 * scrollSpeedRef.current);
+      // Accelerate through the intro "deadzone" (between 0.01 and 0.045)
+      let speedMult = 1;
+      const progress = window.scrollY / document.documentElement.scrollHeight;
+      if (progress >= 0.01 && progress < 0.045) {
+        speedMult = 4.0;
+      }
+      
+      currentVirtualScroll += (0.6 * scrollSpeedRef.current * speedMult);
       lenis.scrollTo(currentVirtualScroll, { immediate: true });
       
       rafId = requestAnimationFrame(scrollStep);
@@ -222,7 +229,14 @@ export const WebHackingLayout: React.FC = () => {
         <div className="pointer-events-none absolute inset-0 z-20">
           <WebHackingIntroOverlay
             progress={sceneProgress}
-            onPlay={() => setIsAutoScrolling(true)}
+            onPlay={() => {
+              setIsAutoScrolling(true);
+              // Jump directly past the initial blank gap
+              const totalScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+              if (window.scrollY < totalScroll * 0.02) {
+                window.scrollTo({ top: totalScroll * 0.02, behavior: "smooth" });
+              }
+            }}
             isAutoScrolling={isAutoScrolling}
           />
         </div>
