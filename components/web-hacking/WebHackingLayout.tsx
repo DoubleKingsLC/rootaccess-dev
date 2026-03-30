@@ -88,47 +88,51 @@ export const WebHackingLayout: React.FC = () => {
     };
   }, [isSpeedControlOpen, scrollSpeed]);
 
-  // ── Auto-scroll via Lenis ──────────────────────────────────────────────────
+  // ── Auto-scroll logic (Mirrors AIHackingLayout / ScrollytellingLayout to fix Safari speeds & standardize Hz-independent scroll) ──
   useEffect(() => {
     if (!isAutoScrolling) return;
 
-    let userInterrupted = false;
+    let lastScrollY = window.scrollY;
     let rafId: number;
+    let lastTime = performance.now();
     let currentVirtualScroll = window.scrollY; // Accumulator for fractional pixel scrolls
 
-    const onWheel     = () => { userInterrupted = true; setIsAutoScrolling(false); };
-    const onTouchMove = () => { userInterrupted = true; setIsAutoScrolling(false); };
-    window.addEventListener("wheel",      onWheel,     { passive: true });
-    window.addEventListener("touchmove",  onTouchMove, { passive: true });
-
-    const scrollStep = () => {
-      if (userInterrupted) return;
-      const lenis    = lenisRef.current;
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      if (!lenis || window.scrollY >= maxScroll - 10) {
+    const scrollStep = (time: number) => {
+      const currentScrollY = window.scrollY;
+      
+      // Interrupt auto-scroll if the user manually scrolls native wheel/touch
+      if (Math.abs(currentScrollY - lastScrollY) > 5) {
         setIsAutoScrolling(false);
         return;
       }
+
+      const dt = time - lastTime;
+      lastTime = time;
+
+      // Target speed: 190 pixels per second (Hz independent) multiplied by speed control
+      let scrollAmount = 190 * (dt / 1000) * scrollSpeedRef.current;
+
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = currentScrollY / maxScroll;
       
       // Accelerate through the intro "deadzone" (between 0.01 and 0.045)
-      let speedMult = 1;
-      const progress = window.scrollY / document.documentElement.scrollHeight;
       if (progress >= 0.01 && progress < 0.045) {
-        speedMult = 4.0;
+        scrollAmount *= 4.0;
       }
-      
-      currentVirtualScroll += (0.6 * scrollSpeedRef.current * speedMult);
-      lenis.scrollTo(currentVirtualScroll, { immediate: true });
-      
-      rafId = requestAnimationFrame(scrollStep);
+
+      currentVirtualScroll += scrollAmount;
+      window.scrollTo(0, currentVirtualScroll);
+      lastScrollY = window.scrollY;
+
+      if (window.scrollY < maxScroll - 10) {
+        rafId = requestAnimationFrame(scrollStep);
+      } else {
+        setIsAutoScrolling(false);
+      }
     };
 
     rafId = requestAnimationFrame(scrollStep);
-    return () => {
-      cancelAnimationFrame(rafId);
-      window.removeEventListener("wheel",     onWheel);
-      window.removeEventListener("touchmove", onTouchMove);
-    };
+    return () => cancelAnimationFrame(rafId);
   }, [isAutoScrolling]);
 
   // ── GSAP + Lenis ──────────────────────────────────────────────────────────
