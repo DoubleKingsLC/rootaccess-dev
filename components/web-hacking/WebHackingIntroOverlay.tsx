@@ -38,8 +38,8 @@ export const WebHackingIntroOverlay: React.FC<WebHackingIntroOverlayProps> = ({
         <p className="font-mono text-sm tracking-[0.3em] text-slate-300 md:text-base uppercase">
           Breaking apps. Understanding the web.
         </p>
-        <p className="max-w-2xl px-4 font-sans text-[13px] md:text-sm leading-relaxed tracking-wide text-rose-100/70">
-          Follow along as we explore a web hacking scenario — a SQL Injection flaw in a real web application.
+        <p className="max-w-3xl px-4 font-sans text-sm md:text-base leading-relaxed tracking-wide text-rose-100/90 drop-shadow-sm">
+          Follow along as we explore a web hacking scenario, a SQL Injection flaw in a real web application.
         </p>
       </div>
 
