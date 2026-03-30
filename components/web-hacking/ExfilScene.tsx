@@ -4,6 +4,7 @@ import React from "react";
 import { DataFlowViz }   from "./DataFlowViz";
 import { ExfilTerminal } from "./ExfilTerminal";
 import { ExfilCounter }  from "./ExfilCounter";
+import { NarrativeCaption } from "./NarrativeCaption";
 
 type ExfilSceneProps = {
   progress: number; // global 0–1
@@ -85,17 +86,9 @@ export const ExfilScene: React.FC<ExfilSceneProps> = ({ progress }) => {
       </div>
 
       {/* ── Narrative caption ───────────────────────────────────────────────── */}
-      <div
-        className="pointer-events-none absolute bottom-[72px] left-1/2 z-[35] -translate-x-1/2"
-        style={{ opacity: captionOpacity(progress) }}
-        aria-hidden
-      >
-        <div className="rounded-xl border border-white/10 bg-slate-950/85 px-5 py-2.5 backdrop-blur-md max-w-[90vw]">
-          <p className="font-mono text-xs font-medium tracking-wide text-slate-100 text-center md:text-sm">
-            No rate limit. No logging. 14 million records in under 3 seconds.
-          </p>
-        </div>
-      </div>
+      <NarrativeCaption opacity={captionOpacity(progress)}>
+        No rate limit. No logging. 14 million records in under 3 seconds.
+      </NarrativeCaption>
     </>
   );
 };

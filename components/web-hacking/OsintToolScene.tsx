@@ -2,6 +2,7 @@
 
 import React from "react";
 import { MockDNSDumpster } from "./MockDNSDumpster";
+import { NarrativeCaption } from "./NarrativeCaption";
 
 type OsintToolSceneProps = {
   progress: number; // global 0–1
@@ -70,17 +71,9 @@ export const OsintToolScene: React.FC<OsintToolSceneProps> = ({ progress }) => {
       </div>
 
       {/* ── Narrative caption ───────────────────────────────────────────────── */}
-      <div
-        className="pointer-events-none absolute bottom-[72px] left-1/2 z-[35] -translate-x-1/2"
-        style={{ opacity: captionOpacity(progress) }}
-        aria-hidden
-      >
-        <div className="rounded-xl border border-white/10 bg-slate-950/85 px-5 py-2.5 backdrop-blur-md max-w-[90vw]">
-          <p className="font-mono text-xs font-medium tracking-wide text-slate-100 text-center md:text-sm">
-            DNS records don&apos;t lie. Two subdomains with no authentication.
-          </p>
-        </div>
-      </div>
+      <NarrativeCaption opacity={captionOpacity(progress)}>
+        DNS records don&apos;t lie. Two subdomains with no authentication.
+      </NarrativeCaption>
     </>
   );
 };

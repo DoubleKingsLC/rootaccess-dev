@@ -5,6 +5,7 @@ import { MockBrowser }          from "./MockBrowser";
 import { MetadataChips }        from "./MetadataChips";
 import { NetworkHeadersFlash }  from "./NetworkHeadersFlash";
 import { WappalyzerPopup }      from "./WappalyzerPopup";
+import { NarrativeCaption }     from "./NarrativeCaption";
 
 type TargetAppearsSceneProps = {
   progress: number; // global scroll progress 0–1
@@ -94,18 +95,10 @@ export const TargetAppearsScene: React.FC<TargetAppearsSceneProps> = ({ progress
         </div>
       </div>
 
-      {/* ── Narrative caption — bottom center ───────────────────────────────── */}
-      <div
-        className="pointer-events-none absolute bottom-[72px] left-1/2 z-[35] -translate-x-1/2"
-        style={{ opacity: captionOpacity(progress) }}
-        aria-hidden
-      >
-        <div className="rounded-xl border border-white/10 bg-slate-950/85 px-5 py-2.5 backdrop-blur-md max-w-[90vw]">
-          <p className="font-mono text-xs font-medium tracking-wide text-slate-100 text-center md:text-sm">
-            {lp >= CAPTION_SWITCH_LP ? CAPTION_CHIPS : CAPTION_EARLY}
-          </p>
-        </div>
-      </div>
+      {/* ── Narrative caption ───────────────────────────────────────────────── */}
+      <NarrativeCaption opacity={captionOpacity(progress)}>
+        {lp >= CAPTION_SWITCH_LP ? CAPTION_CHIPS : CAPTION_EARLY}
+      </NarrativeCaption>
     </>
   );
 };

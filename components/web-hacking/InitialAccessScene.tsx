@@ -2,6 +2,7 @@
 
 import React from "react";
 import { MockAdminLogin } from "./MockAdminLogin";
+import { NarrativeCaption } from "./NarrativeCaption";
 
 type InitialAccessSceneProps = {
   progress: number; // global 0–1
@@ -68,17 +69,9 @@ export const InitialAccessScene: React.FC<InitialAccessSceneProps> = ({ progress
       </div>
 
       {/* ── Narrative caption ───────────────────────────────────────────────── */}
-      <div
-        className="pointer-events-none absolute bottom-[72px] left-1/2 z-[35] -translate-x-1/2"
-        style={{ opacity: captionOpacity(progress) }}
-        aria-hidden
-      >
-        <div className="rounded-xl border border-white/10 bg-slate-950/85 px-5 py-2.5 backdrop-blur-md max-w-[90vw]">
-          <p className="font-mono text-xs font-medium tracking-wide text-slate-100 text-center md:text-sm">
-            The admin portal. No MFA. No lockout. Just a door.
-          </p>
-        </div>
-      </div>
+      <NarrativeCaption opacity={captionOpacity(progress)}>
+        The admin portal. No MFA. No lockout. Just a door.
+      </NarrativeCaption>
     </>
   );
 };

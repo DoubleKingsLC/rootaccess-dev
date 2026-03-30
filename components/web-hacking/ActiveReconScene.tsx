@@ -3,6 +3,7 @@
 import React from "react";
 import { MockTerminal } from "./MockTerminal";
 import { DirbustPanel } from "./DirbustPanel";
+import { NarrativeCaption } from "./NarrativeCaption";
 
 type ActiveReconSceneProps = {
   progress: number; // global 0–1
@@ -75,17 +76,9 @@ export const ActiveReconScene: React.FC<ActiveReconSceneProps> = ({ progress }) 
       </div>
 
       {/* ── Narrative caption ───────────────────────────────────────────────── */}
-      <div
-        className="pointer-events-none absolute bottom-[72px] left-1/2 z-[35] -translate-x-1/2"
-        style={{ opacity: captionOpacity(progress) }}
-        aria-hidden
-      >
-        <div className="rounded-xl border border-white/10 bg-slate-950/85 px-5 py-2.5 backdrop-blur-md max-w-[90vw]">
-          <p className="font-mono text-xs font-medium tracking-wide text-slate-100 text-center md:text-sm">
-            Port 3306 wide open. A <span style={{ color: "#f87171" }}>.env</span> file serving itself. The server is practically waving.
-          </p>
-        </div>
-      </div>
+      <NarrativeCaption opacity={captionOpacity(progress)}>
+        Port 3306 wide open. A <span style={{ color: "#f87171" }}>.env</span> file serving itself. The server is practically waving.
+      </NarrativeCaption>
     </>
   );
 };

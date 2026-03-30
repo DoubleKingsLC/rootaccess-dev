@@ -6,6 +6,7 @@ import { MockAdminDashboard } from "./MockAdminDashboard";
 import { MockAdminLogin }     from "./MockAdminLogin";
 import { SQLDiscoveryChip }   from "./SQLDiscoveryChip";
 import { SQLExplanationPanel } from "./SQLExplanationPanel";
+import { NarrativeCaption }    from "./NarrativeCaption";
 
 type SQLiSceneProps = {
   progress: number; // global 0–1
@@ -207,8 +208,8 @@ export const SQLiScene: React.FC<SQLiSceneProps> = ({ progress }) => {
             style={{
               opacity: zoomOp,
               transform: `scale(${zoomSc}) translateY(${zoomTY}vh)`,
-              width: "clamp(480px, 55vw, 740px)",
-              marginLeft: "12vw",
+              width: "clamp(400px, 50vw, 740px)",
+              marginLeft: "clamp(80px, 20vw, 12rem)",
             }}
           >
             {/* Zoomed query panel */}
@@ -323,17 +324,9 @@ export const SQLiScene: React.FC<SQLiSceneProps> = ({ progress }) => {
       </div>
 
       {/* ── Narrative caption ───────────────────────────────────────────────── */}
-      <div
-        className="pointer-events-none absolute bottom-[72px] left-1/2 z-[35] -translate-x-1/2"
-        style={{ opacity: captionOpacity(progress) }}
-        aria-hidden
-      >
-        <div className="rounded-xl border border-white/10 bg-slate-950/85 px-5 py-2.5 backdrop-blur-md max-w-[90vw]">
-          <p className="font-mono text-xs font-medium tracking-wide text-slate-100 text-center md:text-sm">
-            One quote character. The password check never ran.
-          </p>
-        </div>
-      </div>
+      <NarrativeCaption opacity={captionOpacity(progress)}>
+        One quote character. The password check never ran.
+      </NarrativeCaption>
     </>
   );
 };

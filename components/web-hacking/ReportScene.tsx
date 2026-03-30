@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import { NarrativeCaption } from "./NarrativeCaption";
 
 type ReportSceneProps = {
   progress: number; // global 0–1
@@ -361,17 +362,9 @@ export const ReportScene: React.FC<ReportSceneProps> = ({ progress }) => {
       </div>
 
       {/* ── Narrative caption ───────────────────────────────────────────────── */}
-      <div
-        className="pointer-events-none absolute bottom-[72px] left-1/2 z-[35] -translate-x-1/2"
-        style={{ opacity: captionOpacity(progress) }}
-        aria-hidden
-      >
-        <div className="rounded-xl border border-white/10 bg-slate-950/85 px-5 py-2.5 backdrop-blur-md max-w-[90vw]">
-          <p className="font-mono text-xs font-medium tracking-wide text-slate-100 text-center md:text-sm">
-            Every finding was present before the attacker arrived. The question was never if — it was when.
-          </p>
-        </div>
-      </div>
+      <NarrativeCaption opacity={captionOpacity(progress)}>
+        Every finding was present before the attacker arrived. The question was never if — it was when.
+      </NarrativeCaption>
     </>
   );
 };
