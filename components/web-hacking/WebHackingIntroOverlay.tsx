@@ -34,15 +34,20 @@ export const WebHackingIntroOverlay: React.FC<WebHackingIntroOverlayProps> = ({
       <h1 className="font-sans text-4xl font-bold tracking-tight text-white md:text-6xl lg:text-7xl uppercase">
         WEB HACKING
       </h1>
-      <p className="mt-5 font-mono text-sm tracking-[0.3em] text-slate-300 md:text-base uppercase">
-        Breaking apps. Understanding the web.
-      </p>
+      <div className="mt-5 flex flex-col items-center gap-4 text-center">
+        <p className="font-mono text-sm tracking-[0.3em] text-slate-300 md:text-base uppercase">
+          Breaking apps. Understanding the web.
+        </p>
+        <p className="max-w-2xl px-4 font-sans text-[13px] md:text-sm leading-relaxed tracking-wide text-rose-100/70">
+          Follow along as we explore a web hacking scenario — a SQL Injection flaw in a real web application.
+        </p>
+      </div>
 
       {/* Scroll + autoplay controls */}
       <div className="mt-12 flex flex-col items-center gap-8">
         {/* Scroll CTA */}
         <div className="flex flex-col items-center gap-3">
-          <p className="font-mono text-[10px] md:text-xs tracking-[0.4em] text-slate-300 uppercase font-bold">
+          <p className="font-mono text-[10px] md:text-xs tracking-[0.4em] text-slate-300 uppercase font-bold text-center">
             Scroll to Begin
           </p>
           <div className="text-slate-300 animate-bounce">
