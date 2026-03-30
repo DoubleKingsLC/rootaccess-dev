@@ -67,7 +67,7 @@ export const MockBrowser: React.FC<MockBrowserProps> = ({ urlProgress }) => {
 
         {/* Site navbar */}
         <div
-          className="flex items-center justify-between border-b px-8 py-4"
+          className="flex items-center justify-between border-b px-6 md:px-8 py-3 md:py-4"
           style={{ borderColor: "rgba(255,255,255,0.05)", background: "rgba(10,14,28,0.98)" }}
         >
           {/* Logo */}
@@ -99,7 +99,7 @@ export const MockBrowser: React.FC<MockBrowserProps> = ({ urlProgress }) => {
         </div>
 
         {/* Hero */}
-        <div className="flex flex-col items-center px-8 pt-10 pb-8 text-center">
+        <div className="flex flex-col items-center px-6 md:px-8 py-5 md:py-8 lg:py-10 text-center">
           <div className="mb-4 rounded-full border px-3 py-1 text-[10px] font-mono uppercase tracking-widest" style={{ borderColor: "rgba(244,63,94,0.25)", color: "rgba(244,63,94,0.8)", background: "rgba(244,63,94,0.06)" }}>
             Trusted by 14 million users
           </div>
@@ -119,7 +119,7 @@ export const MockBrowser: React.FC<MockBrowserProps> = ({ urlProgress }) => {
 
         {/* Stats bar */}
         <div
-          className="flex items-center justify-center gap-10 border-t px-8 py-4"
+          className="flex items-center justify-center gap-6 md:gap-10 border-t px-6 md:px-8 py-2.5 md:py-4"
           style={{ borderColor: "rgba(255,255,255,0.05)", background: "rgba(8,12,20,0.6)" }}
         >
           {[

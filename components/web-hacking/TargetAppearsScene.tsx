@@ -67,7 +67,7 @@ export const TargetAppearsScene: React.FC<TargetAppearsSceneProps> = ({ progress
     <>
       {/* ── Main scene ──────────────────────────────────────────────────────── */}
       <div
-        className="absolute inset-0 flex items-center justify-center px-6"
+        className="absolute inset-0 flex items-center justify-center px-6 pb-[6vh] lg:pb-[10vh]"
         style={{ opacity: op, zIndex: 15 }}
       >
         {/* Relative canvas — chips + beams + browser all share same coordinate space */}
@@ -82,7 +82,7 @@ export const TargetAppearsScene: React.FC<TargetAppearsSceneProps> = ({ progress
           <div
             className="relative w-full"
             style={{
-              height: "clamp(340px, 56vh, 640px)",
+              height: "clamp(420px, 62vh, 720px)",
               transform: `scale(${browserScale(lp)})`,
               opacity: browserOpacity(lp),
               transition: "none",
