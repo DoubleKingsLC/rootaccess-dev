@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { LEVELS } from "./data";
 import { ProviderFavicon } from "./ProviderFavicon";
 
-type MobileWebHackingCareerPathProps = {
+type MobileSocCareerPathProps = {
   showScrollTop: boolean;
 };
 
@@ -35,7 +35,7 @@ function SectionHeader({ num, label, color, time, salary, subtitle }: {
       <p className="font-mono text-[14px] leading-relaxed" style={{ color: `${color}dd` }}>{subtitle}</p>
       
       <Link
-        href={`/roadmaps/web-hacking/career-path/detailed#level-${num}`}
+        href={`/roadmaps/soc/career-path/detailed#level-${num}`}
         className="mt-6 flex items-center justify-between p-4 rounded-xl border transition-all duration-300 active:scale-[0.98]"
         style={{
           background: `linear-gradient(135deg, ${color}15, ${color}05)`,
@@ -60,7 +60,7 @@ function SectionHeader({ num, label, color, time, salary, subtitle }: {
   );
 }
 
-export function MobileWebHackingCareerPath({ showScrollTop }: MobileWebHackingCareerPathProps) {
+export function MobileSocCareerPath({ showScrollTop }: MobileSocCareerPathProps) {
   const router = useRouter();
 
   return (
@@ -84,11 +84,11 @@ export function MobileWebHackingCareerPath({ showScrollTop }: MobileWebHackingCa
         </Link>
         <span style={{ color: "rgba(148,163,184,0.45)", fontSize: "10px" }}>/</span>
         <Link
-          href="/roadmaps/web-hacking"
+          href="/roadmaps/soc"
           className="font-mono text-[10px] uppercase tracking-widest flex items-center gap-1.5 transition-colors duration-150 hover:text-white"
           style={{ color: "rgba(148,163,184,0.75)" }}
         >
-          Web Hacking
+          SOC
         </Link>
         <span style={{ color: "rgba(148,163,184,0.45)", fontSize: "10px" }}>/</span>
         <span className="font-mono text-[10px] uppercase tracking-widest font-semibold" style={{ color: "rgba(148,163,184,0.6)" }}>
@@ -111,18 +111,18 @@ export function MobileWebHackingCareerPath({ showScrollTop }: MobileWebHackingCa
 
       {/* ── Hero section ────────────────────────────────────────────────── */}
       <div className="px-6 pt-16 pb-14 border-b border-white/5">
-        <p className="font-mono text-[11px] uppercase tracking-[0.5em] mb-6 font-bold" style={{ color: "rgba(244,63,94,0.7)" }}>
-          Evolution Roadmap
+        <p className="font-mono text-[11px] uppercase tracking-[0.5em] mb-6 font-bold" style={{ color: "rgba(34,211,238,0.7)" }}>
+          Defensive Operations
         </p>
         <h1
           className="text-5xl font-bold text-white mb-8 leading-[0.95] tracking-tight"
           style={{ fontFamily: "var(--font-heading, system-ui)" }}
         >
-          Web Hacking:<br />
-          <span style={{ color: "rgba(244,63,94,0.95)" }}>The Path Explained</span>
+          SOC Analyst:<br />
+          <span style={{ color: "rgba(34,211,238,0.95)" }}>The Career Path</span>
         </h1>
         <p className="text-lg leading-relaxed max-w-xl" style={{ color: "rgba(226,232,240,0.8)" }}>
-          Every expert was once a beginner. This roadmap tracks your evolution from your first lab to leading a full pentest program. No degree, just curiosity and discipline.
+          Protecting the enterprise requires more than just tools. It requires a mindset of vigilance, correlation, and rapid response. This roadmap tracks your journey from entry-level triage to SOC operational command.
         </p>
         
         <div className="mt-10 flex flex-wrap gap-2">
@@ -205,7 +205,7 @@ export function MobileWebHackingCareerPath({ showScrollTop }: MobileWebHackingCa
             {/* Skills & Tools */}
             <div className="mb-14">
               <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] mb-6" style={{ color: `${level.color}aa` }}>
-                Skills & Lab Focus
+                Skills & Monitoring Focus
               </p>
               <div className="grid grid-cols-1 gap-4">
                 <div className="rounded-2xl p-6 border border-white/5 bg-white/[0.01]">
@@ -221,7 +221,7 @@ export function MobileWebHackingCareerPath({ showScrollTop }: MobileWebHackingCa
               </div>
               
               <div className="mt-6 flex flex-wrap gap-2">
-                <span className="w-full font-mono text-[10px] uppercase tracking-widest mb-1 opacity-50">Core Tools:</span>
+                <span className="w-full font-mono text-[10px] uppercase tracking-widest mb-1 opacity-50">Tools of Trace:</span>
                 {level.tools.map((tool) => (
                   <span
                     key={tool}
@@ -236,7 +236,7 @@ export function MobileWebHackingCareerPath({ showScrollTop }: MobileWebHackingCa
             {/* Resources */}
             <div>
               <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] mb-6" style={{ color: `${level.color}aa` }}>
-                Learning Resources
+                Labs & Analyst Training
               </p>
               <div className="grid grid-cols-1 gap-3">
                 {level.labs.map((lab, idx) => (
@@ -266,7 +266,7 @@ export function MobileWebHackingCareerPath({ showScrollTop }: MobileWebHackingCa
       {/* ── Footer ────────────────────────────────────────────────────────── */}
       <footer className="py-20 px-6 text-center border-t border-white/5">
          <button
-          onClick={() => router.push("/roadmaps/web-hacking")}
+          onClick={() => router.push("/roadmaps/soc")}
           className="w-full max-w-xs py-4 rounded-xl border border-white/10 bg-white/5 font-mono text-xs uppercase tracking-widest text-slate-400 hover:bg-white/10 transition-all flex items-center justify-center gap-2 mx-auto"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

@@ -136,12 +136,19 @@ function SkillCard({ name, category, correlatedTools, accentColor, what, why, re
         <p className="text-[15px] leading-relaxed" style={{ color: "rgba(203,213,225,0.85)" }}>{what}</p>
       </div>
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-0" style={{ borderColor: `${accentColor}18` }}>
-        <div className="px-6 py-6" style={{ borderBottom: `1px solid ${accentColor}15` }}>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] mb-4" style={{ color: `${accentColor}ee` }}>Why you need it here</p>
+        {/* Why - Left Column */}
+        <div className="px-6 py-6 border-b xl:border-b-0" style={{ borderColor: `${accentColor}15` }}>
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] mb-4" style={{ color: `${accentColor}ee` }}>
+            Why you need it here
+          </p>
           <p className="text-[15px] leading-relaxed" style={{ color: "rgba(226,232,240,0.88)" }}>{why}</p>
         </div>
-        <div className="px-6 py-6 flex flex-col gap-5" style={{ borderLeft: `1px solid ${accentColor}18`, borderBottom: `1px solid ${accentColor}15` }}>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em]" style={{ color: `${accentColor}ee` }}>Resources to Learn</p>
+
+        {/* Resources - Right Column */}
+        <div className="px-6 py-6 flex flex-col gap-5 border-t xl:border-t-0 xl:border-l" style={{ borderColor: `${accentColor}18` }}>
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em]" style={{ color: `${accentColor}ee` }}>
+            Resources to Learn
+          </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-widest mb-3 font-semibold" style={{ color: "rgba(96,165,250,0.9)" }}>Free Options</p>
@@ -183,7 +190,7 @@ function SectionHeader({ num, label, color, time, salary, subtitle }: {
         </span>
         <span className="font-mono text-[13px] font-medium" style={{ color: "rgba(148,163,184,0.7)" }}>{time} • {salary}</span>
       </div>
-      <h2 className="text-5xl xl:text-6xl font-bold text-white mb-3 leading-tight" style={{ fontFamily: "var(--font-heading, system-ui)", letterSpacing: "-0.02em" }}>{label}</h2>
+      <h2 className="text-4xl sm:text-5xl xl:text-6xl font-bold text-white mb-3 leading-tight" style={{ fontFamily: "var(--font-heading, system-ui)", letterSpacing: "-0.02em" }}>{label}</h2>
       <p className="font-mono text-[14px]" style={{ color: `${color}dd` }}>{subtitle}</p>
       <div className="mt-6 h-px" style={{ background: `linear-gradient(to right, ${color}40, transparent)` }} />
     </div>

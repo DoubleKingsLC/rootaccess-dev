@@ -1,10 +1,27 @@
-"use client";
+import React from "react";
 
-import { PROVIDER_DOMAINS } from "./data";
-
-type ProviderFaviconProps = {
-  provider: string | null;
-  size?: number;
+const PROVIDER_DOMAINS: Record<string, string> = {
+  tryhackme: "tryhackme.com",
+  hackthebox: "hackthebox.com",
+  htb: "hackthebox.com",
+  google: "google.com",
+  tcm: "tcm-sec.com",
+  offsec: "offsec.com",
+  blueteam: "securityblue.team",
+  cyberdefenders: "cyberdefenders.org",
+  elearnsecurity: "elearnsecurity.com",
+  giac: "giac.org",
+  isc2: "isc2.org",
+  comptia: "comptia.org",
+  youtube: "www.youtube.com",
+  sans: "sans.org",
+  crest: "crest-approved.org",
+  pentesteracademy: "pentesteracademy.com",
+  coursera: "coursera.org",
+  isaca: "isaca.org",
+  mitre: "mitre.org",
+  nist: "nist.gov",
+  antisyphon: "antisyphontraining.com",
 };
 
 export function ProviderFavicon({ provider, size = 18 }: { provider: string | null; size?: number }) {

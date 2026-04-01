@@ -17,7 +17,7 @@ export const PROVIDER_DOMAINS: Record<string, string> = {
   htb: "hackthebox.com",
   bugcrowd: "bugcrowd.com",
   owasp: "owasp.org",
-  youtube: "youtube.com",
+  youtube: "www.youtube.com",
   sans: "sans.org",
   crest: "crest-approved.org",
   pentesteracademy: "pentesteracademy.com",
@@ -30,7 +30,7 @@ export const PROVIDER_DOMAINS: Record<string, string> = {
   pentesterlab: "pentesterlab.com",
   appsecengineer: "appsecengineer.com",
   zeropointsecurity: "zero-point-security.co.uk",
-  cxotalk: "youtube.com",
+  cxotalk: "www.youtube.com",
 };
 
 export const LEVELS: Level[] = [
