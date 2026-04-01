@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { MobileMenu } from "@/components/MobileMenu";
 
 // ─── Domains ──────────────────────────────────────────────────────────────────
 
@@ -343,6 +344,7 @@ export default function HomePage() {
     const [hoveredMenu, setHoveredMenu] = useState<'workflows' | 'roadmaps' | null>(null);
     const [rPos, setRPos] = useState<Pt | null>(null);
     const [isMobile, setIsMobile] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     useEffect(() => {
         if (typeof window === "undefined") {
@@ -476,7 +478,7 @@ export default function HomePage() {
 
     return (
         <div ref={containerRef} style={{ height: isMobile ? "auto" : "280vh" }}>
-            {/* Fixed top-left nav */}
+            {/* Fixed top-left nav (Desktop Only) */}
             {!isMobile && (
                 <div style={{ position: "fixed", top: 28, left: 32, zIndex: 100, display: "flex", gap: 16 }}>
                     {/* Workflows Dropdown */}
@@ -639,42 +641,77 @@ export default function HomePage() {
                 </div>
             )}
 
-            {/* Fixed top-right nav */}
-            <Link
-                href="/about"
-                style={{
-                    position: "fixed", top: 28, right: 32, zIndex: 100,
-                    display: "inline-flex", alignItems: "center", gap: 10,
-                    fontFamily: "var(--font-mono, monospace)",
-                    fontSize: 12, fontWeight: 700, letterSpacing: "0.35em", textTransform: "uppercase",
-                    color: "#22d3ee",
-                    background: "rgba(34,211,238,0.06)",
-                    border: "1.5px solid rgba(34,211,238,0.45)",
-                    borderRadius: 10, padding: "12px 24px",
-                    textDecoration: "none", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
-                    transition: "all 0.25s cubic-bezier(0.16,1,0.3,1)",
-                    boxShadow: "0 0 25px rgba(34,211,238,0.12), inset 0 0 10px rgba(34,211,238,0.05)",
-                }}
-                onMouseEnter={e => {
-                    (e.currentTarget as HTMLElement).style.color = "#fff";
-                    (e.currentTarget as HTMLElement).style.borderColor = "#22d3ee";
-                    (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.22)";
-                    (e.currentTarget as HTMLElement).style.boxShadow = "0 0 35px rgba(34,211,238,0.25), inset 0 0 15px rgba(34,211,238,0.1)";
-                    (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
-                }}
-                onMouseLeave={e => {
-                    (e.currentTarget as HTMLElement).style.color = "#22d3ee";
-                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(34,211,238,0.45)";
-                    (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.06)";
-                    (e.currentTarget as HTMLElement).style.boxShadow = "0 0 25px rgba(34,211,238,0.12), inset 0 0 10px rgba(34,211,238,0.05)";
-                    (e.currentTarget as HTMLElement).style.transform = "none";
-                }}
-            >
-                About
-                <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
-                    <path d="M1.5 5.5h8M6.5 2l3.5 3.5-3.5 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-            </Link>
+            {/* Mobile Header (Mobile Only) */}
+            {isMobile && (
+                 <div style={{ 
+                    position: "fixed", top: 0, left: 0, right: 0, height: 60, zIndex: 100,
+                    display: "flex", alignItems: "center", justifyContent: "space-between",
+                    padding: "0 24px", background: "rgba(9,13,20,0.8)", backdropFilter: "blur(12px)",
+                    borderBottom: "1px solid rgba(255,255,255,0.05)"
+                 }}>
+                    <span className="font-mono text-[11px] font-bold tracking-[0.4em] text-cyan-400">rootaccess</span>
+                    <button
+                        onClick={() => setIsMenuOpen(true)}
+                        style={{
+                            display: "inline-flex", alignItems: "center", gap: 8,
+                            fontFamily: "var(--font-mono, monospace)",
+                            fontSize: 10, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase",
+                            color: "#22d3ee", padding: "8px 16px",
+                            background: "rgba(34,211,238,0.1)", border: "1px solid rgba(34,211,238,0.3)",
+                            borderRadius: 8, transition: "all 0.2s ease"
+                        }}
+                    >
+                        Menu
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                 </div>
+            )}
+
+            {/* Fixed top-right nav (Desktop Only) */}
+            {!isMobile && (
+                <Link
+                    href="/about"
+                    style={{
+                        position: "fixed", top: 28, right: 32, zIndex: 100,
+                        display: "inline-flex", alignItems: "center", gap: 10,
+                        fontFamily: "var(--font-mono, monospace)",
+                        fontSize: 12, fontWeight: 700, letterSpacing: "0.35em", textTransform: "uppercase",
+                        color: "#22d3ee",
+                        background: "rgba(34,211,238,0.06)",
+                        border: "1.5px solid rgba(34,211,238,0.45)",
+                        borderRadius: 10, padding: "12px 24px",
+                        textDecoration: "none", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+                        transition: "all 0.25s cubic-bezier(0.16,1,0.3,1)",
+                        boxShadow: "0 0 25px rgba(34,211,238,0.12), inset 0 0 10px rgba(34,211,238,0.05)",
+                    }}
+                    onMouseEnter={e => {
+                        (e.currentTarget as HTMLElement).style.color = "#fff";
+                        (e.currentTarget as HTMLElement).style.borderColor = "#22d3ee";
+                        (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.22)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 35px rgba(34,211,238,0.25), inset 0 0 15px rgba(34,211,238,0.1)";
+                        (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
+                    }}
+                    onMouseLeave={e => {
+                        (e.currentTarget as HTMLElement).style.color = "#22d3ee";
+                        (e.currentTarget as HTMLElement).style.borderColor = "rgba(34,211,238,0.45)";
+                        (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.06)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 25px rgba(34,211,238,0.12), inset 0 0 10px rgba(34,211,238,0.05)";
+                        (e.currentTarget as HTMLElement).style.transform = "none";
+                    }}
+                >
+                    About
+                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                        <path d="M1.5 5.5h8M6.5 2l3.5 3.5-3.5 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                </Link>
+            )}
+
+            {/* Mobile Menu Overlay */}
+            <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
             <div
                 style={{ position: isMobile ? "relative" : "sticky", top: 0, height: isMobile ? "auto" : "100vh", overflow: isMobile ? "visible" : "hidden" }}
