@@ -334,6 +334,32 @@ body {
   animation: pentest-fadeIn 0.5s ease-out forwards;
 }
 
+/* ===== Design System Utilities ===== */
+.grid-overlay {
+    background-image: radial-gradient(circle at 2px 2px, rgba(114, 117, 125, 0.05) 1px, transparent 0);
+    background-size: 40px 40px;
+}
+.glass-card {
+    background: rgba(21, 26, 33, 0.7);
+    backdrop-filter: blur(12px);
+}
+.glow-cyan { filter: drop-shadow(0 0 8px rgba(129, 236, 255, 0.4)); }
+.glow-purple { filter: drop-shadow(0 0 8px rgba(188, 135, 254, 0.4)); }
+.glow-red { filter: drop-shadow(0 0 8px rgba(255, 113, 108, 0.4)); }
+
+@keyframes scroll-indicator {
+    0% { transform: translateY(0); opacity: 0.3; }
+    50% { transform: translateY(8px); opacity: 1; }
+    100% { transform: translateY(0); opacity: 0.3; }
+}
+.animate-scroll-indicator {
+    animation: scroll-indicator 2s ease-in-out infinite;
+}
+
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+}
+
 /* SOC monitor portals — scale shell on constrained viewports so content stays inside frame */
 .soc-monitor-shell {
   transform-origin: top center;

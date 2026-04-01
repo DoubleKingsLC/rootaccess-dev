@@ -50,7 +50,7 @@ export const WebHackingIntroOverlay: React.FC<WebHackingIntroOverlayProps> = ({
           <p className="font-mono text-[10px] md:text-xs tracking-[0.4em] text-slate-300 uppercase font-bold text-center">
             Scroll to Begin
           </p>
-          <div className="text-slate-300 animate-bounce">
+          <div className="text-slate-300 animate-scroll-indicator">
             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
             </svg>
