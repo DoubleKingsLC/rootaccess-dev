@@ -46,7 +46,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} ${manrope.variable}`}>
       <head>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=check_circle,code,expand_more,hub,insights,key,keyboard_double_arrow_down,lan,lock,lock_open,menu_book,priority_high,psychology,route,schedule,security,spider,stairs,terminal,workspace_premium" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=arrow_forward,check_circle,close,code,expand_more,hub,insights,key,keyboard_double_arrow_down,lan,lock,lock_open,menu,menu_book,priority_high,psychology,route,schedule,security,spider,stairs,terminal,workspace_premium" />
       </head>
       <body className="font-sans antialiased text-on-background bg-background">
         {children}

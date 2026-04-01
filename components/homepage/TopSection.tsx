@@ -3,74 +3,226 @@
 import React, { useState } from "react";
 import Link from "next/link";
 
-const LIVE_WORKFLOWS = [
-  { id: "soc", label: "SOC Engineer", href: "/roadmaps/soc/career-path", color: "#22d3ee" },
-  { id: "web", label: "Web Pentester", href: "/roadmaps/web-hacking/career-path", color: "#f43f5e" },
-  { id: "ai", label: "AI Security", href: "/roadmaps/ai-hacking/career-path", color: "#ef4444" },
-  { id: "network", label: "Network Pentester", href: "/roadmaps/network-pentesting/career-path", color: "#dc2626" },
+const ROADMAPS_DATA = [
+  { id: "soc", label: "SOC Career Path", href: "/roadmaps/soc/career-path", color: "#22d3ee" },
+  { id: "web", label: "Web Hacking Path", href: "/roadmaps/web-hacking/career-path", color: "#f43f5e" },
+  { id: "ai", label: "AI Hacking Path", href: "/roadmaps/ai-hacking/career-path", color: "#ef4444" },
+  { id: "network", label: "Network Pentesting", href: "/roadmaps/network-pentesting/career-path", color: "#dc2626" },
+];
+
+const EXPERIENCES_DATA = [
+  { id: "soc", label: "SOC Scrollytelling", href: "/roadmaps/soc", color: "#22d3ee" },
+  { id: "web", label: "Web Hacking", href: "/roadmaps/web-hacking", color: "#f43f5e" },
+  { id: "ai", label: "AI Hacking", href: "/roadmaps/ai-hacking", color: "#ef4444" },
+  { id: "network", label: "Network Pentesting", href: "/roadmaps/network-pentesting", color: "#dc2626" },
 ];
 
 export default function TopSection() {
-  const [openDropdown, setOpenDropdown] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <div className="relative font-body">
       {/* TopNavBar Section */}
       <nav className="fixed top-0 w-full z-[100] bg-background/70 backdrop-blur-lg shadow-[0_0_40px_rgba(0,229,255,0.05)] h-16">
-        <div className="flex justify-between items-center px-8 h-full w-full max-w-screen-2xl mx-auto">
-          <div className="text-lg text-primary font-body lowercase tracking-tight">
+        <div className="flex justify-between items-center px-6 md:px-8 h-full w-full max-w-screen-2xl mx-auto">
+          <div className="text-xl text-primary font-headline lowercase tracking-tighter hover:opacity-80 transition-opacity cursor-default">
             rootaccess.tech
           </div>
           
-          <div className="hidden md:flex items-center gap-8 font-body text-[13px]">
-            <Link className="text-primary/90 hover:text-primary transition-colors" href="#roadmaps">Roadmaps</Link>
+          <div className="hidden md:flex items-center gap-8 font-mono text-[14px] tracking-tight">
+            <Link className="text-primary/90 hover:text-primary transition-colors flex items-center gap-1.5" href="#roadmaps">
+              <span className="w-1 h-1 rounded-full bg-primary/40"></span>
+              Domains
+            </Link>
             
-            {/* Workflows Dropdown Trigger */}
+            {/* Roadmaps Dropdown Trigger */}
             <div 
               className="relative group py-5"
-              onMouseEnter={() => setOpenDropdown(true)}
-              onMouseLeave={() => setOpenDropdown(false)}
+              onMouseEnter={() => setActiveDropdown('roadmaps')}
+              onMouseLeave={() => setActiveDropdown(null)}
             >
-              <button className="flex items-center gap-1.5 text-secondary/70 group-hover:text-primary transition-colors outline-none">
-                Workflows
-                <span className={`material-symbols-outlined text-[14px] transition-transform duration-300 ${openDropdown ? 'rotate-180 text-primary' : ''}`}>
+              <button className={`flex items-center gap-1.5 transition-colors outline-none ${activeDropdown === 'roadmaps' ? 'text-primary' : 'text-secondary/70 hover:text-primary'}`}>
+                Roadmaps
+                <span className={`material-symbols-outlined text-[14px] transition-transform duration-300 ${activeDropdown === 'roadmaps' ? 'rotate-180 text-primary' : ''}`}>
                   expand_more
                 </span>
               </button>
 
               {/* Dropdown Menu */}
-              <div className={`absolute top-full right-0 pt-1 transition-all duration-300 ${openDropdown ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
+              <div className={`absolute top-full left-0 pt-1 transition-all duration-300 ${activeDropdown === 'roadmaps' ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
                 <div className="w-52 border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl bg-[#060a0f]">
                   <div className="p-1.5 flex flex-col gap-0.5">
-                    {LIVE_WORKFLOWS.map((wf) => (
+                    {ROADMAPS_DATA.map((item) => (
                       <Link 
-                        key={wf.id}
-                        href={wf.href}
+                        key={item.id}
+                        href={item.href}
                         className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg hover:bg-white/5 transition-all group/item"
                       >
                         <span 
                           className="w-1.5 h-1.5 rounded-full" 
-                          style={{ backgroundColor: wf.color, boxShadow: `0 0 10px ${wf.color}44` }}
+                          style={{ backgroundColor: item.color, boxShadow: `0 0 10px ${item.color}44` }}
                         />
-                        <span className="text-[12px] text-white/70 group-hover/item:text-primary transition-colors">
-                          {wf.label}
+                        <span className="text-[12px] text-white/70 group-hover/item:text-primary transition-colors whitespace-nowrap">
+                          {item.label}
                         </span>
                       </Link>
                     ))}
                   </div>
-                  <div className="bg-white/[0.02] px-4 py-2 border-t border-white/5">
-                    <span className="text-[9px] italic text-white/30 tracking-wider font-light">Verified Systems Only</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Experience It Dropdown Trigger */}
+            <div 
+              className="relative group py-5"
+              onMouseEnter={() => setActiveDropdown('experiences')}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
+              <button className={`flex items-center gap-1.5 transition-colors outline-none ${activeDropdown === 'experiences' ? 'text-primary' : 'text-secondary/70 hover:text-primary'}`}>
+                Experience It
+                <span className={`material-symbols-outlined text-[14px] transition-transform duration-300 ${activeDropdown === 'experiences' ? 'rotate-180 text-primary' : ''}`}>
+                  expand_more
+                </span>
+              </button>
+
+              {/* Dropdown Menu */}
+              <div className={`absolute top-full left-0 pt-1 transition-all duration-300 ${activeDropdown === 'experiences' ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
+                <div className="w-64 border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl bg-[#060a0f]">
+                  <div className="p-1.5 flex flex-col gap-0.5">
+                    {EXPERIENCES_DATA.map((item) => (
+                      <Link 
+                        key={item.id}
+                        href={item.href}
+                        className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg hover:bg-white/5 transition-all group/item"
+                      >
+                        <span 
+                          className="w-1.5 h-1.5 rounded-full" 
+                          style={{ backgroundColor: item.color, boxShadow: `0 0 10px ${item.color}44` }}
+                        />
+                        <span className="text-[12px] text-white/70 group-hover/item:text-primary transition-colors whitespace-nowrap">
+                          {item.label}
+                        </span>
+                      </Link>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <Link href="/about" className="bg-primary text-on-primary px-5 py-1.5 font-body text-[13px] hover:bg-primary/90 hover:shadow-[0_0_20px_rgba(129,236,255,0.2)] transition-all duration-200 rounded-sm">
-            About
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/about" className="hidden md:block bg-primary text-on-primary px-5 py-1.5 font-mono text-[13px] font-bold tracking-normal hover:bg-primary/90 hover:shadow-[0_0_20px_rgba(129,236,255,0.2)] transition-all duration-200 rounded-sm">
+              About
+            </Link>
+            <button 
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="md:hidden flex items-center justify-center p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors overflow-hidden"
+            >
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <line x1="4" y1="7" x2="20" y2="7"></line>
+                <line x1="4" y1="12" x2="20" y2="12"></line>
+                <line x1="4" y1="17" x2="20" y2="17"></line>
+              </svg>
+            </button>
+          </div>
         </div>
       </nav>
+
+      {/* Mobile Menu Sidebar Overlay */}
+      <div className={`fixed inset-0 z-[200] transition-all duration-500 md:hidden overflow-hidden ${isMobileMenuOpen ? 'visible' : 'invisible pointer-events-none'}`}>
+        {/* Backdrop for peeking effect */}
+        <div 
+          className={`absolute inset-0 bg-background/60 backdrop-blur-md transition-opacity duration-500 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'}`}
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+        
+        {/* Sidebar Panel */}
+        <div className={`absolute right-0 top-0 bottom-0 w-[85%] max-w-[360px] bg-[#060a0f] border-l border-white/10 shadow-[-20px_0_100px_rgba(0,0,0,0.8)] transition-transform duration-500 transform ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+          <div className="flex flex-col h-full overflow-hidden">
+            {/* Sidebar Header */}
+            <div className="flex justify-between items-center px-8 h-20 border-b border-white/[0.03]">
+              <span className="font-mono text-[9px] tracking-[0.4em] text-primary/40 uppercase font-light">Navigation</span>
+              <button 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="w-10 h-10 flex items-center justify-center text-white/40 hover:text-primary hover:bg-primary/5 rounded-full transition-all group"
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover:rotate-90 transition-transform duration-300">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            {/* Sidebar Content */}
+            <div className="flex-1 overflow-y-auto px-8 py-8 flex flex-col gap-12">
+              {/* Section 1: Pathways */}
+              <div className="flex flex-col gap-4">
+                <span className="font-mono text-[10px] tracking-[0.3em] text-white/20 uppercase">Pathways & Certifications</span>
+                <div className="flex flex-col">
+                  {ROADMAPS_DATA.map((item) => (
+                    <Link 
+                      key={item.id}
+                      href={item.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="group flex items-center justify-between py-4 border-b border-white/[0.03] transition-all last:border-0"
+                    >
+                      <span className="font-headline text-[17px] font-bold text-white/80 group-hover:text-primary group-hover:translate-x-1 transition-all">{item.label}</span>
+                      <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: item.color, boxShadow: `0 0 10px ${item.color}44` }} />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* Section 2: Experiences */}
+              <div className="flex flex-col gap-4">
+                <span className="font-mono text-[10px] tracking-[0.3em] text-white/20 uppercase">Interactive Experiences</span>
+                <div className="flex flex-col">
+                  {EXPERIENCES_DATA.map((item) => (
+                    <Link 
+                      key={item.id}
+                      href={item.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="group flex items-center justify-between py-4 border-b border-white/[0.03] transition-all last:border-0"
+                    >
+                      <span className="font-headline text-[17px] font-bold text-white/80 group-hover:text-primary group-hover:translate-x-1 transition-all">{item.label}</span>
+                      <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: item.color, boxShadow: `0 0 10px ${item.color}44` }} />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* Specialized About Card */}
+              <Link 
+                href="/about"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="mt-4 p-5 rounded-xl border border-primary/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all group relative overflow-hidden"
+              >
+                <div className="flex justify-between items-center mb-1 relative z-10 w-full">
+                  <span className="font-mono text-[10px] tracking-[0.2em] text-primary uppercase font-bold">About System</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-primary group-hover:translate-x-1 transition-transform">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </div>
+                <p className="font-body text-[12px] text-white/40 relative z-10 leading-relaxed max-w-[200px]">Our mission, methodology and technical architecture</p>
+                <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity">
+                  <span className="material-symbols-outlined text-6xl">hub</span>
+                </div>
+              </Link>
+            </div>
+
+            {/* Sidebar Footer */}
+            <div className="px-8 py-10 border-t border-white/5 flex flex-col items-center gap-2">
+              <span className="font-mono text-[8px] tracking-[0.4em] text-white/10 uppercase italic">RootAccess.tech V2.4 / Terminal</span>
+              <div className="flex gap-4">
+                <div className="w-1 h-1 rounded-full bg-primary/20 animate-pulse"></div>
+                <div className="w-1 h-1 rounded-full bg-primary/20 animate-pulse delay-75"></div>
+                <div className="w-1 h-1 rounded-full bg-primary/20 animate-pulse delay-150"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Main Content Canvas */}
       <main className="relative pt-24 pb-6 overflow-hidden bg-background">
