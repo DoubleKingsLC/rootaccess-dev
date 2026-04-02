@@ -6,6 +6,7 @@ import Link from "next/link";
 const FOUNDERS = [
     {
         initials: "AJ",
+        photo: "/aaron_dp.jpeg",
         name: "Aaron Joseph Jean",
         role: "Cybersecurity Professional | SOC Operations Specialist | M.Sc Adaptive Cybersecurity",
         location: "Galway, Ireland",
@@ -24,6 +25,7 @@ const FOUNDERS = [
     },
     {
         initials: "KM",
+        photo: "/katriel_dp.jpeg",
         name: "Katriel Delzyn Moses",
         role: "Founding Security Engineer | Cloud Architect | AWS Certified Security Specialist",
         location: "Bangalore, India",
@@ -79,22 +81,17 @@ function FounderCard({ founder, index }: { founder: typeof FOUNDERS[number]; ind
             {/* Header Area */}
             <div style={{ display: "flex", alignItems: "flex-start", gap: 20, marginBottom: 24 }}>
                 <div style={{
-                    width: 60, height: 60, borderRadius: "20%", flexShrink: 0,
-                    background: `${founder.color}08`,
-                    border: `1.5px solid ${founder.color}30`,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    boxShadow: `0 0 25px ${founder.color}12`,
-                    transform: "rotate(-4deg)",
+                    width: 64, height: 64, borderRadius: "50%", flexShrink: 0,
+                    border: `2px solid ${founder.color}40`,
+                    boxShadow: `0 0 20px ${founder.color}18`,
+                    overflow: "hidden",
                 }}>
-                    <span style={{
-                        fontFamily: "var(--font-mono, monospace)",
-                        fontSize: 18, fontWeight: 800,
-                        color: founder.color,
-                        letterSpacing: "-0.05em",
-                        transform: "rotate(4deg)",
-                    }}>
-                        {founder.initials}
-                    </span>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                        src={founder.photo}
+                        alt={founder.name}
+                        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                    />
                 </div>
                 <div style={{ flex: 1 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
@@ -329,6 +326,8 @@ function FounderCard({ founder, index }: { founder: typeof FOUNDERS[number]; ind
 }
 
 export default function AboutPage() {
+    const [journeyOpen, setJourneyOpen] = useState(false);
+
     return (
         <div
             style={{
@@ -427,6 +426,211 @@ export default function AboutPage() {
                             After a year of navigating the high-stakes world of cloud architecture, SOC operations, and incident response, we realized the industry lacked a definitive roadmap for those transitioning from theory to real-world execution. RootAccess.tech was born from a simple mission: to take the complexity of professional security work and make it legible for anyone serious about breaking in. We combine deep-dive technical research with the battle-tested experience of protecting platforms at a national and global scale.
                         </p>
                     </div>
+                </div>
+
+                {/* ── Learning Journey ──────────────────────────────────── */}
+                <div style={{ marginBottom: 72 }}>
+                    {/* Collapsible header row */}
+                    <button
+                        onClick={() => setJourneyOpen(o => !o)}
+                        style={{
+                            width: "100%", display: "flex", alignItems: "center",
+                            justifyContent: "space-between", gap: 16,
+                            background: "none", border: "none", padding: 0,
+                            cursor: "pointer", textAlign: "left", marginBottom: journeyOpen ? 8 : 0,
+                        }}
+                    >
+                        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                                <div style={{ width: 30, height: 1, background: "rgba(255,255,255,0.15)" }} />
+                                <p style={{
+                                    fontFamily: "var(--font-mono, monospace)",
+                                    fontSize: 10, letterSpacing: "0.5em", textTransform: "uppercase",
+                                    color: "rgba(255,255,255,0.5)", fontWeight: 700, margin: 0,
+                                }}>
+                                    How We Got Here
+                                </p>
+                            </div>
+                            <h2 style={{
+                                fontFamily: "var(--font-heading, sans-serif)",
+                                fontSize: "clamp(1.4rem, 3vw, 2rem)",
+                                fontWeight: 900, letterSpacing: "-0.03em",
+                                color: "#f8fafc", margin: 0, lineHeight: 1.1,
+                            }}>
+                                The Learning Journey
+                            </h2>
+                        </div>
+                        {/* Chevron */}
+                        <svg
+                            width="18" height="18" viewBox="0 0 18 18" fill="none"
+                            style={{
+                                flexShrink: 0,
+                                transition: "transform 0.3s ease",
+                                transform: journeyOpen ? "rotate(180deg)" : "rotate(0deg)",
+                                color: "rgba(255,255,255,0.4)",
+                            }}
+                        >
+                            <path d="M4 6.5l5 5 5-5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </button>
+
+                    {/* Collapsible body */}
+                    <div style={{
+                        overflow: "hidden",
+                        maxHeight: journeyOpen ? "9999px" : "0px",
+                        transition: "max-height 0.5s cubic-bezier(0.4,0,0.2,1)",
+                    }}>
+                    <p style={{
+                        fontFamily: "var(--font-sans, sans-serif)",
+                        fontSize: 14, color: "rgba(148,163,184,0.75)",
+                        margin: "16px 0 40px", maxWidth: 560, lineHeight: 1.6,
+                    }}>
+                        No bootcamp, no shortcut. Just two engineers who figured it out step by step — and built this so you don't have to start from scratch.
+                    </p>
+
+                    {/* Timeline */}
+                    <div style={{ position: "relative", paddingLeft: 32 }}>
+                        {/* Vertical line */}
+                        <div style={{
+                            position: "absolute", left: 7, top: 8, bottom: 8, width: 1,
+                            background: "linear-gradient(to bottom, rgba(255,255,255,0.12), rgba(255,255,255,0.03))",
+                        }} />
+
+                        {[
+                            {
+                                num: "01",
+                                title: "Curiosity Over Convention",
+                                body: "We were deep in the SDE grind — and bored out of our minds. Cybersecurity caught our attention not as a career pivot, but as something that was just genuinely interesting. That curiosity was the only thing that got us started.",
+                                tag: null,
+                                color: "rgba(148,163,184,0.6)",
+                            },
+                            {
+                                num: "02",
+                                title: "Google Cybersecurity Certificate",
+                                body: "Our first structured foundation. It gave us the fundamentals and — more importantly — a map of the field. We could finally see what paths existed and which ones pulled us in.",
+                                tag: "Certification",
+                                color: "#4285F4",
+                            },
+                            {
+                                num: "03",
+                                title: "Going Blue Team",
+                                body: "Defensive security clicked for us. We dug into TCM Security's SOC 101, pursued the Practical SOC Analyst (PSAA) certification, and started building a real operator mindset — not just theory.",
+                                tag: "TCM Security · PSAA",
+                                color: "#22d3ee",
+                            },
+                            {
+                                num: "04",
+                                title: "CompTIA Security+",
+                                body: "Let's be honest — this one was for the HR filters. We studied for it, passed it, and moved on. It served its purpose.",
+                                tag: "Certification",
+                                color: "rgba(148,163,184,0.5)",
+                            },
+                            {
+                                num: "05",
+                                title: "HTB Sherlocks → CyberDefenders → Top 50 Globally",
+                                body: "We started with Sherlock challenges on HackTheBox, then migrated to CyberDefenders for the deeper labs and stuck with it. Grinding through real forensics cases until we cracked the top 50 in the world. That ranking changed how we saw ourselves.",
+                                tag: "CyberDefenders · Top 50",
+                                color: "#f59e0b",
+                            },
+                            {
+                                num: "06",
+                                title: "Forensics, Threat Hunting & Malware Analysis",
+                                body: "The leaderboard lit a fire. We went deep — digital forensics, threat hunting, malware analysis. Not surface-level. We got genuinely good at it, and that expertise is baked directly into what we teach.",
+                                tag: "Specialisation",
+                                color: "#ef4444",
+                            },
+                            {
+                                num: "07",
+                                title: "Stepping into Cloud Security",
+                                body: "We noticed a gap. Cloud was everywhere but we were still learning it. Started with accessible challenges to build intuition before committing to formal study.",
+                                tag: "Cloud Entry",
+                                color: "#34d399",
+                            },
+                            {
+                                num: "08",
+                                title: "AWS Solutions Architect — Associate",
+                                body: "To secure the cloud properly, you need to understand how it's built. We went hands-on with architecture — IAM, VPCs, services — not to become architects, but to understand what we were protecting.",
+                                tag: "AWS Certification",
+                                color: "#f97316",
+                            },
+                            {
+                                num: "09",
+                                title: "AWS Security Specialty",
+                                body: "Closed the loop. Took everything we'd learned about cloud architecture and applied it through a security lens. This one wasn't for the resume — it was because we needed to know it cold.",
+                                tag: "AWS Certification",
+                                color: "#f97316",
+                            },
+                        ].map((step, i, arr) => (
+                            <div key={step.num} style={{
+                                position: "relative",
+                                paddingBottom: i < arr.length - 1 ? 32 : 0,
+                                display: "flex", gap: 20, alignItems: "flex-start",
+                            }}>
+                                {/* Dot */}
+                                <div style={{
+                                    position: "absolute", left: -28, top: 4,
+                                    width: 14, height: 14, borderRadius: "50%",
+                                    background: `${step.color}18`,
+                                    border: `1.5px solid ${step.color}`,
+                                    flexShrink: 0,
+                                    boxShadow: `0 0 10px ${step.color}30`,
+                                }} />
+
+                                {/* Content */}
+                                <div style={{
+                                    background: "rgba(15,23,42,0.35)",
+                                    border: "1px solid rgba(255,255,255,0.05)",
+                                    borderLeft: `2px solid ${step.color}40`,
+                                    borderRadius: 12,
+                                    padding: "16px 20px",
+                                    flex: 1,
+                                    backdropFilter: "blur(8px)",
+                                }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6, flexWrap: "wrap" }}>
+                                        <span style={{
+                                            fontFamily: "var(--font-mono, monospace)",
+                                            fontSize: 8, letterSpacing: "0.3em",
+                                            color: step.color, fontWeight: 800,
+                                            opacity: 0.8,
+                                        }}>
+                                            {step.num}
+                                        </span>
+                                        <h3 style={{
+                                            fontFamily: "var(--font-heading, sans-serif)",
+                                            fontSize: 15, fontWeight: 800,
+                                            color: "#f1f5f9", letterSpacing: "-0.02em",
+                                            lineHeight: 1.2,
+                                        }}>
+                                            {step.title}
+                                        </h3>
+                                        {step.tag && (
+                                            <span style={{
+                                                fontFamily: "var(--font-mono, monospace)",
+                                                fontSize: 8, letterSpacing: "0.12em",
+                                                textTransform: "uppercase",
+                                                color: step.color,
+                                                background: `${step.color}12`,
+                                                border: `1px solid ${step.color}30`,
+                                                borderRadius: 4, padding: "2px 8px",
+                                                fontWeight: 700,
+                                            }}>
+                                                {step.tag}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <p style={{
+                                        fontFamily: "var(--font-sans, sans-serif)",
+                                        fontSize: 13.5, lineHeight: 1.65,
+                                        color: "rgba(203,213,225,0.85)",
+                                        margin: 0,
+                                    }}>
+                                        {step.body}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    </div>{/* end collapsible body */}
                 </div>
 
                 {/* Founders Section */}
