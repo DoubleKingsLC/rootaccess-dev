@@ -254,33 +254,15 @@ export default function TopSection() {
                 <div className="flex-1 z-10">
                   <span className="font-label text-primary text-[9px] tracking-[0.2em] uppercase mb-3 block">Navigation Module</span>
                   <h3 className="font-headline text-2xl font-bold mb-1.5 text-white">Interactive Roadmaps</h3>
-                  <p className="font-headline text-on-surface-variant/80 text-base mb-3 italic">See hacking, not just read it.</p>
-                  <p className="text-on-surface-variant text-sm leading-relaxed mb-5 max-w-md">
-                    Scroll-driven attack and defence workflows that visualize complex vulnerabilities in real-time environments.
+                  <p className="font-headline text-on-surface-variant/80 text-base mb-3 italic">Experience Real world scenarios.</p>
+                  <p className="font-label text-white text-[13px] uppercase tracking-[0.2em] mb-4 leading-relaxed">
+                    Scroll driven workflows, understand through visualization. Beginner friendly roadmaps, save the jargon for later.
                   </p>
-                  <ul className="space-y-3">
-                    <li className="flex items-center gap-3 text-sm font-label uppercase tracking-wider text-on-surface text-white">
-                      <span className="material-symbols-outlined text-primary text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>terminal</span>
-                      SOC & Web Hacking live now
-                    </li>
-                    <li className="flex items-center gap-3 text-sm font-label uppercase tracking-wider text-on-surface-variant">
-                      <span className="material-symbols-outlined text-outline text-[16px]">schedule</span>
-                      AI Hacking & Network Pentest soon
-                    </li>
-                  </ul>
                 </div>
-                <div className="md:w-1/4 flex items-center justify-center py-5 z-10">
+                <div className="md:w-1/4 flex items-start justify-center pt-2 z-10">
                   <div className="relative">
-                    <span className="material-symbols-outlined text-6xl text-primary glow-cyan transition-transform duration-700 group-hover:scale-110">route</span>
+                    <span className="material-symbols-outlined text-9xl text-primary glow-cyan transition-transform duration-700 group-hover:scale-110">route</span>
                   </div>
-                </div>
-                {/* Inset Image/Texture for visual depth */}
-                <div className="absolute right-0 bottom-0 w-1/2 h-1/2 opacity-10 pointer-events-none transition-opacity group-hover:opacity-20">
-                  <img 
-                    alt="digital circuit paths" 
-                    className="w-full h-full object-cover grayscale invert" 
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZ9JJvgAYBAu28VXKpd9E8zAAll3zG2y1FaEB4XFe4iMgc_k5W02WNmdkPeAvM4HDoPkwbnLYQQnOPYySm8KifI_sf3uGs0VXbXf1hnA2BGzrN-oYSoWl4PHPBlH7PXCy8GtHf68fXu33-emLPxhFh_NzHGocAMEInPUX-xYJ3rtauELama1le9p8UJTeQDv_h05-r6Y0fzpJJrxzpzYZ72FLx6uQwt3w8ahWjmmTf_8xet7vPS2ikNJJzXw514U0b8HozmtJq"
-                  />
                 </div>
               </div>
             </div>
@@ -318,22 +300,22 @@ export default function TopSection() {
                   <p className="font-headline text-on-surface-variant/80 text-base mb-4 italic">No noise. Only what works.</p>
                   <div className="grid md:grid-cols-2 gap-6">
                     <p className="text-on-surface-variant text-sm leading-relaxed">
-                      Hand-picked labs, courses, and platforms vetted by industry veterans to cut through the marketing fluff.
+                      Hand-picked resources for each and every domain, career level, skill. Your one stop shop, to get started.
                     </p>
                     <ul className="space-y-3">
                       <li className="flex items-center gap-3 text-sm font-label uppercase tracking-wider text-on-surface text-white">
                         <span className="material-symbols-outlined text-tertiary text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-                        PortSwigger, TryHackMe, HTB & more
+                        PORTSWIGGER, TCM SECURITY, HTB & MORE
                       </li>
                       <li className="flex items-center gap-3 text-sm font-label uppercase tracking-wider text-on-surface text-white">
                         <span className="material-symbols-outlined text-tertiary text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-                        Free and paid clearly labelled
+                        FREE AND PAID CLEARLY LABELLED
                       </li>
                     </ul>
                   </div>
                 </div>
                 <div className="order-1 md:order-2">
-                  <span className="material-symbols-outlined text-7xl text-tertiary glow-red transition-all duration-500 group-hover:rotate-6 group-hover:scale-105">menu_book</span>
+                  <span className="material-symbols-outlined text-9xl text-tertiary glow-red transition-all duration-500 group-hover:rotate-6 group-hover:scale-105">menu_book</span>
                 </div>
               </div>
             </div>

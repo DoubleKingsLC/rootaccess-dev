@@ -408,24 +408,27 @@ export default function HomePage() {
             <div className="max-w-[1600px] mx-auto px-8 lg:px-16 pt-16 pb-16 min-h-[max-content] scroll-mt-20" id="roadmaps">
                 
                 {/* 3-COLUMN TACTICAL HUB */}
-                <div className="grid md:grid-cols-[0.7fr_2fr_1.8fr] gap-6 items-start">
+                <div className="grid md:grid-cols-[1.1fr_1.9fr_1.5fr] gap-6 items-start">
                     
                     {/* LHS: Operational Registry */}
-                    <div className="flex flex-col gap-3 sticky top-24">
-                        <div className="mb-4">
+                    <div className="flex flex-col gap-4 md:sticky md:top-24 w-full overflow-hidden">
+                        <div className="hidden md:block">
                             <h2 className="font-mono text-[10px] tracking-[0.4em] uppercase text-primary font-bold opacity-80">Registry_Nodes</h2>
                         </div>
-                        {DOMAINS.map((d) => (
-                            <button
-                                key={d.id}
-                                onClick={() => setActiveId(d.id)}
-                                className={`group flex flex-col p-5 rounded-xl border transition-all duration-500 ${activeId === d.id ? 'bg-slate-900/60' : 'border-white/5 bg-white/[0.01] hover:border-white/20 hover:bg-white/[0.03]'}`}
-                                style={activeId === d.id ? { 
-                                    borderColor: d.color, 
-                                    boxShadow: `0 0 15px ${d.color}15`,
-                                    background: `${d.color}0a`
-                                } : {}}
-                            >
+                        
+                        {/* Mobile Scroll Strip / Desktop Vertical List */}
+                        <div className="flex md:flex-col overflow-x-auto md:overflow-x-visible pb-4 md:pb-0 gap-3 snap-x scrollbar-hide">
+                            {DOMAINS.map((d) => (
+                                <button
+                                    key={d.id}
+                                    onClick={() => setActiveId(d.id)}
+                                    className={`group flex flex-col p-4 md:p-5 rounded-xl border transition-all duration-500 min-w-[140px] md:min-w-0 snap-start ${activeId === d.id ? 'bg-slate-900/60' : 'border-white/5 bg-white/[0.01] hover:border-white/20 hover:bg-white/[0.03]'}`}
+                                    style={activeId === d.id ? { 
+                                        borderColor: d.color, 
+                                        boxShadow: `0 0 15px ${d.color}15`,
+                                        background: `${d.color}0a`
+                                    } : {}}
+                                >
                                 <div className="flex items-start justify-between pointer-events-none w-full">
                                     <div className="flex flex-col items-start">
                                         <span className={`font-headline text-lg md:text-xl font-bold tracking-tight transition-all duration-500 ${activeId === d.id ? 'text-white' : 'text-white/40 group-hover:text-white/80'}`} style={activeId === d.id ? { color: d.color, textShadow: `0 0 10px ${d.color}44` } : {}}>
@@ -442,11 +445,12 @@ export default function HomePage() {
                             </button>
                         ))}
                     </div>
+                </div>
 
                     {/* CENTER: Operational Command Feed (High-Fidelity Tactical Module) */}
-                    <div className="sticky top-24">
+                    <div className="md:sticky md:top-24 w-full">
                         <div 
-                            className="relative min-h-[480px] rounded-2xl overflow-hidden shadow-2xl transition-all duration-700"
+                            className="relative min-h-[460px] md:min-h-[480px] rounded-2xl overflow-hidden shadow-2xl transition-all duration-700"
                             style={{ 
                                 background: "rgba(13, 17, 23, 0.95)",
                                 border: `1px solid ${activeDomain.color}22`,
@@ -485,35 +489,40 @@ export default function HomePage() {
                                 <div className="font-mono text-[9px] font-bold tracking-[0.3em] text-white/10">ROOTACCESS // PERSISTENT</div>
                             </div>
 
-                            <div className="p-6 lg:p-8 flex flex-col min-h-[calc(480px-48px)] relative z-10">
-                                <div className="mb-6">
-                                    <h1 className="font-headline text-3xl font-black text-white mb-1 tracking-tighter leading-none">
+                            <div className="p-5 md:p-8 flex flex-col min-h-[calc(460px-48px)] relative z-10">
+                                <div className="mb-4 md:mb-6">
+                                    <h1 className="font-headline text-2xl md:text-3xl font-black text-white mb-1 tracking-tighter leading-none">
                                         {activeDomain.label}
                                     </h1>
                                     <div className="flex items-center gap-3">
-                                        <div className="h-px w-8" style={{ backgroundColor: activeDomain.color }}></div>
-                                        <span className="font-mono text-[10px] uppercase tracking-[0.4em] font-bold" style={{ color: `${activeDomain.color}bb` }}>{activeDomain.sub}</span>
+                                        <div className="h-px w-6 md:w-8" style={{ backgroundColor: activeDomain.color }}></div>
+                                        <span className="font-mono text-[9px] md:text-[10px] uppercase tracking-[0.4em] font-bold" style={{ color: `${activeDomain.color}bb` }}>{activeDomain.sub}</span>
                                     </div>
                                 </div>
                                 
-                                <p className="text-on-surface-variant text-[15px] leading-relaxed font-light opacity-50 mb-6 max-w-md">
+                                <p className="text-on-surface-variant text-[13px] md:text-[15px] leading-relaxed font-light opacity-50 mb-6 max-w-md">
                                     {activeDomain.desc}
                                 </p>
 
                                 {/* Detailed Stats Feed */}
-                                <div className="grid grid-cols-2 gap-4 mb-auto">
+                                <div className="grid grid-cols-2 gap-x-4 md:gap-x-8 gap-y-4 mb-auto">
                                     {[
                                         { label: "THREAT_LVL", val: "CRITICAL", icon: "priority_high" },
                                         { label: "SYNC_CODE", val: activeDomain.statusText, icon: "code" },
                                         { label: "PROTOCOL", val: "SECURE_TUNNEL", icon: "security" },
                                         { label: "ACCESS", val: activeDomain.live ? "GRANTED" : "LOCKED", icon: activeDomain.live ? "key" : "lock" },
                                     ].map((stat, i) => (
-                                        <div key={i} className="bg-white/[0.02] border border-white/[0.05] p-4 rounded-xl flex flex-col gap-2 group hover:bg-white/[0.04] transition-all duration-300">
-                                            <div className="flex items-center justify-between">
-                                                <span className="font-mono text-[8px] uppercase tracking-widest text-white/30">{stat.label}</span>
-                                                <span className="material-symbols-outlined text-[14px] opacity-20 group-hover:opacity-100 transition-opacity" style={{ color: activeDomain.color }}>{stat.icon}</span>
+                                        <div key={i} className="flex items-center gap-3 transition-opacity">
+                                            <div 
+                                                className="w-8 h-8 rounded-lg flex items-center justify-center border border-white/5"
+                                                style={{ backgroundColor: `${activeDomain.color}0a` }}
+                                            >
+                                                <span className="material-symbols-outlined text-[15px]" style={{ color: activeDomain.color }}>{stat.icon}</span>
                                             </div>
-                                            <span className="font-mono text-[11px] font-black uppercase tracking-widest text-white/70">{stat.val}</span>
+                                            <div className="flex flex-col">
+                                                <span className="font-mono text-[7px] uppercase tracking-widest text-white/30">{stat.label}</span>
+                                                <span className="font-mono text-[10px] font-black uppercase tracking-widest text-white/70">{stat.val}</span>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
@@ -568,18 +577,12 @@ export default function HomePage() {
             <footer className="bg-[#0a0e14] w-full py-20 border-t border-[#81ecff]/5 mt-32">
                 <div className="flex flex-col md:flex-row justify-between items-center px-10 gap-12 w-full max-w-screen-2xl mx-auto">
                     <div className="flex flex-col gap-2">
-                        <div className="text-[#81ecff] font-bold font-headline tracking-tighter uppercase text-xl">rootaccess.tech</div>
+                        <div className="text-[#81ecff] font-bold font-headline tracking-tighter text-xl">rootaccess.tech</div>
                         <div className="text-white/20 font-mono text-[10px] tracking-widest uppercase">Signal Ops // Authentic_Hub</div>
                     </div>
                     
-                    <div className="flex flex-wrap justify-center gap-12 font-label uppercase tracking-[0.3em] text-[11px]">
-                        <Link className="text-white/40 hover:text-[#81ecff] transition-all" href="#">Tactics</Link>
-                        <Link className="text-white/40 hover:text-[#81ecff] transition-all" href="#">Signals</Link>
-                        <Link className="text-white/40 hover:text-[#81ecff] transition-all" href="#">Deepnet</Link>
-                    </div>
-                    
                     <div className="text-right">
-                        <div className="text-[#bc87fe] font-label uppercase tracking-[0.3em] text-[11px] opacity-60 mb-2">© 2024 ROOTACCESS GLOBAL PERSISTENT</div>
+                        <div className="text-[#bc87fe] font-label uppercase tracking-[0.3em] text-[11px] opacity-60 mb-2">© 2026 ROOTACCESS</div>
                         <div className="text-white/20 font-mono text-[8px] uppercase tracking-[0.4em]">Signal: Secure // Persistent</div>
                     </div>
                 </div>

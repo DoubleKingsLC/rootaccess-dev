@@ -70,8 +70,6 @@ function Sidebar() {
 
 // ── Components ────────────────────────────────────────────────────────────────
 
-
-
 interface CertCardProps {
   name: string;
   provider: string;
@@ -167,10 +165,10 @@ function CertCard({ name, provider, href, accentColor, what, why, isTop }: CertC
   );
 }
 
-// Full SkillCard specifically for Level 00 (matches SOC)
 interface SkillResource {
   label: string;
   url: string;
+  why: string;
 }
 
 interface SkillCardProps {
@@ -236,7 +234,6 @@ function SkillCard({ name, category, correlatedTools, accentColor, what, why, re
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-0" style={{ borderColor: `${accentColor}18` }}>
-        {/* Why - Left Column */}
         <div className="px-6 py-6 border-b xl:border-b-0" style={{ borderColor: `${accentColor}15` }}>
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] mb-4" style={{ color: `${accentColor}ee` }}>
             Why you need it here
@@ -244,7 +241,6 @@ function SkillCard({ name, category, correlatedTools, accentColor, what, why, re
           <p className="text-[15px] leading-relaxed" style={{ color: "rgba(226,232,240,0.88)" }}>{why}</p>
         </div>
 
-        {/* Resources - Right Column */}
         <div className="px-6 py-6 flex flex-col gap-5 border-t xl:border-t-0 xl:border-l" style={{ borderColor: `${accentColor}18` }}>
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em]" style={{ color: `${accentColor}ee` }}>
             Resources to Learn
@@ -253,37 +249,41 @@ function SkillCard({ name, category, correlatedTools, accentColor, what, why, re
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-widest mb-3 font-semibold" style={{ color: "rgba(96,165,250,0.9)" }}>Free Options</p>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-4">
                 {resources.free.map((res) => (
-                  <a
-                    key={res.label}
-                    href={res.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center gap-2 text-[12px] hover:text-white transition-colors py-1"
-                    style={{ color: "rgba(203,213,225,0.8)", textDecoration: "underline" }}
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 group-hover:bg-blue-400" style={{ background: "rgba(96,165,250,0.6)" }} />
-                    {res.label}
-                  </a>
+                  <div key={res.label}>
+                    <a
+                      href={res.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-2 text-[12px] font-bold hover:text-white transition-colors"
+                      style={{ color: "rgba(203,213,225,0.95)", textDecoration: "underline" }}
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 group-hover:bg-blue-400" style={{ background: "rgba(96,165,250,0.6)" }} />
+                      {res.label}
+                    </a>
+                    <p className="text-[11px] mt-1 ml-3.5 leading-relaxed" style={{ color: "rgba(148,163,184,0.7)" }}>{res.why}</p>
+                  </div>
                 ))}
               </div>
             </div>
             <div>
               <p className="font-mono text-[10px] uppercase tracking-widest mb-3 font-semibold" style={{ color: "rgba(251,191,36,0.9)" }}>Paid Options</p>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-4">
                 {resources.paid.map((res) => (
-                  <a
-                    key={res.label}
-                    href={res.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center gap-2 text-[12px] hover:text-white transition-colors py-1"
-                    style={{ color: "rgba(203,213,225,0.8)", textDecoration: "underline" }}
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 group-hover:bg-amber-400" style={{ background: "rgba(251,191,36,0.6)" }} />
-                    {res.label}
-                  </a>
+                  <div key={res.label}>
+                    <a
+                      href={res.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-2 text-[12px] font-bold hover:text-white transition-colors"
+                      style={{ color: "rgba(203,213,225,0.95)", textDecoration: "underline" }}
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 group-hover:bg-amber-400" style={{ background: "rgba(251,191,36,0.6)" }} />
+                      {res.label}
+                    </a>
+                    <p className="text-[11px] mt-1 ml-3.5 leading-relaxed" style={{ color: "rgba(148,163,184,0.7)" }}>{res.why}</p>
+                  </div>
                 ))}
               </div>
             </div>
@@ -326,94 +326,65 @@ function WebHackingHeroAnimation() {
   const [phase, setPhase] = useState(0);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase(1), 800);  // sqlmap initializing
-    const t2 = setTimeout(() => setPhase(2), 2200); // payload found
-    const t3 = setTimeout(() => setPhase(3), 3500); // WAF Block kicks in
-    const t4 = setTimeout(() => setPhase(4), 5500); // Friendly advice
+    const t1 = setTimeout(() => setPhase(1), 800);
+    const t2 = setTimeout(() => setPhase(2), 2200);
+    const t3 = setTimeout(() => setPhase(3), 3500);
+    const t4 = setTimeout(() => setPhase(4), 5500);
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
   }, []);
 
   return (
     <div className="relative w-full max-w-[500px] h-[460px] rounded-2xl overflow-hidden bg-[#090d14] border border-rose-500/20 font-mono text-[11px] p-6 flex flex-col shadow-2xl">
-      {/* Background Glow */}
       <div className="absolute inset-0 bg-gradient-to-br from-rose-500/10 to-transparent pointer-events-none" />
-      
-      {/* Window Controls */}
       <div className="flex items-center gap-2 mb-4 border-b border-white/10 pb-4 flex-shrink-0 relative z-10">
         <div className="w-2.5 h-2.5 rounded-full bg-red-500/40" />
         <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/40" />
         <div className="w-2.5 h-2.5 rounded-full bg-green-500/40" />
         <span className="ml-3 text-white/20 text-[10px] uppercase tracking-[0.4em] font-bold">attacker@kali:~#</span>
       </div>
-
       <div className="flex-1 relative z-10 flex flex-col gap-2">
-        {/* Phase 0 & 1: The Attack */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-rose-200">
-          <span className="text-white font-bold">$</span> sqlmap -u "https://rootaccess.tech/api/auth?id=1" --dbs
+          <span className="text-white font-bold">$</span> sqlmap -u "https://rootaccess.tech/api/user?id=1" --dbs
         </motion.div>
-
         {phase >= 1 && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-rose-200/60 leading-relaxed mt-1">
             <span className="text-blue-400 font-bold">[INFO]</span> testing connection to the target URL<br/>
-            <span className="text-blue-400 font-bold">[INFO]</span> checking if the target is protected by some kind of WAF/IPS<br/>
+            <span className="text-blue-400 font-bold">[INFO]</span> checking if the target is protected by a WAF<br/>
           </motion.div>
         )}
-
         {phase >= 2 && (
           <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="text-white bg-white/5 border-l-2 border-rose-500/40 pl-3 py-1.5 mt-1">
-            <span className="text-rose-400 font-bold">[CRITICAL]</span> heuristic test shows that GET parameter 'id' might be injectable (possible DBMS: 'PostgreSQL')
+            <span className="text-rose-400 font-bold">[CRITICAL]</span> parameter 'id' is injectable (DBMS: 'PostgreSQL')
           </motion.div>
         )}
-
-        {/* Phase 3: The WAF Block / Smackdown */}
         {phase >= 3 && (
-          <motion.div
-            layout
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            className="mt-4 p-3 border border-red-500/50 bg-red-500/10 rounded-lg flex gap-3 shadow-[0_0_15px_rgba(239,68,68,0.15)]"
-          >
+          <motion.div layout initial={{ opacity: 0, scale: 0.95, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} className="mt-4 p-3 border border-red-500/50 bg-red-500/10 rounded-lg flex gap-3 shadow-[0_0_15px_rgba(239,68,68,0.15)]">
              <div className="w-2.5 h-2.5 rounded-full bg-red-500 mt-0.5 flex-shrink-0 shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
              <div>
                <div className="font-bold tracking-widest text-[10px] uppercase mb-1 text-red-500">Active Defense Triggered</div>
                <div className="text-red-200/90 text-[11px] leading-relaxed">
-                 FATAL ERROR: You can't do that here.<br/>This is for information only. Stop breaking our site.
+                 FATAL ERROR: Automated payload detected.<br/>This is a controlled environment. Please follow the roadmap.
                </div>
              </div>
           </motion.div>
         )}
-
-        {/* Phase 4: The Redirect */}
         {phase >= 4 && (
-          <motion.div
-            layout
-            initial={{ opacity: 0, scale: 0.9, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            className="mt-4 p-4 border border-rose-400/30 bg-rose-400/10 rounded-xl text-center relative overflow-hidden"
-          >
+          <motion.div layout initial={{ opacity: 0, scale: 0.9, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} className="mt-4 p-4 border border-rose-400/30 bg-rose-400/10 rounded-xl text-center relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-rose-400/0 via-rose-400/10 to-rose-400/0 opacity-50" />
             <div className="text-[10px] font-bold tracking-[0.25em] text-rose-300 mb-2 relative z-10">
               [SYSTEM_GUIDANCE]
             </div>
             <div className="tracking-wide text-[12px] text-rose-100 relative z-10 leading-relaxed">
-              Start actually practicing.<br/>
-              Look for <span className="font-bold text-white bg-rose-500/30 px-2 py-0.5 rounded border border-rose-500/40 shadow-sm mx-1">actual labs to practice on</span> using our pathway.
+              Build your skills properly.<br/>
+              Explore the <span className="font-bold text-white bg-rose-500/30 px-2 py-0.5 rounded border border-rose-500/40 shadow-sm mx-1">curated learning paths</span> below.
             </div>
           </motion.div>
         )}
       </div>
-
-      {/* Decorative scanning line */}
-      <motion.div
-        animate={{ top: ["0%", "100%"] }}
-        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-        className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-rose-500/20 to-transparent z-0 pointer-events-none"
-      />
+      <motion.div animate={{ top: ["0%", "100%"] }} transition={{ duration: 3, repeat: Infinity, ease: "linear" }} className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-rose-500/20 to-transparent z-0 pointer-events-none" />
     </div>
   );
 }
-
-// ── Page Content ──────────────────────────────────────────────────────────────
 
 export default function DetailedWebHackingClient() {
   return (
@@ -468,10 +439,10 @@ export default function DetailedWebHackingClient() {
               style={{ fontFamily: "var(--font-heading, system-ui)" }}
             >
               Web Hacking:<br />
-              <span style={{ color: "rgba(244,63,94,0.95)" }}>The Career Path, Explained</span>
+              <span style={{ color: "rgba(244,63,94,0.95)" }}>The Path, Explained</span>
             </h1>
             <p className="text-xl leading-relaxed max-w-xl" style={{ color: "rgba(226,232,240,0.8)" }}>
-              Most people think hacking is about typing fast in a dark room. It's not. It's about understanding a system so deeply that you can make it do things the original developer never intended. This guide is the "No-BS" roadmap for moving from curious beginner to a Pentest Lead, covering the specific tools, scars, and skills you actually need to survive in the field.
+              Most people assume hacking is about typing fast in a dark room. In reality, it is about understanding a system so deeply that you can make it do things the original developer never intended. This is the grounded roadmap for moving from a curious beginner to a Pentest Lead, outlining the tools, scars, and skills required to survive as a professional.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
               {LEVELS.map((l) => (
@@ -510,34 +481,34 @@ export default function DetailedWebHackingClient() {
           <section id="level-00" className="py-16 xl:py-20">
             <SectionHeader
               num="00" label="The Entry Point" color="#94a3b8"
-              subtitle="Building the Foundation"
+              subtitle="Foundational Theory & Basic Logic"
               time="0-6 months" salary="£25K-£35K"
             />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>
-                In security you will inevitably break things and you will really need to understand exactly how they broke. Before you can ever spot a real attacker you must learn the basic ground you stand on. This starts right here.
+                In the world of security, you will inevitably break things, and you need to understand exactly how they broke. Before you can ever spot a real attacker, you must learn the basic ground you stand on. This starts with the physics of the internet and the mechanics of operating systems.
               </p>
               <p>
-                You have to start learning about operating systems and networks. The entire internet essentially runs on Linux. If you cannot navigate a terminal comfortably you are effectively blind in a Security Operations Centre. It is the clear difference between clicking a shiny button on a dashboard and genuinely understanding the command that just executed across your entire fleet of endpoints.
+                The entire internet essentially runs on Linux. If you cannot navigate a terminal comfortably, you are effectively operating with a blindfold on. It is the clear difference between clicking a shiny button on a dashboard and genuinely understanding the command that just executed across your entire fleet of endpoints.
               </p>
               <p>
-                You also cannot defend what you do not understand. Networking is basically the physics of the digital world. If you do not know how a normal packet moves from point A to point B you will never be able to spot the packet that shouldn't be there. This level slowly turns scary technical jargon into concepts you can actually explain to your friends over coffee.
+                You also cannot defend or exploit what you do not understand. If you do not know how a normal packet moves from point A to point B, you will never be able to spot the packet that shouldn't be there. This level turns scary technical jargon into concepts you can actually explain to a friend over coffee.
               </p>
             </div>
 
             <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] mb-6" style={{ color: "rgba(148,163,184,0.75)" }}>Certifications</p>
             <div className="space-y-5">
               <CertCard name="Google Cybersecurity Certificate" provider="Coursera / Google" href="https://www.coursera.org/professional-certificates/google-cybersecurity" accentColor="#94a3b8" isTop
-                what="An overarching start to security. It guides you from the absolute basics of networking and Linux command line straight through to fundamental threat detection and simple Python scripting. It is incredibly comprehensive and quite affordable."
-                why="This is the absolute best generalist start. It doesn't bog you down with overly dense engineering details. More importantly finishing it proves to employers you can actually commit to a multi-month learning discipline while showing them you understand the broad strokes of a blue team role. It carries heavy weight because HR departments recognize the brand name."
+                what="A broad and accessible start to security. It guides you from the absolute basics of networking and the Linux command line through to fundamental threat detection and simple Python scripting."
+                why="This is the best generalist starting point because it doesn't bog you down with overly dense engineering details. More importantly, finishing it proves to employers that you have the discipline to finish a multi-month course. HR departments universally recognize the Google brand, which helps with your initial resume screening."
               />
               <CertCard name="TryHackMe Pre-Security" provider="TryHackMe" href="https://tryhackme.com/certification/pre-security" accentColor="#94a3b8"
-                what="Bite-sized gamified lessons focusing heavily on removing fear from foundational concepts. You get to interactively learn networking layers HTTP DNS and fundamental security terminology right in your normal browser."
-                why="We put this here because it has the absolute lowest barrier to entry. It turns intimidating tech into small manageable missions. It's about building your vital confidence and allowing you to spin up an interactive lab safely before you spend your hard-earned cash or get totally overwhelmed."
+                what="Bite-sized, gamified lessons that remove the fear from technical concepts. You learn about networking layers, HTTP, DNS, and fundamental security terminology right in your browser."
+                why="We recommend this because it has the lowest barrier to entry. It turns intimidating tech into small, manageable missions. It helps build your confidence and gives you a chance to spin up a lab environment safely before you spend money on more expensive training."
               />
               <CertCard name="TCM Practical Security Fundamentals" provider="TCM Security Academy" href="https://academy.tcm-sec.com/p/practical-security-fundamentals" accentColor="#94a3b8"
-                what="A hands-on practical course that avoids dry static slide decks in favour of real-world demonstrations of exactly how the modern digital world works and then quickly breaks it apart."
-                why="TCM is strictly for the hands-on soul. If you hate reading text-heavy slides and genuinely want to see how networks and operating systems actually break from day one this is your top pick. It heavily focuses on the fundamental 'how' of security not just the boring theory."
+                what="A hands-on course that focuses on real-world demonstrations rather than dry slide decks. It shows you exactly how the modern digital world works and then logically takes it apart."
+                why="This is for learners who prefer doing over watching. If you want to see how networks and operating systems actually break from day one, this is your best choice. It focuses on the fundamental 'how' of security rather than just the academic theory."
               />
             </div>
 
@@ -548,15 +519,15 @@ export default function DetailedWebHackingClient() {
                 category="Core Knowledge"
                 correlatedTools={["VirtualBox", "Terminal", "PowerShell"]}
                 accentColor="#94a3b8"
-                what="The fundamental 'language' of how data moves across a network, including DNS, DHCP, and Subnetting."
-                why="You can't defend what you don't understand. If you don't know how a DNS request is supposed to look, you'll never spot a C2 server 'hiding' in plain sight. This is the physics of the digital world—ignore it, and you're just guessing."
+                what="The fundamental language of how data moves across a network, including DNS, DHCP, and Subnetting."
+                why="You can't exploit what you don't understand. If you don't know how a DNS request is supposed to look, you'll never spot a malicious server hiding in plain sight. This is the physics of the digital world."
                 resources={{
                   free: [
-                    { label: "Professor Messer Net+", url: "https://www.professormesser.com/network-plus/n10-009/n10-009-video/" },
-                    { label: "NetworkChuck", url: "https://www.youtube.com/playlist?list=PLIhvC56v63IJVXv0GJcl9vO5Z6znCVb1P" },
+                    { label: "Professor Messer Net+", url: "https://www.professormesser.com/network-plus/n10-009/n10-009-video/", why: "The gold standard for clear, free networking education with zero fluff." },
+                    { label: "NetworkChuck", url: "https://www.youtube.com/playlist?list=PLIhvC56v63IJVXv0GJcl9vO5Z6znCVb1P", why: "An high-energy, visual way to learn complex networking concepts." },
                   ],
                   paid: [
-                    { label: "Jason Dion Net+", url: "https://www.udemy.com/course/comptia-network-cert-n10-008-the-total-course/" }
+                    { label: "Jason Dion Net+", url: "https://www.udemy.com/course/comptia-network-cert-n10-008-the-total-course/", why: "The best exam prep if you plan on actually taking the Network+ certification." }
                   ]
                 }}
               />
@@ -566,14 +537,14 @@ export default function DetailedWebHackingClient() {
                 correlatedTools={["Linux", "Windows", "VirtualBox"]}
                 accentColor="#94a3b8"
                 what="Deep knowledge of how operating systems manage files, processes, and users across Windows and Linux environments."
-                why="You need to know what 'Normal' looks like to identify 'Abnormal.' Attackers love to hide in system folders or create 'ghost' users. If you don't know your way around the Linux filesystem or the Windows Registry, you're a blind defender."
+                why="You need to know what 'Normal' looks like to identify 'Abnormal.' Attackers hide in system folders or create hidden users. If you don't know your way around the Linux filesystem, you are a blind hacker."
                 resources={{
                   free: [
-                    { label: "The Linux Command Line", url: "https://linuxcommand.org/tlcl.php" },
-                    { label: "THM Linux Fundamentals", url: "https://tryhackme.com/module/linux-fundamentals" },
+                    { label: "The Linux Command Line", url: "https://linuxcommand.org/tlcl.php", why: "A free book that is widely considered the bible for terminal beginners." },
+                    { label: "THM Linux Fundamentals", url: "https://tryhackme.com/module/linux-fundamentals", why: "Hands-on labs to get you over the fear of the black command prompt." },
                   ],
                   paid: [
-                    { label: "TCM Academy Linux 101", url: "https://academy.tcm-sec.com/p/linux-101" }
+                    { label: "TCM Academy Linux 101", url: "https://academy.tcm-sec.com/p/linux-101", why: "Practical, video-led instructions from people who use Linux for hacking every day." }
                   ]
                 }}
               />
@@ -582,15 +553,15 @@ export default function DetailedWebHackingClient() {
                 category="Automation"
                 correlatedTools={["Python", "Bash", "Terminal"]}
                 accentColor="#94a3b8"
-                what="Using code like Python or Bash to automate repetitive, manual tasks and process large datasets."
-                why="Speed is your greatest weapon. You don't want to be the person manually checking 500 logs. You want to be the person who writes a 10-line script to do it in 5 seconds. Automating the boring stuff leaves you time for the actual hunting."
+                what="Using code like Python or Bash to automate repetitive tasks and process large datasets."
+                why="Speed is your greatest weapon. You don't want to manually check 500 logs. You want to write a 10-line script to do it in 5 seconds. Automating the boring stuff leaves you time for actual hacking."
                 resources={{
                   free: [
-                    { label: "Automate the Boring Stuff", url: "https://automatetheboringstuff.com/" },
-                    { label: "CS50P — Python", url: "https://cs50.harvard.edu/python/2022/" }
+                    { label: "Automate the Boring Stuff", url: "https://automatetheboringstuff.com/", why: "The most practical Python guide ever written for non-programmers." },
+                    { label: "CS50P — Python", url: "https://cs50.harvard.edu/python/2022/", why: "A world-class introduction to Python from Harvard University." }
                   ],
                   paid: [
-                    { label: "TCM Python 101", url: "https://academy.tcm-sec.com/p/python-101-for-hackers" }
+                    { label: "TCM Python 101", url: "https://academy.tcm-sec.com/p/python-101-for-hackers", why: "Python explained specifically through the lens of a security professional." }
                   ]
                 }}
               />
@@ -603,27 +574,27 @@ export default function DetailedWebHackingClient() {
           <section id="level-01" className="py-16 xl:py-20">
             <SectionHeader
               num="01" label="Junior Pentester" color="#f43f5e"
-              subtitle="First Exploits, First Reports"
+              subtitle="Breaking the Logic & Writing Proofs"
               time="0–2 years" salary="£35K–£55K"
             />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>
-                Welcome to the middle of the fight. As a Junior Pentester, you’ve stopped just reading about bugs and started finding them. You’re learning to use Burp Suite to 'catch' web requests in mid-air and change them before they reach the server.
+                As a Junior Pentester, you move from reading about vulnerabilities to proving they exist. You will begin and end your day in Burp Suite, catching web requests in mid-air and changing them before they reach the server.
               </p>
               <p>
-                But here is the secret: Finding the bug is only 50% of the job. The other 50% is writing a report that is so clear a stressed-out developer can fix it in ten minutes. If you can’t explain the risk, the bug doesn't matter. You are developing 'The Eye'—the ability to look at a login screen and instinctively know three different ways to try and break it.
+                However, finding the bug is only half the battle. The other half is writing a report that is so clear a stressed-out developer can fix it in ten minutes. If you can't explain the risk, the bug doesn't matter to the business. You are developing 'The Eye' — the instinct to look at a login screen and know exactly which technique to try first.
               </p>
             </div>
 
             <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] mb-6" style={{ color: "rgba(244,63,94,0.85)" }}>Certifications</p>
             <div className="space-y-5">
               <CertCard name="PWPA — Practical Web Pentest Associate" provider="TCM Security" href="https://certifications.tcm-sec.com/pwpa/" accentColor="#f43f5e" isTop
-                what="A brutal, 100% lab-based exam that strips away the multiple-choice fluff and tests if you can actually hack. It forces you to enumerate services, find realistic web vulnerabilities, and chain them together in a live, sandboxed environment without having your hand held."
-                why="This is the best value in the industry right now for proving you can sit down on Day 1 and perform a real web assessment. Employers don't care if you memorized port numbers; they want to know if you can find the bug and write a professional report explaining it. PWPA proves exactly that."
+                what="A purely lab-based exam that tests if you can actually perform a web assessment. There are no multiple-choice questions; you are given a target and must find and document vulnerabilities."
+                why="This is excellent value for proving you can sit down on Day 1 and start worked. Employers want to know if you can find a bug and write a professional report explaining it. PWPA proves exactly that without the high cost of traditional certs."
               />
-              <CertCard name="eWPT — eLearnSecurity Web Penetration Tester" provider="INE" href="https://ine.com/security/certifications/ewpt-certification" accentColor="#f43f5e"
-                what="A highly respected practical exam that dives deep into advanced web application exploitation. It covers everything from bypassing complex authentication mechanisms to exploiting blind SQL injections and chaining XSS attacks to steal admin cookies."
-                why="It serves as a massive confidence builder and a great 'middle ground' certification. Passing it requires you to not just exploit a network, but to professionally document every single finding. It teaches you that a hacked server means nothing if you can't articulate the business risk."
+              <CertCard name="eWPT — eLearnSecurity Web Pentester" provider="INE" href="https://ine.com/security/certifications/ewpt-certification" accentColor="#f43f5e"
+                what="A respected practical exam covering advanced web exploitation, from authentication bypass to exploiting blind SQL injections."
+                why="This serves as a massive confidence builder. Passing it requires you to not just exploit a network, but to professionally document every finding. It teaches you that a hacked server means nothing if you can't communicate the threat clearly."
               />
             </div>
 
@@ -634,15 +605,15 @@ export default function DetailedWebHackingClient() {
                 category="Core Vulnerabilities"
                 correlatedTools={["Browser", "Burp Suite", "SQLMap"]}
                 accentColor="#f43f5e"
-                what="Mastering the most common 'death blows' like SQL Injection, XSS, and Broken Access Control."
-                why="The vast majority of web vulnerabilities encountered in real assessments fall into these core categories. You cannot be a pentester without deeply understanding them."
+                what="Mastering the common vulnerabilities like SQL Injection, Cross-Site Scripting (XSS), and Broken Access Control."
+                why="Almost every web vulnerability found in real life falls into these categories. You cannot be a pentester without mastering them inside and out."
                 resources={{
                   free: [
-                    { label: "PortSwigger Web Security Academy", url: "https://portswigger.net/web-security" },
-                    { label: "OWASP Foundation Guides", url: "https://owasp.org/www-project-top-ten/" },
+                    { label: "PortSwigger Academy", url: "https://portswigger.net/web-security", why: "The single best web security training resource in existence, for free." },
+                    { label: "OWASP Guides", url: "https://owasp.org/www-project-top-ten/", why: "The formal definitions used by every security company on the planet." },
                   ],
                   paid: [
-                    { label: "TCM Practical Bug Bounty", url: "https://academy.tcm-sec.com/p/practical-bug-bounty" }
+                    { label: "TCM Practical Bug Bounty", url: "https://academy.tcm-sec.com/p/practical-bug-bounty", why: "Shows you the 'messy' reality of finding bugs that aren't in a clean lab environment." }
                   ]
                 }}
               />
@@ -651,30 +622,30 @@ export default function DetailedWebHackingClient() {
                 category="Dynamic Testing"
                 correlatedTools={["Burp Suite", "Caido", "FoxyProxy"]}
                 accentColor="#f43f5e"
-                what="Using local proxies to catch, modify, and replay HTTP/S requests in mid-air before they reach the server."
-                why="Modern web apps rely on complex client-side interactions. If you only look at the UI, you miss 80% of the attack surface. Interception lets you talk directly to the backend."
+                what="Using local proxies to catch, modify, and replay HTTP/S requests in mid-air."
+                why="Modern web apps rely on complex client-side interactions. If you only look at the buttons on the screen, you miss 80% of the attack surface. Interception lets you talk directly to the server's brain."
                 resources={{
                   free: [
-                    { label: "Rana Khalil (YouTube)", url: "https://www.youtube.com/c/RanaKhalil101" },
+                    { label: "Rana Khalil (YouTube)", url: "https://www.youtube.com/c/RanaKhalil101", why: "Incredibly detailed walkthroughs of PortSwigger labs." },
                   ],
                   paid: [
-                    { label: "Burp Suite Certified Practitioner Training", url: "https://portswigger.net/web-security/certification" }
+                    { label: "Burp Suite Practitioner", url: "https://portswigger.net/web-security/certification", why: "The official path to becoming a certified master of our industry's most important tool." }
                   ]
                 }}
               />
               <SkillCard
-                name="Vulnerability Documentation"
+                name="Documentation"
                 category="Reporting"
                 correlatedTools={["Markdown", "SysReptor", "Ghostwriter"]}
                 accentColor="#f43f5e"
-                what="Learning to write concise, reproducible Proof-of-Concepts (PoCs) that clearly prove the business risk is real."
-                why="Finding the bug is only 50% of the job. Writing a report that is so clear a stressed-out developer can fix it in ten minutes is what actually gets you paid and rehired."
+                what="Learning to write concise Proof-of-Concepts (PoCs) that prove a business risk is real."
+                why="Finding the bug is fun, but writing the report is what actually gets you paid. Clear documentation separates the hobbyists from the professionals."
                 resources={{
                   free: [
-                    { label: "PentesterLand Writeups", url: "https://pentester.land/writeups/" },
+                    { label: "PentesterLand Writeups", url: "https://pentester.land/writeups/", why: "Read actual reports from the world's most successful bug hunters to see how the pros write." },
                   ],
                   paid: [
-                    { label: "TCM Practical Bug Bounty", url: "https://academy.tcm-sec.com/p/practical-bug-bounty" }
+                    { label: "TCM Reporting Course", url: "https://academy.tcm-sec.com/p/practical-bug-bounty", why: "Teaches you the corporate side of reporting that most courses skip." }
                   ]
                 }}
               />
@@ -687,31 +658,31 @@ export default function DetailedWebHackingClient() {
           <section id="level-02" className="py-16 xl:py-20">
             <SectionHeader
               num="02" label="Exploitation Specialist" color="#fb923c"
-              subtitle="Full Engagements, Cloud & Chaining"
+              subtitle="Complex Chaining & Cloud Infrastructures"
               time="2–5 years" salary="£55K–£80K"
             />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>
-                At this stage, you stop looking for 'single' bugs and start looking for 'chains.' An attacker doesn't just stop at a small information leak; they use that leak to steal a session, which they use to bypass an IDOR, which leads to a full data breach.
+                At this stage, you stop looking for single bugs and start looking for chains. An attacker doesn't stop at an information leak; they use that leak to steal a session, which they use to bypass an IDOR, which leads to a full data breach.
               </p>
               <p>
-                You’re also moving into the Cloud. Most modern companies don't own their servers anymore—they rent them from AWS or Azure. If you don't know how to find a misconfigured S3 bucket or a leaky IAM policy, you're missing half the attack surface. You are now an Exploitation Specialist, which means you aren't just a hacker; you’re a trusted advisor for the client.
+                You are also moving into the Cloud. Most modern companies rent their servers from AWS or Azure. If you don't know how to find a misconfigured S3 bucket or a leaky identity policy, you're missing half of the modern attack surface. You are now a specialist, acting as a trusted advisor to the client.
               </p>
             </div>
 
             <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] mb-6" style={{ color: "rgba(251,146,60,0.85)" }}>Certifications</p>
             <div className="space-y-5">
-              <CertCard name="CWES — HTB Certified Web Exploitation Specialist" provider="Hack The Box" href="https://academy.hackthebox.com/preview/certifications/htb-certified-web-exploitation-specialist" accentColor="#fb923c" isTop
-                what="An intensely difficult, scenario-based practical exam from Hack The Box that puts you in the shoes of a real-world attacker. It tests your ability to read thick, complex source code (Whitebox testing) and leverage advanced techniques like Server-Side Template Injections (SSTI) and insecure deserialization."
-                why="At this level, generic automated scanners won't find the bugs anymore—you have to manually bend the logic of the application. The CWES proves you can handle high-pressure, complex defensive layers and actually creatively engineer an exploit when the easy tools fail."
+              <CertCard name="HTB Certified Web Specialist (CWES)" provider="Hack The Box" href="https://academy.hackthebox.com/preview/certifications/htb-certified-web-exploitation-specialist" accentColor="#fb923c" isTop
+                what="An intensely difficult, scenario-based exam that puts you in the shoes of a real attacker. It tests your ability to read complex source code and leverage advanced techniques."
+                why="At this level, generic scanners won't find the bugs anymore. You have to manually bend the logic of the application. CWES proves you can handle high-pressure scenarios and creatively engineer an exploit when the easy tools fail."
               />
-              <CertCard name="BSCP — Burp Suite Certified Practitioner" provider="PortSwigger" href="https://portswigger.net/web-security/certification" accentColor="#fb923c"
-                what="The official 'Pro' badge from PortSwigger, the actual creators of Burp Suite. This exam is a pure sprint—testing your ability to rapidly identify, exploit, and chain complex vulnerabilities within strict time limits using the industry's most essential tool."
-                why="Burp Suite is the definitive weapon of choice for web hackers. Having the BSCP tells any hiring manager in the world that you aren't just clicking 'Scan'; you are a certified power-user of the tool, capable of writing custom extensions and bypassing modern Web Application Firewalls (WAFs)."
+              <CertCard name="Burp Suite Practitioner (BSCP)" provider="PortSwigger" href="https://portswigger.net/web-security/certification" accentColor="#fb923c"
+                what="The official pro badge from the creators of Burp Suite. This exam is a pure sprint, testing your ability to rapidly identify and chain complex vulnerabilities under a strict time limit."
+                why="Burp Suite is the definitive weapon for web hackers. Having the BSCP tells any manager in the world that you are a power-user of the tool, capable of bypassing modern firewalls and writing custom extensions."
               />
               <CertCard name="OSCP — OffSec Certified Professional" provider="OffSec" href="https://www.offsec.com/courses/pen-200/" accentColor="#fb923c"
-                what="The infamous 24-hour exam where you are dropped into a hostile network with strict rules and zero hints. It forces you to enumerate web services, drop shells, and ultimately escalate privileges to gain full Administrator control across multiple machines."
-                why="It is the undisputed 'Gold Standard' of the offensive industry. While it's broader than just web hacking, passing the OSCP proves to employers that you have the raw technical stamina, frustration tolerance, and the 'Try Harder' mindset required to survive as a professional hacker."
+                what="The infamous 24-hour exam where you must compromise a network with zero hints. It forces you to enumerate services, drop shells, and escalate privileges."
+                why="It is the undisputed gold standard of the industry. While it is broader than just web hacking, passing the OSCP proves you have the technical stamina and the 'Try Harder' mindset needed to survive professional hacking."
               />
             </div>
 
@@ -722,15 +693,15 @@ export default function DetailedWebHackingClient() {
                 category="Infrastructure Attack"
                 correlatedTools={["AWS CLI", "Pacu", "BloodHound"]}
                 accentColor="#fb923c"
-                what="Hunting for misconfigurations in AWS, Azure, and GCP infrastructures, specifically targeting IAM policies and leaky buckets."
-                why="Most modern companies don't own their servers anymore. If you don't know how to exploit a misconfigured S3 bucket or lateral movement in Azure, you're missing half the attack surface."
+                what="Hunting for misconfigurations in AWS, Azure, and GCP, targeting identity policies and leaky storage."
+                why="Most modern companies live in the cloud. If you can't exploit an S3 bucket or move laterally in Azure, you're missing the big picture of modern security."
                 resources={{
                   free: [
-                    { label: "Wiz Academy", url: "https://www.wiz.io/academy" },
-                    { label: "CloudHack", url: "https://cloudhack.thecloud.coach/" },
+                    { label: "Wiz Academy", url: "https://www.wiz.io/academy", why: "Excellent training from the leaders in cloud security posture management." },
+                    { label: "CloudHack", url: "https://cloudhack.thecloud.coach/", why: "A high-quality playground specifically for learning cloud attack vectors." },
                   ],
                   paid: [
-                    { label: "AppSecEngineer Cloud Pentesting", url: "https://www.appsecengineer.com/" }
+                    { label: "AppSecEngineer Cloud", url: "https://www.appsecengineer.com/", why: "Deep, technical training for the engineer who needs to secure cloud workloads." }
                   ]
                 }}
               />
@@ -739,14 +710,14 @@ export default function DetailedWebHackingClient() {
                 category="Exploitation"
                 correlatedTools={["Burp Suite", "Custom Scripts"]}
                 accentColor="#fb923c"
-                what="Connecting visually insignificant small flaws together to escalate an attack into a massive impact."
-                why="An attacker doesn't stop at an information leak; they use it to steal a session, bypass an IDOR, and achieve full data breach. Exploitation Specialists need to prove catastrophic impact."
+                what="Connecting small, visually insignificant flaws together to create a massive security impact."
+                why="Real attackers don't use one bug. They chain three or four together. Proving catastrophic impact is what separates a specialist from a junior."
                 resources={{
                   free: [
-                    { label: "IppSec (YouTube)", url: "https://www.youtube.com/@ippsec" },
+                    { label: "IppSec (YouTube)", url: "https://www.youtube.com/@ippsec", why: "The absolute best resource for learning how a professional hacker thinks and chains attacks." },
                   ],
                   paid: [
-                    { label: "HTB Academy Advanced Web Attacks", url: "https://academy.hackthebox.com/path/preview/advanced-web-attacks-and-exploitation" }
+                    { label: "HTB Advanced Web Attacks", url: "https://academy.hackthebox.com/path/preview/advanced-web-attacks-and-exploitation", why: "A grueling course for those who want to master high-level exploit development." }
                   ]
                 }}
               />
@@ -755,14 +726,14 @@ export default function DetailedWebHackingClient() {
                 category="Engagement Management"
                 correlatedTools={["Notion", "Legal Frameworks"]}
                 accentColor="#fb923c"
-                what="Learning to manage the business side of a hacking engagement, defining boundaries, Rules of Engagement (RoE), and managing client expectations."
-                why="As an Exploitation Specialist, you are a trusted advisor. Understanding exactly what is out-of-bounds technically prevents legal disasters and ensures the client gets the targeted value they paid for."
+                what="Learning to manage the business side of an engagement, defining boundaries and rules of engagement."
+                why="As a specialist, you are a consultant. Understanding exactly what is out-of-bounds technically prevents legal disasters and ensures the client gets the value they paid for."
                 resources={{
                   free: [
-                    { label: "TCM Security Compliance Guides", url: "https://tcm-sec.com/" },
+                    { label: "Compliance Guides", url: "https://tcm-sec.com/", why: "Great summaries of the legal and administrative side of pentesting." },
                   ],
                   paid: [
-                    { label: "SANS Security Consulting", url: "https://www.sans.org/cyber-security-courses/security-consulting/" }
+                    { label: "SANS Consulting", url: "https://www.sans.org/cyber-security-courses/security-consulting/", why: "The premier course for turning your technical skills into a high-end consulting business." }
                   ]
                 }}
               />
@@ -775,27 +746,27 @@ export default function DetailedWebHackingClient() {
           <section id="level-03" className="py-16 xl:py-20">
             <SectionHeader
               num="03" label="Senior Pentester" color="#a78bfa"
-              subtitle="Red Teaming & Adversary Simulation"
+              subtitle="Red Teaming & Advanced Adversary Simulation"
               time="5–8 years" salary="£80K–£110K"
             />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>
-                You are no longer just 'testing' a product; you are simulating a real-world predator. As a Senior, you conduct Red Team engagements where you try to stay hidden inside a network for weeks without being caught.
+                You are no longer just testing a product; you are simulating a real-world predator. As a Senior, you conduct Red Team engagements where you must stay hidden inside a network for weeks without being caught.
               </p>
               <p>
-                You’re using C2 (Command & Control) frameworks to manage your 'infected' machines and moving laterally through Active Directory. You’re also looking at the new frontier: AI. You’re finding ways to 'poison' an AI's brain or trick it into leaking company secrets. You think in Tactic, Techniques, and Procedures (TTPs). You don't just find a hole; you simulate an entire invasion.
+                You use Command and Control (C2) frameworks to manage your infected machines and move laterally through complex environments. You are also exploring the new frontier of AI security, finding ways to poison models or trick LLMs into leaking company secrets. You think in Tactics and Techniques, not just individual bugs.
               </p>
             </div>
 
             <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] mb-6" style={{ color: "rgba(167,139,250,0.85)" }}>Certifications</p>
             <div className="space-y-5">
               <CertCard name="OSWE — OffSec Web Expert" provider="OffSec" href="https://www.offsec.com/courses/web-300/" accentColor="#a78bfa" isTop
-                what="A grueling 'White Box' assessment where you are handed the actual source code of a web application and tasked with finding deeply hidden logic flaws. You must write a custom script that chains multiple vulnerabilities together to completely compromise the application with a single command."
-                why="As a Senior, you can't rely strictly on black-box guessing anymore. The OSWE completely elevates your game by forcing you to understand PHP, Java, and Python backend code. It proves you can find 0-days in custom, proprietary software and write the exploits from scratch yourself."
+                what="A grueling 'White Box' assessment where you are handed the source code of an application and must find deeply hidden logic flaws."
+                why="As a Senior, you can't rely on guessing anymore. OSWE elevates your game by forcing you to understand backend code in Java, PHP, and Python. It proves you can find zero-day vulnerabilities in custom software."
               />
               <CertCard name="CRTP — Certified Red Team Professional" provider="Altered Security" href="https://www.alteredsecurity.com/redteamlab" accentColor="#a78bfa"
-                what="A purely hands-on certification entirely focused on attacking enterprise Active Directory environments. You learn how to abuse built-in Windows protocols, forge Kerberos tickets, and establish persistent footholds without ever needing to rely on third-party patched exploits."
-                why="Web hacking doesn't exist in a vacuum. Once you successfully exploit a web server, you are usually dropped into a massive internal corporate network. The CRTP is the essential badge that shows you know exactly how to pivot from a compromised web app to owning the entire Domain Controller."
+                what="A hands-on certification focused entirely on attacking enterprise Active Directory environments."
+                why="Web hacking doesn't exist in a vacuum. Once you exploit a web server, you are usually dropped into a massive corporate network. CRTP shows you how to pivot from a web app to owning the entire Domain Controller."
               />
             </div>
 
@@ -806,14 +777,14 @@ export default function DetailedWebHackingClient() {
                 category="Adversary Simulation"
                 correlatedTools={["Cobalt Strike", "Sliver", "Mythic"]}
                 accentColor="#a78bfa"
-                what="Simulating Advanced Persistent Threats (APTs) by establishing stealthy footholds, utilizing memory injection, and moving laterally undetected."
-                why="You are no longer just 'testing' a product; you are testing the SOC's ability to catch a real-world predator. Finding a hole is easy; executing an entire invasion silently is an art."
+                what="Simulating Advanced Persistent Threats by establishing stealthy footholds and moving laterally undetected."
+                why="Finding a hole is easy; executing an entire invasion silently for two weeks is an art. Seniors test the defenders' ability to catch a real threat."
                 resources={{
                   free: [
-                    { label: "Orange Tsai (Blog)", url: "https://blog.orange.tw/" },
+                    { label: "Orange Tsai Blog", url: "https://blog.orange.tw/", why: "The world's leader in finding complex, high-impact logic chains in enterprise software." },
                   ],
                   paid: [
-                    { label: "Zero-Point Security (CRTO)", url: "https://www.zero-point-security.co.uk/red-team-ops" }
+                    { label: "Zero-Point Security", url: "https://www.zero-point-security.co.uk/red-team-ops", why: "The most practical training available for learning modern red team operations." }
                   ]
                 }}
               />
@@ -823,29 +794,29 @@ export default function DetailedWebHackingClient() {
                 correlatedTools={["STRIDE", "MITRE ATT&CK"]}
                 accentColor="#a78bfa"
                 what="Predicting and mapping out how an attacker will strike a complex architecture before they even attempt it."
-                why="Seniors must think steps ahead of the defenders. By modeling the threat landscape, you identify the exact weak links in trust boundaries and focus your exploitation where it hurts most."
+                why="Seniors must think steps ahead of the defenders. Identifying the weak links in trust boundaries allows you to focus your exploitation where it truly hurts."
                 resources={{
                   free: [
-                    { label: "OWASP Threat Modeling Playbook", url: "https://owasp.org/www-project-threat-modeling-playbook/" },
+                    { label: "OWASP Playbook", url: "https://owasp.org/www-project-threat-modeling-playbook/", why: "The industry standard for formalizing threat modeling workflows." },
                   ],
                   paid: [
-                    { label: "SANS SEC530", url: "https://www.sans.org/cyber-security-courses/defensible-security-architecture-and-engineering/" }
+                    { label: "SANS SEC530", url: "https://www.sans.org/cyber-security-courses/defensible-security-architecture-and-engineering/", why: "Teaches you how to build architectures that are designed to fail safely." }
                   ]
                 }}
               />
               <SkillCard
                 name="Emerging Threat Vectors"
                 category="Social Eng / AI"
-                correlatedTools={["Garak", "Custom Phishing Frameworks"]}
+                correlatedTools={["Garak", "Phishing Frameworks"]}
                 accentColor="#a78bfa"
                 what="Exploiting cutting-edge technologies like poisoning AI models to leak secrets, combined with human-element Social Engineering."
-                why="The boundaries of hacking constantly evolve. Tricking a human or a high-permission LLM instance bypasses millions of dollars in conventional network security infrastructure."
+                why="The boundaries of hacking evolve daily. Tricking a human or a high-permission AI instance bypasses millions of dollars in conventional security."
                 resources={{
                   free: [
-                    { label: "LLM PenTest Hub", url: "https://anmolksachan.medium.com/" },
+                    { label: "Anmol Sachan AI Hub", url: "https://anmolksachan.medium.com/", why: "One of the few researchers documenting practical AI hacking techniques." },
                   ],
                   paid: [
-                    { label: "OffSec AWAE", url: "https://www.offsec.com/courses/web-300/" }
+                    { label: "OffSec AWAE/OSWE", url: "https://www.offsec.com/courses/web-300/", why: "The definitive course for those who want to reach the absolute apex of web exploitation." }
                   ]
                 }}
               />
@@ -858,77 +829,77 @@ export default function DetailedWebHackingClient() {
           <section id="level-04" className="py-16 xl:py-20">
             <SectionHeader
               num="04" label="Pentest Lead" color="#34d399"
-              subtitle="Program Ownership & Strategy"
+              subtitle="Enterprise Security Ownership & Strategy"
               time="8+ years" salary="£110K–£160K+"
             />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>
-                You’ve survived the trenches, and now you’re the one who has to build them. As a Lead, you aren't just hacking one app; you're designing the entire program that secures a thousand apps.
+                You've survived the trenches, and now you're the one who must build them. As a Lead, you aren't just hacking one app; you're designing the entire program that secures a thousand applications simultaneously across a global enterprise.
               </p>
               <p>
-                Your success is no longer measured by how many bugs you find, but by how many bugs your system prevents. You are the bridge between the technical 'wizardry' of the Red Team and the cold reality of the Boardroom. You take a catastrophic vulnerability and translate it into a business risk report that a CEO can understand. You’re the architect of the company’s defense.
+                Your success is no longer measured by how many bugs you find, but by how many bugs your system prevents. You are the bridge between the technical wizardry of the security team and the cold reality of the boardroom. You take a catastrophic vulnerability and translate it into a business risk report that a CEO can prioritize. You are the architect of the company’s digital defense.
               </p>
             </div>
 
             <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] mb-6" style={{ color: "rgba(52,211,153,0.85)" }}>Certifications</p>
             <div className="space-y-5">
               <CertCard name="CISSP" provider="ISC²" href="https://www.isc2.org/certifications/cissp" accentColor="#34d399" isTop
-                what="The management 'Golden Ticket'—a mammoth, mile-wide exam covering eight massive domains of security. It covers everything from cryptography and secure software development lifecycles (SDLC) to physical security and broad risk management architecture."
-                why="At the Lead level, nobody asks you to pop a reverse shell anymore. They ask you how much it financially costs to mitigate a risk across a thousand AWS instances. The CISSP is the exact vocabulary test that gets you the Director title and proves you can actually speak the language of the Boardroom."
+                what="The management 'Golden Ticket' — a mammoth exam covering eight massive domains of security, from risk management to software development security."
+                why="At the Lead level, nobody asks you to pop a shell anymore. They ask you how much it costs to mitigate a risk across a thousand servers. CISSP is the passport that gets you the Director title and proves you speak the language of business."
               />
               <CertCard name="GXPN — GIAC Exploit Researcher" provider="GIAC" href="https://www.giac.org/certifications/exploit-researcher-advanced-penetration-tester-gxpn/" accentColor="#34d399"
-                what="A highly prestigious technical certification focusing heavily on advanced exploit development, memory corruption, network evasion, and the deep, low-level mechanics of exactly how operating systems manage memory."
-                why="Just because you are managing the program doesn't mean you should lose your technical teeth. The GXPN commands massive respect in the Red Team community. It proves to your most senior engineers that you still have the lethal, technical edge needed to guide them through complex engagements."
+                what="A prestigious technical certification focused on advanced exploit development, memory corruption, and network evasion."
+                why="Just because you are managing the program doesn't mean you should lose your technical edge. The GXPN commands massive respect from engineers. It proves you still have the lethal skills needed to guide your team through complex engagements."
               />
             </div>
 
             <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] mt-12 mb-6" style={{ color: "rgba(52,211,153,0.85)" }}>Skills & Labs</p>
             <div className="space-y-6">
               <SkillCard
-                name="Program Design"
+                name="Security Program Design"
                 category="Strategy"
                 correlatedTools={["Jira", "Risk Matrices"]}
                 accentColor="#34d399"
-                what="Designing the entire framework and operational workflows for securing a thousand interconnected applications simultaneously."
-                why="Your success is no longer measured by bugs found, but by bugs prevented systemically. You need to identify tool limitations, plan scaling strategies, and define what an internal security team focuses on."
+                what="Designing the entire framework and operational workflows for securing a thousand interconnected applications."
+                why="Success at this level is about systemic prevention. You need to plan scaling strategies and define what an internal security team focuses on annually."
                 resources={{
                   free: [
-                    { label: "NIST AI RMF", url: "https://www.nist.gov/itl/ai-risk-management-framework" },
+                    { label: "NIST AI RMF", url: "https://www.nist.gov/itl/ai-risk-management-framework", why: "The definitive guide for managing the emerging risks of artificial intelligence." },
                   ],
                   paid: [
-                    { label: "ISACA CISM Curriculum", url: "https://www.isaca.org/credentialing/cism/cism-exam-planning-guide" }
+                    { label: "ISACA CISM", url: "https://www.isaca.org/credentialing/cism/cism-exam-planning-guide", why: "The gold standard for becoming a high-level Information Security Manager." }
                   ]
                 }}
               />
               <SkillCard
                 name="Executive Communication"
                 category="Leadership"
-                correlatedTools={["PowerPoint", "Executive Summaries"]}
+                correlatedTools={["Executive Summaries"]}
                 accentColor="#34d399"
-                what="Translating catastrophic technical vulnerabilities into clear, actionable business risk reports that the C-Suite can economically understand."
-                why="To get the budget to fix the flaws, the Board needs to understand the financial impact. You are the critical bridge between Red Team wizardry and the cold reality of the boardroom."
+                what="Translating catastrophic technical vulnerabilities into clear, actionable business risk reports for the C-Suite."
+                why="To get the budget to fix the flaws, the Board needs to understand the financial impact. You are the critical bridge between the technical team and the boardroom."
                 resources={{
                   free: [
-                    { label: "CXOTALK (YouTube)", url: "https://www.youtube.com/@cxotalk" },
+                    { label: "CXOTALK (YouTube)", url: "https://www.youtube.com/@cxotalk", why: "A great channel for seeing how tech leaders talk about business problems." },
                   ],
                   paid: [
-                    { label: "SANS MGT512", url: "https://www.sans.org/cyber-security-courses/security-leadership-essentials-managers/" }
+                    { label: "SANS Security Leadership", url: "https://www.sans.org/cyber-security-courses/security-leadership-essentials-managers/", why: "Teaches you the exact management skills required to lead a global security organization." }
                   ]
                 }}
               />
               <SkillCard
-                name="Compliance & Governance"
+                name="Governance & Compliance"
                 category="Legal Frameworks"
                 correlatedTools={["CREST", "NIST", "OWASP SAMM"]}
                 accentColor="#34d399"
-                what="Navigating international compliance standards to ensure testing is strictly legal, audited properly, and meets regulatory thresholds."
-                why="When operating at an enterprise scale, the law catches up with technical risk. Managing external audits and ensuring your internal program maps to legal requirements is mandatory."
+                what="Navigating international compliance standards to ensure testing is legal and meeting all regulatory thresholds."
+                why="When operating at an enterprise scale, the law catches up with technical risk. Ensuring your internal program maps to legal requirements is mandatory at this seniority."
                 resources={{
                   free: [
-                    { label: "Andrej Karpathy (YouTube)", url: "https://www.youtube.com/watch?v=zjkBMFhNj_g" },
+                    { label: "Andrej Karpathy AI Guide", url: "https://www.youtube.com/watch?v=zjkBMFhNj_g", why: "The best explanation of the technical reality of AI, which is mandatory for modern governance." },
                   ],
                   paid: [
-                    { label: "ISC2 CISSP Official Guide", url: "https://www.isc2.org/certifications/cissp" }
+                    { label: "CISSP Official Guide", url: "https://www.isc2.org/certifications/cissp", why: "The most comprehensive source for learning high-level security governance." }
                   ]
                 }}
               />
