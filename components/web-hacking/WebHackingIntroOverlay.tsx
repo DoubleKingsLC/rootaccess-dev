@@ -67,12 +67,13 @@ export const WebHackingIntroOverlay: React.FC<WebHackingIntroOverlayProps> = ({
         {/* Play button */}
         <div className="relative flex flex-col items-center gap-5">
           <button
+            type="button"
             onClick={(e) => {
               e.stopPropagation();
               onPlay();
             }}
             disabled={isAutoScrolling}
-            className="group relative flex h-20 w-20 items-center justify-center rounded-full border border-rose-300/30 bg-rose-950/60 text-white shadow-2xl backdrop-blur-md transition-all duration-500 hover:scale-110 hover:border-rose-400/60 hover:bg-rose-950/80 disabled:opacity-50 disabled:pointer-events-none"
+            className="scrolly-control-btn group relative flex h-20 w-20 shrink-0 items-center justify-center rounded-full border border-rose-300/30 bg-rose-950/60 text-white shadow-2xl backdrop-blur-md transition-all duration-500 hover:scale-110 hover:border-rose-400/60 hover:bg-rose-950/80 disabled:opacity-50 disabled:pointer-events-none"
             style={{
               boxShadow: isAutoScrolling
                 ? "0 0 40px rgba(244,63,94,0.25)"

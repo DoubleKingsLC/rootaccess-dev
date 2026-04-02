@@ -50,12 +50,13 @@ export const IntroOverlay: React.FC<IntroOverlayProps> = ({ progress, onPlay, is
 
         <div className="relative flex flex-col items-center gap-5">
           <button
+            type="button"
             onClick={(e) => {
               e.stopPropagation();
               onPlay();
             }}
             disabled={isAutoScrolling}
-            className={`group relative flex h-20 w-20 items-center justify-center rounded-full border border-white/20 bg-slate-900/60 text-white shadow-2xl backdrop-blur-md transition-all duration-500 hover:scale-110 hover:border-cyan-500/50 hover:bg-slate-900/80 disabled:opacity-50 disabled:pointer-events-none`}
+            className={`scrolly-control-btn group relative flex h-20 w-20 shrink-0 items-center justify-center rounded-full border border-white/20 bg-slate-900/60 text-white shadow-2xl backdrop-blur-md transition-all duration-500 hover:scale-110 hover:border-cyan-500/50 hover:bg-slate-900/80 disabled:opacity-50 disabled:pointer-events-none`}
             style={{
               boxShadow: isAutoScrolling ? "0 0 40px rgba(34,211,238,0.2)" : "0 20px 40px rgba(0,0,0,0.4)"
             }}

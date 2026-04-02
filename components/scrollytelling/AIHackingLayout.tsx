@@ -41,12 +41,17 @@ const PACKETS = [
     { left: "65%", top: "100%", anim: "packet-v-rev", dur: 12, delay: 2.5 }
 ];
 
+/** Through first narrative segment; autoplay uses 4× speed until then (seamless, no instant jump). */
+const INTRO_AUTOPLAY_END_PROGRESS = 0.08;
+const INTRO_AUTOPLAY_SPEED_MULT = 4;
+
 export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) => {
     const router = useRouter();
     const scrollSectionRef = useRef<HTMLDivElement | null>(null);
     const pinnedViewportRef = useRef<HTMLDivElement | null>(null);
     const backgroundRef = useRef<HTMLDivElement | null>(null);
     const workspaceRef = useRef<HTMLDivElement | null>(null);
+    const lenisRef = useRef<Lenis | null>(null);
 
     const [progress, setProgress] = useState(0);
     const [isAutoScrolling, setIsAutoScrolling] = useState(false);
@@ -77,6 +82,19 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
             if (speedTimeoutRef.current) clearTimeout(speedTimeoutRef.current);
         };
     }, [isSpeedControlOpen, scrollSpeed]);
+
+    /** Lenis owns scroll; `window.scrollTo` does not stay in sync — use Lenis for programmatic scroll. */
+    const readScrollY = () => lenisRef.current?.scroll ?? window.scrollY;
+    const applyScrollY = (y: number) => {
+        const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+        const clamped = Math.min(maxScroll, Math.max(0, y));
+        const lenis = lenisRef.current;
+        if (lenis) {
+            lenis.scrollTo(clamped, { immediate: true, force: true });
+        } else {
+            window.scrollTo(0, clamped);
+        }
+    };
 
     useEffect(() => {
         const updateScale = () => {
@@ -112,6 +130,7 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
         const multiplier = 1.0;
 
         const lenis = new Lenis({ lerp: 0.05, wheelMultiplier: multiplier });
+        lenisRef.current = lenis;
         lenis.on("scroll", ScrollTrigger.update);
         function update(time: number) { lenis.raf(time * 1000); }
         gsap.ticker.add(update);
@@ -143,23 +162,25 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
 
         }, scrollSectionRef);
 
-        return () => { ctx.revert(); gsap.ticker.remove(update); lenis.destroy(); };
+        return () => {
+            ctx.revert();
+            gsap.ticker.remove(update);
+            lenisRef.current = null;
+            lenis.destroy();
+        };
     }, []);
 
     // ── Auto-scrolling logic (mirrors SOC ScrollytellingLayout) ─────────────
     useEffect(() => {
         if (!isAutoScrolling) return;
 
-        let lastScrollY = window.scrollY;
+        let lastScrollY = readScrollY();
         let rafId: number;
         let lastTime = performance.now();
-        let currentVirtualScroll = window.scrollY; // Accumulator for fractional pixel scrolls
-
-        // Check if the user is on Safari to apply the deadzone acceleration constraint
-        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        let currentVirtualScroll = lastScrollY;
 
         const scrollStep = (time: number) => {
-            const currentScrollY = window.scrollY;
+            const currentScrollY = readScrollY();
             if (Math.abs(currentScrollY - lastScrollY) > 5) {
                 setIsAutoScrolling(false);
                 return;
@@ -171,20 +192,18 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
             // Target speed: 190 pixels per second (Hz independent) multiplied by speed control
             let scrollAmount = 190 * (dt / 1000) * scrollSpeedRef.current;
 
-            // The deadzone is located exactly between the fade-in (0.04) and Phase 1 start (0.08).
             const totalScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
             const currentProgress = currentScrollY / totalScroll;
-            
-            // Accelerate through the "deadzone" between the intro fade-out (0.01) and the first phase start (0.08).
-            if (currentProgress >= 0.01 && currentProgress < 0.08) {
-                scrollAmount *= 3.5; 
+
+            if (currentProgress < INTRO_AUTOPLAY_END_PROGRESS) {
+                scrollAmount *= INTRO_AUTOPLAY_SPEED_MULT;
             }
 
-            currentVirtualScroll += scrollAmount;
-            window.scrollTo(0, currentVirtualScroll);
-            lastScrollY = window.scrollY;
+            currentVirtualScroll = Math.min(totalScroll, currentVirtualScroll + scrollAmount);
+            applyScrollY(currentVirtualScroll);
+            lastScrollY = readScrollY();
 
-            if (window.scrollY + window.innerHeight < document.documentElement.scrollHeight - 10) {
+            if (readScrollY() < totalScroll - 10) {
                 rafId = requestAnimationFrame(scrollStep);
             } else {
                 setIsAutoScrolling(false);
@@ -263,12 +282,7 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
                 <AIIntroOverlay
                     progress={progress}
                     isAutoScrolling={isAutoScrolling}
-                    onPlay={() => {
-                        setIsAutoScrolling(true);
-                        // Skip the initial 5-second linear scroll delay by jumping directly to the intro fade-out threshold.
-                        const totalScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-                        window.scrollTo({ top: totalScroll * 0.012, behavior: "smooth" });
-                    }}
+                    onPlay={() => setIsAutoScrolling(true)}
                 />
 
                 {/* ── Main Workspace ──────────────────────────────────────────────────── */}
@@ -475,6 +489,8 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
                         </div>
 
                         <button
+                            type="button"
+                            className="scrolly-control-btn"
                             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                             onMouseEnter={() => setIsRedoHovered(true)}
                             onMouseLeave={() => setIsRedoHovered(false)}
@@ -555,7 +571,7 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
                             />
                             <button 
                                 onClick={() => setIsSpeedControlOpen(false)}
-                                className="ml-3 flex h-6 w-6 shrink-0 items-center justify-center rounded-full hover:bg-white/10 transition-colors text-slate-400 hover:text-white"
+                                className="scrolly-control-btn ml-3 flex h-6 w-6 shrink-0 items-center justify-center rounded-full hover:bg-white/10 transition-colors text-slate-400 hover:text-white"
                             >
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M9 18l6-6-6-6" />
@@ -569,7 +585,7 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
                                 setIsSpeedControlOpen(!isSpeedControlOpen);
                                 if (!isSpeedControlOpen) handleSpeedInteraction();
                             }}
-                            className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border backdrop-blur-md transition-all duration-300"
+                            className="scrolly-control-btn relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border backdrop-blur-md transition-all duration-300"
                             style={{
                                 borderColor: isSpeedControlOpen ? "rgba(239,68,68,0.5)" : "rgba(255,255,255,0.1)",
                                 background: isSpeedControlOpen ? "rgba(15,3,7,0.8)" : "rgba(2,6,23,0.4)",
@@ -600,7 +616,7 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
 
                     <button
                         onClick={() => setIsAutoScrolling(!isAutoScrolling)}
-                        className={`group relative flex shrink-0 h-12 w-12 items-center justify-center rounded-full border transition-all duration-300 ${
+                        className={`scrolly-control-btn group relative flex shrink-0 h-12 w-12 items-center justify-center rounded-full border transition-all duration-300 ${
                             isAutoScrolling
                                 ? "border-red-500/50 bg-slate-900/80 shadow-[0_0_20px_rgba(239,68,68,0.3)]"
                                 : "border-white/10 bg-slate-950/40 hover:border-white/30 hover:bg-slate-900/60"
@@ -640,7 +656,7 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
                 >
                     <button
                         onClick={() => router.push("/")}
-                        className="group relative flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-slate-950/40 text-white shadow-2xl backdrop-blur-md transition-all hover:scale-110 hover:border-red-400/30 hover:bg-slate-900/60"
+                        className="scrolly-control-btn group relative flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-slate-950/40 text-white shadow-2xl backdrop-blur-md transition-all hover:scale-110 hover:border-red-400/30 hover:bg-slate-900/60"
                     >
                         <svg
                             width="20"

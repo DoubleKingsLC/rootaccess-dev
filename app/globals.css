@@ -382,3 +382,14 @@ body {
     transform: scale(0.85);
   }
 }
+
+/* Scrollytelling: icon controls (home, play/pause, speed, rewatch) — native button UA styles can look square */
+.scrolly-control-btn {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  /* UA padding + missing -webkit-radius can read as “rounded square” on some browsers */
+  padding: 0 !important;
+  border-radius: 9999px !important;
+  -webkit-border-radius: 9999px !important;
+}

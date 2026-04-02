@@ -45,6 +45,10 @@ const PACKETS = [
   { left: "65%",  top: "100%",anim: "packet-v-rev", dur: 12, delay: 2.5 },
 ];
 
+/** Intro overlay cleared ~here; autoplay uses 4× speed until then (seamless, no instant jump). */
+const INTRO_AUTOPLAY_END_PROGRESS = 0.045;
+const INTRO_AUTOPLAY_SPEED_MULT = 4;
+
 export const WebHackingLayout: React.FC = () => {
   const router = useRouter();
 
@@ -66,6 +70,19 @@ export const WebHackingLayout: React.FC = () => {
   const [isSpeedControlOpen, setIsSpeedControlOpen] = useState(false);
   const speedTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isRedoHovered, setIsRedoHovered] = useState(false);
+
+  /** Lenis owns scroll; drive programmatic scroll through Lenis so autoplay isn't overwritten. */
+  const readScrollY = () => lenisRef.current?.scroll ?? window.scrollY;
+  const applyScrollY = (y: number) => {
+    const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    const clamped = Math.min(maxScroll, Math.max(0, y));
+    const lenis = lenisRef.current;
+    if (lenis) {
+      lenis.scrollTo(clamped, { immediate: true, force: true });
+    } else {
+      window.scrollTo(0, clamped);
+    }
+  };
 
   // Sync state to ref for animation loop
   useEffect(() => {
@@ -92,14 +109,14 @@ export const WebHackingLayout: React.FC = () => {
   useEffect(() => {
     if (!isAutoScrolling) return;
 
-    let lastScrollY = window.scrollY;
+    let lastScrollY = readScrollY();
     let rafId: number;
     let lastTime = performance.now();
-    let currentVirtualScroll = window.scrollY; // Accumulator for fractional pixel scrolls
+    let currentVirtualScroll = lastScrollY;
 
     const scrollStep = (time: number) => {
-      const currentScrollY = window.scrollY;
-      
+      const currentScrollY = readScrollY();
+
       // Interrupt auto-scroll if the user manually scrolls native wheel/touch
       if (Math.abs(currentScrollY - lastScrollY) > 5) {
         setIsAutoScrolling(false);
@@ -112,19 +129,18 @@ export const WebHackingLayout: React.FC = () => {
       // Target speed: 190 pixels per second (Hz independent) multiplied by speed control
       let scrollAmount = 190 * (dt / 1000) * scrollSpeedRef.current;
 
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = currentScrollY / maxScroll;
-      
-      // Accelerate through the intro "deadzone" (between 0.01 and 0.045)
-      if (progress >= 0.01 && progress < 0.045) {
-        scrollAmount *= 4.0;
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const p = currentScrollY / maxScroll;
+
+      if (p < INTRO_AUTOPLAY_END_PROGRESS) {
+        scrollAmount *= INTRO_AUTOPLAY_SPEED_MULT;
       }
 
-      currentVirtualScroll += scrollAmount;
-      window.scrollTo(0, currentVirtualScroll);
-      lastScrollY = window.scrollY;
+      currentVirtualScroll = Math.min(maxScroll, currentVirtualScroll + scrollAmount);
+      applyScrollY(currentVirtualScroll);
+      lastScrollY = readScrollY();
 
-      if (window.scrollY < maxScroll - 10) {
+      if (readScrollY() < maxScroll - 10) {
         rafId = requestAnimationFrame(scrollStep);
       } else {
         setIsAutoScrolling(false);
@@ -233,14 +249,7 @@ export const WebHackingLayout: React.FC = () => {
         <div className="pointer-events-none absolute inset-0 z-20">
           <WebHackingIntroOverlay
             progress={sceneProgress}
-            onPlay={() => {
-              setIsAutoScrolling(true);
-              // Jump directly past the initial blank gap
-              const totalScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-              if (window.scrollY < totalScroll * 0.02) {
-                window.scrollTo({ top: totalScroll * 0.02, behavior: "smooth" });
-              }
-            }}
+            onPlay={() => setIsAutoScrolling(true)}
             isAutoScrolling={isAutoScrolling}
           />
         </div>
@@ -335,7 +344,7 @@ export const WebHackingLayout: React.FC = () => {
               />
               <button 
                 onClick={() => setIsSpeedControlOpen(false)}
-                className="ml-3 flex h-6 w-6 shrink-0 items-center justify-center rounded-full hover:bg-white/10 transition-colors text-slate-400 hover:text-white"
+                className="scrolly-control-btn ml-3 flex h-6 w-6 shrink-0 items-center justify-center rounded-full hover:bg-white/10 transition-colors text-slate-400 hover:text-white"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M9 18l6-6-6-6" />
@@ -349,7 +358,7 @@ export const WebHackingLayout: React.FC = () => {
                 setIsSpeedControlOpen(!isSpeedControlOpen);
                 if (!isSpeedControlOpen) handleSpeedInteraction();
               }}
-              className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border backdrop-blur-md transition-all duration-300"
+              className="scrolly-control-btn relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border backdrop-blur-md transition-all duration-300"
               style={{
                 borderColor: isSpeedControlOpen ? "rgba(244,63,94,0.5)" : "rgba(255,255,255,0.1)",
                 background: isSpeedControlOpen ? "rgba(15,3,7,0.8)" : "rgba(2,6,23,0.4)",
@@ -381,7 +390,7 @@ export const WebHackingLayout: React.FC = () => {
           {/* Play/Pause Button */}
           <button
             onClick={() => setIsAutoScrolling(!isAutoScrolling)}
-            className="group relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border text-white backdrop-blur-md transition-all duration-300"
+            className="scrolly-control-btn group relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border text-white backdrop-blur-md transition-all duration-300"
             style={{
               borderColor: isAutoScrolling ? "rgba(244,63,94,0.5)" : "rgba(255,255,255,0.1)",
               background:  isAutoScrolling ? "rgba(15,3,7,0.8)"    : "rgba(2,6,23,0.4)",
@@ -417,7 +426,7 @@ export const WebHackingLayout: React.FC = () => {
           {/* Home */}
           <button
             onClick={() => router.push("/")}
-            className="group relative flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-slate-950/40 text-white shadow-2xl backdrop-blur-md transition-all hover:scale-110 hover:border-white/30 hover:bg-slate-900/60"
+            className="scrolly-control-btn group relative flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-slate-950/40 text-white shadow-2xl backdrop-blur-md transition-all hover:scale-110 hover:border-white/30 hover:bg-slate-900/60"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -444,6 +453,8 @@ export const WebHackingLayout: React.FC = () => {
           }}
         >
           <button
+            type="button"
+            className="scrolly-control-btn"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             onMouseEnter={() => setIsRedoHovered(true)}
             onMouseLeave={() => setIsRedoHovered(false)}
