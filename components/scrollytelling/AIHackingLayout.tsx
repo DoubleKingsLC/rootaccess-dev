@@ -339,7 +339,7 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
                                         <div className="flex-shrink-0 transition-all duration-1000 ease-out"
                                              style={{
                                                  transform: progress >= 0.91 ? "scale(1.15)" : "scale(1)",
-                                                 filter: progress >= 0.91 ? "drop-shadow(0 0 60px rgba(239, 68, 68, 0.8)) brightness(1.2)" : "none"
+                                                 filter: progress >= 0.91 ? "brightness(1.2)" : "none",
                                              }}>
                                             <HackerAvatar progress={progress} />
                                         </div>
@@ -381,7 +381,7 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
                                         <div className="flex-shrink-0 transition-all duration-1000 ease-out"
                                              style={{
                                                  transform: progress >= 0.91 ? "scale(1.2)" : "scale(1)",
-                                                 filter: progress >= 0.91 ? "drop-shadow(0 0 80px rgba(239, 68, 68, 1)) brightness(1.3)" : "none"
+                                                 filter: progress >= 0.91 ? "brightness(1.3)" : "none",
                                              }}>
                                             <LLMBrain compromised={progress >= AI_LLM_COMPROMISED_AT} />
                                         </div>

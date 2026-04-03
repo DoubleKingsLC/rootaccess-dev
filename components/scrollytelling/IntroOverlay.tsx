@@ -56,9 +56,9 @@ export const IntroOverlay: React.FC<IntroOverlayProps> = ({ progress, onPlay, is
               onPlay();
             }}
             disabled={isAutoScrolling}
-            className={`scrolly-control-btn group relative flex h-20 w-20 shrink-0 items-center justify-center overflow-visible rounded-full border border-white/20 bg-slate-900/60 text-white shadow-2xl backdrop-blur-md transition-all duration-500 hover:scale-110 hover:border-cyan-500/50 hover:bg-slate-900/80 disabled:opacity-50 disabled:pointer-events-none`}
+            className={`scrolly-control-btn group relative flex h-20 w-20 shrink-0 items-center justify-center overflow-visible rounded-full border border-white/20 bg-slate-900/60 text-white shadow-none outline-none transition-all duration-500 hover:scale-110 hover:border-cyan-500/50 hover:bg-slate-900/80 focus-visible:ring-2 focus-visible:ring-cyan-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 disabled:opacity-50 disabled:pointer-events-none`}
             style={{
-              boxShadow: isAutoScrolling ? "0 0 40px rgba(34,211,238,0.2)" : "0 20px 40px rgba(0,0,0,0.4)"
+              boxShadow: isAutoScrolling ? "0 0 40px rgba(34,211,238,0.2)" : "0 0 24px rgba(0,0,0,0.5)"
             }}
           >
             {isAutoScrolling ? (
@@ -72,8 +72,8 @@ export const IntroOverlay: React.FC<IntroOverlayProps> = ({ progress, onPlay, is
                   aria-hidden
                   className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[7.5rem] w-[7.5rem] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                   style={{
-                    background: "radial-gradient(circle at center, rgba(34,211,238,0.42) 0%, transparent 68%)",
-                    filter: "blur(12px)",
+                    background:
+                      "radial-gradient(circle at center, rgba(34,211,238,0.36) 0%, rgba(34,211,238,0.1) 42%, transparent 72%)",
                   }}
                 />
                 <div className="relative z-10 flex items-center justify-center">
@@ -81,10 +81,6 @@ export const IntroOverlay: React.FC<IntroOverlayProps> = ({ progress, onPlay, is
                     <path d="M8 5v14l11-7z" />
                   </svg>
                 </div>
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute inset-[-4px] z-[1] rounded-full border border-white/15 opacity-0 group-hover:opacity-100 group-hover:animate-ping"
-                />
               </>
             )}
           </button>
