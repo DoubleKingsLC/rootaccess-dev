@@ -73,7 +73,7 @@ export const WebHackingIntroOverlay: React.FC<WebHackingIntroOverlayProps> = ({
               onPlay();
             }}
             disabled={isAutoScrolling}
-            className="scrolly-control-btn group relative flex h-20 w-20 shrink-0 items-center justify-center rounded-full border border-rose-300/30 bg-rose-950/60 text-white shadow-2xl backdrop-blur-md transition-all duration-500 hover:scale-110 hover:border-rose-400/60 hover:bg-rose-950/80 disabled:opacity-50 disabled:pointer-events-none"
+            className="scrolly-control-btn group relative flex h-20 w-20 shrink-0 items-center justify-center overflow-visible rounded-full border border-rose-300/30 bg-rose-950/60 text-white shadow-2xl backdrop-blur-md transition-all duration-500 hover:scale-110 hover:border-rose-400/60 hover:bg-rose-950/80 disabled:opacity-50 disabled:pointer-events-none"
             style={{
               boxShadow: isAutoScrolling
                 ? "0 0 40px rgba(244,63,94,0.25)"
@@ -86,17 +86,25 @@ export const WebHackingIntroOverlay: React.FC<WebHackingIntroOverlayProps> = ({
                 <div className="h-5 w-1.5 rounded-full bg-rose-400 animate-pulse" style={{ animationDelay: "0.15s" }} />
               </div>
             ) : (
-              <div className="relative flex items-center justify-center">
-                <svg className="ml-1 h-8 w-8 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-                <div className="absolute inset-0 -m-4 bg-rose-500/20 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              </div>
-            )}
-
-            {/* Animated ring on hover */}
-            {!isAutoScrolling && (
-              <div className="absolute -inset-1 rounded-full border border-white/10 opacity-0 group-hover:opacity-100 group-hover:animate-ping" />
+              <>
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[7.5rem] w-[7.5rem] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  style={{
+                    background: "radial-gradient(circle at center, rgba(244,63,94,0.42) 0%, transparent 68%)",
+                    filter: "blur(12px)",
+                  }}
+                />
+                <div className="relative z-10 flex items-center justify-center">
+                  <svg className="ml-1 h-8 w-8 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-[-4px] z-[1] rounded-full border border-white/15 opacity-0 group-hover:opacity-100 group-hover:animate-ping"
+                />
+              </>
             )}
           </button>
 

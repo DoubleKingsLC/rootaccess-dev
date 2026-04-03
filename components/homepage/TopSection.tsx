@@ -13,7 +13,7 @@ const ROADMAPS_DATA = [
 ];
 
 const EXPERIENCES_DATA = [
-  { id: "soc", label: "SOC Scrollytelling", href: "/roadmaps/soc", color: "#22d3ee" },
+  { id: "soc", label: "SOC", href: "/roadmaps/soc", color: "#22d3ee" },
   { id: "web", label: "Web Hacking", href: "/roadmaps/web-hacking", color: "#f43f5e" },
   { id: "ai", label: "AI Hacking", href: "/roadmaps/ai-hacking", color: "#ef4444" },
   { id: "network", label: "Network Pentesting", href: "/roadmaps/network-pentesting", color: "#dc2626" },

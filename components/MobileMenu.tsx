@@ -22,7 +22,7 @@ const NAV_GROUPS = [
   {
     title: "Interactive Experiences",
     items: [
-      { label: "SOC Scrollytelling", href: "/roadmaps/soc", color: "#22d3ee" },
+      { label: "SOC", href: "/roadmaps/soc", color: "#22d3ee" },
       { label: "Web Hacking", href: "/roadmaps/web-hacking", color: "#f43f5e" },
       { label: "AI Hacking", href: "/roadmaps/ai-hacking", color: "#ef4444" },
       { label: "Network Pentesting", href: "/roadmaps/network-pentesting", color: "#dc2626" },
