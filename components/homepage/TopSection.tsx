@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { isDomainLocked, useDomainLive } from "@/hooks/useDomainLive";
+import { DomainDeepDiveVisual } from "@/components/homepage/DomainDeepDiveVisual";
 
 const ROADMAPS_DATA = [
   { id: "soc", label: "SOC Career Path", href: "/roadmaps/soc/career-path", color: "#22d3ee" },
@@ -17,109 +19,94 @@ const EXPERIENCES_DATA = [
   { id: "network", label: "Network Pentesting", href: "/roadmaps/network-pentesting", color: "#dc2626" },
 ];
 
+/** Favicon hostnames for Curated Resources pills (DuckDuckGo icon proxy); null = no favicon. */
+const CURATED_RESOURCE_PLATFORMS: { label: string; faviconHost: string | null }[] = [
+  { label: "YouTube", faviconHost: "youtube.com" },
+  { label: "TCM Security", faviconHost: "tcm-sec.com" },
+  { label: "PortSwigger", faviconHost: "portswigger.net" },
+  { label: "HackTheBox", faviconHost: "hackthebox.com" },
+  { label: "CyberDefenders", faviconHost: "cyberdefenders.org" },
+  { label: "Many more", faviconHost: null },
+];
+
 const DOMAIN_DATA = [
   {
     id: "soc",
     nodeCode: "NODE_001",
     title: "SOC",
     subtitle: "Security monitoring simulation.",
+    analystRole: "SOC Analyst",
+    isLive: true,
     status: "ACTIVE",
     threat: "CRITICAL // 0.94",
     sync: "8x44_SENTINEL",
-    terminalLines: [
-      "sentinel@core:~$ init soc_monitoring_v2.sh",
-      "[SUCCESS] Handshake established with Global Node 001.",
-      "Scanning infrastructure... [||||||||||----------] 52%",
-      "ALERT: Brute force attempt detected on NODE_DB_04.",
-      "IP_SOURCE: 45.122.11.98 | ATTEMPTS: 4,502",
-      "sentinel@core:~$ quarantine --target 45.122.11.98",
-      "Protocol SENTINEL_LOCK initiated. Node isolated.",
-      "sentinel@core:~$"
-    ]
   },
   {
     id: "web",
     nodeCode: "NODE_002",
     title: "WEB_HACKING",
     subtitle: "Vulnerability exploitation research.",
+    analystRole: "WebApp Pentester",
+    isLive: true,
     status: "ACTIVE",
     threat: "ELEVATED // 0.62",
     sync: "3x91_PROXY",
-    terminalLines: [
-      "proxy@node-2:~$ run xss_scan --target client_portal",
-      "[INFO] Fuzzing input vectors...",
-      "PAYLOAD: <script>alert(1)</script> -> REFLECTED in response.",
-      "VULN FOUND: Cross-Site Scripting (Reflected).",
-      "proxy@node-2:~$ generate_report -v",
-      "Report generated: ./reports/web_recon.log",
-      "proxy@node-2:~$"
-    ]
   },
   {
     id: "ai",
     nodeCode: "NODE_003",
     title: "AI_HACKING",
     subtitle: "LLM security audits.",
-    status: "LOCKED",
-    threat: "UNKNOWN",
-    sync: "WAITING...",
-    terminalLines: [
-      "SYSTEM: Access to Node 003 is currently restricted.",
-      "Requires clearance level: ARCHITECT",
-      "> Connection refused."
-    ]
+    analystRole: "AI Security Analyst",
+    isLive: true,
+    status: "ACTIVE",
+    threat: "ELEVATED // 0.58",
+    sync: "NEURAL_LINK_OK",
   },
   {
     id: "network",
     nodeCode: "NODE_004",
-    title: "NETWORK",
+    title: "NETWORK_PENTESTING",
     subtitle: "Enterprise intrusion testing.",
+    analystRole: "Network Pentester",
+    isLive: true,
     status: "ACTIVE",
     threat: "MODERATE // 0.45",
     sync: "1x11_LAN",
-    terminalLines: [
-      "agent@004:~$ nmap -sS -p- 10.0.8.0/24",
-      "Starting Nmap 7.93...",
-      "Discovered open port 445/tcp on 10.0.8.12",
-      "Discovered open port 3389/tcp on 10.0.8.22",
-      "Nmap done: 256 IP addresses scanned in 14.2s",
-      "agent@004:~$"
-    ]
   },
   {
     id: "cloud",
     nodeCode: "NODE_005",
     title: "CLOUD_SEC",
     subtitle: "Cloud hardening & IAM.",
+    analystRole: "Cloud Security Engineer",
+    isLive: false,
     status: "ACTIVE",
     threat: "LOW // 0.12",
     sync: "AWS_SYNC_OK",
-    terminalLines: [
-      "cloud-admin:~$ check_iam_policies --strict",
-      "[WARN] User 'backup_svc' has AdminAccess.",
-      "Action required: Enforce principle of least privilege.",
-      "cloud-admin:~$ revoke_access --user backup_svc",
-      "[SUCCESS] Policy detached.",
-      "cloud-admin:~$"
-    ]
   },
   {
     id: "grc",
     nodeCode: "NODE_006",
     title: "GRC",
     subtitle: "Governance & Risk frameworks.",
+    analystRole: "GRC Analyst",
+    isLive: false,
     status: "ACTIVE",
     threat: "NOMINAL",
     sync: "COMPLIANT",
-    terminalLines: [
-      "auditor:~$ run_compliance_check iso-27001",
-      "Checking access controls... PASS",
-      "Checking encryption at rest... PASS",
-      "Checking incident response plan... MISSING",
-      "[ALERT] Non-compliance detected. Gap analysis logged.",
-      "auditor:~$"
-    ]
-  }
+  },
+  {
+    id: "devsecops",
+    nodeCode: "NODE_007",
+    title: "DEVSECOPS",
+    subtitle: "Pipeline security, SAST/DAST & secure SDLC.",
+    analystRole: "DevSecOps Engineer",
+    isLive: false,
+    status: "ACTIVE",
+    threat: "ELEVATED // 0.38",
+    sync: "PIPELINE_OK",
+  },
 ];
 
 const DomainIcons = {
@@ -171,14 +158,31 @@ const DomainIcons = {
       <polyline points="10 9 9 9 8 9" />
     </svg>
   ),
+  devsecops: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-amber-400 w-5 h-5">
+      <path d="M12 2L2 7l10 5 10-5-10-5z" fill="rgba(251,191,36,0.12)" />
+      <path d="M2 17l10 5 10-5" />
+      <path d="M2 12l10 5 10-5" />
+    </svg>
+  ),
 };
 
 export default function TopSection() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mobileCareerOpen, setMobileCareerOpen] = useState(false);
+  const [mobileWorkflowsOpen, setMobileWorkflowsOpen] = useState(false);
   const [activeDomain, setActiveDomain] = useState<string>("soc");
 
+  useEffect(() => {
+    if (!isMobileMenuOpen) {
+      setMobileCareerOpen(false);
+      setMobileWorkflowsOpen(false);
+    }
+  }, [isMobileMenuOpen]);
+
   const activeData = DOMAIN_DATA.find((d) => d.id === activeDomain) || DOMAIN_DATA[0];
+  const activeLive = useDomainLive(activeData);
 
   return (
     <div className="relative font-body">
@@ -277,8 +281,8 @@ export default function TopSection() {
           onClick={() => setIsMobileMenuOpen(false)}
         />
         <div className={`absolute right-0 top-0 bottom-0 w-[85%] max-w-[360px] bg-[#060a0f] border-l border-white/10 shadow-[-20px_0_100px_rgba(0,0,0,0.8)] transition-transform duration-500 transform ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-          <div className="flex flex-col h-full overflow-hidden">
-            <div className="flex justify-between items-center px-8 h-20 border-b border-white/[0.03]">
+          <div className="flex h-full min-h-0 flex-col overflow-hidden">
+            <div className="flex shrink-0 justify-between items-center px-8 h-20 border-b border-white/[0.03]">
               <span className="font-mono text-[9px] tracking-[0.4em] text-primary/40 uppercase font-light">Navigation</span>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -291,43 +295,88 @@ export default function TopSection() {
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-8 py-8 flex flex-col gap-12">
-              <div className="flex flex-col gap-4">
-                <span className="font-mono text-[10px] tracking-[0.3em] text-white/20 uppercase">Career Paths</span>
-                <div className="flex flex-col">
-                  {ROADMAPS_DATA.map((item) => (
-                    <Link
-                      key={item.id}
-                      href={item.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="group flex items-center justify-between py-4 border-b border-white/[0.03] transition-all last:border-0"
-                    >
-                      <span className="font-headline text-[17px] font-bold text-white/80 group-hover:text-primary group-hover:translate-x-1 transition-all">{item.label}</span>
-                      <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: item.color, boxShadow: `0 0 10px ${item.color}44` }} />
-                    </Link>
-                  ))}
+            <div className="flex min-h-0 flex-1 flex-col">
+              <div className="min-h-0 flex-1 overflow-y-auto px-8 py-6">
+                <div className="flex flex-col border-b border-white/[0.06] pb-1">
+                  <button
+                    type="button"
+                    onClick={() => setMobileCareerOpen((o) => !o)}
+                    className="flex w-full items-center justify-between gap-3 py-3 text-left outline-none"
+                    aria-expanded={mobileCareerOpen}
+                  >
+                    <span className="font-mono text-[10px] tracking-[0.28em] uppercase font-bold text-cyan-300/95">
+                      Career Paths
+                    </span>
+                    <span className={`material-symbols-outlined text-[20px] text-cyan-400/80 transition-transform duration-200 ${mobileCareerOpen ? "rotate-180" : ""}`}>
+                      expand_more
+                    </span>
+                  </button>
+                  {mobileCareerOpen && (
+                    <div className="flex flex-col pb-2">
+                      {ROADMAPS_DATA.map((item) => (
+                        <Link
+                          key={item.id}
+                          href={item.href}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="group flex items-center justify-between py-3.5 border-b border-white/[0.03] transition-all last:border-0"
+                        >
+                          <span className="font-headline text-[17px] font-bold text-white/80 group-hover:text-primary group-hover:translate-x-1 transition-all">
+                            {item.label}
+                          </span>
+                          <span className="w-1.5 h-1.5 shrink-0 rounded-full" style={{ backgroundColor: item.color, boxShadow: `0 0 10px ${item.color}44` }} />
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex flex-col border-b border-white/[0.06] pt-2 pb-1">
+                  <button
+                    type="button"
+                    onClick={() => setMobileWorkflowsOpen((o) => !o)}
+                    className="flex w-full items-center justify-between gap-3 py-3 text-left outline-none"
+                    aria-expanded={mobileWorkflowsOpen}
+                  >
+                    <span className="font-mono text-[10px] tracking-[0.28em] uppercase font-bold text-cyan-300/95">
+                      Workflows
+                    </span>
+                    <span className={`material-symbols-outlined text-[20px] text-cyan-400/80 transition-transform duration-200 ${mobileWorkflowsOpen ? "rotate-180" : ""}`}>
+                      expand_more
+                    </span>
+                  </button>
+                  {mobileWorkflowsOpen && (
+                    <div className="flex flex-col pb-2">
+                      {EXPERIENCES_DATA.map((item) => (
+                        <Link
+                          key={item.id}
+                          href={item.href}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="group flex items-center justify-between py-3.5 border-b border-white/[0.03] transition-all last:border-0"
+                        >
+                          <span className="font-headline text-[17px] font-bold text-white/80 group-hover:text-primary group-hover:translate-x-1 transition-all">
+                            {item.label}
+                          </span>
+                          <span className="w-1.5 h-1.5 shrink-0 rounded-full" style={{ backgroundColor: item.color, boxShadow: `0 0 10px ${item.color}44` }} />
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 
-              <div className="flex flex-col gap-4">
-                <span className="font-mono text-[10px] tracking-[0.3em] text-white/20 uppercase">Workflows</span>
-                <div className="flex flex-col">
-                  {EXPERIENCES_DATA.map((item) => (
-                    <Link
-                      key={item.id}
-                      href={item.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="group flex items-center justify-between py-4 border-b border-white/[0.03] transition-all last:border-0"
-                    >
-                      <span className="font-headline text-[17px] font-bold text-white/80 group-hover:text-primary group-hover:translate-x-1 transition-all">{item.label}</span>
-                      <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: item.color, boxShadow: `0 0 10px ${item.color}44` }} />
-                    </Link>
-                  ))}
-                </div>
+              <div className="shrink-0 border-t border-white/[0.08] bg-[#060a0f] px-8 py-4">
+                <Link
+                  href="/about"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex w-full items-center justify-center rounded-lg border border-white/10 bg-white/[0.04] py-3.5 font-mono text-[12px] font-bold tracking-[0.12em] uppercase text-white/90 transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
+                >
+                  About
+                </Link>
               </div>
             </div>
           </div>
         </div>
+
       </div>
 
       {/* Main Content Canvas - Level 1 (Original Hero + Bento) */}
@@ -361,23 +410,17 @@ export default function TopSection() {
               >
                 {/* Left: text content */}
                 <div className="flex flex-col flex-1">
-                  <div className="mb-4">
-                    <span className="font-mono text-[9px] tracking-[0.3em] uppercase text-white/30 border border-white/[0.08] rounded-full px-3 py-1">
-                      Protocol 01
-                    </span>
-                  </div>
-
                   <h3 className="font-headline text-3xl md:text-4xl font-bold text-white leading-[1.05] mb-1.5">
                     Interactive Roadmaps
                   </h3>
-                  <p className="font-label text-primary text-sm italic mb-4 opacity-85">
+                  <p className="font-label text-primary text-sm italic mb-2 opacity-85">
                     Scenario-driven technical progression.
                   </p>
 
-                  <div className="mt-auto grid grid-cols-2 gap-x-4">
+                  <div className="mt-2 grid grid-cols-2 gap-x-4 md:gap-x-6">
                     <div>
-                      <p className="font-mono text-[8px] tracking-[0.22em] uppercase text-white/55 mb-2.5">Live Now</p>
-                      <ul className="space-y-2">
+                      <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/60 mb-2">Live Now</p>
+                      <ul className="space-y-1.5">
                         {[
                           { label: "SOC", color: "#22d3ee" },
                           { label: "Web Hacking", color: "#f43f5e" },
@@ -386,18 +429,18 @@ export default function TopSection() {
                         ].map((d) => (
                           <li key={d.label} className="flex items-center gap-2.5">
                             <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 animate-pulse" style={{ background: d.color, boxShadow: `0 0 6px ${d.color}` }} />
-                            <span className="font-label text-[13px] text-white/90">{d.label}</span>
+                            <span className="font-label text-[17px] sm:text-[18px] text-white/90">{d.label}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
                     <div>
-                      <p className="font-mono text-[8px] tracking-[0.22em] uppercase text-white/40 mb-2.5">Coming Soon</p>
-                      <ul className="space-y-2">
+                      <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/45 mb-2">Coming Soon</p>
+                      <ul className="space-y-1.5">
                         {["DevSecOps", "Cloud Sec", "GRC"].map((label) => (
                           <li key={label} className="flex items-center gap-2.5">
                             <span className="w-1.5 h-1.5 rounded-full border border-white/30 flex-shrink-0" />
-                            <span className="font-label text-[13px] text-white/45">{label}</span>
+                            <span className="font-label text-[17px] sm:text-[18px] text-white/50">{label}</span>
                           </li>
                         ))}
                       </ul>
@@ -530,7 +573,7 @@ export default function TopSection() {
                         {item.icon}
                       </div>
                       <div>
-                        <p className="font-label text-[12px] font-semibold text-white/80 leading-snug">{item.label}</p>
+                        <p className="font-label text-[15px] font-semibold text-white/80 leading-snug">{item.label}</p>
                         <p className="font-label text-[11px] text-white/35 leading-snug">{item.desc}</p>
                       </div>
                     </div>
@@ -554,14 +597,36 @@ export default function TopSection() {
                   <p className="font-headline text-base md:text-lg italic mb-2 leading-snug" style={{ color: "#f97316" }}>
                     Cut out the BS. Get to the point.
                   </p>
-                  <p className="text-white/60 text-xs leading-relaxed mb-3">
-                    Hand-picked for each domain and career level — only what practitioners actually use to get hired.
+                  <p className="text-white/70 text-[15px] md:text-[17px] leading-relaxed mb-3">
+                    Organised by domain and career stage. You get shortlists of labs, courses, and reads people
+                    actually open, not another giant list you&apos;ll never finish.
                   </p>
 
                   <div className="flex flex-wrap gap-2">
-                    {["PortSwigger", "TCM Security", "HackTheBox", "TryHackMe"].map((tag) => (
-                      <span key={tag} className="font-mono text-[9px] tracking-[0.12em] uppercase text-white/55 border border-white/[0.15] px-3 py-1 rounded-full">
-                        {tag}
+                    {CURATED_RESOURCE_PLATFORMS.map(({ label, faviconHost }) => (
+                      <span
+                        key={label}
+                        className="inline-flex items-center gap-2 rounded-full border border-white/[0.18] bg-white/[0.04] px-3 py-1.5 font-mono text-[10px] sm:text-[11px] tracking-[0.08em] uppercase text-white/85"
+                      >
+                        {faviconHost ? (
+                          <img
+                            src={`https://icons.duckduckgo.com/ip3/${faviconHost}.ico`}
+                            alt=""
+                            width={16}
+                            height={16}
+                            className="h-4 w-4 shrink-0 rounded-[3px] object-contain"
+                            loading="lazy"
+                            referrerPolicy="no-referrer"
+                          />
+                        ) : (
+                          <span
+                            className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] border border-white/25 bg-white/[0.06] text-[10px] font-bold leading-none text-white/70"
+                            aria-hidden
+                          >
+                            +
+                          </span>
+                        )}
+                        {label}
                       </span>
                     ))}
                   </div>
@@ -588,7 +653,7 @@ export default function TopSection() {
                     </div>
 
                     <Link
-                      href="/roadmaps/network-pentesting/career-path/detailed"
+                      href="#explore-domains"
                       className="w-full font-mono text-[10px] tracking-[0.2em] uppercase font-bold text-black bg-white px-4 py-2.5 rounded-lg hover:bg-white/90 transition-colors duration-200 text-center block"
                     >
                       Browse Library
@@ -611,14 +676,14 @@ export default function TopSection() {
       </main>
 
       {/* Main Content Canvas - Level 2 (New Mission Control Grid) */}
-      <section className="relative py-24 min-h-screen border-t border-white/5" id="explore-domains">
+      <section className="relative py-12 md:py-20 lg:py-24 min-h-screen border-t border-white/5" id="explore-domains">
         {/* Deep dark grid background matching mockup */}
         <div className="absolute inset-0 -z-10" style={{ backgroundColor: "#080c10", backgroundImage: "radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px)", backgroundSize: "32px 32px" }}></div>
 
         <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
           
           {/* Header Section */}
-          <div className="mb-10">
+          <div className="mb-6 md:mb-10">
             <div className="flex items-center gap-4 mb-2 opacity-80">
               <div className="w-8 h-[1px]" style={{ background: "rgba(255,255,255,0.2)" }}></div>
               <span className="font-mono text-[9px] tracking-[0.25em] text-cyan-400 uppercase">Mission Control</span>
@@ -633,38 +698,44 @@ export default function TopSection() {
 
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
             
-            {/* Left Column: Grid of 6 Cards */}
-            <div className="flex-1 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1">
+            {/* Left Column: Domain cards grid */}
+            <div className="flex-1 w-full grid grid-cols-3 gap-px sm:gap-1">
                {DOMAIN_DATA.map((domain) => {
                   const isActive = activeDomain === domain.id;
+                  const locked = isDomainLocked(domain);
                   
                   return (
                      <div 
                         key={domain.id} 
                         onClick={() => setActiveDomain(domain.id)}
-                        className={`border flex flex-col p-6 min-h-[260px] cursor-pointer transition-all duration-300 relative group overflow-hidden ${isActive ? 'bg-[#10151c] border-white/10 shadow-[inset_0_0_20px_rgba(34,211,238,0.05)]' : 'bg-[#0b0e13] border-white/5 hover:bg-[#0f131a] hover:border-white/10'}`}
+                        className={`[container-type:inline-size] border flex flex-col p-2 sm:p-3 md:p-4 min-h-[96px] sm:min-h-[128px] md:min-h-[180px] lg:min-h-[200px] cursor-pointer transition-all duration-300 relative group overflow-hidden ${isActive ? 'bg-[#10151c] border-white/10 shadow-[inset_0_0_20px_rgba(34,211,238,0.05)]' : 'bg-[#0b0e13] border-white/5 hover:bg-[#0f131a] hover:border-white/10'}`}
                      >
                         {/* Hover glow effect */}
                         <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/0 to-cyan-500/[0.02] opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         
-                        <div className="flex justify-between items-start mb-10 relative z-10">
-                           <div className="w-10 h-10 flex items-center justify-center bg-[#182029] border border-white/[0.08] rounded shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+                        <div className="flex justify-between items-start gap-0.5 mb-1 sm:mb-3 md:mb-4 relative z-10 min-w-0">
+                           <div className="w-6 h-6 sm:w-7 sm:h-8 md:h-8 flex shrink-0 items-center justify-center bg-[#182029] border border-white/[0.08] rounded shadow-[0_4px_10px_rgba(0,0,0,0.2)] [&_svg]:w-3 [&_svg]:h-3 sm:[&_svg]:w-3.5 sm:[&_svg]:h-3.5 md:[&_svg]:w-4 md:[&_svg]:h-4">
                               {DomainIcons[domain.id as keyof typeof DomainIcons]}
                            </div>
-                           <span className={`font-mono text-[8px] tracking-[0.1em] uppercase ${isActive ? 'text-cyan-400' : 'text-white/20'}`}>{domain.nodeCode}</span>
+                           <span className={`font-mono text-[5px] sm:text-[8px] tracking-[0.06em] sm:tracking-[0.1em] uppercase truncate max-w-[45%] text-right ${isActive ? 'text-cyan-400' : 'text-white/20'}`}>{domain.nodeCode}</span>
                         </div>
                         
-                        <div className="relative z-10">
-                           <h3 className="font-headline text-[15px] tracking-widest font-bold text-white uppercase mb-2">{domain.title}</h3>
-                           <p className="font-body text-[11px] text-white/40 leading-relaxed pr-2">{domain.subtitle}</p>
+                        <div className="relative z-10 min-w-0">
+                           <h3
+                              className="font-headline min-w-0 truncate font-bold text-white uppercase mb-0.5 sm:mb-1.5 leading-tight tracking-tight sm:tracking-wide [font-size:clamp(6px,calc(0.22rem+5.5cqw),22px)]"
+                              title={domain.title}
+                           >
+                              {domain.title}
+                           </h3>
+                           <p className="font-body text-[7px] sm:text-[11px] text-white/40 leading-snug pr-0 sm:pr-1 line-clamp-2 sm:line-clamp-none">{domain.subtitle}</p>
                         </div>
                         
-                        <div className="mt-auto pt-8 flex items-center justify-between relative z-10 w-full">
-                           <div className="flex items-center gap-1.5 opacity-70 group-hover:opacity-100 transition-opacity">
-                              <span className={`font-mono text-[9px] tracking-[0.15em] font-bold ${domain.status === 'LOCKED' ? 'text-white/30' : 'text-cyan-400'} uppercase`}>
-                                 {domain.status === 'LOCKED' ? 'Locked' : 'Explore'}
+                        <div className="mt-auto pt-1 sm:pt-3 md:pt-4 flex items-center justify-between relative z-10 w-full min-w-0">
+                           <div className="flex min-w-0 items-center gap-0.5 sm:gap-1.5 opacity-70 group-hover:opacity-100 transition-opacity">
+                              <span className={`font-mono text-[6px] sm:text-[9px] tracking-[0.08em] sm:tracking-[0.15em] font-bold truncate ${locked ? 'text-white/30' : 'text-cyan-400'} uppercase`}>
+                                 {locked ? 'Locked' : 'Explore'}
                               </span>
-                              {domain.status === 'LOCKED' ? (
+                              {locked ? (
                                  <span className="material-symbols-outlined text-[10px] text-white/30">lock</span>
                               ) : (
                                  <span className="material-symbols-outlined text-[12px] text-cyan-400 transition-transform group-hover:translate-x-1">arrow_forward</span>
@@ -689,24 +760,34 @@ export default function TopSection() {
                <div className="border border-white/5 bg-[#0b0e13] flex flex-col shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
                   
                   {/* Info Top Section */}
-                  <div className="p-6 border-b border-white/5">
+                  <div className="overflow-visible p-4 sm:p-6 border-b border-white/5">
                      
                      {/* Node Identity */}
-                     <div className="flex items-center gap-5 mb-8">
+                     <div className="flex items-center gap-5 mb-4 md:mb-8">
                         <div className="w-11 h-11 flex items-center justify-center bg-[#182029] border border-white/[0.08] shadow-[inset_0_0_8px_rgba(255,255,255,0.02)]">
                            {DomainIcons[activeData.id as keyof typeof DomainIcons]}
                         </div>
                         <div className="flex flex-col gap-1.5">
-                           <p className="font-headline text-[17px] font-bold text-white tracking-widest uppercase leading-none">{activeData.title} ANALYST</p>
+                           <p className="font-headline text-[17px] font-bold text-white tracking-wide leading-none">
+                              {activeData.analystRole}
+                           </p>
                            <div className="flex items-center gap-2">
-                              <span className={`w-1.5 h-1.5 rounded-full ${activeData.status === 'LOCKED' ? 'bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.5)]' : 'bg-green-500 shadow-[0_0_6px_rgba(34,197,94,0.5)]'}`}></span>
-                              <span className="font-mono text-[8px] text-white/50 tracking-[0.1em] uppercase">STATUS: {activeData.status}_FEED</span>
+                              <span
+                                className={`w-1.5 h-1.5 rounded-full ${
+                                  activeData.isLive
+                                    ? "bg-green-500 shadow-[0_0_6px_rgba(34,197,94,0.5)]"
+                                    : "bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.5)]"
+                                }`}
+                              />
+                              <span className="font-mono text-[8px] text-white/50 tracking-[0.1em] uppercase">
+                                STATUS: {activeData.isLive ? `${activeData.status}_FEED` : "OFFLINE"}
+                              </span>
                            </div>
                         </div>
                      </div>
 
                      {/* Stats Row */}
-                     <div className="flex justify-between mb-8">
+                     <div className="flex justify-between mb-4 md:mb-8">
                         <div className="flex flex-col gap-1.5">
                           <p className="font-mono text-[8px] text-white/30 tracking-[0.15em] uppercase">Threat</p>
                           <p className={`font-mono text-[10px] font-bold ${activeData.threat.includes('CRITICAL') || activeData.threat.includes('ELEVATED') ? 'text-red-400' : 'text-cyan-400'}`}>{activeData.threat}</p>
@@ -718,58 +799,57 @@ export default function TopSection() {
                      </div>
 
                      {/* Action Buttons */}
-                     <div className="flex gap-3">
-                        <Link
-                          href={EXPERIENCES_DATA.find(e => e.id === activeData.id)?.href ?? '#'}
-                          className="flex-1 bg-cyan-400 hover:bg-cyan-300 text-black font-headline text-[11px] tracking-[0.1em] font-bold py-3 px-4 outline-none transition-colors uppercase text-center"
-                        >
-                          Experience It
-                        </Link>
-                        <Link
-                          href={ROADMAPS_DATA.find(r => r.id === activeData.id)?.href ?? '#'}
-                          className="flex-1 border border-white/10 text-white hover:bg-white/5 font-headline text-[11px] tracking-[0.1em] font-bold py-3 px-4 outline-none transition-colors uppercase text-center"
-                        >
-                          Explore Pathway
-                        </Link>
+                     <div className="flex gap-3 overflow-visible">
+                        {activeLive.isLocked ? (
+                          <span
+                            className="relative group flex-1 flex items-center justify-center gap-1.5 bg-cyan-400/15 text-white/35 border border-cyan-400/20 font-headline text-[11px] tracking-[0.1em] font-bold py-3 px-4 uppercase cursor-not-allowed select-none"
+                            aria-disabled
+                            aria-label="Experience It — coming soon"
+                          >
+                            <span
+                              className="pointer-events-none absolute bottom-[calc(100%+6px)] left-1/2 z-20 -translate-x-1/2 rounded border border-cyan-400/35 bg-[#0a0f12] px-2.5 py-1.5 font-mono text-[9px] font-bold tracking-[0.2em] text-cyan-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)] opacity-0 transition-opacity duration-150 group-hover:opacity-100 whitespace-nowrap"
+                              role="tooltip"
+                            >
+                              COMING SOON!
+                            </span>
+                            <span className="material-symbols-outlined text-[14px] text-white/35">lock</span>
+                            Experience It
+                          </span>
+                        ) : (
+                          <Link
+                            href={EXPERIENCES_DATA.find((e) => e.id === activeData.id)?.href ?? "#"}
+                            className="flex-1 bg-cyan-400 hover:bg-cyan-300 text-black font-headline text-[11px] tracking-[0.1em] font-bold py-3 px-4 outline-none transition-colors uppercase text-center"
+                          >
+                            Experience It
+                          </Link>
+                        )}
+                        {activeLive.isLocked ? (
+                          <span
+                            className="relative group flex-1 flex items-center justify-center gap-1.5 border border-white/[0.08] text-white/35 font-headline text-[11px] tracking-[0.1em] font-bold py-3 px-4 uppercase cursor-not-allowed select-none"
+                            aria-disabled
+                            aria-label="Explore Pathway — coming soon"
+                          >
+                            <span
+                              className="pointer-events-none absolute bottom-[calc(100%+6px)] left-1/2 z-20 -translate-x-1/2 rounded border border-white/20 bg-[#0a0f12] px-2.5 py-1.5 font-mono text-[9px] font-bold tracking-[0.2em] text-white/90 shadow-[0_4px_20px_rgba(0,0,0,0.5)] opacity-0 transition-opacity duration-150 group-hover:opacity-100 whitespace-nowrap"
+                              role="tooltip"
+                            >
+                              COMING SOON!
+                            </span>
+                            <span className="material-symbols-outlined text-[14px] text-white/35">lock</span>
+                            Explore Pathway
+                          </span>
+                        ) : (
+                          <Link
+                            href={ROADMAPS_DATA.find((r) => r.id === activeData.id)?.href ?? "#"}
+                            className="flex-1 border border-white/10 text-white hover:bg-white/5 font-headline text-[11px] tracking-[0.1em] font-bold py-3 px-4 outline-none transition-colors uppercase text-center"
+                          >
+                            Explore Pathway
+                          </Link>
+                        )}
                      </div>
                   </div>
 
-                  {/* Built-in Terminal Simulation */}
-                  <div className="flex flex-col w-full h-[240px] bg-[#07090c] relative">
-                     {/* Mac-like header */}
-                     <div className="flex items-center justify-between px-4 h-8 bg-white/[0.02] border-b border-white/[0.04]">
-                        <div className="flex gap-1.5">
-                           <span className="w-2 h-2 rounded-full bg-[#ef4444] opacity-50"></span>
-                           <span className="w-2 h-2 rounded-full bg-[#eab308] opacity-50"></span>
-                           <span className="w-2 h-2 rounded-full bg-[#22c55e] opacity-50"></span>
-                        </div>
-                        <span className="font-mono text-[8px] text-white/20 tracking-[0.2em] uppercase">TERMINAL_V2</span>
-                     </div>
-                     
-                     {/* Lines */}
-                     <div className="p-4 overflow-y-auto flex-1 font-mono text-[10px] tracking-wide leading-[1.8] flex flex-col gap-1">
-                        {activeData.terminalLines.map((line, idx) => {
-                           let className = "text-white/60";
-                           const isPrompt = line.includes("@") && line.includes("~$");
-                           const isSuccess = line.includes("[SUCCESS]") || line.includes("PASS");
-                           const isAlert = line.includes("ALERT") || line.includes("VULN") || line.includes("refused") || line.includes("[WARN]");
-                           const isHighlight = line.includes("PAYLOAD") || line.includes("IP_SOURCE");
-
-                           if (isPrompt) className = "text-cyan-400";
-                           else if (isSuccess) className = "text-green-400";
-                           else if (isAlert) className = "text-red-400";
-                           else if (isHighlight) className = "text-orange-400";
-                           
-                           return (
-                             <div key={idx} className={`${className} break-words`}>
-                               {line}
-                             </div>
-                           )
-                        })}
-                        {/* Cursor */}
-                        <div className="w-1.5 h-3 bg-cyan-400 animate-pulse mt-0.5 ml-[115px]"></div>
-                     </div>
-                  </div>
+                  <DomainDeepDiveVisual domainId={activeData.id} />
 
                </div>
             </div>

@@ -4,9 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:turbo": "next dev --turbo",
+    "dev:clean": "npm run clean && npm run dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "clean": "node -e \"const fs=require('fs');const p='.next';if(fs.existsSync(p))fs.rmSync(p,{recursive:true,force:true});\""
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

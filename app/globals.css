@@ -393,3 +393,86 @@ body {
   border-radius: 9999px !important;
   -webkit-border-radius: 9999px !important;
 }
+
+/* Homepage domain deep-dive panel (CSS-only; avoids framer-motion vendor chunk issues on /) */
+@keyframes domain-deep-scanline {
+  0% {
+    top: 0%;
+  }
+  100% {
+    top: calc(100% - 1px);
+  }
+}
+
+.domain-deep-scanline {
+  position: absolute;
+  animation: domain-deep-scanline 3.5s linear infinite;
+}
+
+@keyframes domain-cloud-node {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+
+.domain-cloud-node {
+  animation: domain-cloud-node 2.6s ease-in-out infinite;
+}
+
+@keyframes domain-cloud-dash {
+  to {
+    stroke-dashoffset: -48;
+  }
+}
+
+.domain-cloud-path {
+  animation: domain-cloud-dash 4s linear infinite;
+}
+
+@keyframes domain-intent-pulse {
+  0%,
+  100% {
+    opacity: 0.75;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.domain-intent-pulse {
+  animation: domain-intent-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes domain-ai-pulse-bg {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.domain-ai-pulse-bg {
+  animation: domain-ai-pulse-bg 1.8s ease-in-out infinite;
+}
+
+@keyframes domain-grc-glow {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+.domain-grc-glow {
+  animation: domain-grc-glow 2.5s ease-in-out infinite;
+}

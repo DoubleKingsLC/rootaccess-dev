@@ -6,25 +6,33 @@ import "./globals.css";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
-  display: "swap"
+  display: "swap",
+  preload: false,
+  fallback: ["Arial", "Helvetica", "system-ui", "sans-serif"],
 });
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
-  display: "swap"
+  display: "swap",
+  preload: false,
+  fallback: ["Consolas", "Monaco", "Menlo", "monospace"],
 });
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-headline",
-  display: "swap"
+  display: "swap",
+  preload: false,
+  fallback: ["Arial", "Helvetica", "system-ui", "sans-serif"],
 });
 
 const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-label",
-  display: "swap"
+  display: "swap",
+  preload: false,
+  fallback: ["Arial", "Helvetica", "system-ui", "sans-serif"],
 });
 
 export const metadata: Metadata = {
