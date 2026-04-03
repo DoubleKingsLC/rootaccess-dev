@@ -14,6 +14,8 @@ import { AIHackingNotesCard } from "./ai-hacking/AIHackingNotesCard";
 import { DataFlightOverlay } from "./ai-hacking/DataFlightOverlay";
 import { AIHackingCareerRoadmap } from "./ai-hacking/AIHackingCareerRoadmap";
 import { AIIntroOverlay } from "./AIIntroOverlay";
+import { useRoadmapWorkflowVideoMode } from "@/hooks/useRoadmapWorkflowVideoMode";
+import { RoadmapWorkflowMobileWalkthrough } from "@/components/roadmaps/RoadmapWorkflowMobileWalkthrough";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -61,6 +63,7 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
     const speedTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [isRedoHovered, setIsRedoHovered] = useState(false);
     const [layoutScale, setLayoutScale] = useState(1);
+    const showRecordedWorkflow = useRoadmapWorkflowVideoMode();
 
     // Sync state to ref for animation loop
     useEffect(() => {
@@ -97,6 +100,7 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
     };
 
     useEffect(() => {
+        if (showRecordedWorkflow) return;
         const updateScale = () => {
             if (window.innerWidth < 1024) {
                 setLayoutScale(1);
@@ -112,7 +116,7 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
         updateScale();
         window.addEventListener("resize", updateScale);
         return () => window.removeEventListener("resize", updateScale);
-    }, []);
+    }, [showRecordedWorkflow]);
 
     // Staggered hand-off:
     // 1. Dashboard fades from 1 -> 0 between 0.97 and 0.985
@@ -122,6 +126,7 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
     const roadmapOpacity = progress < 0.98 ? 0 : Math.min(1, (progress - 0.98) / 0.015);
 
     useEffect(() => {
+        if (showRecordedWorkflow) return;
         if (!scrollSectionRef.current || !pinnedViewportRef.current) return;
 
         // Normalize scroll speed: Chrome/Brave are too fast at 1.0, so we use 0.7.
@@ -168,10 +173,11 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
             lenisRef.current = null;
             lenis.destroy();
         };
-    }, []);
+    }, [showRecordedWorkflow]);
 
     // ── Auto-scrolling logic (mirrors SOC ScrollytellingLayout) ─────────────
     useEffect(() => {
+        if (showRecordedWorkflow) return;
         if (!isAutoScrolling) return;
 
         let lastScrollY = readScrollY();
@@ -212,7 +218,11 @@ export const AIHackingLayout: React.FC<AIHackingLayoutProps> = ({ children }) =>
 
         rafId = requestAnimationFrame(scrollStep);
         return () => cancelAnimationFrame(rafId);
-    }, [isAutoScrolling]);
+    }, [isAutoScrolling, showRecordedWorkflow]);
+
+    if (showRecordedWorkflow) {
+        return <RoadmapWorkflowMobileWalkthrough slug="ai-hacking" />;
+    }
 
     return (
         <section

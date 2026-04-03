@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { MobileWebHackingCareerPath } from "@/components/web-hacking/career-path/MobileWebHackingCareerPath";
@@ -59,7 +58,7 @@ function SectionHeader({
   num: string; label: string; color: string; subtitle: string;
 }) {
   return (
-    <div className="mb-10 flex flex-col xl:flex-row xl:items-end justify-between gap-8">
+    <div className="mb-10">
       <div className="flex-1 min-w-0">
         <div className="flex flex-wrap items-baseline gap-4 mb-4">
           <span
@@ -78,29 +77,6 @@ function SectionHeader({
         <p className="font-mono text-sm" style={{ color: `${color}aa` }}>{subtitle}</p>
         <div className="mt-6 h-px" style={{ background: `linear-gradient(to right, ${color}28, transparent)` }} />
       </div>
-
-      <Link
-        href={`/roadmaps/web-hacking/career-path/detailed#level-${num}`}
-        className="group/deep hidden xl:flex flex-col gap-2.5 p-5 rounded-2xl border transition-all duration-300 w-[320px] flex-shrink-0 hover:-translate-y-1"
-        style={{
-          textDecoration: "none",
-          borderColor: `${color}35`,
-          background: `linear-gradient(135deg, ${color}15, ${color}05)`,
-        }}
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-[11px] font-bold uppercase tracking-[0.3em]" style={{ color }}>Deep Dive</span>
-            <span className="flex h-1.5 w-1.5 rounded-full animate-pulse" style={{ background: color }} />
-          </div>
-          <svg className="w-4 h-4 transform group-hover/deep:translate-x-1.5 transition-transform" style={{ color }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </div>
-        <p className="text-[13px] leading-relaxed" style={{ color: "rgba(226,232,240,0.5)" }}>
-          View detailed certification breakdowns, skill research, and learning resources.
-        </p>
-      </Link>
     </div>
   );
 }

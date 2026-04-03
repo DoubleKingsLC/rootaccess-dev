@@ -22,7 +22,6 @@ export const LEVELS: Level[] = [
     certs: [
       { label: "Google Cybersecurity Certificate", link: "https://www.coursera.org/professional-certificates/google-cybersecurity", provider: "google" },
       { label: "TCM · Practical Security Fundamentals", link: "https://academy.tcm-sec.com/p/practical-security-fundamentals", provider: "tcm" },
-      { label: "THM · Security+ Pre-Security (SEC1)", link: "https://tryhackme.com/certification/pre-security", provider: "tryhackme" },
     ],
     labs: [
       { label: "Hacking AI is TOO EASY (this should be illegal)", link: "https://youtu.be/Qvx2sVgQ-u0", provider: "youtube" },

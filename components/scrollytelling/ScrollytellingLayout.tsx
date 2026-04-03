@@ -10,9 +10,9 @@ import { IntelTicker } from "./IntelTicker";
 import { MonitorPortal } from "./MonitorPortal";
 import { NarrativeOverlay } from "./NarrativeOverlay";
 import { PostMortem } from "./PostMortem";
-import { SOCMobileExperience } from "./SOCMobileExperience";
+import { RoadmapWorkflowMobileWalkthrough } from "@/components/roadmaps/RoadmapWorkflowMobileWalkthrough";
 import { TacticalBriefing } from "./TacticalBriefing";
-import { useIsMobile } from "../../hooks/useIsMobile";
+import { useRoadmapWorkflowVideoMode } from "@/hooks/useRoadmapWorkflowVideoMode";
 import Lenis from "lenis";
 import { useRouter } from "next/navigation";
 
@@ -77,7 +77,7 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
 
   const [progress, setProgress] = useState(0);
   const [stageScaleFactor, setStageScaleFactor] = useState(1);
-  const isMobile = useIsMobile(768);
+  const showRecordedWorkflow = useRoadmapWorkflowVideoMode();
   const [orientation, setOrientation] = useState<Orientation>("horizontal");
   const [isRedoHovered, setIsRedoHovered] = useState(false);
   const [isAutoScrolling, setIsAutoScrolling] = useState(false);
@@ -310,7 +310,7 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
       lenisRef.current = null;
       lenis.destroy();
     };
-  }, [orientation, stageScaleFactor, isMobile]);
+  }, [orientation, stageScaleFactor, showRecordedWorkflow]);
 
   // ── Derived opacity values ─────────────────────────────────────────────────
   const roadmapOpacity = progress > 0.90 ? Math.min(1, (progress - 0.90) / 0.10) : 0;
@@ -321,8 +321,8 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
 
   return (
     <>
-      {isMobile ? (
-        <SOCMobileExperience />
+      {showRecordedWorkflow ? (
+        <RoadmapWorkflowMobileWalkthrough slug="soc" />
       ) : (
         <>
           {/* ── Orientation Blocker (Applies to all devices, including mobile) ── */}

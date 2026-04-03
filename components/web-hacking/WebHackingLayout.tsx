@@ -14,6 +14,8 @@ import { InitialAccessScene }   from "./InitialAccessScene";
 import { SQLiScene }            from "./SQLiScene";
 import { ExfilScene }          from "./ExfilScene";
 import { ReportScene }         from "./ReportScene";
+import { useRoadmapWorkflowVideoMode } from "@/hooks/useRoadmapWorkflowVideoMode";
+import { RoadmapWorkflowMobileWalkthrough } from "@/components/roadmaps/RoadmapWorkflowMobileWalkthrough";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -70,6 +72,7 @@ export const WebHackingLayout: React.FC = () => {
   const [isSpeedControlOpen, setIsSpeedControlOpen] = useState(false);
   const speedTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isRedoHovered, setIsRedoHovered] = useState(false);
+  const showRecordedWorkflow = useRoadmapWorkflowVideoMode();
 
   /** Lenis owns scroll; drive programmatic scroll through Lenis so autoplay isn't overwritten. */
   const readScrollY = () => lenisRef.current?.scroll ?? window.scrollY;
@@ -107,6 +110,7 @@ export const WebHackingLayout: React.FC = () => {
 
   // ── Auto-scroll logic (Mirrors AIHackingLayout / ScrollytellingLayout to fix Safari speeds & standardize Hz-independent scroll) ──
   useEffect(() => {
+    if (showRecordedWorkflow) return;
     if (!isAutoScrolling) return;
 
     let lastScrollY = readScrollY();
@@ -149,10 +153,11 @@ export const WebHackingLayout: React.FC = () => {
 
     rafId = requestAnimationFrame(scrollStep);
     return () => cancelAnimationFrame(rafId);
-  }, [isAutoScrolling]);
+  }, [isAutoScrolling, showRecordedWorkflow]);
 
   // ── GSAP + Lenis ──────────────────────────────────────────────────────────
   useEffect(() => {
+    if (showRecordedWorkflow) return;
     if (!scrollSectionRef.current || !pinnedViewportRef.current) return;
 
     const lenis = new Lenis({ lerp: 0.05, wheelMultiplier: 0.5 });
@@ -186,7 +191,11 @@ export const WebHackingLayout: React.FC = () => {
       lenis.destroy();
       lenisRef.current = null;
     };
-  }, []);
+  }, [showRecordedWorkflow]);
+
+  if (showRecordedWorkflow) {
+    return <RoadmapWorkflowMobileWalkthrough slug="web-hacking" />;
+  }
 
   return (
     <section ref={scrollSectionRef} className="relative h-[2000vh] w-screen bg-slate-950">

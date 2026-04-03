@@ -33,27 +33,6 @@ function SectionHeader({ num, label, color, time, salary, subtitle }: {
         {label}
       </h2>
       <p className="font-mono text-[14px] leading-relaxed" style={{ color: `${color}dd` }}>{subtitle}</p>
-      
-      <Link
-        href={`/roadmaps/soc/career-path/detailed#level-${num}`}
-        className="mt-6 flex items-center justify-between p-4 rounded-xl border transition-all duration-300 active:scale-[0.98]"
-        style={{
-          background: `linear-gradient(135deg, ${color}15, ${color}05)`,
-          borderColor: `${color}30`,
-          textDecoration: "none"
-        }}
-      >
-        <div className="flex items-center gap-2.5">
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color }}>Deep Dive</span>
-          <span className="flex h-1.5 w-1.5 rounded-full animate-pulse" style={{ background: color }} />
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="font-mono text-[9px] uppercase tracking-wider opacity-40 shrink-0" style={{ color: "white" }}>Full breakdown</span>
-          <svg className="w-4 h-4" style={{ color }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </div>
-      </Link>
 
       <div className="mt-8 h-px" style={{ background: `linear-gradient(to right, ${color}40, transparent)` }} />
     </div>

@@ -521,10 +521,6 @@ export default function DetailedAiHackingClient() {
                 what="A broad and accessible start to security. It guides you from the absolute basics of networking and the Linux command line through to fundamental threat detection and simple Python scripting."
                 why="This is the best generalist starting point because it doesn't bog you down with overly dense engineering details. More importantly, finishing it proves to employers that you have the discipline to finish a multi-month course. HR departments universally recognize the Google brand, which helps with your initial resume screening."
               />
-              <CertCard name="TryHackMe Pre-Security" provider="TryHackMe" href="https://tryhackme.com/certification/pre-security" accentColor="#94a3b8"
-                what="Bite-sized, gamified lessons that remove the fear from technical concepts. You learn about networking layers, HTTP, DNS, and fundamental security terminology right in your browser."
-                why="We recommend this because it has the lowest barrier to entry. It turns intimidating tech into small, manageable missions. It helps build your confidence and gives you a chance to spin up a lab environment safely before you spend money on more expensive training."
-              />
               <CertCard name="TCM Practical Security Fundamentals" provider="TCM Security Academy" href="https://academy.tcm-sec.com/p/practical-security-fundamentals" accentColor="#94a3b8"
                 what="A hands-on course that focuses on real-world demonstrations rather than dry slide decks. It shows you exactly how the modern digital world works and then logically takes it apart."
                 why="This is for learners who prefer doing over watching. If you want to see how networks and operating systems actually break from day one, this is your best choice. It focuses on the fundamental 'how' of security rather than just the academic theory."
