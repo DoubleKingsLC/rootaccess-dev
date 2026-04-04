@@ -36,6 +36,8 @@ export type RoadmapWorkflowMobileConfig = {
   careerPathHref: string;
   /** Same stem for both `webm/{basename}.webm` and `mp4/{basename}.mp4` under `public/.../workflow-walkthroughs/`. */
   videoBasename: string;
+  /** Middle segment in the top breadcrumb (e.g. "SOC", "Web Hacking"). */
+  breadcrumbLabel: string;
 };
 
 export const ROADMAP_WORKFLOW_MOBILE: Record<
@@ -48,6 +50,7 @@ export const ROADMAP_WORKFLOW_MOBILE: Record<
     accentColor: "#22d3ee",
     careerPathHref: "/roadmaps/soc/career-path",
     videoBasename: "SOC_Mobile",
+    breadcrumbLabel: "SOC",
   },
   "web-hacking": {
     slug: "web-hacking",
@@ -55,6 +58,7 @@ export const ROADMAP_WORKFLOW_MOBILE: Record<
     accentColor: "#f43f5e",
     careerPathHref: "/roadmaps/web-hacking/career-path",
     videoBasename: "WebHacking_Mobile",
+    breadcrumbLabel: "Web Hacking",
   },
   "ai-hacking": {
     slug: "ai-hacking",
@@ -62,6 +66,7 @@ export const ROADMAP_WORKFLOW_MOBILE: Record<
     accentColor: "#ef4444",
     careerPathHref: "/roadmaps/ai-hacking/career-path",
     videoBasename: "AIhacking_Mobile",
+    breadcrumbLabel: "AI Hacking",
   },
   "network-pentesting": {
     slug: "network-pentesting",
@@ -69,6 +74,7 @@ export const ROADMAP_WORKFLOW_MOBILE: Record<
     accentColor: "#dc2626",
     careerPathHref: "/roadmaps/network-pentesting/career-path",
     videoBasename: "NetworkPentesting_Mobile",
+    breadcrumbLabel: "Network",
   },
   grc: {
     slug: "grc",
@@ -76,5 +82,6 @@ export const ROADMAP_WORKFLOW_MOBILE: Record<
     accentColor: "#14b8a6",
     careerPathHref: "/roadmaps/grc/career-path",
     videoBasename: "GRC_Mobile",
+    breadcrumbLabel: "GRC",
   },
 };

@@ -17,11 +17,55 @@ export const RoadmapWorkflowMobileWalkthrough: React.FC<Props> = ({
 }) => {
   const cfg = ROADMAP_WORKFLOW_MOBILE[slug];
   const { webm, mp4 } = workflowWalkthroughVideoUrls(cfg.videoBasename);
+  const workflowHref = `/roadmaps/${cfg.slug}`;
 
   return (
-    <div className="min-h-[100dvh] w-full bg-[#060a0f] px-4 py-8 pb-12">
-      <div className="mx-auto flex max-w-lg flex-col gap-6">
-        <header className="space-y-2 text-center">
+    <div className="flex min-h-[100dvh] w-full flex-col bg-[#060a0f]">
+      {/* Top bar — aligned with mobile career path; higher-contrast text for readability */}
+      <header
+        className="sticky top-0 z-50 flex min-h-12 shrink-0 flex-wrap items-center gap-x-2 gap-y-1 px-4 py-2 sm:gap-x-3 sm:px-6"
+        style={{
+          background: "rgba(9,13,20,0.96)",
+          borderBottom: "1px solid rgba(255,255,255,0.08)",
+          backdropFilter: "blur(12px)",
+        }}
+      >
+        <nav
+          className="flex flex-wrap items-center gap-x-2 gap-y-1"
+          aria-label="Breadcrumb"
+        >
+          <Link
+            href="/"
+            className="font-mono text-[10px] uppercase tracking-widest text-slate-200 transition-colors hover:text-white sm:text-[11px]"
+          >
+            Home
+          </Link>
+          <span
+            className="font-mono text-[10px] text-slate-500 sm:text-[11px]"
+            aria-hidden
+          >
+            /
+          </span>
+          <Link
+            href={workflowHref}
+            className="font-mono text-[10px] uppercase tracking-widest text-slate-200 transition-colors hover:text-white sm:text-[11px]"
+          >
+            {cfg.breadcrumbLabel}
+          </Link>
+          <span
+            className="font-mono text-[10px] text-slate-500 sm:text-[11px]"
+            aria-hidden
+          >
+            /
+          </span>
+          <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-slate-400 sm:text-[11px]">
+            Walkthrough
+          </span>
+        </nav>
+      </header>
+
+      <div className="mx-auto flex w-full max-w-lg flex-1 flex-col gap-6 px-4 py-8 pb-12">
+        <div className="space-y-2 text-center">
           <p
             className="font-mono text-[10px] uppercase tracking-[0.35em]"
             style={{ color: cfg.accentColor }}
@@ -35,7 +79,7 @@ export const RoadmapWorkflowMobileWalkthrough: React.FC<Props> = ({
             The full experience is interactive on larger viewports. On this screen
             size, watch this capture to see the flow end to end.
           </p>
-        </header>
+        </div>
 
         <div
           className="overflow-hidden rounded-xl border border-white/10 bg-black/40 shadow-[0_0_60px_rgba(0,0,0,0.45)]"
