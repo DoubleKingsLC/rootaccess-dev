@@ -8,20 +8,35 @@ export type RoadmapWorkflowSlug =
   | "soc"
   | "web-hacking"
   | "ai-hacking"
-  | "network-pentesting";
+  | "network-pentesting"
+  | "grc";
+
+/** Static root: maps to `public/roadmaps/workflow-walkthroughs/` */
+const BASE = "/roadmaps/workflow-walkthroughs";
+
+/**
+ * Public URLs for walkthrough encodings. Place files at:
+ * - `public/roadmaps/workflow-walkthroughs/webm/{basename}.webm`
+ * - `public/roadmaps/workflow-walkthroughs/mp4/{basename}.mp4`
+ */
+export function workflowWalkthroughVideoUrls(basename: string): {
+  webm: string;
+  mp4: string;
+} {
+  return {
+    webm: `${BASE}/webm/${basename}.webm`,
+    mp4: `${BASE}/mp4/${basename}.mp4`,
+  };
+}
 
 export type RoadmapWorkflowMobileConfig = {
   slug: RoadmapWorkflowSlug;
   title: string;
   accentColor: string;
   careerPathHref: string;
-  /** Public URL to MP4 in public/roadmaps/workflow-walkthroughs/ */
-  videoMp4: string;
-  /** Optional WebM (same basename + .webm) for browsers that support it. */
-  videoWebm?: string;
+  /** Same stem for both `webm/{basename}.webm` and `mp4/{basename}.mp4` under `public/.../workflow-walkthroughs/`. */
+  videoBasename: string;
 };
-
-const BASE = "/roadmaps/workflow-walkthroughs";
 
 export const ROADMAP_WORKFLOW_MOBILE: Record<
   RoadmapWorkflowSlug,
@@ -32,27 +47,34 @@ export const ROADMAP_WORKFLOW_MOBILE: Record<
     title: "SOC workflow",
     accentColor: "#22d3ee",
     careerPathHref: "/roadmaps/soc/career-path",
-    videoMp4: `${BASE}/SOC_Mobile.mp4`,
+    videoBasename: "SOC_Mobile",
   },
   "web-hacking": {
     slug: "web-hacking",
     title: "Web hacking workflow",
     accentColor: "#f43f5e",
     careerPathHref: "/roadmaps/web-hacking/career-path",
-    videoMp4: `${BASE}/WebHacking_Mobile.mp4`,
+    videoBasename: "WebHacking_Mobile",
   },
   "ai-hacking": {
     slug: "ai-hacking",
     title: "AI hacking workflow",
     accentColor: "#ef4444",
     careerPathHref: "/roadmaps/ai-hacking/career-path",
-    videoMp4: `${BASE}/AIhacking_Mobile.mp4`,
+    videoBasename: "AIhacking_Mobile",
   },
   "network-pentesting": {
     slug: "network-pentesting",
     title: "Network pentesting workflow",
     accentColor: "#dc2626",
     careerPathHref: "/roadmaps/network-pentesting/career-path",
-    videoMp4: `${BASE}/NetworkPentesting_Mobile.mp4`,
+    videoBasename: "NetworkPentesting_Mobile",
+  },
+  grc: {
+    slug: "grc",
+    title: "GRC workflow",
+    accentColor: "#14b8a6",
+    careerPathHref: "/roadmaps/grc/career-path",
+    videoBasename: "GRC_Mobile",
   },
 };

@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import {
   ROADMAP_WORKFLOW_MOBILE,
+  workflowWalkthroughVideoUrls,
   type RoadmapWorkflowSlug,
 } from "@/lib/roadmapWorkflowMobile";
 
@@ -15,6 +16,7 @@ export const RoadmapWorkflowMobileWalkthrough: React.FC<Props> = ({
   slug,
 }) => {
   const cfg = ROADMAP_WORKFLOW_MOBILE[slug];
+  const { webm, mp4 } = workflowWalkthroughVideoUrls(cfg.videoBasename);
 
   return (
     <div className="min-h-[100dvh] w-full bg-[#060a0f] px-4 py-8 pb-12">
@@ -30,8 +32,8 @@ export const RoadmapWorkflowMobileWalkthrough: React.FC<Props> = ({
             {cfg.title}
           </h1>
           <p className="text-sm leading-relaxed text-slate-400">
-            The full experience is interactive on larger screens. On mobile,
-            watch this capture to see the flow end to end.
+            The full experience is interactive on larger viewports. On this screen
+            size, watch this capture to see the flow end to end.
           </p>
         </header>
 
@@ -42,16 +44,15 @@ export const RoadmapWorkflowMobileWalkthrough: React.FC<Props> = ({
           }}
         >
           <video
+            key={slug}
             className="block w-full"
             controls
             playsInline
             preload="metadata"
             aria-label={`${cfg.title} screen recording`}
           >
-            {cfg.videoWebm ? (
-              <source src={cfg.videoWebm} type="video/webm" />
-            ) : null}
-            <source src={cfg.videoMp4} type="video/mp4" />
+            <source src={webm} type="video/webm" />
+            <source src={mp4} type="video/mp4" />
             Your browser does not support embedded video.
           </video>
         </div>
