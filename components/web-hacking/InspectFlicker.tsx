@@ -6,11 +6,12 @@ type InspectFlickerProps = {
   localProgress: number; // 0–1 within this phase
 };
 
-// Slides up at 0.80, fully visible 0.86–1.0
+// Slides up at 0.82, fully visible 0.92–1.0
+// ─ After WappalyzerPopup fully gone (0.80) and GhostCursor is cruising ─
 const panelSlide = (local: number): { opacity: number; translateY: number } => {
-  if (local < 0.80) return { opacity: 0, translateY: 100 };
-  if (local < 0.88) {
-    const t = (local - 0.80) / 0.08;
+  if (local < 0.82) return { opacity: 0, translateY: 100 };
+  if (local < 0.92) {
+    const t = (local - 0.82) / 0.10;
     const eased = 1 - Math.pow(1 - t, 3);
     return { opacity: eased, translateY: 100 * (1 - eased) };
   }

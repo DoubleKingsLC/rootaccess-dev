@@ -3,33 +3,34 @@
 import React from "react";
 import { MockTerminal } from "./MockTerminal";
 import { DirbustPanel } from "./DirbustPanel";
+import { NarrativeCaption } from "./NarrativeCaption";
 
 type ActiveReconSceneProps = {
   progress: number; // global 0–1
 };
 
-// ── Scene window: 0.20–0.30 ───────────────────────────────────────────────────
-// Fade in  0.200–0.212
-// Full     0.212–0.280
-// Fade out 0.280–0.300
+// ── Scene window: 0.407–0.550 ──────────────────────────────────────────────────
+// Fade in  0.407–0.427
+// Full     0.427–0.535
+// Fade out 0.535–0.550 (Snappy)
 const sceneOpacity = (p: number): number => {
-  if (p < 0.200) return 0;
-  if (p < 0.212) return (p - 0.200) / 0.012;
-  if (p <= 0.280) return 1;
-  if (p < 0.300) return 1 - (p - 0.280) / 0.020;
+  if (p < 0.407) return 0;
+  if (p < 0.427) return (p - 0.407) / 0.020;
+  if (p <= 0.535) return 1;
+  if (p < 0.550) return 1 - (p - 0.535) / 0.015;
   return 0;
 };
 
-// Local 0–1 across 0.200–0.295
+// Local 0–1 across 0.407–0.540
 const local = (p: number): number =>
-  Math.max(0, Math.min(1, (p - 0.200) / 0.095));
+  Math.max(0, Math.min(1, (p - 0.407) / 0.133));
 
-// Caption fades in at 0.230, out at 0.285
+// Caption fades in at 0.427, out at 0.540
 const captionOpacity = (p: number): number => {
-  if (p < 0.230) return 0;
-  if (p < 0.242) return (p - 0.230) / 0.012;
-  if (p <= 0.278) return 1;
-  if (p < 0.290) return 1 - (p - 0.278) / 0.012;
+  if (p < 0.427) return 0;
+  if (p < 0.447) return (p - 0.427) / 0.020;
+  if (p <= 0.535) return 1;
+  if (p < 0.545) return 1 - (p - 0.535) / 0.010;
   return 0;
 };
 
@@ -57,9 +58,9 @@ export const ActiveReconScene: React.FC<ActiveReconSceneProps> = ({ progress }) 
 
         {/* Top label */}
         <div
-          className="absolute top-12 left-1/2 -translate-x-1/2 font-mono text-[9px] uppercase tracking-[0.45em]"
+          className="absolute top-12 left-1/2 -translate-x-1/2 font-mono text-[11px] uppercase tracking-[0.35em]"
           style={{
-            color: "rgba(244,63,94,0.4)",
+            color: "rgba(226,232,240,0.65)",
             opacity: lp > 0.05 ? 1 : 0,
             transition: "opacity 0.3s",
           }}
@@ -75,17 +76,9 @@ export const ActiveReconScene: React.FC<ActiveReconSceneProps> = ({ progress }) 
       </div>
 
       {/* ── Narrative caption ───────────────────────────────────────────────── */}
-      <div
-        className="pointer-events-none absolute bottom-[72px] left-1/2 z-[35] -translate-x-1/2"
-        style={{ opacity: captionOpacity(progress) }}
-        aria-hidden
-      >
-        <div className="rounded-xl border border-white/10 bg-slate-950/85 px-5 py-2.5 backdrop-blur-md max-w-[90vw]">
-          <p className="font-mono text-xs font-medium tracking-wide text-slate-100 text-center md:text-sm">
-            Port 3306 wide open. A <span style={{ color: "#f87171" }}>.env</span> file serving itself. The server is practically waving.
-          </p>
-        </div>
-      </div>
+      <NarrativeCaption opacity={captionOpacity(progress)}>
+        Port 3306 wide open. A <span style={{ color: "#f87171" }}>.env</span> file serving itself. The server is practically waving.
+      </NarrativeCaption>
     </>
   );
 };

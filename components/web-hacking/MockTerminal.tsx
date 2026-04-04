@@ -8,22 +8,22 @@ type MockTerminalProps = {
 
 // ── Timing (local) ────────────────────────────────────────────────────────────
 // 0.00–0.12  prompt appears
-// 0.12–0.38  command types
-// 0.38–0.55  scan loading bar sweeps
-// 0.55–0.95  ports stream one by one
+// 0.12–0.27  command types (faster)
+// 0.27–0.45  scan loading bar sweeps (faster)
+// 0.45–0.75  ports stream one by one (faster reveal)
 
 const COMMAND = "nmap -sV -p- --open 188.166.92.14";
 
 const cmdTyped = (lp: number): string => {
   if (lp < 0.12) return "";
-  const t = Math.min((lp - 0.12) / 0.26, 1);
+  const t = Math.min((lp - 0.12) / 0.15, 1);
   return COMMAND.slice(0, Math.round(t * COMMAND.length));
 };
 
 const scanProgress = (lp: number): number => {
-  if (lp < 0.38) return 0;
-  if (lp > 0.55) return 100;
-  return ((lp - 0.38) / 0.17) * 100;
+  if (lp < 0.27) return 0;
+  if (lp > 0.45) return 100;
+  return ((lp - 0.27) / 0.18) * 100;
 };
 
 const PORTS = [
@@ -35,8 +35,8 @@ const PORTS = [
 ];
 
 const portsVisible = (lp: number): number => {
-  if (lp < 0.55) return 0;
-  return Math.floor(((lp - 0.55) / 0.40) * (PORTS.length + 1));
+  if (lp < 0.45) return 0;
+  return Math.floor(((lp - 0.45) / 0.30) * (PORTS.length + 1));
 };
 
 const ROSE   = "#f43f5e";

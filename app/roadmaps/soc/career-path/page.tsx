@@ -1,357 +1,267 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { MobileSocCareerPath } from "@/components/soc/career-path/MobileSocCareerPath";
+import { LEVELS, ACTIONS } from "@/components/soc/career-path/data";
+import { ProviderFavicon } from "@/components/soc/career-path/ProviderFavicon";
 
+// ── Components ────────────────────────────────────────────────────────────────
 
-gsap.registerPlugin(ScrollTrigger);
-
-const PROVIDER_DOMAINS: Record<string, string> = {
-    tryhackme: "tryhackme.com",
-    hackthebox: "hackthebox.com",
-    htb: "hackthebox.com",
-    google: "google.com",
-    tcm: "tcm-sec.com",
-    offsec: "offsec.com",
-    blueteam: "securityblue.team",
-    cyberdefenders: "cyberdefenders.org",
-    elearnsecurity: "elearnsecurity.com",
-    giac: "giac.org",
-    isc2: "isc2.org",
-    comptia: "comptia.org",
-    youtube: "youtube.com",
-    sans: "sans.org",
-    crest: "crest-approved.org",
-    pentesteracademy: "pentesteracademy.com",
-    coursera: "coursera.org",
-    ine: "ine.com",
-    "ec-council": "eccouncil.org",
-    portswigger: "portswigger.net",
-    isaca: "isaca.org",
-    altered: "alteredsecurity.com",
-    hackerone: "hackerone.com",
-    bugcrowd: "bugcrowd.com",
-    owasp: "owasp.org",
-    splunk: "splunk.com",
-    microsoft: "microsoft.com",
-    elastic: "elastic.co",
-    ibm: "ibm.com",
-    paloalto: "paloaltonetworks.com",
-    cisco: "cisco.com",
-};
-
-function ProviderFavicon({ provider, size = 18 }: { provider: string | null; size?: number }) {
-  const domain = provider ? PROVIDER_DOMAINS[provider] : null;
-  if (!domain) return null;
+function Sidebar() {
   return (
-    <img
-      src={`https://www.google.com/s2/favicons?domain=${domain}&sz=64`}
-      alt={provider ?? ""}
-      width={size}
-      height={size}
-      className="rounded-sm flex-shrink-0"
-      style={{ objectFit: "contain" }}
-    />
+    <aside
+      className="hidden lg:flex flex-col gap-1 w-[240px] xl:w-[260px] flex-shrink-0 sticky self-start overflow-y-auto px-5 py-8"
+      style={{ top: "64px", maxHeight: "calc(100vh - 64px)", borderRight: "1px solid rgba(255,255,255,0.04)" }}
+    >
+      <p className="font-mono text-[11px] uppercase tracking-[0.25em] mb-5" style={{ color: "rgba(148,163,184,0.55)" }}>
+        Levels
+      </p>
+      {LEVELS.map((level) => (
+        <a
+          key={level.num}
+          href={`#level-${level.num}`}
+          className="group flex items-start gap-3 rounded-lg px-3 py-3 transition-all duration-150"
+          style={{ textDecoration: "none" }}
+        >
+          <span
+            className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-mono text-[11px] font-bold border mt-0.5 transition-all duration-200 group-hover:scale-110"
+            style={{ borderColor: `${level.color}55`, color: level.color, background: `${level.color}12` }}
+          >
+            {level.num}
+          </span>
+          <div>
+            <p
+              className="font-mono text-[12px] font-semibold uppercase tracking-wider leading-tight transition-colors duration-150 group-hover:text-white"
+              style={{ color: "rgba(226,232,240,0.75)" }}
+            >
+              {level.label}
+            </p>
+          </div>
+        </a>
+      ))}
+    </aside>
   );
 }
 
-function NavDot({ num, color, label, onClick, isActive }: { num: string; color: string; label: string; onClick: () => void; isActive?: boolean }) {
+function SectionHeader({
+  num, label, color, subtitle, slug,
+}: {
+  num: string; label: string; color: string; subtitle: string; slug: string;
+}) {
+  const router = useRouter();
+
   return (
-    <button
-      onClick={onClick}
-      className="flex items-center gap-2.5 group transition-all duration-300"
-      style={{ 
-        background: "none", border: "none", cursor: "pointer", padding: 0,
-        opacity: isActive ? 1 : 0.85
+    <div className="mb-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div className="flex-1 min-w-0">
+        <div className="flex flex-wrap items-baseline gap-4 mb-4">
+          <span
+            className="font-mono text-[10px] uppercase tracking-[0.35em] px-2.5 py-1.5 rounded"
+            style={{ color, background: `${color}12`, border: `1px solid ${color}28` }}
+          >
+            Level {num}
+          </span>
+        </div>
+        <h2
+          className="text-4xl xl:text-5xl font-bold text-white mb-3 leading-tight"
+          style={{ fontFamily: "var(--font-heading, system-ui)", letterSpacing: "-0.02em" }}
+        >
+          {label}
+        </h2>
+        <p className="font-mono text-sm" style={{ color: `${color}aa` }}>{subtitle}</p>
+        <div className="mt-6 h-px" style={{ background: `linear-gradient(to right, ${color}28, transparent)` }} />
+      </div>
+
+      <div className="flex-shrink-0">
+        <button
+          onClick={() => router.push(`/roadmaps/${slug}/career-path/detailed#level-${num}`)}
+          className="group relative flex flex-col items-start p-5 rounded-2xl transition-all duration-300 hover:scale-[1.02] text-left lg:w-[320px]"
+          style={{
+            background: "rgba(15,22,35,0.4)",
+            border: "1px solid rgba(255,255,255,0.05)",
+            backdropFilter: "blur(10px)",
+          }}
+        >
+          <div className="flex items-center justify-between w-full mb-2">
+            <span className="font-mono text-[10px] font-black uppercase tracking-[0.35em]" style={{ color }}>
+              Deep Dive
+            </span>
+            <div 
+              className="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300"
+              style={{ background: `${color}12`, border: `1px solid ${color}28` }}
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                className="transition-transform duration-300 group-hover:translate-x-1"
+                style={{ color }}
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+          </div>
+          <p className="text-[12px] leading-relaxed text-slate-400 group-hover:text-slate-300 transition-colors pr-4">
+            Full breakdown of every certification, tool, and the &quot;why&quot; behind them.
+          </p>
+          <div 
+            className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+            style={{ 
+              boxShadow: `0 0 40px -10px ${color}30`,
+              border: `1px solid ${color}40`,
+              zIndex: -1
+            }}
+          />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function ContentCard({
+  title, icon, color, items, isCerts, levelNum,
+}: {
+  title: string;
+  icon: string;
+  color: string;
+  items: any[];
+  isCerts?: boolean;
+  levelNum?: string;
+}) {
+  const renderItem = (item: any, idx: number) => {
+    const isObj = typeof item === "object";
+    const label = isObj ? item.label : item;
+    const link = isObj ? item.link : null;
+    const provider = isObj ? item.provider : null;
+
+    return (
+      <li key={idx} className="flex items-start gap-3 group/li">
+        {provider ? (
+            <div className="mt-0.5 flex-shrink-0">
+                <ProviderFavicon provider={provider} size={16} />
+            </div>
+        ) : (
+          <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-sm flex-shrink-0" style={{ background: color }} />
+        )}
+        <div className="flex-1 min-w-0">
+          {link ? (
+            <a
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-sans text-[14px] leading-relaxed text-slate-300 hover:text-white transition-all flex items-center justify-between gap-2 group/link"
+            >
+              <span className="relative">
+                {label}
+                <span className="absolute left-0 -bottom-0.5 w-0 h-px bg-current transition-all duration-300 group-hover/link:w-full opacity-25" />
+              </span>
+              <svg className="w-3 h-3 opacity-0 group-hover/link:opacity-50 flex-shrink-0 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
+              </svg>
+            </a>
+          ) : (
+            <span className="font-sans text-[14px] leading-relaxed text-slate-300">{label}</span>
+          )}
+        </div>
+      </li>
+    );
+  };
+
+  return (
+    <div
+      className="rounded-2xl overflow-hidden"
+      style={{
+        background: "rgba(15,20,30,0.7)",
+        border: `1px solid ${color}20`,
       }}
     >
-      <span
-        className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center font-mono text-[10px] font-bold border transition-all duration-200 group-hover:scale-110"
-        style={{ 
-          borderColor: isActive ? color : `${color}aa`, 
-          color: isActive ? "#fff" : "#ffffff", 
-          background: isActive ? color : `${color}22`,
-          boxShadow: isActive ? `0 0 12px ${color}66` : "none"
-        }}
+      <div
+        className="flex items-center gap-3 px-5 py-4"
+        style={{ background: `${color}08`, borderBottom: `1px solid ${color}15` }}
       >
-        {num}
-      </span>
-      <span
-        className="font-mono text-[10px] uppercase tracking-[0.2em] font-medium hidden lg:block transition-colors duration-200 group-hover:text-white"
-        style={{ color: isActive ? "#fff" : "#ffffff" }}
-      >
-        {label}
-      </span>
-    </button>
+        <span className="text-lg">{icon}</span>
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.3em]" style={{ color }}>{title}</p>
+      </div>
+
+      <div className="px-5 py-5">
+        {isCerts && items.length > 1 ? (
+          <div className="flex flex-col gap-5">
+            <div>
+              <p className="mb-3 font-mono text-[9px] font-bold uppercase tracking-[0.35em]" style={{ color, opacity: 0.65 }}>
+                Recommended
+              </p>
+              <ul className="space-y-3">
+                {[items[0]].map((item, idx) => renderItem(item, idx))}
+              </ul>
+            </div>
+            <div>
+              <p className="mb-3 font-mono text-[9px] font-bold uppercase tracking-[0.35em] text-slate-500">
+                {levelNum === "04" ? "Additional" : "Alternatives"}
+              </p>
+              <ul className="space-y-3">
+                {items.slice(1).map((item, idx) => renderItem(item, idx))}
+              </ul>
+            </div>
+          </div>
+        ) : (
+          <ul className="space-y-3">
+            {items.map((item, idx) => renderItem(item, idx))}
+          </ul>
+        )}
+      </div>
+    </div>
   );
 }
 
-// ── Types ─────────────────────────────────────────────────────────────────────
-interface ResourceItem {
-  label: string;
-  link: string;
-  provider?: string;
+function ToolsCard({ tools, color }: { tools: string[]; color: string }) {
+  return (
+    <div
+      className="inline-flex flex-col rounded-2xl overflow-hidden"
+      style={{
+        background: "rgba(15,20,30,0.7)",
+        border: `1px solid ${color}20`,
+      }}
+    >
+      <div
+        className="flex items-center gap-3 px-5 py-4"
+        style={{ background: `${color}08`, borderBottom: `1px solid ${color}15` }}
+      >
+        <span className="text-lg">🔧</span>
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.3em]" style={{ color }}>Tools &amp; Stack</p>
+      </div>
+      <div className="px-5 py-5">
+        <div className="flex flex-wrap gap-2">
+          {tools.map((tool) => (
+            <span
+              key={tool}
+              className="font-mono text-[11px] px-3 py-1.5 rounded-full"
+              style={{
+                background: `${color}10`,
+                border: `1px solid ${color}28`,
+                color: `${color}cc`,
+              }}
+            >
+              {tool}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
-
-interface Level {
-  num: string;
-  label: string;
-  subtitle: string;
-  color: string;
-  glow: string;
-  border: string;
-  quote: string;
-  time: string;
-  salary: string;
-  tools: string[];
-  skills: string[];
-  certs: ResourceItem[];
-  labs: ResourceItem[];
-}
-
-interface ActionItem {
-  label: string;
-  link?: string;
-}
-
-interface Action {
-  icon: string;
-  title: string;
-  color: string;
-  border: string;
-  glow: string;
-  items: Array<ActionItem | string>;
-}
-
-// ── Career level data ─────────────────────────────────────────────────────────
-const LEVELS: Level[] = [
-  {
-    num: "00",
-    label: "Entry Point",
-    subtitle: "No Experience Required",
-    color: "#94a3b8",
-    glow: "rgba(148,163,184,0.2)",
-    border: "rgba(148,163,184,0.25)",
-    quote:
-      "You don't need a degree. You need curiosity and the discipline to build it. Everyone starts here.",
-    time: "0–6 months",
-    salary: "£25K–£35K",
-    tools: ["VirtualBox", "Linux", "Terminal / PowerShell", "Python"],
-    skills: [
-      "Networking — TCP/IP, DNS, DHCP, subnetting",
-      "OS fundamentals — Windows & Linux",
-      "Security concepts — CIA triad, common threats",
-      "Scripting basics — Python or Bash",
-    ],
-    certs: [
-      { label: "THM · Security+ Pre-Security (SEC1)", link: "https://tryhackme.com/certification/pre-security", provider: "tryhackme" },
-      { label: "Google Cybersecurity Certificate", link: "https://www.coursera.org/professional-certificates/google-cybersecurity", provider: "google" },
-      { label: "TCM · Practical Security Fundamentals", link: "https://academy.tcm-sec.com/p/practical-security-fundamentals", provider: "tcm" },
-    ],
-    labs: [
-      { label: "TryHackMe · Pre-Security learning path", link: "https://tryhackme.com/path/outline/presecurity", provider: "tryhackme" },
-      { label: "Learn Virtual Machines RIGHT NOW!! (Kali, Ubuntu, Windows)", link: "https://youtu.be/wX75Z-4MEoM", provider: "youtube" },
-      { label: "40 Windows Commands you NEED to know", link: "https://youtu.be/Jfvg3CS1X3A", provider: "youtube" },
-    ],
-  },
-  {
-    num: "01",
-    label: "L1 Triage Analyst",
-    subtitle: "First Line of Detection",
-    color: "#22d3ee",
-    glow: "rgba(34,211,238,0.2)",
-    border: "rgba(34,211,238,0.25)",
-    quote:
-      "07:45. You open the SIEM dashboard. 4,200 alerts overnight. Your job is to find the three that matter.",
-    time: "6–18 months",
-    salary: "£30K–£45K",
-    tools: ["Splunk / ELK / Wazuh", "Wireshark / tcpdump", "VirusTotal", "grep / awk"],
-    skills: [
-      "SIEM log analysis and search query writing",
-      "Alert triage, classification, and prioritisation",
-      "IOC lookup and contextual enrichment",
-      "Incident ticketing and escalation procedures",
-    ],
-    certs: [
-      { label: "Practical SOC Analyst (PSAA)", link: "https://certifications.tcm-sec.com/psaa/", provider: "tcm" },
-      { label: "BTL1 — Blue Team Level 1", link: "https://www.securityblue.team/certifications/blue-team-level-1", provider: "blueteam" },
-      { label: "CompTIA Security+", link: "https://www.comptia.org/en/certifications/security/", provider: "comptia" },
-    ],
-    labs: [
-      { label: "Cyberdefenders CyberRange - Network Forensics, Threat Hunting", link: "https://cyberdefenders.org/blue-team-labs/", provider: "cyberdefenders" },
-      { label: "HTB Sherlocks - SOC", link: "https://app.hackthebox.com/sherlocks", provider: "htb" },
-      { label: "Wazuh - you need this FREE CyberSecurity tool", link: "https://youtu.be/3CaG2GI1kn0", provider: "youtube" },
-      { label: "Splunk - Getting started guide", link: "https://youtu.be/-SXddlIZkUs", provider: "youtube" },
-    ],
-  },
-  {
-    num: "02",
-    label: "L2 Advanced Analyst",
-    subtitle: "Pattern Recognition & Correlation",
-    color: "#8b5cf6",
-    glow: "rgba(139,92,246,0.2)",
-    border: "rgba(139,92,246,0.25)",
-    quote:
-      "Three events. Each harmless alone. But you see them together — and you see the attacker's hand.",
-    time: "2–4 years",
-    salary: "£45K–£65K",
-    tools: ["CyberChef", "Velociraptor", "MISP", "TheHive", "MITRE ATT&CK"],
-    skills: [
-      "Threat correlation and attack pattern mapping",
-      "Malware triage — static and dynamic analysis",
-      "MITRE ATT&CK framework and TTP identification",
-      "SOAR automation and playbook development",
-    ],
-    certs: [
-      { label: "CCDL2 — Threat Hunting & DFIR Certification", link: "https://cyberdefenders.org/certifications/certified-cyberdefender-level2/", provider: "cyberdefenders" },
-      { label: "HTB CDSA — Certified Defensive Security Analyst", link: "https://academy.hackthebox.com/preview/certifications/htb-certified-defensive-security-analyst", provider: "htb" },
-    ],
-    labs: [
-      { label: "Cyberdefenders CyberRange - Detection Engineering, Threat Hunting", link: "https://cyberdefenders.org/blue-team-labs/", provider: "cyberdefenders" },
-      { label: "HTB Sherlocks - SOC/DFIR", link: "https://app.hackthebox.com/sherlocks", provider: "htb" },
-      { label: "Detection Engineering with Wazuh (John Hammond)", link: "https://youtu.be/nSOqU1iX5oQ", provider: "youtube" },
-    ],
-  },
-  {
-    num: "03",
-    label: "L3 Forensic Analyst",
-    subtitle: "Deep Forensics & Incident Lead",
-    color: "#f59e0b",
-    glow: "rgba(245,158,11,0.2)",
-    border: "rgba(245,158,11,0.25)",
-    quote:
-      "You pull the disk. You find the malware. You trace it to its first byte. This is where the story ends.",
-    time: "4–7 years",
-    salary: "£65K–£90K",
-    tools: ["Volatility", "KAPE", "EZTools", "x64dbg", "FTK Imager"],
-    skills: [
-      "Disk and memory forensics — full acquisition",
-      "Malware reverse engineering and binary analysis",
-      "C2 infrastructure profiling and attribution",
-      "APT tracking and threat intelligence production",
-    ],
-    certs: [
-      { label: "BTL2 — Blue Team Level 2", link: "https://www.securityblue.team/certifications/blue-team-level-2", provider: "blueteam" },
-      { label: "GCFA — GIAC Certified Forensic Analyst", link: "https://www.giac.org/certifications/certified-forensic-analyst-gcfa/", provider: "giac" },
-      { label: "OSCP+", link: "https://www.offsec.com/courses/pen-200/", provider: "offsec" },
-    ],
-    labs: [
-      { label: "Cyberdefenders CyberRange - Endpoint Forensics, Threat Hunting", link: "https://cyberdefenders.org/blue-team-labs/", provider: "cyberdefenders" },
-      { label: "HTB Sherlocks - SOC/DFIR", link: "https://app.hackthebox.com/sherlocks", provider: "htb" },
-      { label: "Antisyphon - SOC Core Skills", link: "https://www.antisyphontraining.com/product/soc-core-skills-with-john-strand/", provider: "antisyphon" },
-    ],
-  },
-  {
-    num: "04",
-    label: "SOC Lead",
-    subtitle: "Operations Command",
-    color: "#34d399",
-    glow: "rgba(52,211,153,0.2)",
-    border: "rgba(52,211,153,0.25)",
-    quote:
-      "The team responds as fast as the system you built for them. Your job: make the next incident take 10 minutes, not 15.",
-    time: "7+ years",
-    salary: "£90K–£130K+",
-    tools: ["Palo Alto XSOAR", "PowerBI", "ServiceNow SecOps", "Confluence / Jira"],
-    skills: [
-      "SOC architecture design and tool strategy",
-      "MTTD / MTTR KPI definition and reporting",
-      "Analyst mentoring and career development",
-      "Executive stakeholder communication",
-    ],
-    certs: [
-      { label: "CISSP — Certified Information Systems Security Professional", link: "https://www.isc2.org/certifications/cissp", provider: "isc2" },
-      { label: "CSOM — Certified SOC Manager", link: "https://www.securityblue.team/certifications/certified-security-operations-manager", provider: "blueteam" },
-      { label: "CISM — Certified Information Security Manager", link: "https://www.isaca.org/credentialing/cism", provider: "isaca" },
-    ],
-    labs: [
-      { label: "Antisyphon - SOC Core Skills", link: "https://www.antisyphontraining.com/product/soc-core-skills-with-john-strand/", provider: "antisyphon" },
-      { label: "MITRE ATT&CK for SOC Managers", link: "https://attack.mitre.org/resources/training/cti/", provider: "mitre" },
-      { label: "NIST CSWP 29 (SOC Model)", link: "https://csrc.nist.gov/pubs/cswp/29/final", provider: "nist" },
-    ],
-  },
-] as const;
-
-// ── Next action cards ─────────────────────────────────────────────────────────
-const ACTIONS: Action[] = [
-  {
-    icon: "🧪",
-    title: "Start in a Lab Today",
-    color: "#22d3ee",
-    border: "rgba(34,211,238,0.25)",
-    glow: "rgba(34,211,238,0.08)",
-    items: [
-      { label: "TryHackMe SOC Level 1 path", link: "https://tryhackme.com/path/outline/soclevel1" },
-      { label: "LetsDefend.io - SOC environment", link: "https://letsdefend.io/" },
-      { label: "CyberDefenders - blue team labs", link: "https://cyberdefenders.org/blue-team-labs/" },
-      { label: "HTB Sherlocks - SOC/DFIR", link: "https://app.hackthebox.com/sherlocks" },
-      { label: "BTLO - Blue Team Labs Online", link: "https://blueteamlabs.online/" },
-    ],
-  },
-  {
-    icon: "📁",
-    title: "Build a Portfolio",
-    color: "#8b5cf6",
-    border: "rgba(139,92,246,0.25)",
-    glow: "rgba(139,92,246,0.08)",
-    items: [
-      "Write lab walkthrough reports in PDF format",
-      "Document your homelab with screenshots",
-      "GitHub: scripts, tools, and detection rules",
-    ],
-  },
-] as const;
-
-// ── Bezier branch Y positions (SVG viewBox 0 0 100 300) ──────────────────────
-const BRANCH_Y = [65, 150, 235] as const;
 
 export default function SocCareerPathPage() {
   const router = useRouter();
-  const scrollToLevel = (index: number) => {
-    const section = sectionRefs.current[index];
-    if (section) {
-      const top = section.getBoundingClientRect().top + window.pageYOffset - 50;
-      window.scrollTo({ top, behavior: "smooth" });
-    }
-  };
-  const containerRef = useRef<HTMLDivElement>(null);
-  const heroRef = useRef<HTMLDivElement>(null);
-  const trunkRef = useRef<HTMLDivElement>(null);
-
-  // Per-level refs (5 levels)
-  const sectionRefs = useRef<(HTMLElement | null)[]>(Array(5).fill(null));
-  const hubRefs = useRef<(HTMLDivElement | null)[]>(Array(5).fill(null));
-
-  // 5 levels × 3 cards each = 15
-  const cardRefs = useRef<(HTMLDivElement | null)[]>(Array(15).fill(null));
-  // 5 levels × 3 SVG paths each = 15
-  const pathRefs = useRef<(SVGPathElement | null)[]>(Array(15).fill(null));
-  const pathGlowRefs = useRef<(SVGPathElement | null)[]>(Array(15).fill(null));
-
-  // Tools branch (5 levels × 1)
-  const toolsCardRefs = useRef<(HTMLDivElement | null)[]>(Array(5).fill(null));
-  const toolsPathRefs = useRef<(SVGPathElement | null)[]>(Array(5).fill(null));
-  const toolsPathGlowRefs = useRef<(SVGPathElement | null)[]>(Array(5).fill(null));
-
-  const [activeLevel, setActiveLevel] = useState<number>(-1);
-  const [layout, setLayout] = useState<any>(null);
-
-  // ── Orientation & Device Detection ──────────────────────────────────
   const isMobile = useIsMobile(768);
-  const [orientation, setOrientation] = useState<"portrait" | "landscape">("landscape");
-  const [scaleFactor, setScaleFactor] = useState(1);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-  // ── Ensure page starts at the top ──────────────────────────────────
   useEffect(() => {
     if (typeof window !== "undefined") {
-      // Force scroll to top on mount
       window.scrollTo(0, 0);
-      
-      // Prevent browser from restoring scroll position
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
       }
@@ -360,1090 +270,291 @@ export default function SocCareerPathPage() {
 
   useEffect(() => {
     const toggleVisibility = () => {
-      if (window.pageYOffset > 400) {
-        setShowScrollTop(true);
-      } else {
-        setShowScrollTop(false);
-      }
+      setShowScrollTop(window.pageYOffset > 400);
     };
-
     window.addEventListener("scroll", toggleVisibility);
     return () => window.removeEventListener("scroll", toggleVisibility);
   }, []);
 
-  useEffect(() => {
-    const checkOrientation = () => {
-      if (typeof window !== "undefined") {
-        setOrientation(window.innerHeight > window.innerWidth ? "portrait" : "landscape");
+  if (isMobile) {
+    return <MobileSocCareerPath showScrollTop={showScrollTop} />;
+  }
 
-        // Calculate scale factor for smaller landscape screens
-        if (window.innerWidth < 1100 && window.innerWidth > window.innerHeight) {
-          const s = Math.min(1, window.innerWidth / 1200);
-          setScaleFactor(s);
-        } else {
-          setScaleFactor(1);
-        }
-      }
-    };
-
-    checkOrientation();
-    window.addEventListener("resize", checkOrientation);
-    return () => window.removeEventListener("resize", checkOrientation);
-  }, []);
-
-
-
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (typeof window === "undefined" || typeof document === "undefined") {
-        return;
-      }
-
-      const vh = window.innerHeight;
-      let totalWidth = window.innerWidth;
-
-      const levelsContainer = document.querySelector(".max-w-7xl") as HTMLElement | null;
-      if (levelsContainer) {
-        // Measure exact available width
-        const computedStyle = window.getComputedStyle(levelsContainer);
-        const pl = parseFloat(computedStyle.paddingLeft || "0");
-        const pr = parseFloat(computedStyle.paddingRight || "0");
-        totalWidth = levelsContainer.clientWidth - pl - pr;
-      }
-
-      const hub = { x: 55, y: vh * 0.22 }; // Moved up to give branches and cards more room
-
-      const toolsCardWidth = Math.max(220, Math.min(280, totalWidth * 0.22));
-      const toolsCardX = totalWidth - toolsCardWidth - 20;
-      const toolsCardY = hub.y - 35;
-      const toolsCard = { x: toolsCardX, y: toolsCardY, w: toolsCardWidth };
-
-      const cardsLeft = 140;
-      const cardsRight = totalWidth - 20; // Reverted back to full width for wide, readable cards
-      const layoutWidth = cardsRight - cardsLeft;
-
-      // Calculate gap and card width responsively
-      const gap = Math.max(16, Math.min(30, layoutWidth * 0.03));
-
-      // Cards should take up available space but have max/min bounds for readability
-      const calculatedCardW = (layoutWidth - gap * 2) / 3;
-      const cardW = Math.max(260, Math.min(360, calculatedCardW));
-
-      // Ensure cards fit within screen if calculatedWidth is less than min width
-      const finalCardW = (cardW * 3 + gap * 2 > layoutWidth) ? (layoutWidth - gap * 2) / 3 : cardW;
-
-      const cardY = vh * 0.55; // Pushed down just slightly more to ensure absolute vertical clearance from Tools card
-
-      const cards = [
-        { x: cardsLeft + finalCardW / 2, y: cardY },
-        { x: cardsLeft + finalCardW + gap + finalCardW / 2, y: cardY },
-        { x: cardsLeft + (finalCardW + gap) * 2 + finalCardW / 2, y: cardY },
-      ];
-
-      setLayout({ hub, cards, cardW: finalCardW, gap, cardsLeft, cardY, toolsCard });
-    };
-
-    // Slight delay on first mount to ensure the document is fully laid out
-    setTimeout(handleResize, 50);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const drawToolsBranch = (from: { x: number, y: number }, toBox: { x: number, y: number }, layout: any) => {
-    const r = 14;
-    const i = 3;
-    const startY = from.y + (i - 1) * 24;
-    const jX = 140 + i * 28; // Outer drop lane (approx 224)
-    const jY = from.y + 110; // Horizontal run immediately under the title, above bottom cards
-    const jX2 = toBox.x - 30; // Vertical run specifically for tools card
-
-    const cX = from.x + 30;
-    const endSX = from.x + 60;
-    const connectY = toBox.y + 40; // Enter the middle-left of the tools box
-
-    return [
-      `M ${from.x} ${from.y}`,
-      `C ${cX} ${from.y}, ${cX} ${startY}, ${endSX} ${startY}`,
-      `L ${jX - r} ${startY}`,
-      `Q ${jX} ${startY} ${jX} ${startY + r}`,
-      `L ${jX} ${jY - r}`,
-      `Q ${jX} ${jY} ${jX + r} ${jY}`,
-      `L ${jX2 - r} ${jY}`,
-      `Q ${jX2} ${jY} ${jX2} ${jY - r}`,
-      `L ${jX2} ${connectY + r}`,
-      `Q ${jX2} ${connectY} ${jX2 + r} ${connectY}`,
-      `L ${toBox.x} ${connectY}`
-    ].join(" ");
-  };
-
-  // Helper for orthogonal branching with beautiful S-curve fanning out the hub
-  const drawBranch = (from: { x: number, y: number }, to: { x: number, y: number }, i: number) => {
-    const r = 14;
-
-    // Spread the three lines out immediately vertically before dropping
-    const startY = from.y + (i - 1) * 24;
-    const jX = 140 + i * 28; // Staggered drop X coords
-    const jY = to.y - 70 + i * 20; // Staggered horizontal approach above cards
-
-    const cX = from.x + 30;
-    const endSX = from.x + 60; // S-curve resolves at X=115
-
-    return [
-      `M ${from.x} ${from.y}`,
-      `C ${cX} ${from.y}, ${cX} ${startY}, ${endSX} ${startY}`,
-      `L ${jX - r} ${startY}`,
-      `Q ${jX} ${startY} ${jX} ${startY + r}`,
-      `L ${jX} ${jY - r}`,
-      `Q ${jX} ${jY} ${jX + r} ${jY}`,
-      `L ${to.x - r} ${jY}`,
-      `Q ${to.x} ${jY} ${to.x} ${jY + r}`,
-      `L ${to.x} ${to.y}`
-    ].join(" ");
-  };
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // ── Hero entrance ──────────────────────────────────────────────────
-      if (heroRef.current) {
-        const anims = heroRef.current.querySelectorAll<HTMLElement>(".hero-anim");
-        gsap.fromTo(
-          anims,
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 0.9, ease: "power3.out", stagger: 0.14, delay: 0.2 }
-        );
-      }
-
-      // ── Trunk grows as levels scroll in ───────────────────────────────
-      if (trunkRef.current) {
-        gsap.set(trunkRef.current, { scaleY: 0, transformOrigin: "top center" });
-        const lastSection = sectionRefs.current[4];
-        gsap.to(trunkRef.current, {
-          scaleY: 1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRefs.current[0],
-            start: "top 80%",
-            end: lastSection ? `bottom 50%` : "+=4000",
-            scrub: 1.2,
-          },
-        });
-      }
-
-      // ── Per-level animations ───────────────────────────────────────────
-      LEVELS.forEach((_, i) => {
-        const section = sectionRefs.current[i];
-        if (!section) return;
-
-        // Active level tracking
-        ScrollTrigger.create({
-          trigger: section,
-          start: "top 55%",
-          end: "bottom 45%",
-          onEnter: () => setActiveLevel(i),
-          onEnterBack: () => setActiveLevel(i),
-        });
-
-        // Main fade in/out for the section
-        gsap.to(section, {
-          opacity: 1,
-          duration: 0.5,
-          ease: "power2.inOut",
-          scrollTrigger: {
-            trigger: section,
-            start: "top 65%",
-            end: "bottom 35%",
-            toggleActions: "play reverse play reverse",
-          }
-        });
-
-        // Use a Timeline to guarantee robust synchronized playback without trigger bugs
-        const sectionTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: section,
-            start: "top 55%",
-            end: "bottom 35%",
-            toggleActions: "play reverse play reverse",
-          }
-        });
-
-        // Hub node scale-in
-        const hub = hubRefs.current[i];
-        if (hub) {
-          sectionTl.fromTo(hub, { scale: 0 }, { scale: 1, duration: 0.6, ease: "back.out(2)" }, 0);
-        }
-
-        // SVG branch paths
-        for (let j = 0; j < 3; j++) {
-          const path = pathRefs.current[i * 3 + j];
-          const glow = pathGlowRefs.current[i * 3 + j];
-
-          if (path && glow) {
-            // Approximate line length (Manhattan distance) works beautifully because paths are strictly right/down
-            const toX = layout.cards[j].x;
-            const toY = layout.cards[j].y;
-            const fromX = layout.hub.x;
-            const fromY = layout.hub.y;
-            // Adding a small padding factor to absolute Manhattan to account for the S-curves
-            const len = (toX - fromX) + Math.abs(toY - fromY) + 60;
-
-            gsap.set([path, glow], { strokeDasharray: len, strokeDashoffset: len });
-            sectionTl.to([path, glow], {
-              strokeDashoffset: 0,
-              duration: 1.2,
-              ease: "power2.inOut",
-            }, 0.2 + (j * 0.1));
-          }
-        }
-
-        // Tools branch path
-        const tPath = toolsPathRefs.current[i];
-        const tGlow = toolsPathGlowRefs.current[i];
-        if (tPath && tGlow && layout.toolsCard) {
-          const len = 4000; // Manhattan approximation
-          gsap.set([tPath, tGlow], { strokeDasharray: len, strokeDashoffset: len });
-          sectionTl.to([tPath, tGlow], {
-            strokeDashoffset: 0,
-            duration: 1.5,
-            ease: "power2.inOut",
-          }, 0.35); // Stagger slightly behind main branches
-        }
-
-        // Tools Card
-        const tCard = toolsCardRefs.current[i];
-        if (tCard) {
-          sectionTl.fromTo(
-            tCard,
-            { opacity: 0, x: 30 },
-            { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" },
-            0.8
-          );
-        }
-
-        // Content cards slide-up
-        for (let j = 0; j < 3; j++) {
-          const card = cardRefs.current[i * 3 + j];
-          if (!card) continue;
-          sectionTl.fromTo(
-            card,
-            { opacity: 0, y: 30 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.8,
-              ease: "power3.out",
-            }, 0.5 + (j * 0.1)
-          );
-        }
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, [layout]);
-
-  // ── Mobile Components ───────────────────────────────────────────────
-
-
-  const MobileSocCareerPath = () => (
-    <div className="min-h-screen bg-slate-950 text-white overflow-x-hidden font-sans pb-20 pt-14">
-      <header className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-white/5 bg-slate-950/90 px-4 py-3 backdrop-blur-md">
+  return (
+    <div className="min-h-screen" style={{ background: "#090d14", color: "rgba(226,232,240,0.9)" }}>
+      {/* ── Top nav ── */}
+      <div
+        className="sticky top-0 z-30 flex items-center gap-3 px-6 py-0"
+        style={{
+          background: "rgba(9,13,20,0.96)",
+          borderBottom: "1px solid rgba(255,255,255,0.05)",
+          backdropFilter: "blur(12px)",
+          height: "64px",
+        }}
+      >
         <button
           onClick={() => router.push("/")}
-          className="font-mono text-[10px] font-bold uppercase tracking-widest text-slate-400"
+          className="font-mono text-[12px] uppercase tracking-widest flex items-center gap-1.5 transition-colors duration-150 hover:text-white"
+          style={{ color: "rgba(226,232,240,0.85)", background: "none", border: "none", cursor: "pointer" }}
         >
           Home
         </button>
-        <p className="font-mono text-[9px] font-black uppercase tracking-[0.3em] text-cyan-400">
-          SOC Career Path
-        </p>
+        <span style={{ color: "rgba(148,163,184,0.9)", fontSize: "12px" }}>/</span>
         <button
           onClick={() => router.push("/roadmaps/soc")}
-          className="font-mono text-[10px] font-bold uppercase tracking-widest text-slate-500"
+          className="font-mono text-[12px] uppercase tracking-widest flex items-center gap-1.5 transition-colors duration-150 hover:text-white"
+          style={{ color: "rgba(226,232,240,0.75)", background: "none", border: "none", cursor: "pointer" }}
         >
-          Back
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <path d="M7 1L3 5L7 9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          SOC Roadmap
         </button>
-      </header>
-      <div className="relative">
-        {LEVELS.map((level, i) => (
-          <section key={level.num} className="relative pt-16 pb-20 px-6 border-b border-white/5 last:border-0 overflow-hidden">
-            {/* Level Indicator Hub */}
-            <div
-              className="mb-8 flex items-center justify-center rounded-full border-2 bg-slate-950 shadow-2xl"
-              style={{
-                width: 48,
-                height: 48,
-                borderColor: level.color,
-                boxShadow: `0 0 20px ${level.glow}`,
-              }}
-            >
-              <span className="font-mono text-base font-black" style={{ color: level.color }}>
-                {level.num}
-              </span>
+        <span style={{ color: "rgba(148,163,184,0.9)", fontSize: "12px" }}>/</span>
+        <span className="font-mono text-[12px] uppercase tracking-widest" style={{ color: "rgba(148,163,184,0.6)" }}>
+          Career Path
+        </span>
+
+        <div className="flex-1" />
+
+        <div className="flex lg:hidden items-center gap-2">
+          {LEVELS.map((l) => (
+            <a key={l.num} href={`#level-${l.num}`} className="font-mono text-[9px] font-bold w-6 h-6 rounded-full flex items-center justify-center border transition-all duration-150" style={{ borderColor: `${l.color}44`, color: l.color, background: `${l.color}10`, textDecoration: "none" }}>{l.num}</a>
+          ))}
+        </div>
+
+        <p className="hidden lg:block font-mono text-sm font-black uppercase tracking-[0.4em] text-cyan-400">
+          SOC Analyst Career Path
+        </p>
+      </div>
+
+      {/* ── Hero ── */}
+      <div className="px-8 lg:px-16 xl:px-20 pt-16 pb-14 flex items-center gap-12 xl:gap-20">
+        <div className="flex-1 min-w-0">
+          <p className="font-mono text-[10px] uppercase tracking-[0.4em] mb-5" style={{ color: "rgba(34,211,238,0.55)" }}>
+            Defend the Frontline
+          </p>
+          <h1
+            className="font-mono font-black text-cyan-400 mb-7 leading-[1.05] tracking-tight"
+            style={{
+              fontSize: "clamp(42px, 5.5vw, 72px)",
+              textShadow: "0 0 80px rgba(34,211,238,0.5), 0 0 160px rgba(34,211,238,0.2)",
+            }}
+          >
+            Detect.<br />Analyze.<br />Respond.
+          </h1>
+          <p className="text-xl leading-relaxed max-w-2xl mb-3" style={{ color: "rgba(203,213,225,0.85)" }}>
+            The definitive guide to becoming a world-class Blue Team analyst.
+          </p>
+          <p className="text-base leading-relaxed max-w-xl" style={{ color: "rgba(148,163,184,0.65)" }}>
+            From entry-level triage to mastering digital forensics and incidence response. We&apos;ve distilled the essential tools, certifications, and operational workflows required to secure an enterprise.
+          </p>
+          <div className="mt-10 flex flex-wrap gap-3">
+            {LEVELS.map((l) => (
+              <a
+                key={l.num}
+                href={`#level-${l.num}`}
+                className="flex items-center gap-2 px-4 py-2 rounded-full font-mono text-[11px] uppercase tracking-widest transition-all duration-200 hover:scale-105"
+                style={{ background: `${l.color}0f`, border: `1px solid ${l.color}25`, color: `${l.color}cc`, textDecoration: "none" }}
+              >
+                <span style={{ opacity: 0.6 }}>{l.num}</span>
+                <span>{l.label}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {/* Hero Animation - Hidden on mobile by parent flex layout + hidden xl:flex but let's be explicit */}
+        <div className="hidden xl:flex flex-col w-[440px] flex-shrink-0">
+          <div
+            className="rounded-3xl overflow-hidden"
+            style={{
+              background: "rgba(5,10,15,0.95)",
+              border: "1px solid rgba(34,211,238,0.2)",
+              backdropFilter: "blur(20px)",
+            }}
+          >
+            {/* SIEM Header */}
+            <div className="px-6 py-4 flex items-center justify-between border-b border-cyan-500/10" style={{ background: "rgba(34,211,238,0.05)" }}>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-cyan-500/20 flex items-center justify-center border border-cyan-500/30">
+                  <span className="text-cyan-400 text-[10px] font-bold">SOC</span>
+                </div>
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-cyan-400/80 font-bold">Sentinel SIEM v2</p>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="font-mono text-[8px] text-emerald-400/80 tracking-tighter uppercase">Systems Normal</span>
+                  </div>
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="font-mono text-[8px] text-cyan-500/40 uppercase tracking-widest leading-none">EPS Rate</p>
+                <p className="font-mono text-[10px] text-cyan-400 font-bold">4.2K</p>
+              </div>
             </div>
 
-            {/* Header Content */}
-            <div className="mb-10 space-y-2">
-              <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-cyan-400/60">
-                {level.subtitle}
-              </span>
-              <h2 className="text-3xl font-bold tracking-tight leading-tight">
-                {level.label}
-              </h2>
-              <div className="relative pl-5 py-1 mt-4">
-                <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-white/10" />
-                <p className="text-slate-400 italic text-sm leading-relaxed max-w-md">
+            {/* SIEM Body */}
+            <div className="p-6 space-y-5 min-h-[380px] relative overflow-hidden">
+              <style>{`
+                @keyframes siem-log { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+                @keyframes siem-alert { 0% { background: rgba(34,211,238,0.05); } 50% { background: rgba(239,68,68,0.2); } 100% { background: rgba(34,211,238,0.05); } }
+                .siem-log { animation: siem-log 0.4s ease forwards; opacity: 0; }
+                .alert-active { animation: siem-alert 2s infinite; }
+              `}</style>
+
+              {/* Log Feed */}
+              <div className="space-y-3 font-mono text-[9px]">
+                <div className="siem-log text-slate-500" style={{ animationDelay: "0.1s" }}>[09:42:11] AUTH_SUCCESS: user="admin" src="10.0.4.22"</div>
+                <div className="siem-log text-slate-500" style={{ animationDelay: "0.4s" }}>[09:42:12] SQL_QUERY: database="prod_kb" duration="14ms"</div>
+                <div className="siem-log text-slate-500" style={{ animationDelay: "0.7s" }}>[09:42:15] FW_ALLOW: src="10.0.5.11" dst="8.8.8.8" port="53"</div>
+
+                {/* The Incident */}
+                <div className="siem-log space-y-2 pt-4" style={{ animationDelay: "1.5s" }}>
+                  <div className="flex items-center gap-2">
+                    <div className="h-px flex-1 bg-red-500/30"></div>
+                    <span className="text-red-500 uppercase font-black tracking-[0.2em] text-[8px]">Critical Alert</span>
+                    <div className="h-px flex-1 bg-red-500/30"></div>
+                  </div>
+                  <div className="bg-red-500/10 border border-red-500/40 p-3 rounded-xl relative overflow-hidden">
+                    <div className="absolute inset-0 bg-red-500/5 animate-pulse"></div>
+                    <div className="relative z-10">
+                      <p className="text-red-400 font-bold mb-1">UNUSUAL_OUTBOUND_TRAFFIC</p>
+                      <p className="text-slate-400 text-[8px] leading-tight mb-2">Host: 10.0.12.88 (HR-WKST-04)<br/>Target: 194.22.11.4 (Suspected C2)</p>
+                      <div className="flex gap-2">
+                        <span className="px-1.5 py-0.5 bg-red-500 text-white rounded text-[7px] font-bold uppercase transition-transform hover:scale-105 cursor-default">Isolate Host</span>
+                        <span className="px-1.5 py-0.5 bg-slate-800 text-slate-400 rounded text-[7px] font-bold uppercase transition-transform hover:scale-105 cursor-default">Investigate</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="siem-log text-slate-500 pt-2" style={{ animationDelay: "2.5s" }}>[09:42:18] VPC_FLOW: rule="default-deny" action="REJECT"</div>
+              </div>
+
+              {/* Grid Background */}
+              <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "radial-gradient(#22d3ee 1px, transparent 1px)", backgroundSize: "16px 16px" }}></div>
+            </div>
+
+            {/* SIEM Footer */}
+            <div className="px-6 py-4 border-t border-cyan-500/10 flex items-center justify-between text-[8px] font-mono uppercase tracking-widest text-cyan-500/40">
+              <span>Operational Dashboard</span>
+              <div className="flex items-center gap-3">
+                <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]"></span> Triage Mode</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="h-px mx-8 lg:mx-16 xl:mx-20" style={{ background: "rgba(255,255,255,0.05)" }} />
+
+      <div className="flex">
+        <Sidebar />
+
+        <main className="flex-1 min-w-0 px-6 lg:px-12 xl:px-16">
+          {LEVELS.map((level, i) => (
+            <React.Fragment key={level.num}>
+              <section id={`level-${level.num}`} className="py-16 xl:py-20">
+                 <SectionHeader
+                   num={level.num}
+                   label={level.label}
+                   color={level.color}
+                   subtitle={level.subtitle}
+                   slug="soc"
+                 />
+
+                <p
+                  className="font-sans text-lg italic leading-relaxed mb-10 pl-4"
+                  style={{
+                    color: "rgba(203,213,225,0.6)",
+                    borderLeft: `2px solid ${level.color}40`,
+                  }}
+                >
                   &ldquo;{level.quote}&rdquo;
                 </p>
-              </div>
+
+                <div className="mb-6">
+                  <ToolsCard
+                    tools={level.tools}
+                    color={level.color}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
+                  <ContentCard
+                    title="Core Skills"
+                    icon="⚡"
+                    color={level.color}
+                    items={level.skills}
+                  />
+                  <ContentCard
+                    title="Certifications"
+                    icon="🎯"
+                    color={level.color}
+                    items={level.certs}
+                    isCerts
+                    levelNum={level.num}
+                  />
+                  <ContentCard
+                    title="Resources"
+                    icon="🧪"
+                    color={level.color}
+                    items={level.labs}
+                  />
+                </div>
+              </section>
+
+              {i < LEVELS.length - 1 && (
+                <div className="h-px" style={{ background: "rgba(255,255,255,0.04)" }} />
+              )}
+            </React.Fragment>
+          ))}
+
+          {/* ── Next Actions ──────────────────────────────────────────────────── */}
+          <section className="py-16 xl:py-20" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+            <div className="mb-10">
+              <p className="font-mono text-[10px] uppercase tracking-[0.4em] mb-4" style={{ color: "rgba(34,211,238,0.55)" }}>
+                Begin
+              </p>
+              <h2
+                className="text-4xl font-bold text-white mb-3 leading-tight"
+                style={{ fontFamily: "var(--font-heading, system-ui)", letterSpacing: "-0.02em" }}
+              >
+                Next Actions
+              </h2>
+              <p className="font-sans text-base" style={{ color: "rgba(148,163,184,0.55)" }}>
+                Start building your detection workflow today.
+              </p>
+              <div className="mt-6 h-px" style={{ background: "linear-gradient(to right, rgba(34,211,238,0.2), transparent)" }} />
             </div>
 
-            {/* Info Cards Grid */}
-            <div className="grid grid-cols-1 gap-6">
-              {[
-                { title: "SKILLS", items: level.skills, icon: "⚡" },
-                { title: "CERTS", items: level.certs, icon: "🎯" },
-                { title: "RESOURCES", items: level.labs, icon: "🧪" },
-                { title: "TOOLS", items: level.tools, icon: "🔧" },
-              ].map((cat: any) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl">
+              {ACTIONS.map((action) => (
                 <div
-                  key={cat.title}
-                  className="rounded-2xl border border-white/5 bg-slate-900/30 p-5 backdrop-blur-sm relative overflow-hidden group shadow-lg"
+                  key={action.title}
+                  className="rounded-2xl overflow-hidden"
+                  style={{
+                    background: "rgba(15,20,30,0.7)",
+                    border: `1px solid ${action.border}`,
+                  }}
                 >
-                  <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none text-2xl">
-                    {cat.icon}
-                  </div>
-                  <h3 className="font-mono text-[10px] font-bold tracking-[0.3em] text-slate-500 mb-4 border-b border-white/5 pb-2">
-                    {cat.title}
-                  </h3>
-                  {cat.title === "CERTS" && cat.items.length > 1 ? (
-                    /* ── Certifications: Recommended + Additional ── */
-                    <div className="flex flex-col gap-5 pt-1">
-                      <div>
-                        <p className="mb-2 font-mono text-[9px] font-bold uppercase tracking-[0.35em] text-cyan-500/60">Recommended</p>
-                        <ul>
-                          {[cat.items[0]].map((item: any, idx: number) => {
-                            const isObj = typeof item === "object";
-                            const label = isObj ? item.label : item;
-                            const link = isObj ? item.link : null;
-                            const provider = isObj ? item.provider : null;
-                            return (
-                              <li key={idx} className="flex items-center gap-3">
-                                <ProviderFavicon provider={provider} size={18} />
-                                <div className="flex flex-col gap-1 w-full">
-                                  {link ? (
-                                    <a href={link} target="_blank" rel="noopener noreferrer"
-                                      className="text-xs font-medium text-slate-300 active:text-white flex items-center justify-between group/link">
-                                      <span>{label}</span>
-                                      <svg className="w-3 h-3 opacity-20 group-hover/link:opacity-60 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
-                                      </svg>
-                                    </a>
-                                  ) : (
-                                    <span className="text-xs font-medium text-slate-300 leading-normal">{label}</span>
-                                  )}
-                                </div>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </div>
-                      <div>
-                        <p className="mb-2 font-mono text-[9px] font-bold uppercase tracking-[0.35em] text-slate-500">{level.num === "03" ? "Additional" : "Alternatives"}</p>
-                        <ul className="space-y-4">
-                          {cat.items.slice(1).map((item: any, idx: number) => {
-                            const isObj = typeof item === "object";
-                            const label = isObj ? item.label : item;
-                            const link = isObj ? item.link : null;
-                            const provider = isObj ? item.provider : null;
-                            return (
-                              <li key={idx} className="flex items-center gap-3 mb-2 last:mb-0">
-                                <ProviderFavicon provider={provider} size={18} />
-                                <div className="flex flex-col gap-1 w-full">
-                                  {link ? (
-                                    <a href={link} target="_blank" rel="noopener noreferrer"
-                                      className="text-xs font-medium text-slate-300 active:text-white flex items-center justify-between group/link">
-                                      <span>{label}</span>
-                                      <svg className="w-3 h-3 opacity-20 group-hover/link:opacity-60 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
-                                      </svg>
-                                    </a>
-                                  ) : (
-                                    <span className="text-xs font-medium text-slate-300 leading-normal">{label}</span>
-                                  )}
-                                </div>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </div>
-                    </div>
-                  ) : (
-                    /* ── All other categories (or single-cert): flat list ── */
-                    <ul className="space-y-4 pt-1">
-                      {cat.items.map((item: any, idx: number) => {
-                        const isObj = typeof item === "object";
-                        const label = isObj ? item.label : item;
-                        const link = isObj ? item.link : null;
-                        const provider = isObj ? item.provider : null;
-
-                        return (
-                          <li key={idx} className="flex items-center gap-3 mb-2 last:mb-0">
-                            <ProviderFavicon provider={provider} size={18} />
-                            <div className="flex flex-col gap-1 w-full">
-                              {link ? (
-                                <a
-                                  href={link}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-xs font-medium text-slate-300 active:text-white flex items-center justify-between group/link"
-                                >
-                                  <span>{label}</span>
-                                  <svg className="w-3 h-3 opacity-20 group-hover/link:opacity-60 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
-                                  </svg>
-                                </a>
-                              ) : (
-                                <span className="text-xs font-medium text-slate-300 leading-normal">
-                                  {label}
-                                </span>
-                              )}
-                            </div>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  )}
-                </div>
-              ))}
-            </div>
-          </section>
-        ))}
-      </div>
-
-      {/* Simple Footer */}
-      <div className="mt-12 mb-20 flex flex-col items-center gap-4 px-6">
-        <button
-          onClick={() => router.push("/roadmaps/soc")}
-          className="w-full max-w-xs py-4 rounded-xl border border-white/10 bg-white/5 font-mono text-xs uppercase tracking-widest text-slate-400 hover:bg-white/10 transition-all flex items-center justify-center gap-2"
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M19 12H5M12 19l-7-7 7-7" />
-          </svg>
-          Back to SOC Roadmap
-        </button>
-        <button
-          onClick={() => router.push("/")}
-          className="w-full max-w-xs py-3 font-mono text-[10px] uppercase tracking-[0.3em] text-slate-600 active:text-slate-300 transition-all"
-        >
-          Go to Homepage
-        </button>
-      </div>
-      
-      {/* Scroll to Top Button */}
-      <button
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        style={{
-          position: "fixed",
-          bottom: "32px",
-          right: "24px",
-          zIndex: 100,
-          width: "48px",
-          height: "48px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          borderRadius: "50%",
-          background: "rgba(15,23,42,0.8)",
-          backdropFilter: "blur(12px)",
-          border: "1px solid rgba(255,255,255,0.1)",
-          color: "#f8fafc",
-          cursor: "pointer",
-          opacity: showScrollTop ? 1 : 0,
-          visibility: showScrollTop ? "visible" : "hidden",
-          transform: showScrollTop ? "translateY(0)" : "translateY(20px)",
-          transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-          boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
-        }}
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M18 15l-6-6-6 6" />
-        </svg>
-      </button>
-    </div>
-  );
-
-
-  if (isMobile) {
-    return <MobileSocCareerPath />;
-  }
-
-
-
-  return (
-    <main className="min-h-screen bg-slate-950 text-white overflow-x-hidden">
-      <div style={{ transform: `scale(${scaleFactor})`, transformOrigin: "top left", width: scaleFactor !== 1 ? `${100 / scaleFactor}%` : "100%", height: scaleFactor !== 1 ? `${100 / scaleFactor}%` : "100%" }}>
-
-        <header
-          className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-white/5 px-8 pt-4 pb-4 backdrop-blur-md"
-          style={{ background: "rgba(9,13,20,0.9)" }}
-        >
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => router.push("/")}
-              className="font-mono text-[10px] uppercase tracking-widest font-medium flex items-center gap-1.5 transition-all duration-150 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]"
-              style={{ color: "#ffffff", background: "none", border: "none", cursor: "pointer" }}
-            >
-              Home
-            </button>
-            <span style={{ color: "rgba(255,255,255,0.4)", fontSize: "10px" }}>/</span>
-            <button
-              onClick={() => router.push("/roadmaps/soc")}
-              className="font-mono text-[10px] uppercase tracking-widest font-medium flex items-center gap-1.5 transition-all duration-150 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]"
-              style={{ color: "#ffffff", background: "none", border: "none", cursor: "pointer" }}
-            >
-              SOC Experience
-            </button>
-            <span style={{ color: "rgba(255,255,255,0.4)", fontSize: "10px" }}>/</span>
-            <span className="font-mono text-[10px] uppercase tracking-widest font-medium" style={{ color: "#ffffff", opacity: 0.9 }}>
-              Career Path
-            </span>
-          </div>
-
-          <div className="flex items-center gap-8">
-            {LEVELS.map((level, i) => (
-              <NavDot
-                key={level.num}
-                num={level.num}
-                label={level.label}
-                color={level.color}
-                isActive={activeLevel === i}
-                onClick={() => scrollToLevel(i)}
-              />
-            ))}
-          </div>
-        </header>
-
-
-        <div
-          ref={containerRef}
-          className="pt-16"
-        >
-          {/* ── Hero ────────────────────────────────────────────────────────── */}
-          <section className="relative flex min-h-[85vh] items-start justify-center overflow-hidden pt-24 pb-32 lg:pt-32">
-            {/* Grid */}
-            <div
-              className="pointer-events-none absolute inset-0"
-              style={{
-                backgroundImage:
-                  "linear-gradient(to right, rgba(30,41,59,0.5) 1px, transparent 1px), linear-gradient(to bottom, rgba(30,41,59,0.5) 1px, transparent 1px)",
-                backgroundSize: "40px 40px",
-              }}
-            />
-            {/* Radial vignette */}
-            <div
-              className="pointer-events-none absolute inset-0"
-              style={{ background: "radial-gradient(circle at center, transparent 35%, rgba(2,6,23,0.96) 100%)" }}
-            />
-            {/* Emerald ambient */}
-            <div
-              className="pointer-events-none absolute inset-0"
-              style={{ background: "radial-gradient(ellipse at center, rgba(52,211,153,0.04) 0%, transparent 65%)" }}
-            />
-
-            <div className="relative z-10 flex w-full max-w-7xl items-start px-8 lg:px-12">
-              {/* Index - LHS (Desktop only) */}
-              <div className="hero-anim hidden w-80 flex-col gap-8 rounded-2xl border border-white/5 bg-slate-900/10 p-8 backdrop-blur-sm lg:flex shadow-2xl">
-                <div className="space-y-2">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.4em] text-slate-400 font-bold">
-                    Phase Index
-                  </p>
-                  <div className="h-0.5 w-12 bg-cyan-500/50" />
-                </div>
-                
-                <nav className="flex flex-col gap-7">
-                  {LEVELS.map((level, i) => (
-                    <button
-                      key={level.num}
-                      onClick={() => scrollToLevel(i)}
-                      className="group flex flex-col items-start gap-1 text-left transition-all"
-                    >
-                      <div className="flex items-center gap-4">
-                        <span className="font-mono text-sm font-black text-slate-700 transition-colors group-hover:text-white" style={{ color: activeLevel === i ? level.color : undefined }}>
-                          {level.num}
-                        </span>
-                        <span 
-                          className="font-mono text-base font-bold tracking-widest text-slate-400 transition-all group-hover:translate-x-1 uppercase"
-                          style={{ color: level.color }}
-                        >
-                          {level.label}
-                        </span>
-                      </div>
-                      <div className="ml-9 h-px w-0 bg-cyan-500/40 transition-all duration-500 group-hover:w-16" />
-                    </button>
-                  ))}
-                </nav>
-
-                <div className="mt-4">
-                  <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-slate-600 leading-relaxed">
-                    Select a role to view detailed<br />roadmap & requirements.
-                  </p>
-                </div>
-              </div>
-
-              {/* Hero Content - Shifted Right */}
-              <div ref={heroRef} className="flex-1 px-8 text-center lg:pl-24 lg:text-left">
-                <div className="hero-anim mb-6 flex justify-center lg:justify-start">
-                  <div className="rounded-full border border-cyan-500/30 bg-cyan-950/40 px-5 py-2 flex items-center gap-3 backdrop-blur-md">
-                    <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" style={{ boxShadow: "0 0 10px #22d3ee" }}></span>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.55em] text-cyan-400">
-                      The Blueprint to Perfection
+                  <div
+                    className="flex items-center gap-3 px-5 py-4"
+                    style={{ background: `${action.color}08`, borderBottom: `1px solid ${action.color}15` }}
+                  >
+                    <span className="text-lg">{action.icon}</span>
+                    <p className="font-mono text-xs font-bold uppercase tracking-[0.3em]" style={{ color: action.color }}>
+                      {action.title}
                     </p>
                   </div>
-                </div>
-
-                {/* Big Question Hook */}
-                <div className="hero-anim mb-6 flex justify-center lg:justify-start">
-                  <h1
-                    className="font-mono font-black text-emerald-400 tracking-tight"
-                    style={{
-                      fontSize: "clamp(42px, 6vw, 76px)",
-                      textShadow: "0 0 80px rgba(52,211,153,0.5), 0 0 160px rgba(52,211,153,0.2)",
-                      lineHeight: "1.05"
-                    }}
-                  >
-                    Wondering where<br />to begin?
-                  </h1>
-                </div>
-
-                <p className="hero-anim mb-6 font-sans text-xl leading-relaxed text-slate-100 max-w-2xl mx-auto lg:mx-0">
-                  Stop guessing. This is the ultimate, battle-tested roadmap for your cybersecurity career.
-                </p>
-                <p className="hero-anim mb-10 font-sans text-base leading-relaxed text-slate-400 max-w-xl mx-auto lg:mx-0">
-                  Distilled from community discussions and industry standards. We&apos;ve mapped out the precise skills, tools, and certifications you need—from your first lab to leading the SOC.
-                </p>
-              </div>
-            </div>
-
-            {/* Centered Scroll Hint (Independent of flex shift) */}
-            <div className="hero-anim absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-4 text-slate-300">
-              <span
-                className="font-mono font-bold uppercase tracking-[0.6em]"
-                style={{
-                  fontSize: 11,
-                }}
-              >
-                Scroll to explore
-              </span>
-              <div className="animate-bounce">
-                <svg width="22" height="22" viewBox="0 0 14 14" fill="none">
-                  <path
-                    d="M7 2 L7 12 M2 7 L7 12 L12 7"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
-            </div>
-          </section>
-
-          {/* ── Career Levels ────────────────────────────────────────────────── */}
-          <div className="relative mx-auto max-w-7xl px-8">
-            {/* Continuous trunk — spans all level sections */}
-            <div
-              className="pointer-events-none absolute"
-              style={{ left: 55, top: 0, bottom: 0, width: 2 }}
-            >
-              <div ref={trunkRef} className="tech-tree-trunk h-full w-full" />
-            </div>
-
-            {LEVELS.map((level, i) => (
-              <section
-                key={level.num}
-                ref={(el) => { sectionRefs.current[i] = el; }}
-                className="relative flex h-screen w-full items-center opacity-0"
-                style={{ zIndex: 10 - i }}
-              >
-                {layout && (
-                  <>
-                    {/* ── Background SVG Branches ── */}
-                    <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
-                      <defs>
-                        <filter id={`glow-${i}`} x="-120%" y="-120%" width="340%" height="340%">
-                          <feGaussianBlur stdDeviation="3.5" result="blur" />
-                          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-                        </filter>
-                      </defs>
-
-                      {/* Trunk dot at hub */}
-                      <circle
-                        cx={layout.hub.x}
-                        cy={layout.hub.y}
-                        r="4"
-                        fill="none"
-                        stroke={level.color}
-                        strokeWidth="6"
-                        opacity="0.15"
-                        filter={`url(#glow-${i})`}
-                      />
-
-                      {/* Branches */}
-                      {layout.cards.map((targetCard: any, j: number) => {
-                        const d = drawBranch(layout.hub, targetCard, j);
-                        return (
-                          <g key={`branch-${j}`}>
-                            {/* Glow path */}
-                            <path
-                              ref={(el) => { pathGlowRefs.current[i * 3 + j] = el; }}
-                              d={d}
-                              fill="none"
-                              stroke={level.color}
-                              strokeWidth={6}
-                              opacity={0.25}
-                              filter={`url(#glow-${i})`}
-                              strokeLinecap="round"
-                            />
-                            {/* Solid path */}
-                            <path
-                              ref={(el) => { pathRefs.current[i * 3 + j] = el; }}
-                              d={d}
-                              fill="none"
-                              stroke={level.color}
-                              strokeWidth={1.5}
-                              opacity={0.8}
-                              strokeLinecap="round"
-                            />
-                            {/* Terminal dot */}
-                            <circle
-                              cx={targetCard.x} cy={targetCard.y} r={3}
-                              fill={level.color}
-                              style={{ filter: `drop-shadow(0 0 5px ${level.color})` }}
-                            />
-                          </g>
-                        );
-                      })}
-
-                      {/* Tools Branch */}
-                      {layout.toolsCard && (
-                        <g>
-                          <path
-                            ref={(el) => { toolsPathGlowRefs.current[i] = el; }}
-                            d={drawToolsBranch(layout.hub, layout.toolsCard, layout)}
-                            fill="none"
-                            stroke={level.color}
-                            strokeWidth={6}
-                            opacity={0.25}
-                            filter={`url(#glow-${i})`}
-                            strokeLinecap="round"
-                          />
-                          <path
-                            ref={(el) => { toolsPathRefs.current[i] = el; }}
-                            d={drawToolsBranch(layout.hub, layout.toolsCard, layout)}
-                            fill="none"
-                            stroke={level.color}
-                            strokeWidth={1.5}
-                            opacity={0.8}
-                            strokeLinecap="round"
-                          />
-                          <circle
-                            cx={layout.toolsCard.x} cy={layout.toolsCard.y + 40} r={3}
-                            fill={level.color}
-                            style={{ filter: `drop-shadow(0 0 5px ${level.color})` }}
-                          />
-                        </g>
-                      )}
-                    </svg>
-
-                    {/* ── Left: hub node ── */}
-                    <div
-                      ref={(el) => { hubRefs.current[i] = el; }}
-                      className="absolute flex items-center justify-center rounded-full border-2 bg-slate-950 z-10"
-                      style={{
-                        left: layout.hub.x,
-                        top: layout.hub.y,
-                        width: 56,
-                        height: 56,
-                        transform: 'translate(-50%, -50%)',
-                        borderColor: level.color,
-                        boxShadow: `0 0 24px ${level.glow}, 0 0 60px ${level.glow}`,
-                      }}
-                    >
-                      <span className="font-mono text-base font-black" style={{ color: level.color }}>
-                        {level.num}
-                      </span>
-                      <div
-                        className="absolute -inset-3 animate-pulse rounded-full border opacity-30"
-                        style={{ borderColor: level.color }}
-                      />
-                    </div>
-
-
-                    {/* ── Title & Quote (Top Area) ── */}
-                    <div className="absolute z-10 pointer-events-none" style={{ top: layout.hub.y - 20, left: layout.hub.x + 220, right: layout.toolsCard.w + 64 }}>
-                      <span className="font-mono text-[10px] uppercase tracking-[0.45em]" style={{ color: level.color }}>
-                        {level.subtitle}
-                      </span>
-                      <h2 className="mt-2 text-5xl font-heading font-bold text-white mb-4 drop-shadow-lg">
-                        {level.label}
-                      </h2>
-                      <p className="font-sans text-xl italic leading-relaxed text-slate-300 max-w-3xl" style={{ textShadow: `0 0 50px ${level.glow}` }}>
-                        &ldquo;{level.quote}&rdquo;
-                      </p>
-                    </div>
-
-                    {/* ── Tools Card (Top Right) ── */}
-                    {layout.toolsCard && (
-                      <div
-                        ref={(el) => { toolsCardRefs.current[i] = el; }}
-                        className="absolute rounded-xl border bg-slate-950/80 px-5 py-5 backdrop-blur-md z-10 flex flex-col"
-                        style={{
-                          left: layout.toolsCard.x,
-                          top: layout.toolsCard.y,
-                          width: layout.toolsCard.w,
-                          borderColor: level.border,
-                          boxShadow: `0 0 30px ${level.glow}, inset 0 0 20px rgba(0,0,0,0.5)`,
-                        }}
-                      >
-                        <div className="mb-4 flex items-center gap-3 border-b border-white/5 pb-3">
-                          <span className="text-xl" style={{ textShadow: `0 0 10px ${level.color}` }}>🔧</span>
-                          <p className="font-mono text-xs font-bold uppercase tracking-[0.3em]" style={{ color: level.color }}>
-                            Tools & Stack
-                          </p>
-                        </div>
-                        <div className="flex-1">
-                          <ul className="space-y-3">
-                            {level.tools.map((item) => (
-                              <li key={item} className="flex items-start gap-3">
-                                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: level.color, boxShadow: `0 0 8px ${level.color}` }} />
-                                <span className="font-sans text-[13px] leading-relaxed text-slate-300">
-                                  {item}
-                                </span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* ── Cards (Bottom Area) ── */}
-                    {(
-                      [
-                        { title: "Core Skills", icon: "⚡", items: level.skills },
-                        { title: "Certifications", icon: "🎯", items: level.certs },
-                        { title: "Resources", icon: "🧪", items: level.labs },
-                      ] as const
-                    ).map((cat, j) => (
-                      <div
-                        key={cat.title}
-                        ref={(el) => { cardRefs.current[i * 3 + j] = el; }}
-                        className="absolute rounded-xl border bg-slate-950/80 px-5 py-6 backdrop-blur-md z-10 flex flex-col"
-                        style={{
-                          left: layout.cardsLeft + j * (layout.cardW + layout.gap),
-                          top: layout.cardY + 12,
-                          width: layout.cardW,
-                          height: "auto",
-                          minHeight: layout.cardY * 0.45,
-                          borderColor: level.border,
-                          boxShadow: `0 0 30px ${level.glow}, inset 0 0 20px rgba(0,0,0,0.5)`,
-                        }}
-                      >
-                        <div className="mb-4 flex items-center gap-3 border-b border-white/5 pb-3">
-                          <span className="text-xl" style={{ textShadow: `0 0 10px ${level.color}` }}>{cat.icon}</span>
-                          <p className="font-mono text-xs font-bold uppercase tracking-[0.3em]" style={{ color: level.color }}>
-                            {cat.title}
-                          </p>
-                        </div>
-                        <div className="flex-1 pb-16">
-                          {cat.title === "Certifications" && cat.items.length > 1 ? (
-                            /* ── Certifications: Recommended + Additional sections ── */
-                            <div className="flex flex-col gap-5">
-                              {/* RECOMMENDED */}
-                              <div>
-                                <p className="mb-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.35em]" style={{ color: level.color, opacity: 0.7 }}>
-                                  Recommended
-                                </p>
-                                <ul>
-                                  {[cat.items[0]].map((item: any, idx: number) => {
-                                    const isObj = typeof item === "object";
-                                    const label = isObj ? item.label : item;
-                                    const link = isObj ? item.link : null;
-                                    const provider = isObj ? item.provider : null;
-                                    return (
-                                      <li key={idx} className="flex items-center gap-3 group/li transition-all duration-300">
-                                        <ProviderFavicon provider={provider} size={18} />
-                                        <div className="flex flex-col gap-1 w-full">
-                                          {link ? (
-                                            <a href={link} target="_blank" rel="noopener noreferrer"
-                                              className="font-sans text-[13px] leading-relaxed text-slate-300 hover:text-white transition-all flex items-center justify-between group/link">
-                                              <span className="relative">
-                                                {label}
-                                                <span className="absolute left-0 -bottom-1 w-0 h-px bg-current transition-all group-hover/link:w-2/3 opacity-30" />
-                                              </span>
-                                              <svg className="w-3.5 h-3.5 opacity-10 group-hover/link:opacity-60 group-hover/link:translate-x-0.5 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
-                                              </svg>
-                                            </a>
-                                          ) : (
-                                            <span className="font-sans text-[13px] leading-relaxed text-slate-300">{label}</span>
-                                          )}
-                                        </div>
-                                      </li>
-                                    );
-                                  })}
-                                </ul>
-                              </div>
-
-                              {/* ADDITIONAL */}
-                              <div>
-                                <p className="mb-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.35em] text-slate-500">
-                                  {level.num === "03" ? "Additional" : "Alternatives"}
-                                </p>
-                                <ul className="space-y-4">
-                                  {cat.items.slice(1).map((item: any, idx: number) => {
-                                    const isObj = typeof item === "object";
-                                    const label = isObj ? item.label : item;
-                                    const link = isObj ? item.link : null;
-                                    const provider = isObj ? item.provider : null;
-                                    return (
-                                      <li key={idx} className="flex items-start gap-4 group/li transition-all duration-300">
-                                        {!provider ? (
-                                          <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-sm transition-transform group-hover/li:scale-125" style={{ background: level.color, boxShadow: `0 0 8px ${level.color}` }} />
-                                        ) : (
-                                          <div className="mt-1 shrink-0 transition-transform group-hover/li:scale-110">
-                                            <ProviderFavicon provider={provider} size={18} />
-                                          </div>
-                                        )}
-                                        <div className="flex flex-col gap-1 w-full">
-                                          {link ? (
-                                            <a href={link} target="_blank" rel="noopener noreferrer"
-                                              className="font-sans text-[13px] leading-relaxed text-slate-300 hover:text-white transition-all flex items-center justify-between group/link">
-                                              <span className="relative">
-                                                {label}
-                                                <span className="absolute left-0 -bottom-1 w-0 h-px bg-current transition-all group-hover/link:w-2/3 opacity-30" />
-                                              </span>
-                                              <svg className="w-3.5 h-3.5 opacity-10 group-hover/link:opacity-60 group-hover/link:translate-x-0.5 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
-                                              </svg>
-                                            </a>
-                                          ) : (
-                                            <span className="font-sans text-[13px] leading-relaxed text-slate-300">{label}</span>
-                                          )}
-                                        </div>
-                                      </li>
-                                    );
-                                  })}
-                                </ul>
-                              </div>
-                            </div>
-                          ) : (
-                            /* ── All other categories (or single-cert): flat list ── */
-                            <ul className="space-y-4">
-                              {cat.items.map((item: any, idx: number) => {
-                                const isObj = typeof item === "object";
-                                const label = isObj ? item.label : item;
-                                const link = isObj ? item.link : null;
-                                const provider = isObj ? item.provider : null;
-
-                                return (
-                                  <li key={idx} className="flex items-start gap-4 group/li transition-all duration-300">
-                                    {!provider ? (
-                                      <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-sm transition-transform group-hover/li:scale-125" style={{ background: level.color, boxShadow: `0 0 8px ${level.color}` }} />
-                                    ) : (
-                                      <div className="mt-1 shrink-0 transition-transform group-hover/li:scale-110">
-                                        <ProviderFavicon provider={provider} size={18} />
-                                      </div>
-                                    )}
-
-                                    <div className="flex flex-col gap-1 w-full">
-                                      {link ? (
-                                        <a
-                                          href={link}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          className="font-sans text-[13px] leading-relaxed text-slate-300 hover:text-white transition-all flex items-center justify-between group/link"
-                                        >
-                                          <span className="relative">
-                                            {label}
-                                            <span className="absolute left-0 -bottom-1 w-0 h-px bg-current transition-all group-hover/link:w-2/3 opacity-30" />
-                                          </span>
-                                          <svg className="w-3.5 h-3.5 opacity-10 group-hover/link:opacity-60 group-hover/link:translate-x-0.5 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
-                                          </svg>
-                                        </a>
-                                      ) : (
-                                        <span className="font-sans text-[13px] leading-relaxed text-slate-300">
-                                          {label}
-                                        </span>
-                                      )}
-                                    </div>
-                                  </li>
-                                );
-                              })}
-                            </ul>
-                          )}
-                        </div>
-
-                        {/* Sub-bg ambient glow inside card */}
-                        <div className="absolute inset-x-0 bottom-0 h-24 pointer-events-none rounded-b-xl" style={{ background: `linear-gradient(to top, ${level.glow}, transparent)` }} />
-                      </div>
-                    ))}
-                  </>
-                )}
-              </section>
-            ))}
-          </div>
-
-          {/* ── Next Actions ────────────────────────────────────────────────── */}
-          <section className="relative overflow-hidden py-28 px-8">
-            {/* Ambient */}
-            <div
-              className="pointer-events-none absolute inset-0"
-              style={{ background: "radial-gradient(ellipse at center, rgba(34,211,238,0.04) 0%, transparent 70%)" }}
-            />
-            {/* Top border */}
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent" />
-
-            <div className="relative z-10 mx-auto max-w-5xl">
-              <div className="mb-12 text-center">
-                <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.55em] text-cyan-400">
-                  Begin
-                </p>
-                <h2 className="font-mono text-3xl font-black uppercase tracking-widest text-white">
-                  Next Actions
-                </h2>
-                <p className="mt-3 font-sans text-slate-400">
-                  Every SOC analyst started somewhere. Here&apos;s your first move.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                {ACTIONS.map((action) => (
-                  <div
-                    key={action.title}
-                    className="rounded-2xl border bg-slate-900/60 px-6 py-7 backdrop-blur-sm"
-                    style={{
-                      borderColor: action.border,
-                      boxShadow: `0 0 40px ${action.glow}`,
-                    }}
-                  >
-                    <div className="mb-5 flex items-center gap-3">
-                      <span className="text-3xl">{action.icon}</span>
-                      <p
-                        className="font-mono text-sm font-bold uppercase tracking-wider"
-                        style={{ color: action.color }}
-                      >
-                        {action.title}
-                      </p>
-                    </div>
+                  <div className="px-5 py-5">
                     <ul className="space-y-3">
                       {action.items.map((item: any, idx: number) => {
-                        const isObj = typeof item === "object";
-                        const label = isObj ? item.label : item;
-                        const link = isObj ? item.link : null;
-
+                        const label = typeof item === "object" ? item.label : item;
+                        const link = typeof item === "object" ? item.link : null;
                         return (
-                          <li key={idx} className="flex items-start gap-2.5">
+                          <li key={idx} className="flex items-start gap-3">
                             <span
                               className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
                               style={{ background: action.color }}
@@ -1453,47 +564,50 @@ export default function SocCareerPathPage() {
                                 href={link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="font-sans text-sm leading-relaxed text-slate-300 hover:text-white transition-colors flex items-center gap-1.5 group/link"
+                                className="font-sans text-[13px] leading-relaxed text-slate-300 hover:text-white transition-colors flex items-center gap-1.5 group/link"
                               >
                                 <span>{label}</span>
-                                <svg className="w-3.5 h-3.5 opacity-0 group-hover/link:opacity-60 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                <svg className="w-3 h-3 opacity-0 group-hover/link:opacity-50 transition-opacity flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                                   <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
                                 </svg>
                               </a>
                             ) : (
-                              <span className="font-sans text-sm leading-relaxed text-slate-300">
-                                {label}
-                              </span>
+                              <span className="font-sans text-[13px] leading-relaxed text-slate-300">{label}</span>
                             )}
                           </li>
                         );
                       })}
                     </ul>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
+            </div>
 
-              {/* Footer CTA */}
-              <div className="mt-16 flex flex-col items-center gap-5 text-center">
-                <p className="max-w-lg font-sans text-sm leading-relaxed text-slate-500">
-                  The SOC isn&apos;t just a career — it&apos;s the team that keeps the rest of us safe.
-                </p>
-                <button
-                  onClick={() => router.push("/roadmaps/soc")}
-                  className="inline-flex items-center gap-3 rounded-xl border border-cyan-500/35 bg-cyan-950/20 px-8 py-3.5 font-mono text-sm uppercase tracking-widest text-cyan-300 transition-all hover:border-cyan-400/60 hover:bg-cyan-950/40"
-                >
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <path d="M9 6H3M3 6L6 3M3 6L6 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  Back to SOC Experience
-                </button>
-              </div>
+            <div className="mt-16 flex flex-col items-start gap-4">
+              <p className="font-sans text-sm leading-relaxed" style={{ color: "rgba(148,163,184,0.4)" }}>
+                The SOC is the heart of security operations. Your vigilance keeps the business alive.
+              </p>
+              <button
+                onClick={() => router.push("/roadmaps/soc")}
+                className="inline-flex items-center gap-2 rounded-xl font-mono text-[11px] uppercase tracking-widest transition-all duration-200"
+                style={{
+                  border: "1px solid rgba(34,211,238,0.3)",
+                  background: "rgba(34,211,238,0.08)",
+                  color: "rgba(34,211,238,0.75)",
+                  padding: "10px 20px",
+                  cursor: "pointer",
+                }}
+              >
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                  <path d="M7 1L3 5L7 9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                Back to SOC Roadmap Experience
+              </button>
             </div>
           </section>
-        </div>
+        </main>
       </div>
-      
-      {/* Scroll to Top Button */}
+
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         style={{
@@ -1501,40 +615,28 @@ export default function SocCareerPathPage() {
           bottom: "40px",
           right: "40px",
           zIndex: 100,
-          width: "56px",
-          height: "56px",
+          width: "52px",
+          height: "52px",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           borderRadius: "14px",
-          background: "rgba(2,6,23,0.85)",
+          background: "rgba(9,13,20,0.9)",
           backdropFilter: "blur(12px)",
-          border: "1px solid rgba(255,255,255,0.1)",
+          border: "1px solid rgba(255,255,255,0.08)",
           color: "#f8fafc",
           cursor: "pointer",
           opacity: showScrollTop ? 1 : 0,
           visibility: showScrollTop ? "visible" : "hidden",
           transform: showScrollTop ? "translateY(0)" : "translateY(20px)",
           transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
-          boxShadow: "0 15px 40px rgba(0,0,0,0.5)",
-        }}
-        onMouseEnter={e => {
-          (e.currentTarget as HTMLElement).style.background = "rgba(15,23,42,0.95)";
-          (e.currentTarget as HTMLElement).style.borderColor = "rgba(34,211,238,0.3)";
-          (e.currentTarget as HTMLElement).style.color = "#22d3ee";
-        }}
-        onMouseLeave={e => {
-          (e.currentTarget as HTMLElement).style.background = "rgba(2,6,23,0.85)";
-          (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.1)";
-          (e.currentTarget as HTMLElement).style.color = "#f8fafc";
+          boxShadow: "0 12px 32px rgba(0,0,0,0.5)",
         }}
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M18 15l-6-6-6 6" />
         </svg>
       </button>
-    </main>
+    </div>
   );
 }
-
-

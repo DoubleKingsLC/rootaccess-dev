@@ -7,27 +7,27 @@ type MockDNSDumpsterProps = {
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-// URL typing: 0.00–0.20 of local → types "dnsdumpster.com"
+// URL typing: 0.25–0.32 (faster)
 const URL_TEXT = "dnsdumpster.com";
 const urlTyped = (lp: number): string => {
-  if (lp <= 0) return "";
-  const chars = Math.round((Math.min(lp, 0.20) / 0.20) * URL_TEXT.length);
+  if (lp < 0.25) return "";
+  const chars = Math.round((Math.min(lp - 0.25, 0.07) / 0.07) * URL_TEXT.length);
   return URL_TEXT.slice(0, chars);
 };
 
-// Search field typing: 0.20–0.42 → types "nexuspay.io"
+// Search field typing: 0.32–0.42 (faster)
 const QUERY_TEXT = "nexuspay.io";
 const queryTyped = (lp: number): string => {
-  if (lp < 0.20) return "";
-  const chars = Math.round((Math.min(lp - 0.20, 0.22) / 0.22) * QUERY_TEXT.length);
+  if (lp < 0.32) return "";
+  const chars = Math.round((Math.min(lp - 0.32, 0.10) / 0.10) * QUERY_TEXT.length);
   return QUERY_TEXT.slice(0, chars);
 };
 
-// Loading bar: 0.42–0.58 → sweeps 0→100%
+// Loading bar: 0.42–0.52 (faster sweep)
 const loadingWidth = (lp: number): number => {
   if (lp < 0.42) return 0;
-  if (lp > 0.58) return 100;
-  return ((lp - 0.42) / 0.16) * 100;
+  if (lp > 0.52) return 100;
+  return ((lp - 0.42) / 0.10) * 100;
 };
 
 // DNS results rows — appear one by one after 0.58
@@ -40,8 +40,8 @@ const DNS_ROWS = [
 ];
 
 const rowsVisible = (lp: number): number => {
-  if (lp < 0.58) return 0;
-  return Math.floor(((lp - 0.58) / 0.38) * (DNS_ROWS.length + 1));
+  if (lp < 0.52) return 0;
+  return Math.floor(((lp - 0.52) / 0.33) * (DNS_ROWS.length + 1));
 };
 
 const ROSE = "#f43f5e";
@@ -51,7 +51,7 @@ export const MockDNSDumpster: React.FC<MockDNSDumpsterProps> = ({ localProgress 
   const query    = queryTyped(localProgress);
   const loading  = loadingWidth(localProgress);
   const visible  = rowsVisible(localProgress);
-  const showRows = localProgress >= 0.58;
+  const showRows = localProgress >= 0.52;
 
   return (
     <div

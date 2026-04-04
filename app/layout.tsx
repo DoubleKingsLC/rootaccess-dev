@@ -1,18 +1,38 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Space_Grotesk, Manrope } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
-  display: "swap"
+  display: "swap",
+  preload: false,
+  fallback: ["Arial", "Helvetica", "system-ui", "sans-serif"],
 });
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
-  display: "swap"
+  display: "swap",
+  preload: false,
+  fallback: ["Consolas", "Monaco", "Menlo", "monospace"],
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-headline",
+  display: "swap",
+  preload: false,
+  fallback: ["Arial", "Helvetica", "system-ui", "sans-serif"],
+});
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-label",
+  display: "swap",
+  preload: false,
+  fallback: ["Arial", "Helvetica", "system-ui", "sans-serif"],
 });
 
 export const metadata: Metadata = {
@@ -32,8 +52,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
-      <body className="font-sans antialiased">
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} ${manrope.variable}`}>
+      <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=arrow_forward,check_circle,close,code,expand_more,hub,insights,key,keyboard_double_arrow_down,lan,lock,lock_open,menu,menu_book,priority_high,psychology,route,schedule,security,spider,stairs,terminal,workspace_premium" />
+      </head>
+      <body className="font-sans antialiased text-on-background bg-background">
         {children}
         <Analytics />
       </body>

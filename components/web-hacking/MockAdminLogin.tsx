@@ -14,6 +14,14 @@ const urlTyped = (lp: number): string => {
   return URL_TEXT.slice(0, chars);
 };
 
+// Username types 0.90–0.96 (reveal mode only, at the very end of discovery)
+const USERNAME_TEXT = "admin";
+const userTyped = (lp: number): string => {
+  if (lp < 0.90) return "";
+  const t = Math.min((lp - 0.90) / 0.06, 1);
+  return USERNAME_TEXT.slice(0, Math.round(t * USERNAME_TEXT.length));
+};
+
 // Page content fades in at 0.32 (reveal mode only)
 const pageOpacity = (lp: number): number => {
   if (lp < 0.32) return 0;
@@ -21,11 +29,21 @@ const pageOpacity = (lp: number): number => {
   return 1;
 };
 
-// "Found via recon" chip appears at 0.54 (reveal mode only)
+// "Found via recon" chip appears at 0.54, fades out at 0.92–0.98 (to avoid jumpy transition)
 const chipOpacity = (lp: number): number => {
   if (lp < 0.54) return 0;
   if (lp < 0.64) return (lp - 0.54) / 0.10;
-  return 1;
+  if (lp <= 0.92) return 1;
+  if (lp < 0.98) return 1 - (lp - 0.92) / 0.06;
+  return 0;
+};
+
+const alertOpacity = (lp: number): number => {
+  if (lp < 0.46) return 0; // After page fades in
+  if (lp < 0.56) return (lp - 0.46) / 0.10;
+  if (lp <= 0.92) return 1;
+  if (lp < 0.98) return 1 - (lp - 0.92) / 0.06;
+  return 0;
 };
 
 type AttackState = {
@@ -33,6 +51,7 @@ type AttackState = {
   passwordValue: string;                          // probe or payload text
   showCursor: boolean;                            // blinking cursor in password field
   isError: boolean;                               // red border + SQL error box
+  isClicked?: boolean;                            // button pressed state
   errorLines: Array<{ text: string; visible: boolean }>;
   isAuthenticated: boolean;                       // green border + ✓ Authenticated
 };
@@ -46,9 +65,11 @@ export const MockAdminLogin: React.FC<MockAdminLoginProps> = ({ localProgress, a
   const isAttack = !!attack;
 
   // ── Reveal-mode derived values ─────────────────────────────────────────────
-  const typed  = isAttack ? null : urlTyped(localProgress);
-  const pageOp = isAttack ? 1    : pageOpacity(localProgress);
-  const chipOp = isAttack ? 0    : chipOpacity(localProgress);
+  const typedUser = isAttack ? null : userTyped(localProgress);
+  const typedUrl  = isAttack ? null : urlTyped(localProgress);
+  const pageOp    = isAttack ? 1    : pageOpacity(localProgress);
+  const chipOp    = isAttack ? 0    : chipOpacity(localProgress);
+  const alertOp   = isAttack ? 0    : alertOpacity(localProgress);
 
   // ── Border / glow colour ───────────────────────────────────────────────────
   const borderColor = attack?.isAuthenticated
@@ -96,8 +117,8 @@ export const MockAdminLogin: React.FC<MockAdminLoginProps> = ({ localProgress, a
               <path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
             <span className="font-mono text-[11px]" style={{ color: "rgba(226,232,240,0.7)" }}>
-              {isAttack ? URL_TEXT : typed}
-              {!isAttack && typed && typed.length < URL_TEXT.length && localProgress > 0 && (
+              {isAttack ? URL_TEXT : typedUrl}
+              {!isAttack && typedUrl && typedUrl.length < URL_TEXT.length && localProgress > 0 && (
                 <span
                   className="ml-0.5 inline-block w-px"
                   style={{ background: ROSE, height: "12px", verticalAlign: "middle", animation: "pulse 1s steps(1) infinite" }}
@@ -120,7 +141,7 @@ export const MockAdminLogin: React.FC<MockAdminLoginProps> = ({ localProgress, a
           className="flex flex-col items-center justify-center px-8 py-10 gap-6"
           style={{
             opacity: pageOp,
-            minHeight: 360,
+            height: 540,
             background: "linear-gradient(160deg, #0d1117 0%, #0f0a12 100%)",
           }}
         >
@@ -154,8 +175,14 @@ export const MockAdminLogin: React.FC<MockAdminLoginProps> = ({ localProgress, a
                   border: "1px solid rgba(255,255,255,0.10)",
                 }}
               >
-                <span className="font-mono text-[12px]" style={{ color: isAttack ? "rgba(226,232,240,0.85)" : "rgba(148,163,184,0.4)" }}>
-                  {isAttack ? attack.usernameValue : "Enter username"}
+                <span className="font-mono text-[12px]" style={{ color: (isAttack || (typedUser && typedUser.length > 0)) ? "rgba(226,232,240,0.85)" : "rgba(148,163,184,0.4)" }}>
+                  {isAttack ? attack.usernameValue : (typedUser || "Enter username")}
+                  {!isAttack && typedUser && typedUser.length > 0 && typedUser.length < USERNAME_TEXT.length && (
+                    <span
+                      className="ml-0.5 inline-block w-px"
+                      style={{ background: ROSE, height: "13px", verticalAlign: "middle", animation: "pulse 1s steps(1) infinite" }}
+                    />
+                  )}
                 </span>
               </div>
             </div>
@@ -211,9 +238,11 @@ export const MockAdminLogin: React.FC<MockAdminLoginProps> = ({ localProgress, a
                 className="mt-1 w-full rounded-lg py-2.5 text-center font-mono text-[11px] font-bold uppercase tracking-widest"
                 style={{
                   background: attack.isAuthenticated ? "rgba(34,197,94,0.15)" : "rgba(244,63,94,0.12)",
-                  border: attack.isAuthenticated ? "1px solid rgba(34,197,94,0.4)" : "1px solid rgba(244,63,94,0.25)",
+                  border: attack.isAuthenticated ? "1px solid rgba(34,197,94,0.4)" : `1px solid ${attack.isClicked ? ROSE : "rgba(244,63,94,0.25)"}`,
                   color: attack.isAuthenticated ? GREEN : "rgba(244,63,94,0.6)",
-                  transition: "all 0.3s",
+                  transform: attack.isClicked ? "scale(0.96)" : "scale(1)",
+                  boxShadow: attack.isClicked ? `0 0 20px ${ROSE}33` : "none",
+                  transition: "all 0.1s ease-out",
                 }}
               >
                 {attack.isAuthenticated ? "✓ Authenticated" : "Sign In"}
@@ -231,31 +260,38 @@ export const MockAdminLogin: React.FC<MockAdminLoginProps> = ({ localProgress, a
               </button>
             )}
 
-            {/* No MFA notice (reveal mode only) */}
-            {!isAttack && (
-              <div
-                className="flex items-center gap-2 rounded-lg px-3 py-2"
-                style={{ background: "rgba(244,63,94,0.06)", border: "1px solid rgba(244,63,94,0.12)" }}
-              >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={ROSE} strokeWidth="2.5">
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="12" y1="8" x2="12" y2="12" />
-                  <line x1="12" y1="16" x2="12.01" y2="16" />
-                </svg>
-                <span className="font-mono text-[10px]" style={{ color: "rgba(244,63,94,0.65)" }}>
-                  No MFA · No rate limit · No lockout policy
-                </span>
-              </div>
-            )}
+            {/* No MFA notice — always rendered but visible only during discovery to prevent layout jumps */}
+            <div
+              className="flex items-center gap-2 rounded-lg px-3 py-2"
+              style={{
+                opacity: alertOp,
+                background: "rgba(244,63,94,0.06)",
+                border: "1px solid rgba(244,63,94,0.12)",
+                transition: "opacity 0.25s",
+                pointerEvents: alertOp > 0 ? "auto" : "none",
+              }}
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={ROSE} strokeWidth="2.5">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              <span className="font-mono text-[10px]" style={{ color: "rgba(244,63,94,0.65)" }}>
+                No MFA · No rate limit · No lockout policy
+              </span>
+            </div>
           </div>
 
-          {/* ── Database error — page-level, below form (attack mode) ──────── */}
+          {/* ── Database error — page-level, pulse + pop (attack mode) ─────── */}
           {attack?.isError && (
             <div
               className="w-full overflow-hidden rounded-lg"
               style={{
                 border: `1px solid ${RED}55`,
                 background: "rgba(17,6,6,0.95)",
+                transform: `translateY(${localProgress >= 0.44 ? Math.max(0, 8 - (localProgress - 0.44) * 400) : 0}px)`,
+                boxShadow: `0 0 ${20 + Math.sin(localProgress * 180) * 12}px rgba(239,68,68,${0.25 + Math.sin(localProgress * 180) * 0.2})`,
+                transition: "transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
               }}
             >
               {/* Error header bar */}
@@ -263,11 +299,7 @@ export const MockAdminLogin: React.FC<MockAdminLoginProps> = ({ localProgress, a
                 className="flex items-center gap-2 px-4 py-2.5"
                 style={{ background: "rgba(239,68,68,0.14)", borderBottom: `1px solid ${RED}33` }}
               >
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={RED} strokeWidth="2.5">
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="12" y1="8" x2="12" y2="12" />
-                  <line x1="12" y1="16" x2="12.01" y2="16" />
-                </svg>
+                <div className="h-1.5 w-1.5 rounded-full bg-red-500 shadow-[0_0_8px_#f43f5e]" />
                 <span className="font-mono text-[11px] font-bold uppercase tracking-widest" style={{ color: RED }}>
                   Database Error
                 </span>

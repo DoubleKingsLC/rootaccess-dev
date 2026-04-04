@@ -17,10 +17,20 @@ export const PROVIDER_DOMAINS: Record<string, string> = {
   htb: "hackthebox.com",
   bugcrowd: "bugcrowd.com",
   owasp: "owasp.org",
-  youtube: "youtube.com",
+  youtube: "www.youtube.com",
   sans: "sans.org",
   crest: "crest-approved.org",
   pentesteracademy: "pentesteracademy.com",
+  coursera: "coursera.org",
+  wiz: "wiz.io",
+  github: "github.com",
+  nist: "nist.gov",
+  ibm: "ibm.com",
+  cyberaces: "cyberaces.org",
+  pentesterlab: "pentesterlab.com",
+  appsecengineer: "appsecengineer.com",
+  zeropointsecurity: "zero-point-security.co.uk",
+  cxotalk: "www.youtube.com",
 };
 
 export const LEVELS: Level[] = [
@@ -34,7 +44,6 @@ export const LEVELS: Level[] = [
     quote:
       "You don't need a degree. You need curiosity and the discipline to build it. Everyone starts here.",
     time: "0–6 months",
-    salary: "£25K–£35K",
     tools: ["VirtualBox", "Linux", "Terminal / PowerShell", "Python"],
     skills: [
       "Networking — TCP/IP, DNS, DHCP, subnetting",
@@ -43,7 +52,6 @@ export const LEVELS: Level[] = [
       "Scripting basics — Python or Bash",
     ],
     certs: [
-      { label: "THM · Security+ Pre-Security (SEC1)", link: "https://tryhackme.com/certification/pre-security", provider: "tryhackme" },
       { label: "Google Cybersecurity Certificate", link: "https://www.coursera.org/professional-certificates/google-cybersecurity", provider: "google" },
       { label: "TCM · Practical Security Fundamentals", link: "https://academy.tcm-sec.com/p/practical-security-fundamentals", provider: "tcm" },
     ],
@@ -63,7 +71,6 @@ export const LEVELS: Level[] = [
     quote:
       "You found the SQLi. Now write a report that makes the developer fix it. Both skills matter equally.",
     time: "0–2 years",
-    salary: "£35K–£55K",
     tools: ["Burp Suite Community", "Nmap", "SQLmap", "OWASP Juice Shop"],
     skills: [
       "OWASP Top 10 — SQLi, XSS, broken access control",
@@ -72,19 +79,20 @@ export const LEVELS: Level[] = [
       "Basic Python / Bash scripting for automation",
     ],
     certs: [
-      { label: "eJPT — eLearnSecurity Junior Penetration Tester", link: "https://security.ine.com/certifications/ejpt-certification/", provider: "ine" },
-      { label: "CompTIA PenTest+", link: "https://www.comptia.org/certifications/pentest", provider: "comptia" },
-      { label: "CEH v13 — Certified Ethical Hacker", link: "https://www.eccouncil.org/train-certify/certified-ethical-hacker-ceh/", provider: "ec-council" },
+      { label: "PWPA — Practical Web Pentest Associate", link: "https://certifications.tcm-sec.com/pwpa/", provider: "tcm" },
+      { label: "eWPT — eLearnSecurity Web Penetration Tester", link: "https://ine.com/security/certifications/ewpt-certification", provider: "ine" },
     ],
     labs: [
-      { label: "PortSwigger Web Security Academy — free web labs", link: "https://portswigger.net/web-security", provider: "portswigger" },
-      { label: "TryHackMe · Web Fundamentals path", link: "https://tryhackme.com/path/outline/web", provider: "tryhackme" },
-      { label: "OWASP Juice Shop — vulnerable practice app", link: "https://github.com/juice-shop/juice-shop", provider: "owasp" },
+      { label: "PortSwigger Web Security Academy", link: "https://portswigger.net/web-security", provider: "portswigger" },
+      { label: "TCM Academy: Practical Bug Bounty Course", link: "https://academy.tcm-sec.com/p/practical-bug-bounty", provider: "tcm" },
+      { label: "HTB Academy: Web Penetration Tester Path", link: "https://academy.hackthebox.com/path/outline/web-penetration-tester", provider: "htb" },
+      { label: "Rana Khalil: Web Security Academy Walkthroughs (YouTube)", link: "https://www.youtube.com/c/RanaKhalil101", provider: "youtube" },
+      { label: "HackerSploit: Penetration Testing Bootcamp (YouTube)", link: "https://www.youtube.com/playlist?list=PLBf0hzazHTGM8V_3E5e9nL9qD5yozSdy2", provider: "youtube" },
     ],
   },
   {
     num: "02",
-    label: "Security Consultant",
+    label: "Exploitation Specialist",
     subtitle: "Full Engagements, Cloud & Chaining",
     color: "#fb923c",
     glow: "rgba(251,146,60,0.2)",
@@ -92,7 +100,6 @@ export const LEVELS: Level[] = [
     quote:
       "One XSS becomes a session hijack, becomes an IDOR, becomes a full data breach. You learn to chain.",
     time: "2–5 years",
-    salary: "£55K–£80K",
     tools: ["Burp Suite Pro", "Metasploit", "Gobuster / ffuf", "AWS CLI / Azure CLI"],
     skills: [
       "Cloud pentesting — IAM misconfigs, S3, Lambda",
@@ -101,14 +108,16 @@ export const LEVELS: Level[] = [
       "Client scoping, engagement management and debrief reporting",
     ],
     certs: [
-      { label: "OSCP — OffSec Certified Professional", link: "https://www.offsec.com/courses/pen-200/", provider: "offsec" },
+      { label: "CWES — HTB Certified Web Exploitation Specialist", link: "https://academy.hackthebox.com/preview/certifications/htb-certified-web-exploitation-specialist", provider: "htb" },
       { label: "BSCP — Burp Suite Certified Practitioner", link: "https://portswigger.net/web-security/certification", provider: "portswigger" },
-      { label: "PNPT — Practical Network Penetration Tester", link: "https://certifications.tcm-sec.com/pnpt/", provider: "tcm" },
+      { label: "OSCP — OffSec Certified Professional", link: "https://www.offsec.com/courses/pen-200/", provider: "offsec" },
     ],
     labs: [
-      { label: "HackerOne — public bug bounty programs", link: "https://www.hackerone.com/", provider: "hackerone" },
-      { label: "HTB Pro Labs — enterprise network simulations", link: "https://www.hackthebox.com/hacker/pro-labs", provider: "htb" },
-      { label: "Bugcrowd — bug bounty platform", link: "https://www.bugcrowd.com/", provider: "bugcrowd" },
+      { label: "IppSec: Methodology Walkthroughs (YouTube)", link: "https://www.youtube.com/@ippsec", provider: "youtube" },
+      { label: "Wiz Academy: Cloud Pentesting Resource Guide", link: "https://www.wiz.io/academy/cloud-careers/how-to-become-a-penetration-tester", provider: "wiz" },
+      { label: "TCM Academy: Practical API Hacking", link: "https://academy.tcm-sec.com/p/practical-api-hacking", provider: "tcm" },
+      { label: "PentesterLab: Web Application Security", link: "https://pentesterlab.com/", provider: "pentesterlab" },
+      { label: "AppSecEngineer: Cloud Security Labs & Masterclasses", link: "https://www.appsecengineer.com/", provider: "appsecengineer" },
     ],
   },
   {
@@ -121,7 +130,6 @@ export const LEVELS: Level[] = [
     quote:
       "It's not a test anymore. It's a simulation of a real APT. Your job: think like the adversary.",
     time: "5–8 years",
-    salary: "£80K–£110K",
     tools: ["Cobalt Strike / Sliver", "BloodHound / Mimikatz", "Havoc C2", "OSINT Framework"],
     skills: [
       "Red team TTPs — APT simulation with C2 frameworks",
@@ -131,13 +139,15 @@ export const LEVELS: Level[] = [
     ],
     certs: [
       { label: "OSWE — OffSec Web Expert", link: "https://www.offsec.com/courses/web-300/", provider: "offsec" },
-      { label: "OSEP — OffSec Experienced Penetration Tester", link: "https://www.offsec.com/courses/pen-300/", provider: "offsec" },
+      { label: "CWEE — HTB Certified Web Exploitation Expert", link: "https://academy.hackthebox.com/preview/certifications/htb-certified-web-exploitation-expert", provider: "htb" },
       { label: "CRTP — Certified Red Team Professional", link: "https://www.alteredsecurity.com/redteamlab", provider: "altered" },
     ],
     labs: [
-      { label: "HTB Pro Labs — Offshore & RastaLabs APT simulations", link: "https://www.hackthebox.com/hacker/pro-labs", provider: "htb" },
-      { label: "Pentester Academy — Active Directory Attack Labs", link: "https://www.pentesteracademy.com/", provider: "pentesteracademy" },
-      { label: "SANS SEC542 — Web App Penetration Testing & Ethical Hacking", link: "https://www.sans.org/cyber-security-courses/web-app-penetration-testing-ethical-hacking/", provider: "sans" },
+      { label: "Orange Tsai: Research Blog & Slides", link: "https://blog.orange.tw/", provider: "github" },
+      { label: "OffSec WEB-300: OSWE Courseware", link: "https://www.offsec.com/courses/web-300/", provider: "offsec" },
+      { label: "Zero-Point Security: Red Team Ops (CRTO)", link: "https://www.zero-point-security.co.uk/red-team-ops", provider: "zeropointsecurity" },
+      { label: "OWASP GenAI Security Project (LLM Top 10)", link: "https://genai.owasp.org/", provider: "owasp" },
+      { label: "LLM PenTest Hub (Anmol K Sachan)", link: "https://anmolksachan.medium.com/introducing-llm-pentest-hub-0ff24f47784e", provider: "github" },
     ],
   },
   {
@@ -150,7 +160,6 @@ export const LEVELS: Level[] = [
     quote:
       "You don't just find vulnerabilities. You design the program that finds them at scale, across every product.",
     time: "8+ years",
-    salary: "£110K–£160K+",
     tools: ["Dradis / Plextrac", "Confluence / Jira", "PowerBI", "Threat intel platforms"],
     skills: [
       "Pentest program design, tooling strategy and methodology ownership",
@@ -164,9 +173,11 @@ export const LEVELS: Level[] = [
       { label: "CISM — Certified Information Security Manager", link: "https://www.isaca.org/credentialing/cism", provider: "isaca" },
     ],
     labs: [
-      { label: "CREST CPSA / CRT certification pathway", link: "https://www.crest-approved.org/certifications/", provider: "crest" },
-      { label: "SANS MGT512 — Security Leadership Essentials", link: "https://www.sans.org/cyber-security-courses/security-leadership-essentials-for-managers/", provider: "sans" },
-      { label: "HackerOne — run a private bug bounty program", link: "https://www.hackerone.com/", provider: "hackerone" },
+      { label: "CXOTALK: Leadership & AI Strategy Discussions", link: "https://www.youtube.com/@cxotalk", provider: "youtube" },
+      { label: "NIST AI Risk Management Framework (AI RMF)", link: "https://www.nist.gov/itl/ai-risk-management-framework", provider: "nist" },
+      { label: "SANS Leadership & Management (LDR) Training Roadmap", link: "https://www.sans.org/cyber-security-skills-roadmap", provider: "sans" },
+      { label: "IBM: Cybersecurity Architecture (Coursera)", link: "https://www.coursera.org/learn/cybersecurity-architecture", provider: "coursera" },
+      { label: "Andrej Karpathy: Intro to Large Language Models", link: "https://www.youtube.com/watch?v=zjkBMFhNj_g", provider: "youtube" },
     ],
   },
 ];

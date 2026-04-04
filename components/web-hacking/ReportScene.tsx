@@ -2,52 +2,51 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import { NarrativeCaption } from "./NarrativeCaption";
 
 type ReportSceneProps = {
   progress: number; // global 0–1
 };
 
-// ── Scene window: 0.780–1.000 ─────────────────────────────────────────────────
-// Fade in  0.780–0.792
-// Full     0.792–0.950
-// Career card takes over 0.950–1.000
+// ── Scene window: 0.937–1.000 ─────────────────────────────────────────────────
+// Fade in  0.937–0.952
+// Full     0.952–1.000
 const sceneOpacity = (p: number): number => {
-  if (p < 0.780) return 0;
-  if (p < 0.792) return (p - 0.780) / 0.012;
+  if (p < 0.937) return 0;
+  if (p < 0.952) return (p - 0.937) / 0.015;
   return 1;
 };
 
-// Local 0–1 across 0.780–0.950 (report content, before career card)
+// Local 0–1 across 0.937–1.000
 const local = (p: number): number =>
-  Math.max(0, Math.min(1, (p - 0.780) / 0.170));
+  Math.max(0, Math.min(1, (p - 0.937) / 0.063));
 
-// Career card opacity 0.950–1.000
+// Career card opacity — pushed to the very end (0.985–1.000)
 const careerOpacity = (p: number): number => {
-  if (p < 0.950) return 0;
-  if (p < 0.965) return (p - 0.950) / 0.015;
+  if (p < 0.985) return 0;
+  if (p < 0.995) return (p - 0.985) / 0.010;
   return 1;
 };
 
-// ── Finding card reveal (local 0.20–0.65, ~0.11 each) ────────────────────────
+// ── Finding card reveal (local 0.08–0.35, ~0.06 each) — faster cascade ───────
 const cardVisible = (lp: number, idx: number): boolean =>
-  lp >= 0.20 + idx * 0.11;
+  lp >= 0.08 + idx * 0.06;
 
-// ── Impact chips (local 0.65–0.80) ───────────────────────────────────────────
+// ── Impact chips (local 0.35–0.50) ───────────────────────────────────────────
 const chipVisible = (lp: number, idx: number): boolean =>
-  lp >= 0.65 + idx * 0.05;
+  lp >= 0.35 + idx * 0.03;
 
-// ── CVSS dial fill (local 0.80–1.00) ─────────────────────────────────────────
+// ── CVSS dial fill (local 0.50–0.70) ─────────────────────────────────────────
 const dialFill = (lp: number): number => {
-  if (lp < 0.80) return 0;
-  return Math.min((lp - 0.80) / 0.18, 1);
+  if (lp < 0.50) return 0;
+  return Math.min((lp - 0.50) / 0.18, 1);
 };
 
-// Caption local 0.72–0.95
+// Caption local 0.60–0.90
 const captionOpacity = (p: number): number => {
-  if (p < 0.870) return 0;
-  if (p < 0.882) return (p - 0.870) / 0.012;
-  if (p <= 0.940) return 1;
-  if (p < 0.950) return 1 - (p - 0.940) / 0.010;
+  if (p < 0.960) return 0;
+  if (p < 0.970) return (p - 0.960) / 0.010;
+  if (p <= 0.990) return 1;
   return 0;
 };
 
@@ -59,32 +58,24 @@ const FINDINGS = [
     severity: "CRITICAL",
     cvss: "9.8",
     title: "SQL Injection — Login Password Field",
-    detail: "Unsanitised input in /login passed directly to MySQL query. Full auth bypass with `' OR 1=1 --`.",
-    fix: "Parameterised queries (PDO/prepared statements). Never interpolate user input into SQL.",
   },
   {
     id: "F-02",
     severity: "CRITICAL",
     cvss: "9.1",
     title: "Unauthenticated Mass Data Endpoint",
-    detail: "/api/v1/users returns all 14.2M records with no auth check, no rate limit, no audit log.",
-    fix: "Enforce Bearer token auth. Add rate limiting + anomaly detection on bulk requests.",
   },
   {
     id: "F-03",
     severity: "HIGH",
     cvss: "7.5",
     title: "Admin Portal Publicly Accessible",
-    detail: "admin.nexuspay.io resolves publicly. Discovered via passive DNS + dir enumeration in under 2 minutes.",
-    fix: "Restrict to VPN / IP allowlist. Remove from public DNS or place behind zero-trust gateway.",
   },
   {
     id: "F-04",
     severity: "HIGH",
     cvss: "7.2",
     title: "No MFA · No Lockout on Admin Login",
-    detail: "Admin portal has no multi-factor auth, no account lockout, no CAPTCHA. Brute-force trivial.",
-    fix: "Enforce TOTP MFA. Implement lockout after 5 failed attempts + alert on anomalous logins.",
   },
 ];
 
@@ -133,14 +124,18 @@ export const ReportScene: React.FC<ReportSceneProps> = ({ progress }) => {
 
         {/* Top label */}
         <div
-          className="absolute top-12 left-1/2 -translate-x-1/2 font-mono text-[9px] uppercase tracking-[0.45em]"
-          style={{ color: "rgba(244,63,94,0.4)" }}
+          className="absolute top-12 left-1/2 -translate-x-1/2 font-mono text-[11px] uppercase tracking-[0.35em]"
+          style={{
+            color: "rgba(226,232,240,0.65)",
+            opacity: lp > 0.5 ? 1 : 0, // Appears after summary
+            transition: "opacity 0.3s",
+          }}
         >
           Penetration test report · NexusPay
         </div>
 
         {/* ── Content ───────────────────────────────────────────────────────── */}
-        <div className="flex items-start gap-5" style={{ width: "clamp(580px, 74vw, 920px)" }}>
+        <div className="flex items-start gap-5" style={{ width: "clamp(660px, 82vw, 920px)" }}>
 
           {/* ── Left: findings list ─────────────────────────────────────────── */}
           <div className="flex flex-1 flex-col gap-2.5 min-w-0">
@@ -181,7 +176,7 @@ export const ReportScene: React.FC<ReportSceneProps> = ({ progress }) => {
             {FINDINGS.map((f, i) => (
               <div
                 key={f.id}
-                className="flex flex-col gap-1.5 rounded-xl px-4 py-3"
+                className="flex items-center gap-3 rounded-xl px-4 py-3"
                 style={{
                   background: "rgba(8,12,24,0.96)",
                   border: f.severity === "CRITICAL"
@@ -192,39 +187,25 @@ export const ReportScene: React.FC<ReportSceneProps> = ({ progress }) => {
                   transition: "opacity 0.35s, transform 0.35s",
                 }}
               >
-                <div className="flex items-center gap-2.5">
-                  {/* Severity badge */}
-                  <span
-                    className="shrink-0 rounded px-1.5 py-0.5 font-mono text-[8px] font-bold uppercase tracking-wider"
-                    style={{
-                      background: f.severity === "CRITICAL" ? "rgba(244,63,94,0.14)" : "rgba(251,113,133,0.10)",
-                      border: f.severity === "CRITICAL" ? "1px solid rgba(244,63,94,0.35)" : "1px solid rgba(251,113,133,0.25)",
-                      color: f.severity === "CRITICAL" ? ROSE : "#f87171",
-                    }}
-                  >
-                    {f.severity}
-                  </span>
-                  {/* CVSS */}
-                  <span className="font-mono text-[9px] font-bold tabular-nums" style={{ color: "rgba(148,163,184,0.5)" }}>
-                    CVSS {f.cvss}
-                  </span>
-                  <span className="font-mono text-[9px]" style={{ color: "rgba(148,163,184,0.3)" }}>
-                    {f.id}
-                  </span>
-                </div>
-
-                <p className="font-mono text-[10px] font-semibold" style={{ color: "rgba(226,232,240,0.88)" }}>
+                {/* Severity badge */}
+                <span
+                  className="shrink-0 rounded px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider"
+                  style={{
+                    background: f.severity === "CRITICAL" ? "rgba(244,63,94,0.14)" : "rgba(251,113,133,0.10)",
+                    border: f.severity === "CRITICAL" ? "1px solid rgba(244,63,94,0.35)" : "1px solid rgba(251,113,133,0.25)",
+                    color: f.severity === "CRITICAL" ? ROSE : "#f87171",
+                  }}
+                >
+                  {f.severity}
+                </span>
+                {/* CVSS */}
+                <span className="font-mono text-[10px] font-bold tabular-nums" style={{ color: "rgba(148,163,184,0.5)" }}>
+                  CVSS {f.cvss}
+                </span>
+                {/* Title — large and readable */}
+                <p className="font-mono text-[13px] font-bold" style={{ color: "rgba(226,232,240,0.9)" }}>
                   {f.title}
                 </p>
-                <p className="font-mono text-[9px] leading-relaxed" style={{ color: "rgba(148,163,184,0.55)" }}>
-                  {f.detail}
-                </p>
-                <div className="flex items-start gap-1.5 pt-0.5">
-                  <span className="mt-0.5 shrink-0 font-mono text-[9px]" style={{ color: "rgba(34,197,94,0.6)" }}>↳</span>
-                  <span className="font-mono text-[9px]" style={{ color: "rgba(34,197,94,0.55)" }}>
-                    Fix: {f.fix}
-                  </span>
-                </div>
               </div>
             ))}
           </div>
@@ -317,86 +298,73 @@ export const ReportScene: React.FC<ReportSceneProps> = ({ progress }) => {
 
       {/* ── Career path card (95–100%) ───────────────────────────────────────── */}
       <div
-        className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center px-6"
-        style={{ opacity: careerOp }}
+        className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center px-6 transition-all duration-700"
+        style={{ 
+          opacity: careerOp, 
+          transform: `scale(${0.9 + careerOp * 0.1}) translateY(${20 - careerOp * 20}px)`,
+          filter: `blur(${(1 - careerOp) * 20}px)`
+        }}
       >
         <div
-          className={`w-[min(560px,92vw)] rounded-2xl px-7 py-6 backdrop-blur-2xl ${
+          className={`w-[min(580px,94vw)] rounded-3xl border border-rose-500/30 bg-black/80 px-6 py-8 md:px-10 md:py-12 backdrop-blur-3xl shadow-[0_0_80px_rgba(244,63,94,0.15)] text-center relative overflow-hidden transition-all duration-300 ${
             careerOp > 0.1 ? "pointer-events-auto" : "pointer-events-none"
           }`}
-          style={{
-            border: "1px solid rgba(244,63,94,0.45)",
-            background: "rgba(6,2,4,0.88)",
-            boxShadow: "0 0 60px rgba(244,63,94,0.18), 0 0 120px rgba(244,63,94,0.07)",
-          }}
+          role="banner"
         >
-          {/* Header */}
-          <div className="mb-4 flex items-center gap-3">
-            <div
-              className="h-2.5 w-2.5 rounded-full"
-              style={{ background: ROSE, boxShadow: `0 0 10px rgba(244,63,94,0.9)`, animation: "pulse 1s infinite" }}
-            />
-            <p className="font-mono text-[10px] uppercase tracking-[0.4em]" style={{ color: ROSE }}>
-              Report Delivered · What&apos;s Next?
-            </p>
+          {/* Subtle rose holographic scanline */}
+          <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(244,63,94,0.05)_1px,transparent_1px)] bg-[size:100%_4px] opacity-30" />
+          
+          {/* Core Glow Background */}
+          <div className="absolute -inset-24 bg-rose-500/5 blur-[120px] rounded-full pointer-events-none" />
+
+          {/* Breach Status Badge */}
+          <div className="mb-6 md:mb-10 flex justify-center">
+            <div className="inline-flex items-center gap-2.5 rounded-full border border-rose-400/40 bg-rose-950/60 px-4 py-1.5 shadow-[0_0_20px_rgba(244,63,94,0.4)]">
+              <span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse shadow-[0_0_8px_rgba(244,63,94,1)]" />
+              <span className="font-mono text-[11px] font-black uppercase tracking-[0.25em] text-rose-100">
+                BREACH STATUS: 100% EXFILTRATED
+              </span>
+            </div>
           </div>
 
-          {/* Stat */}
-          <div className="mb-4 flex items-baseline gap-3">
-            <p
-              className="font-mono text-5xl font-black"
-              style={{ color: ROSE, textShadow: "0 0 30px rgba(244,63,94,0.5)" }}
-            >
-              4 vulns
-            </p>
-            <p className="font-mono text-xs uppercase tracking-widest" style={{ color: "rgba(244,63,94,0.5)" }}>
-              recon → 14.2M records
-            </p>
+          <h2 className="mb-5 font-sans text-3xl md:text-5xl font-black tracking-tight text-white uppercase leading-none"
+              style={{ textShadow: "0 0 40px rgba(255,255,255,0.2)" }}>
+            MISSION <span className="text-rose-500">ACCOMPLISHED</span>
+          </h2>
+
+          <p className="mb-8 text-sm md:text-base lg:text-lg leading-relaxed text-slate-300 font-medium px-2 md:px-6">
+            Behind every line of code is a vulnerability. 
+            You&apos;ve seen the exploit — now master the defense. 
+            Explore the professional path from Researcher to Lead security Architect.
+          </p>
+
+          <div className="flex flex-col items-center gap-6">
+              <button
+                type="button"
+                onClick={() => router.push("/roadmaps/web-hacking/career-path")}
+                className="group relative w-full max-w-sm overflow-hidden rounded-2xl border border-rose-500/50 bg-rose-500/10 px-8 py-5 font-mono text-sm font-black uppercase tracking-[0.3em] text-rose-400 transition-all hover:border-rose-400 hover:bg-rose-500/20 hover:text-white hover:shadow-[0_0_40px_rgba(244,63,94,0.3)]"
+              >
+                <div className="relative z-10 flex items-center justify-center gap-3">
+                  GO THROUGH THE ROADMAP
+                  <svg className="transition-transform group-hover:translate-x-1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </div>
+                <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-rose-500 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+              </button>
+              
+              <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-rose-900/60 font-bold">
+                [ SECURE CONNECTION ESTABLISHED ]
+              </p>
           </div>
-
-          {/* Body */}
-          <p className="mb-2 font-sans text-base leading-relaxed text-slate-100">
-            Every finding in this engagement was preventable. Behind every successful pentest are
-            professionals who know exactly where to look — and how to fix what they find.
-          </p>
-          <p className="mb-6 font-sans text-sm leading-relaxed text-slate-400">
-            Explore the web hacking career path — the roles, the tools, and the certifications
-            that take you from recon to red team lead.
-          </p>
-
-          {/* CTA */}
-          <button
-            type="button"
-            onClick={() => router.push("/roadmaps/web-hacking/career-path")}
-            className="inline-flex items-center gap-3 rounded-xl px-5 py-3 font-mono text-xs uppercase tracking-widest transition-all"
-            style={{
-              border: "1px solid rgba(244,63,94,0.45)",
-              background: "rgba(244,63,94,0.08)",
-              color: ROSE,
-            }}
-            onMouseEnter={e => (e.currentTarget.style.background = "rgba(244,63,94,0.18)")}
-            onMouseLeave={e => (e.currentTarget.style.background = "rgba(244,63,94,0.08)")}
-          >
-            Explore the Web Hacking Career Path
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M3 6h6M6 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
         </div>
       </div>
 
       {/* ── Narrative caption ───────────────────────────────────────────────── */}
-      <div
-        className="pointer-events-none absolute bottom-[72px] left-1/2 z-[35] -translate-x-1/2"
-        style={{ opacity: captionOpacity(progress) }}
-        aria-hidden
-      >
-        <div className="rounded-xl border border-white/10 bg-slate-950/85 px-5 py-2.5 backdrop-blur-md max-w-[90vw]">
-          <p className="font-mono text-xs font-medium tracking-wide text-slate-100 text-center md:text-sm">
-            Every finding was present before the attacker arrived. The question was never if — it was when.
-          </p>
-        </div>
-      </div>
+      <NarrativeCaption opacity={captionOpacity(progress)}>
+        Every finding was present before the attacker arrived. The question was never if — it was when.
+      </NarrativeCaption>
     </>
   );
 };

@@ -7,11 +7,10 @@ type MetadataChipsProps = {
 };
 
 const CHIPS = [
-  { label: "nexuspay.io",  sub: "DNS lookup",        icon: "🌐", threshold: 0.42 },
-  { label: "Nginx/1.18",  sub: "HTTP Server header", icon: "⚡", threshold: 0.52 },
-  { label: "React 18",    sub: "Wappalyzer",         icon: "⚛", threshold: 0.60 },
-  { label: "Cloudflare",  sub: "Response headers",   icon: "☁", threshold: 0.68 },
-  { label: "PostgreSQL",  sub: "Error fingerprint",  icon: "🗄", threshold: 0.76 },
+  { label: "nexuspay.io",  sub: "DNS lookup",        icon: "🌐", threshold: 0.18 }, // After URL typing
+  { label: "Nginx/1.18",  sub: "HTTP Server header", icon: "⚡", threshold: 0.40 }, // NetworkHeaders fully open
+  { label: "React 18",    sub: "Wappalyzer",         icon: "⚛", threshold: 0.65 }, // Wappalyzer React reveal
+  { label: "Cloudflare",  sub: "Response headers",   icon: "☁", threshold: 0.75 }, // Wappalyzer Cloudflare reveal
 ] as const;
 
 const chipFade = (local: number, threshold: number): number => {
@@ -24,8 +23,8 @@ const chipFade = (local: number, threshold: number): number => {
 const chipPop = (local: number, threshold: number): number => {
   const t = local - threshold;
   if (t < 0) return 1;
-  if (t < 0.015) return 1 + 0.08 * (t / 0.015);
-  if (t < 0.035) return 1.08 - 0.08 * ((t - 0.015) / 0.020);
+  if (t < 0.010) return 1 + 0.08 * (t / 0.010);
+  if (t < 0.025) return 1.08 - 0.08 * ((t - 0.010) / 0.015);
   return 1;
 };
 
@@ -41,7 +40,7 @@ const chipGlow = (local: number, threshold: number): number => {
 
 export const MetadataChips: React.FC<MetadataChipsProps> = ({ localProgress }) => {
   // Row fades in when first chip starts appearing
-  const rowOpacity = chipFade(localProgress, 0.42);
+const rowOpacity = chipFade(localProgress, 0.15);
   if (rowOpacity === 0) return null;
 
   return (
@@ -51,10 +50,10 @@ export const MetadataChips: React.FC<MetadataChipsProps> = ({ localProgress }) =
     >
       {/* Label */}
       <div className="shrink-0 mr-2 text-right">
-        <p className="font-mono text-[9px] uppercase tracking-[0.35em]" style={{ color: "rgba(244,63,94,0.55)" }}>
+        <p className="font-mono text-[11px] uppercase tracking-[0.35em]" style={{ color: "rgba(226,232,240,0.85)" }}>
           Fingerprinted
         </p>
-        <p className="font-mono text-[8px] uppercase tracking-[0.2em]" style={{ color: "rgba(148,163,184,0.3)" }}>
+        <p className="font-mono text-[9px] uppercase tracking-[0.2em]" style={{ color: "rgba(226,232,240,0.45)" }}>
           no packets sent
         </p>
       </div>
@@ -66,7 +65,7 @@ export const MetadataChips: React.FC<MetadataChipsProps> = ({ localProgress }) =
         return (
           <div
             key={chip.label}
-            className="flex items-center gap-2 rounded-xl px-3 py-2 backdrop-blur-md"
+            className="flex items-center gap-2.5 rounded-xl px-4 py-2.5 backdrop-blur-md"
             style={{
               opacity: op,
               transform: `translateY(${(1 - op) * 14}px) scale(${pop})`,
@@ -79,10 +78,10 @@ export const MetadataChips: React.FC<MetadataChipsProps> = ({ localProgress }) =
               whiteSpace: "nowrap",
             }}
           >
-            <span className="text-sm leading-none">{chip.icon}</span>
+            <span className="text-base leading-none">{chip.icon}</span>
             <div>
-              <p className="font-mono text-[12px] font-bold text-white leading-tight">{chip.label}</p>
-              <p className="font-mono text-[9px] uppercase tracking-widest" style={{ color: "rgba(244,63,94,0.6)" }}>
+              <p className="font-mono text-[15px] font-bold text-white leading-tight">{chip.label}</p>
+              <p className="font-mono text-[10px] uppercase tracking-widest" style={{ color: "rgba(244,63,94,0.6)" }}>
                 {chip.sub}
               </p>
             </div>

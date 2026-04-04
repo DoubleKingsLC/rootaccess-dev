@@ -2,29 +2,31 @@
 
 import React from "react";
 import { ReconPanel } from "./ReconPanel";
+import { NarrativeCaption } from "./NarrativeCaption";
 
 type PassiveReconSceneProps = {
   progress: number; // global 0–1
 };
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-// Scene lives at 0.125–0.20 (fade in 0.125–0.135, full 0.135–0.165, fade out 0.165–0.20)
+// ── Helpers ────────────────────────────────────────────────────────────────────
+// Scene lives at 0.317–0.410 (fade in 0.317–0.337, full 0.337–0.395, fade out 0.395–0.410)
 const sceneOpacity = (p: number): number => {
-  if (p < 0.125) return 0;
-  if (p < 0.135) return (p - 0.125) / 0.010;
-  if (p <= 0.165) return 1;
-  if (p < 0.200) return 1 - (p - 0.165) / 0.035;
+  if (p < 0.317) return 0;
+  if (p < 0.337) return (p - 0.317) / 0.020;
+  if (p <= 0.395) return 1;
+  if (p < 0.410) return 1 - (p - 0.395) / 0.015;
   return 0;
 };
 
-// Local 0–1 across 0.125–0.175
-const local = (p: number): number => Math.max(0, Math.min(1, (p - 0.125) / 0.05));
+
+// Local 0–1 across 0.317–0.410
+const local = (p: number): number => Math.max(0, Math.min(1, (p - 0.317) / 0.093));
 
 const captionOpacity = (p: number): number => {
-  if (p < 0.135) return 0;
-  if (p < 0.148) return (p - 0.135) / 0.013;
-  if (p <= 0.165) return 1;
-  if (p < 0.180) return 1 - (p - 0.165) / 0.015;
+  if (p < 0.277) return 0;
+  if (p < 0.297) return (p - 0.277) / 0.020;
+  if (p <= 0.380) return 1;
+  if (p < 0.395) return 1 - (p - 0.380) / 0.015;
   return 0;
 };
 
@@ -68,8 +70,8 @@ export const PassiveReconScene: React.FC<PassiveReconSceneProps> = ({ progress }
 
         {/* Source label — top center */}
         <div
-          className="absolute top-12 left-1/2 -translate-x-1/2 font-mono text-[9px] uppercase tracking-[0.45em]"
-          style={{ color: "rgba(244,63,94,0.4)", opacity: lp > 0.1 ? 1 : 0, transition: "opacity 0.3s" }}
+          className="absolute top-12 left-1/2 -translate-x-1/2 font-mono text-[11px] uppercase tracking-[0.35em]"
+          style={{ color: "rgba(226,232,240,0.65)", opacity: lp > 0.1 ? 1 : 0, transition: "opacity 0.3s" }}
         >
           Passive intelligence — no packets sent
         </div>
@@ -82,7 +84,7 @@ export const PassiveReconScene: React.FC<PassiveReconSceneProps> = ({ progress }
           items={SUBDOMAINS}
           localProgress={lp}
           appearAt={0.05}
-          itemsStartAt={0.20}
+          itemsStartAt={0.15}
           slideFrom="left"
           count="hosts"
         />
@@ -94,25 +96,17 @@ export const PassiveReconScene: React.FC<PassiveReconSceneProps> = ({ progress }
           icon="🔍"
           items={ENDPOINTS}
           localProgress={lp}
-          appearAt={0.42}
-          itemsStartAt={0.55}
+          appearAt={0.35}
+          itemsStartAt={0.45}
           slideFrom="right"
           count="routes"
         />
       </div>
 
       {/* ── Narrative caption ───────────────────────────────────────────────── */}
-      <div
-        className="pointer-events-none absolute bottom-[72px] left-1/2 z-[35] -translate-x-1/2"
-        style={{ opacity: captionOpacity(progress) }}
-        aria-hidden
-      >
-        <div className="rounded-xl border border-white/10 bg-slate-950/85 px-5 py-2.5 backdrop-blur-md max-w-[90vw]">
-          <p className="font-mono text-xs font-medium tracking-wide text-slate-100 text-center md:text-sm">
-            Subdomains, exposed endpoints, no auth on staging — all gathered without touching the server.
-          </p>
-        </div>
-      </div>
+      <NarrativeCaption opacity={lp > 0.1 ? 1 : 0}>
+        Subdomains, exposed endpoints, no auth on staging — all gathered without touching the server.
+      </NarrativeCaption>
     </>
   );
 };

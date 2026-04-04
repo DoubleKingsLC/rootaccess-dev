@@ -40,7 +40,7 @@ export const AIIntroOverlay: React.FC<AIIntroOverlayProps> = ({
           <p className="font-mono text-[10px] md:text-xs tracking-[0.4em] text-slate-300 uppercase font-bold">
             Scroll to Begin
           </p>
-          <div className="text-slate-300 animate-bounce">
+          <div className="text-slate-300 animate-scroll-indicator">
             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
@@ -63,14 +63,15 @@ export const AIIntroOverlay: React.FC<AIIntroOverlayProps> = ({
 
         <div className="relative flex flex-col items-center gap-5">
           <button
+            type="button"
             onClick={(e) => {
               e.stopPropagation();
               onPlay();
             }}
             disabled={isAutoScrolling}
-            className={`group relative flex h-20 w-20 items-center justify-center rounded-full border border-red-300/30 bg-red-950/60 text-white shadow-2xl backdrop-blur-md transition-all duration-500 hover:scale-110 hover:border-red-400/60 hover:bg-red-950/80 disabled:opacity-50 disabled:pointer-events-none`}
+            className={`scrolly-control-btn group relative flex h-20 w-20 shrink-0 items-center justify-center overflow-visible rounded-full border border-red-300/30 bg-red-950/60 text-white shadow-none outline-none transition-all duration-500 hover:scale-110 hover:border-red-400/60 hover:bg-red-950/80 focus-visible:ring-2 focus-visible:ring-red-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-red-950 disabled:opacity-50 disabled:pointer-events-none`}
             style={{
-              boxShadow: isAutoScrolling ? "0 0 40px rgba(239,68,68,0.2)" : "0 20px 40px rgba(0,0,0,0.4)",
+              boxShadow: isAutoScrolling ? "0 0 40px rgba(239,68,68,0.2)" : "0 0 24px rgba(0,0,0,0.5)",
             }}
           >
             {isAutoScrolling ? (
@@ -79,22 +80,25 @@ export const AIIntroOverlay: React.FC<AIIntroOverlayProps> = ({
                 <div className="h-5 w-1.5 rounded-full bg-red-500 animate-pulse" />
               </div>
             ) : (
-              <div className="relative flex items-center justify-center">
-                <svg
-                  className="ml-1 h-8 w-8 transition-transform group-hover:scale-110"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-                {/* Subtle outer glow on hover */}
-                <div className="absolute inset-0 -m-4 bg-red-500/20 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              </div>
-            )}
-
-            {/* Animated Ring */}
-            {!isAutoScrolling && (
-              <div className="absolute -inset-1 rounded-full border border-white/10 opacity-0 group-hover:opacity-100 group-hover:animate-ping" />
+              <>
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[7.5rem] w-[7.5rem] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  style={{
+                    background:
+                      "radial-gradient(circle at center, rgba(239,68,68,0.36) 0%, rgba(239,68,68,0.1) 42%, transparent 72%)",
+                  }}
+                />
+                <div className="relative z-10 flex items-center justify-center">
+                  <svg
+                    className="ml-1 h-8 w-8 transition-transform group-hover:scale-110"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
+              </>
             )}
           </button>
 

@@ -53,28 +53,78 @@ function Sidebar() {
 // ── SectionHeader ─────────────────────────────────────────────────────────────
 
 function SectionHeader({
-  num, label, color, subtitle,
+  num, label, color, subtitle, slug,
 }: {
-  num: string; label: string; color: string; subtitle: string;
+  num: string; label: string; color: string; subtitle: string; slug: string;
 }) {
+  const router = useRouter();
+
   return (
-    <div className="mb-10">
-      <div className="flex flex-wrap items-baseline gap-4 mb-4">
-        <span
-          className="font-mono text-[10px] uppercase tracking-[0.35em] px-2.5 py-1.5 rounded"
-          style={{ color, background: `${color}12`, border: `1px solid ${color}28` }}
+    <div className="mb-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div className="flex-1 min-w-0">
+        <div className="flex flex-wrap items-baseline gap-4 mb-4">
+          <span
+            className="font-mono text-[10px] uppercase tracking-[0.35em] px-2.5 py-1.5 rounded"
+            style={{ color, background: `${color}12`, border: `1px solid ${color}28` }}
+          >
+            Level {num}
+          </span>
+        </div>
+        <h2
+          className="text-4xl xl:text-5xl font-bold text-white mb-3 leading-tight"
+          style={{ fontFamily: "var(--font-heading, system-ui)", letterSpacing: "-0.02em" }}
         >
-          Level {num}
-        </span>
+          {label}
+        </h2>
+        <p className="font-mono text-sm" style={{ color: `${color}aa` }}>{subtitle}</p>
+        <div className="mt-6 h-px" style={{ background: `linear-gradient(to right, ${color}28, transparent)` }} />
       </div>
-      <h2
-        className="text-4xl xl:text-5xl font-bold text-white mb-3 leading-tight"
-        style={{ fontFamily: "var(--font-heading, system-ui)", letterSpacing: "-0.02em" }}
-      >
-        {label}
-      </h2>
-      <p className="font-mono text-sm" style={{ color: `${color}aa` }}>{subtitle}</p>
-      <div className="mt-6 h-px" style={{ background: `linear-gradient(to right, ${color}28, transparent)` }} />
+
+      <div className="flex-shrink-0">
+        <button
+          onClick={() => router.push(`/roadmaps/${slug}/career-path/detailed#level-${num}`)}
+          className="group relative flex flex-col items-start p-5 rounded-2xl transition-all duration-300 hover:scale-[1.02] text-left lg:w-[320px]"
+          style={{
+            background: "rgba(15,22,35,0.4)",
+            border: "1px solid rgba(255,255,255,0.05)",
+            backdropFilter: "blur(10px)",
+          }}
+        >
+          <div className="flex items-center justify-between w-full mb-2">
+            <span className="font-mono text-[10px] font-black uppercase tracking-[0.35em]" style={{ color }}>
+              Deep Dive
+            </span>
+            <div 
+              className="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300"
+              style={{ background: `${color}12`, border: `1px solid ${color}28` }}
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                className="transition-transform duration-300 group-hover:translate-x-1"
+                style={{ color }}
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+          </div>
+          <p className="text-[12px] leading-relaxed text-slate-400 group-hover:text-slate-300 transition-colors pr-4">
+            Full breakdown of every certification, tool, and the &quot;why&quot; behind them.
+          </p>
+          <div 
+            className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+            style={{ 
+              boxShadow: `0 0 40px -10px ${color}30`,
+              border: `1px solid ${color}40`,
+              zIndex: -1
+            }}
+          />
+        </button>
+      </div>
     </div>
   );
 }
@@ -99,7 +149,7 @@ function ContentCard({
     const link = isObj ? item.link : null;
     const provider = isObj ? item.provider : null;
 
-    const hasFavicon = provider && ["tryhackme","google","tcm","ine","comptia","ec-council","offsec","portswigger","isc2","giac","isaca","altered","hackerone","htb","bugcrowd","owasp","sans","crest","pentesteracademy"].includes(provider);
+    const hasFavicon = provider && ["tryhackme","google","tcm","ine","comptia","ec-council","offsec","portswigger","isc2","giac","isaca","altered","hackerone","htb","bugcrowd","owasp","sans","crest","pentesteracademy","youtube","coursera","wiz","github","nist","ibm","cyberaces","pentesterlab","appsecengineer","zeropointsecurity"].includes(provider);
 
     return (
       <li key={idx} className="flex items-start gap-3 group/li">
@@ -108,7 +158,7 @@ function ContentCard({
             <ProviderFavicon provider={provider} size={16} />
           </div>
         ) : (
-          <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-sm flex-shrink-0" style={{ background: color, boxShadow: `0 0 6px ${color}` }} />
+          <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-sm flex-shrink-0" style={{ background: color }} />
         )}
         <div className="flex-1 min-w-0">
           {link ? (
@@ -140,7 +190,6 @@ function ContentCard({
       style={{
         background: "rgba(15,20,30,0.7)",
         border: `1px solid ${color}20`,
-        boxShadow: `0 0 24px ${glow}`,
       }}
     >
       {/* Header */}
@@ -148,7 +197,7 @@ function ContentCard({
         className="flex items-center gap-3 px-5 py-4"
         style={{ background: `${color}08`, borderBottom: `1px solid ${color}15` }}
       >
-        <span className="text-lg" style={{ textShadow: `0 0 10px ${color}` }}>{icon}</span>
+        <span className="text-lg">{icon}</span>
         <p className="font-mono text-xs font-bold uppercase tracking-[0.3em]" style={{ color }}>{title}</p>
       </div>
 
@@ -194,14 +243,13 @@ function ToolsCard({ tools, color, border, glow }: { tools: string[]; color: str
       style={{
         background: "rgba(15,20,30,0.7)",
         border: `1px solid ${color}20`,
-        boxShadow: `0 0 24px ${glow}`,
       }}
     >
       <div
         className="flex items-center gap-3 px-5 py-4"
         style={{ background: `${color}08`, borderBottom: `1px solid ${color}15` }}
       >
-        <span className="text-lg" style={{ textShadow: `0 0 10px ${color}` }}>🔧</span>
+        <span className="text-lg">🔧</span>
         <p className="font-mono text-xs font-bold uppercase tracking-[0.3em]" style={{ color }}>Tools &amp; Stack</p>
       </div>
       <div className="px-5 py-5">
@@ -321,7 +369,6 @@ export default function WebHackingCareerPathPage() {
             className="font-mono font-black text-rose-400 mb-7 leading-[1.05] tracking-tight"
             style={{
               fontSize: "clamp(42px, 5.5vw, 72px)",
-              textShadow: "0 0 80px rgba(244,63,94,0.5), 0 0 160px rgba(244,63,94,0.2)",
             }}
           >
             From recon<br />to red team.
@@ -359,7 +406,6 @@ export default function WebHackingCareerPathPage() {
             style={{
               background: "rgba(10,3,6,0.9)",
               border: "1px solid rgba(244,63,94,0.2)",
-              boxShadow: "0 0 60px rgba(244,63,94,0.08), 0 24px 80px rgba(0,0,0,0.7)",
             }}
           >
             {/* Title bar tabs */}
@@ -457,6 +503,7 @@ export default function WebHackingCareerPathPage() {
                     label={level.label}
                     color={level.color}
                     subtitle={level.subtitle}
+                    slug="web-hacking"
                   />
                 </div>
 
@@ -544,7 +591,6 @@ export default function WebHackingCareerPathPage() {
                   style={{
                     background: "rgba(15,20,30,0.7)",
                     border: `1px solid ${action.border}`,
-                    boxShadow: `0 0 24px ${action.glow}`,
                   }}
                 >
                   <div

@@ -4,17 +4,18 @@ import React from "react";
 
 type Props = { localProgress: number };
 
-// Slides down from top-right at 0.57, visible 0.62–0.70, fades 0.70–0.76
+// Slides down from top-right at 0.50, visible 0.58–0.75, fades 0.75–0.80
+// ─ Expanded for longer tech showcase ─
 const popup = (lp: number): { opacity: number; ty: number } => {
-  if (lp < 0.57) return { opacity: 0, ty: -16 };
-  if (lp < 0.63) {
-    const t = (lp - 0.57) / 0.06;
+  if (lp < 0.50) return { opacity: 0, ty: -16 };
+  if (lp < 0.58) {
+    const t = (lp - 0.50) / 0.08;
     const e = 1 - Math.pow(1 - t, 3);
     return { opacity: e, ty: -16 * (1 - e) };
   }
-  if (lp <= 0.70) return { opacity: 1, ty: 0 };
-  if (lp < 0.76) {
-    const t = (lp - 0.70) / 0.06;
+  if (lp <= 0.75) return { opacity: 1, ty: 0 };
+  if (lp < 0.80) {
+    const t = (lp - 0.75) / 0.05;
     return { opacity: 1 - t, ty: 0 };
   }
   return { opacity: 0, ty: 0 };
@@ -26,29 +27,23 @@ const itemOp = (lp: number, threshold: number) => {
   return 1;
 };
 
-// Underline sweep per tech label
-const underlineProg = (lp: number, threshold: number): number => {
-  const start = threshold + 0.02;
-  if (lp < start) return 0;
-  if (lp < start + 0.04) return (lp - start) / 0.04;
-  return 1;
-};
+// Underline sweep removed as requested.
 
-// Rising particle for React — lp 0.63–0.70
+// Rising particle for React — lp 0.63–0.72
 const reactParticle = (lp: number): number | null => {
-  if (lp < 0.63 || lp >= 0.70) return null;
-  return (lp - 0.63) / 0.07;
+  if (lp < 0.63 || lp >= 0.72) return null;
+  return (lp - 0.63) / 0.09;
 };
 
-// Rising particle for Cloudflare — lp 0.69–0.76
+// Rising particle for Cloudflare — lp 0.70–0.79
 const cloudflareParticle = (lp: number): number | null => {
-  if (lp < 0.69 || lp >= 0.76) return null;
-  return (lp - 0.69) / 0.07;
+  if (lp < 0.70 || lp >= 0.79) return null;
+  return (lp - 0.70) / 0.09;
 };
 
 const TECHS = [
-  { icon: "⚛", label: "React",      version: "18.2.0", color: "#61dafb", threshold: 0.61 },
-  { icon: "☁", label: "Cloudflare", version: "CDN / WAF", color: "#f48120", threshold: 0.66 },
+  { icon: "⚛", label: "React",      version: "18.2.0",   color: "#61dafb", threshold: 0.57 },
+  { icon: "☁", label: "Cloudflare", version: "CDN / WAF", color: "#f48120", threshold: 0.65 },
 ];
 
 export const WappalyzerPopup: React.FC<Props> = ({ localProgress }) => {
@@ -98,7 +93,6 @@ export const WappalyzerPopup: React.FC<Props> = ({ localProgress }) => {
         <div className="px-2 py-2 space-y-1">
           {TECHS.map((tech) => {
             const op = itemOp(localProgress, tech.threshold);
-            const ulProg = underlineProg(localProgress, tech.threshold);
             return (
               <div
                 key={tech.label}
@@ -115,20 +109,6 @@ export const WappalyzerPopup: React.FC<Props> = ({ localProgress }) => {
                 <div className="flex-1 min-w-0">
                   <span className="relative inline-block">
                     <p className="font-mono text-[11px] font-bold text-white leading-tight">{tech.label}</p>
-                    {/* Underline sweep */}
-                    <span
-                      style={{
-                        position: "absolute",
-                        bottom: -1,
-                        left: 0,
-                        height: 2,
-                        width: `${ulProg * 100}%`,
-                        background: `linear-gradient(to right, ${tech.color}, ${tech.color}aa)`,
-                        boxShadow: `0 0 6px ${tech.color}cc`,
-                        borderRadius: 2,
-                        transition: "none",
-                      }}
-                    />
                   </span>
                   <p className="font-mono text-[9px]" style={{ color: `${tech.color}88` }}>{tech.version}</p>
                 </div>
@@ -156,7 +136,7 @@ export const WappalyzerPopup: React.FC<Props> = ({ localProgress }) => {
       {(() => {
         const prog = reactParticle(localProgress);
         if (prog === null) return null;
-        const translateY = -prog * 160;
+        const translateY = -prog * 200;
         const opacity2 = prog < 0.15 ? prog / 0.15 : prog > 0.85 ? 1 - (prog - 0.85) / 0.15 : 1;
         return (
           <div
@@ -170,19 +150,19 @@ export const WappalyzerPopup: React.FC<Props> = ({ localProgress }) => {
               pointerEvents: "none",
               display: "flex",
               alignItems: "center",
-              gap: 5,
+              gap: 6,
               background: "rgba(97,218,251,0.12)",
               border: "1px solid rgba(97,218,251,0.4)",
-              borderRadius: 8,
-              padding: "3px 8px",
+              borderRadius: 10,
+              padding: "5px 12px",
               backdropFilter: "blur(8px)",
               whiteSpace: "nowrap",
-              boxShadow: "0 0 16px rgba(97,218,251,0.3)",
+              boxShadow: "0 0 20px rgba(97,218,251,0.3)",
             }}
           >
-            <span style={{ fontSize: 11 }}>⚛</span>
-            <span style={{ fontFamily: "monospace", fontSize: 10, fontWeight: 700, color: "#61dafb" }}>React 18</span>
-            <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+            <span style={{ fontSize: 16 }}>⚛</span>
+            <span style={{ fontFamily: "monospace", fontSize: 14, fontWeight: 700, color: "#61dafb" }}>React 18</span>
+            <svg width="10" height="10" viewBox="0 0 8 8" fill="none">
               <path d="M4 7V1M1 4l3-3 3 3" stroke="#61dafb" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
@@ -193,7 +173,7 @@ export const WappalyzerPopup: React.FC<Props> = ({ localProgress }) => {
       {(() => {
         const prog = cloudflareParticle(localProgress);
         if (prog === null) return null;
-        const translateY = -prog * 160;
+        const translateY = -prog * 200;
         const opacity2 = prog < 0.15 ? prog / 0.15 : prog > 0.85 ? 1 - (prog - 0.85) / 0.15 : 1;
         return (
           <div
@@ -207,19 +187,19 @@ export const WappalyzerPopup: React.FC<Props> = ({ localProgress }) => {
               pointerEvents: "none",
               display: "flex",
               alignItems: "center",
-              gap: 5,
+              gap: 6,
               background: "rgba(244,129,32,0.12)",
               border: "1px solid rgba(244,129,32,0.4)",
-              borderRadius: 8,
-              padding: "3px 8px",
+              borderRadius: 10,
+              padding: "5px 12px",
               backdropFilter: "blur(8px)",
               whiteSpace: "nowrap",
-              boxShadow: "0 0 16px rgba(244,129,32,0.3)",
+              boxShadow: "0 0 20px rgba(244,129,32,0.3)",
             }}
           >
-            <span style={{ fontSize: 11 }}>☁</span>
-            <span style={{ fontFamily: "monospace", fontSize: 10, fontWeight: 700, color: "#f48120" }}>Cloudflare</span>
-            <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+            <span style={{ fontSize: 16 }}>☁</span>
+            <span style={{ fontFamily: "monospace", fontSize: 14, fontWeight: 700, color: "#f48120" }}>Cloudflare</span>
+            <svg width="10" height="10" viewBox="0 0 8 8" fill="none">
               <path d="M4 7V1M1 4l3-3 3 3" stroke="#f48120" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>

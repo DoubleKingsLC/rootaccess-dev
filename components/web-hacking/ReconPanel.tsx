@@ -39,8 +39,8 @@ export const ReconPanel: React.FC<ReconPanelProps> = ({
 
   if (panelT === 0) return null;
 
-  // Items reveal one by one after itemsStartAt
-  const itemRange = 1 - itemsStartAt;
+  // Items reveal one by one in a tighter 40% window after itemsStartAt
+  const itemRange = 0.40; 
   const itemsVisible = localProgress < itemsStartAt ? 0
     : Math.floor(((localProgress - itemsStartAt) / itemRange) * (items.length + 1));
 

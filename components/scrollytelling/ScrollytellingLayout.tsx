@@ -10,9 +10,9 @@ import { IntelTicker } from "./IntelTicker";
 import { MonitorPortal } from "./MonitorPortal";
 import { NarrativeOverlay } from "./NarrativeOverlay";
 import { PostMortem } from "./PostMortem";
-import { SOCMobileExperience } from "./SOCMobileExperience";
+import { RoadmapWorkflowMobileWalkthrough } from "@/components/roadmaps/RoadmapWorkflowMobileWalkthrough";
 import { TacticalBriefing } from "./TacticalBriefing";
-import { useIsMobile } from "../../hooks/useIsMobile";
+import { useRoadmapWorkflowVideoMode } from "@/hooks/useRoadmapWorkflowVideoMode";
 import Lenis from "lenis";
 import { useRouter } from "next/navigation";
 
@@ -29,6 +29,10 @@ export const PHASES = {
   SOC_OPERATIONS: [0.05, 0.85],
   EXIT_TO_ROADMAP: [0.85, 1.0]
 };
+
+/** Autoplay runs at 4× through the intro phase only (seamless scroll, no jump). */
+const INTRO_AUTOPLAY_END_PROGRESS = PHASES.INTRO[1];
+const INTRO_AUTOPLAY_SPEED_MULT = 4;
 
 // ── Incident Timeline nodes ───────────────────────────────────────────────────
 const TIMELINE = [
@@ -69,26 +73,63 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
   const briefingL2Ref = useRef<HTMLDivElement | null>(null);
   const briefingL3Ref = useRef<HTMLDivElement | null>(null);
   const briefingPostMortemRef = useRef<HTMLDivElement | null>(null);
-
+  const lenisRef = useRef<Lenis | null>(null);
 
   const [progress, setProgress] = useState(0);
   const [stageScaleFactor, setStageScaleFactor] = useState(1);
-  const isMobile = useIsMobile(768);
+  const showRecordedWorkflow = useRoadmapWorkflowVideoMode();
   const [orientation, setOrientation] = useState<Orientation>("horizontal");
   const [isRedoHovered, setIsRedoHovered] = useState(false);
   const [isAutoScrolling, setIsAutoScrolling] = useState(false);
+  const [scrollSpeed, setScrollSpeed] = useState(1.0);
+  const scrollSpeedRef = useRef(1.0);
+  const [isSpeedControlOpen, setIsSpeedControlOpen] = useState(false);
+  const speedTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Sync state to ref for animation loop
+  useEffect(() => {
+    scrollSpeedRef.current = scrollSpeed;
+  }, [scrollSpeed]);
+
+  const handleSpeedInteraction = () => {
+    if (speedTimeoutRef.current) clearTimeout(speedTimeoutRef.current);
+    speedTimeoutRef.current = setTimeout(() => {
+      setIsSpeedControlOpen(false);
+    }, 3000);
+  };
+
+  useEffect(() => {
+    if (isSpeedControlOpen) {
+      handleSpeedInteraction();
+    }
+    return () => {
+      if (speedTimeoutRef.current) clearTimeout(speedTimeoutRef.current);
+    };
+  }, [isSpeedControlOpen, scrollSpeed]);
+
+  const readScrollY = () => lenisRef.current?.scroll ?? window.scrollY;
+  const applyScrollY = (y: number) => {
+    const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    const clamped = Math.min(maxScroll, Math.max(0, y));
+    const lenis = lenisRef.current;
+    if (lenis) {
+      lenis.scrollTo(clamped, { immediate: true, force: true });
+    } else {
+      window.scrollTo(0, clamped);
+    }
+  };
 
   // ── Auto-scrolling logic ───────────────────────────────────────────
   useEffect(() => {
     if (!isAutoScrolling) return;
 
-    let lastScrollY = window.scrollY;
+    let lastScrollY = readScrollY();
     let rafId: number;
     let lastTime = performance.now();
+    let currentVirtualScroll = lastScrollY;
 
     const scrollStep = (time: number) => {
-      // Small tolerance to allow for pixel precision differences
-      const currentScrollY = window.scrollY;
+      const currentScrollY = readScrollY();
       if (Math.abs(currentScrollY - lastScrollY) > 5) {
         setIsAutoScrolling(false);
         return;
@@ -97,13 +138,20 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
       const dt = time - lastTime;
       lastTime = time;
 
-      // Target speed: 190 pixels per second (Hz independent)
-      const scrollAmount = 190 * (dt / 1000);
+      const speedMultiplier = scrollSpeedRef.current;
+      let scrollAmount = 190 * (dt / 1000) * speedMultiplier;
 
-      window.scrollBy(0, scrollAmount);
-      lastScrollY = window.scrollY;
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const p = currentScrollY / maxScroll;
+      if (p < INTRO_AUTOPLAY_END_PROGRESS) {
+        scrollAmount *= INTRO_AUTOPLAY_SPEED_MULT;
+      }
 
-      if (window.scrollY + window.innerHeight < document.documentElement.scrollHeight - 10) {
+      currentVirtualScroll = Math.min(maxScroll, currentVirtualScroll + scrollAmount);
+      applyScrollY(currentVirtualScroll);
+      lastScrollY = readScrollY();
+
+      if (readScrollY() < maxScroll - 10) {
         rafId = requestAnimationFrame(scrollStep);
       } else {
         setIsAutoScrolling(false);
@@ -156,6 +204,7 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
     if (!scrollSectionRef.current || !pinnedViewportRef.current || !worldStageRef.current) return;
 
     const lenis = new Lenis({ lerp: 0.05, wheelMultiplier: 0.7 });
+    lenisRef.current = lenis;
     lenis.on("scroll", ScrollTrigger.update);
     function update(time: number) { lenis.raf(time * 1000); }
     gsap.ticker.add(update);
@@ -255,8 +304,13 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
       }
     }, scrollSectionRef);
 
-    return () => { ctx.revert(); gsap.ticker.remove(update); lenis.destroy(); };
-  }, [orientation, stageScaleFactor, isMobile]);
+    return () => {
+      ctx.revert();
+      gsap.ticker.remove(update);
+      lenisRef.current = null;
+      lenis.destroy();
+    };
+  }, [orientation, stageScaleFactor, showRecordedWorkflow]);
 
   // ── Derived opacity values ─────────────────────────────────────────────────
   const roadmapOpacity = progress > 0.90 ? Math.min(1, (progress - 0.90) / 0.10) : 0;
@@ -267,8 +321,8 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
 
   return (
     <>
-      {isMobile ? (
-        <SOCMobileExperience />
+      {showRecordedWorkflow ? (
+        <RoadmapWorkflowMobileWalkthrough slug="soc" />
       ) : (
         <>
           {/* ── Orientation Blocker (Applies to all devices, including mobile) ── */}
@@ -485,6 +539,8 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
                   </div>
 
                   <button
+                    type="button"
+                    className="scrolly-control-btn"
                     onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                     onMouseEnter={() => setIsRedoHovered(true)}
                     onMouseLeave={() => setIsRedoHovered(false)}
@@ -512,18 +568,96 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
                 </div>
               </div>
 
-              {/* Persistent Play/Pause Toggle */}
+              {/* ── Persistent Play/Pause Toggle & Speed Control ────────────────────── */}
               <div 
-                className="fixed top-10 right-10 z-[1000] transition-all duration-700"
+                className="fixed top-10 right-10 z-[1000] flex items-center gap-4 transition-all duration-700"
                 style={{ 
                   opacity: progress > 0.01 ? 1 : 0,
                   transform: progress > 0.01 ? "translateY(0)" : "translateY(-20px)",
                   pointerEvents: progress > 0.01 ? "auto" : "none"
                 }}
               >
+                  {/* Speed Control Wrapper */}
+                  <div className="relative flex items-center" onMouseMove={handleSpeedInteraction} onTouchMove={handleSpeedInteraction}>
+                      {/* Expanded Slider Panel */}
+                      <div
+                          className="absolute right-6 flex items-center justify-between rounded-l-full border-y border-l pl-5 pr-8 h-12 backdrop-blur-md transition-all duration-300 overflow-hidden"
+                          style={{
+                              borderColor: "rgba(255,255,255,0.1)",
+                              background: "rgba(2,6,23,0.75)",
+                              opacity: isSpeedControlOpen ? 1 : 0,
+                              pointerEvents: isSpeedControlOpen ? "auto" : "none",
+                              transform: isSpeedControlOpen ? "translateX(0)" : "translateX(20px)",
+                              width: isSpeedControlOpen ? "180px" : "0px",
+                          }}
+                      >
+                          <input
+                              type="range"
+                              min="0.5"
+                              max="2"
+                              step="0.1"
+                              value={scrollSpeed}
+                              onChange={(e) => {
+                                  setScrollSpeed(parseFloat(e.target.value));
+                                  handleSpeedInteraction();
+                              }}
+                              className="w-full cursor-pointer accent-cyan-400"
+                              style={{
+                                  height: "2px",
+                                  background: "rgba(255,255,255,0.2)",
+                                  appearance: "none",
+                                  outline: "none",
+                                  borderRadius: "2px",
+                              }}
+                          />
+                          <button 
+                              onClick={() => setIsSpeedControlOpen(false)}
+                              className="scrolly-control-btn ml-3 flex h-6 w-6 shrink-0 items-center justify-center rounded-full hover:bg-white/10 transition-colors text-slate-400 hover:text-white"
+                          >
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M9 18l6-6-6-6" />
+                              </svg>
+                          </button>
+                      </div>
+
+                      {/* Toggle Button */}
+                      <button
+                          onClick={() => {
+                              setIsSpeedControlOpen(!isSpeedControlOpen);
+                              if (!isSpeedControlOpen) handleSpeedInteraction();
+                          }}
+                          className="scrolly-control-btn relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border backdrop-blur-md transition-all duration-300"
+                          style={{
+                              borderColor: isSpeedControlOpen ? "rgba(34,211,238,0.5)" : "rgba(255,255,255,0.1)",
+                              background: isSpeedControlOpen ? "rgba(2,30,40,0.8)" : "rgba(2,6,23,0.4)",
+                              boxShadow: isSpeedControlOpen ? `0 0 15px rgba(34,211,238,0.3)` : "none",
+                          }}
+                      >
+                          <span className="font-mono text-[10px] font-bold" style={{ color: "#22d3ee" }}>
+                              {scrollSpeed.toFixed(1)}x
+                          </span>
+                      </button>
+
+                      <style>{`
+                          input[type=range]::-webkit-slider-thumb {
+                              appearance: none;
+                              width: 12px;
+                              height: 12px;
+                              background: #22d3ee;
+                              border-radius: 50%;
+                              cursor: pointer;
+                              box-shadow: 0 0 10px rgba(34,211,238,0.6);
+                              transition: transform 0.1s;
+                          }
+                          input[type=range]::-webkit-slider-thumb:hover {
+                              transform: scale(1.2);
+                          }
+                      `}</style>
+                  </div>
+
                 <button
                   onClick={() => setIsAutoScrolling(!isAutoScrolling)}
-                  className={`group relative flex h-12 w-12 items-center justify-center rounded-full border transition-all duration-300 ${
+                  className={`scrolly-control-btn group relative flex shrink-0 h-12 w-12 items-center justify-center rounded-full border transition-all duration-300 ${
                     isAutoScrolling 
                       ? "border-cyan-500/50 bg-slate-900/80 shadow-[0_0_20px_rgba(34,211,238,0.3)]" 
                       : "border-white/10 bg-slate-950/40 hover:border-white/30 hover:bg-slate-900/60"
@@ -541,8 +675,8 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
                   )}
                   
                   {/* Tooltip-style label */}
-                  <div className="absolute right-full mr-4 whitespace-nowrap rounded-lg bg-slate-900/90 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.2em] text-cyan-400 opacity-0 transition-opacity group-hover:opacity-100 border border-white/10 backdrop-blur-sm pointer-events-none">
-                    {isAutoScrolling ? "Pause Auto-Player" : "Resume Auto-Player"}
+                  <div className="absolute top-[120%] mr-0 whitespace-nowrap rounded-lg bg-slate-900/90 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.2em] text-cyan-400 opacity-0 transition-opacity group-hover:opacity-100 border border-white/10 backdrop-blur-sm pointer-events-none">
+                    {isAutoScrolling ? "Pause" : "Resume"}
                   </div>
                 </button>
               </div>
@@ -558,7 +692,7 @@ export const ScrollytellingLayout: React.FC<ScrollytellingLayoutProps> = () => {
               >
                 <button
                   onClick={() => router.push("/")}
-                  className="group relative flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-slate-950/40 text-white shadow-2xl backdrop-blur-md transition-all hover:scale-110 hover:border-white/30 hover:bg-slate-900/60"
+                  className="scrolly-control-btn group relative flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-slate-950/40 text-white shadow-2xl backdrop-blur-md transition-all hover:scale-110 hover:border-white/30 hover:bg-slate-900/60"
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />

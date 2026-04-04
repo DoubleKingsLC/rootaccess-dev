@@ -4,81 +4,85 @@ import React from "react";
 import { SQLQueryPanel }      from "./SQLQueryPanel";
 import { MockAdminDashboard } from "./MockAdminDashboard";
 import { MockAdminLogin }     from "./MockAdminLogin";
+import { SQLDiscoveryChip }   from "./SQLDiscoveryChip";
+import { SQLExplanationPanel } from "./SQLExplanationPanel";
+import { NarrativeCaption }    from "./NarrativeCaption";
 
 type SQLiSceneProps = {
   progress: number; // global 0–1
 };
 
-// ── Scene window: 0.40–0.60 ───────────────────────────────────────────────────
-// Full     0.400–0.585  (no fade-in — continues from InitialAccessScene seamlessly)
-// Fade out 0.585–0.600
+// ── Scene window: 0.670–0.870 ──────────────────────────────────────────────────
+// Full     0.670–0.860  (no fade-in — continues from InitialAccessScene seamlessly)
+// Fade out 0.860–0.870 (1% Snappy)
 const sceneOpacity = (p: number): number => {
-  if (p < 0.400) return 0;
-  if (p <= 0.585) return 1;
-  if (p < 0.600) return 1 - (p - 0.585) / 0.015;
+  if (p < 0.670) return 0;
+  if (p <= 0.860) return 1;
+  if (p < 0.870) return 1 - (p - 0.860) / 0.010;
   return 0;
 };
 
-// Local 0–1 across 0.400–0.595
+// Local 0–1 across 0.670–0.870
 const local = (p: number): number =>
-  Math.max(0, Math.min(1, (p - 0.400) / 0.195));
+  Math.max(0, Math.min(1, (p - 0.670) / 0.200));
 
-// ── Phase 1 — probe: type `'` into password (local 0.06–0.18) ────────────────
+// ── Phase 1 — probe: type `'` into password (local 0.05–0.12) ────────────────
 const PROBE = "'";
 const probeTyped = (lp: number): string => {
-  if (lp < 0.06 || lp >= 0.34) return "";   // cleared before payload phase
-  if (lp < 0.18) return PROBE.slice(0, Math.round(((lp - 0.06) / 0.12) * PROBE.length));
-  return PROBE; // stays visible during error phase
+  if (lp < 0.05 || lp >= 0.26) return "";   // cleared before payload phase
+  if (lp < 0.12) return PROBE.slice(0, Math.round(((lp - 0.05) / 0.07) * PROBE.length));
+  return PROBE;
 };
 
-// ── Phase 2 — error state (local 0.20–0.34) ──────────────────────────────────
-const errorVisible = (lp: number): boolean => lp >= 0.20 && lp < 0.34;
+// ── Phase 2 — error state (probe or failed payload, local windows) ──────
+const errorVisible = (lp: number): boolean => 
+  (lp >= 0.14 && lp < 0.26) ||  // Probe error
+  (lp >= 0.44 && lp < 0.48);    // Payload click error
 
 const ERROR_LINES = [
   "SQLSTATE[42000]: Syntax error or access violation",
   "near \"'\" at line 1 — unexpected token",
 ];
-// Each error line flashes in sequentially
 const errorLineVisible = (lp: number, idx: number): boolean => {
   if (!errorVisible(lp)) return false;
-  return lp >= 0.20 + idx * 0.055;
+  return lp >= 0.14 + idx * 0.04;
 };
 
-// ── Phase 3 — payload: type `' OR 1=1 --` (local 0.34–0.56) ─────────────────
+// ── Phase 3 — payload: type `' OR 1=1 --` (local 0.26–0.42) ─────────────────
 const PAYLOAD = "' OR 1=1 --";
 const payloadTyped = (lp: number): string => {
-  if (lp < 0.34) return "";
-  const t = Math.min((lp - 0.34) / 0.22, 1);
+  if (lp < 0.26) return "";
+  const t = Math.min((lp - 0.26) / 0.16, 1);
   return PAYLOAD.slice(0, Math.round(t * PAYLOAD.length));
 };
 
-// ── Phase 4 — SQL zoom (local 0.72–0.82) ─────────────────────────────────────
-const showSQLZoom  = (lp: number): boolean => lp >= 0.72 && lp < 0.82;
-const showLoginForm = (lp: number): boolean => lp < 0.72;
+// ── Phase 4 — SQL zoom (local 0.47–0.75) ─────────────────────────────────────
+const loginOpacity = (lp: number): number => {
+  if (lp < 0.44) return 1;         // fully visible through authenticated moment
+  if (lp < 0.47) return 1 - (lp - 0.44) / 0.03;   // fade out into zoom
+  return 0;
+};
 
-// Zoom panel — starts small + low (mimics the bottom SQLQueryPanel),
-// rises to center and scales up to full size
 const ease = (t: number) => 1 - Math.pow(1 - t, 3);
 
 const zoomOpacity = (lp: number): number => {
-  if (lp < 0.72) return 0;
-  if (lp < 0.73) return ease((lp - 0.72) / 0.01) * 0.7; // quick partial fade in
-  if (lp <= 0.80) return 0.7 + ease((lp - 0.73) / 0.07) * 0.3; // finish to 1
-  if (lp < 0.82) return 1 - (lp - 0.80) / 0.02;
+  if (lp < 0.48) return 0;
+  if (lp < 0.51) return (lp - 0.48) / 0.03; 
+  if (lp <= 0.72) return 1; 
+  if (lp < 0.75) return 1 - (lp - 0.72) / 0.03;
   return 0;
 };
 
 // Scale: starts at 0.55 (roughly the small panel size), grows to 1.0
 const zoomScale = (lp: number): number => {
-  if (lp < 0.72) return 0.55;
-  if (lp < 0.77) return 0.55 + ease((lp - 0.72) / 0.05) * 0.45;
+  if (lp < 0.45) return 0.55;
+  if (lp < 0.52) return 0.55 + ease((lp - 0.45) / 0.07) * 0.45;
   return 1.0;
 };
 
-// TranslateY: starts at +32vh (bottom), rises to 0 (center)
 const zoomTranslateY = (lp: number): number => {
-  if (lp < 0.72) return 32;
-  if (lp < 0.77) return 32 * (1 - ease((lp - 0.72) / 0.05));
+  if (lp < 0.45) return 32;
+  if (lp < 0.52) return 32 * (1 - ease((lp - 0.45) / 0.07));
   return 0;
 };
 
@@ -90,19 +94,19 @@ const RESULT_COLS = [
   { key: "auth_token", value: "eyJhbGciOiJIUzI1NiJ9..." },
 ];
 const resultColsVisible = (lp: number): number => {
-  if (lp < 0.76) return 0;
-  return Math.floor(((lp - 0.76) / 0.055) * (RESULT_COLS.length + 1));
+  if (lp < 0.50) return 0;
+  return Math.floor(((lp - 0.50) / 0.08) * (RESULT_COLS.length + 1));
 };
 
-// ── Dashboard visible after local 0.82 ───────────────────────────────────────
-const showDashboard = (lp: number): boolean => lp >= 0.82;
+// ── Dashboard visible after local 0.62 ───────────────────────────────────────
+const showDashboard = (lp: number): boolean => lp >= 0.62;
 
-// Caption: in at 0.495, out at 0.585 global
+// Caption: in at 0.710, out at 0.855 global
 const captionOpacity = (p: number): number => {
-  if (p < 0.495) return 0;
-  if (p < 0.507) return (p - 0.495) / 0.012;
-  if (p <= 0.578) return 1;
-  if (p < 0.590) return 1 - (p - 0.578) / 0.012;
+  if (p < 0.710) return 0;
+  if (p < 0.730) return (p - 0.710) / 0.020;
+  if (p <= 0.845) return 1;
+  if (p < 0.855) return 1 - (p - 0.845) / 0.010;
   return 0;
 };
 
@@ -117,11 +121,18 @@ export const SQLiScene: React.FC<SQLiSceneProps> = ({ progress }) => {
   const lp        = local(progress);
   const probe     = probeTyped(lp);
   const payload   = payloadTyped(lp);
-  const isError   = errorVisible(lp);
-  const loginVis  = showLoginForm(lp);
-  const sqlZoom   = showSQLZoom(lp);
-  const dashVis   = showDashboard(lp);
+  // Error box logic — ONLY for the probe phase (lp 0.14 - 0.26)
+  const errorVisible = lp >= 0.14 && lp < 0.26;
+  const authenticated = lp >= 0.44; 
+
+  // Transitions
+  const loginOp   = loginOpacity(lp);
+  const loginVis  = lp < 0.47;  // Keep login visible until 0.47 so "Authenticated" state is seen
+  const isClicked = (lp >= 0.12 && lp < 0.14) || (lp >= 0.42 && lp < 0.44); 
   const zoomOp    = zoomOpacity(lp);
+  const zoomVis   = lp >= 0.47 && lp < 0.76;
+  const dashVis   = lp >= 0.76;  // Dashboard after zoom
+  const dashOp    = lp >= 0.76 ? 1 : 0;
   const zoomSc    = zoomScale(lp);
   const zoomTY    = zoomTranslateY(lp);
   const colsVis   = resultColsVisible(lp);
@@ -130,7 +141,6 @@ export const SQLiScene: React.FC<SQLiSceneProps> = ({ progress }) => {
   const passField = payload || probe;
   const passIsPayload = payload.length > 0;
   const passIsProbe   = probe.length > 0 && !passIsPayload;
-  const authenticated = lp >= 0.72;
 
   return (
     <>
@@ -150,19 +160,25 @@ export const SQLiScene: React.FC<SQLiSceneProps> = ({ progress }) => {
 
         {/* Top label */}
         <div
-          className="absolute top-12 left-1/2 -translate-x-1/2 font-mono text-[9px] uppercase tracking-[0.45em]"
+          className="absolute top-12 left-1/2 -translate-x-1/2 font-mono text-[11px] uppercase tracking-[0.35em]"
           style={{
-            color: "rgba(244,63,94,0.4)",
+            color: "rgba(226,232,240,0.65)",
             opacity: lp > 0.05 ? 1 : 0,
             transition: "opacity 0.3s",
           }}
         >
-          {dashVis ? "Access granted — admin session active" : "SQL injection · admin.nexuspay.io/login"}
+          SQL Injection — expanding access · target: nexuspay.io/admin
         </div>
+
+        {/* ── SQL Discovery Reveal (LHS) ──────────────────────────────────── */}
+        <SQLDiscoveryChip localProgress={lp} />
+
+        {/* ── SQL Explanation Panel (LHS during zoom) ──────────────────────── */}
+        <SQLExplanationPanel localProgress={lp} />
 
         {/* ── Login form + SQL panel (pre-bypass) ─────────────────────────── */}
         {loginVis && (
-          <div className="flex flex-col gap-3" style={{ width: "clamp(480px, 52vw, 720px)" }}>
+          <div className="flex flex-col gap-3" style={{ width: "clamp(480px, 52vw, 720px)", opacity: loginOp }}>
             <MockAdminLogin
               localProgress={lp}
               attack={{
@@ -171,10 +187,11 @@ export const SQLiScene: React.FC<SQLiSceneProps> = ({ progress }) => {
                 showCursor:
                   (passIsProbe && probe.length < PROBE.length) ||
                   (passIsPayload && payload.length < PAYLOAD.length),
-                isError,
+                isError: errorVisible,
+                isClicked,
                 errorLines: ERROR_LINES.map((text, idx) => ({
                   text,
-                  visible: errorLineVisible(lp, idx),
+                  visible: errorLineVisible(lp, idx) || (lp >= 0.44), // all visible for payload error
                 })),
                 isAuthenticated: authenticated,
               }}
@@ -184,14 +201,15 @@ export const SQLiScene: React.FC<SQLiSceneProps> = ({ progress }) => {
           </div>
         )}
 
-        {/* ── SQL zoom phase (lp 0.72–0.82) ──────────────────────────────── */}
-        {sqlZoom && (
+        {/* ── SQL zoom phase (lp 0.45–0.75) ──────────────────────────────── */}
+        {zoomVis && (
           <div
             className="flex flex-col gap-4"
             style={{
               opacity: zoomOp,
               transform: `scale(${zoomSc}) translateY(${zoomTY}vh)`,
-              width: "clamp(480px, 58vw, 780px)",
+              width: "clamp(400px, 50vw, 740px)",
+              marginLeft: "clamp(80px, 20vw, 12rem)",
             }}
           >
             {/* Zoomed query panel */}
@@ -306,17 +324,9 @@ export const SQLiScene: React.FC<SQLiSceneProps> = ({ progress }) => {
       </div>
 
       {/* ── Narrative caption ───────────────────────────────────────────────── */}
-      <div
-        className="pointer-events-none absolute bottom-[72px] left-1/2 z-[35] -translate-x-1/2"
-        style={{ opacity: captionOpacity(progress) }}
-        aria-hidden
-      >
-        <div className="rounded-xl border border-white/10 bg-slate-950/85 px-5 py-2.5 backdrop-blur-md max-w-[90vw]">
-          <p className="font-mono text-xs font-medium tracking-wide text-slate-100 text-center md:text-sm">
-            One quote character. The password check never ran.
-          </p>
-        </div>
-      </div>
+      <NarrativeCaption opacity={captionOpacity(progress)}>
+        One quote character. The password check never ran.
+      </NarrativeCaption>
     </>
   );
 };

@@ -14,6 +14,8 @@ import { InitialAccessScene }   from "./InitialAccessScene";
 import { SQLiScene }            from "./SQLiScene";
 import { ExfilScene }          from "./ExfilScene";
 import { ReportScene }         from "./ReportScene";
+import { useRoadmapWorkflowVideoMode } from "@/hooks/useRoadmapWorkflowVideoMode";
+import { RoadmapWorkflowMobileWalkthrough } from "@/components/roadmaps/RoadmapWorkflowMobileWalkthrough";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -22,10 +24,10 @@ gsap.registerPlugin(ScrollTrigger);
 // Early phases (0–0.75 raw) map to 0–0.60 of old scene scale (2× more scroll).
 // Late phases (0.75–1.0 raw) map to 0.60–1.0 unchanged (same abs distance as before).
 const TIMELINE = [
-  { label: "Recon",        threshold: 0.10 },
-  { label: "Scanning",     threshold: 0.31 },
-  { label: "Exploit",      threshold: 0.56 },
-  { label: "Post-Exploit", threshold: 0.78 },
+  { label: "Recon",        threshold: 0.12 },
+  { label: "Scanning",     threshold: 0.32 },
+  { label: "Exploit",      threshold: 0.52 },
+  { label: "Post-Exploit", threshold: 0.72 },
   { label: "Report",       threshold: 0.89 },
 ] as const;
 
@@ -45,6 +47,10 @@ const PACKETS = [
   { left: "65%",  top: "100%",anim: "packet-v-rev", dur: 12, delay: 2.5 },
 ];
 
+/** Intro overlay cleared ~here; autoplay uses 4× speed until then (seamless, no instant jump). */
+const INTRO_AUTOPLAY_END_PROGRESS = 0.045;
+const INTRO_AUTOPLAY_SPEED_MULT = 4;
+
 export const WebHackingLayout: React.FC = () => {
   const router = useRouter();
 
@@ -58,54 +64,103 @@ export const WebHackingLayout: React.FC = () => {
 
   const [progress, setProgress]           = useState(0);
 
-  // Remap raw scroll progress so recon/exploit phases get 2× more scroll
-  // while ExfilScene (60–78%) and ReportScene (78–100%) keep the same
-  // absolute scroll distance they had at 1000vh total.
-  // Raw 0–0.75 → scene 0–0.60  (early phases, doubled)
-  // Raw 0.75–1.0 → scene 0.60–1.0 (late phases, unchanged)
-  const sceneProgress = progress <= 0.75
-    ? progress * (0.60 / 0.75)
-    : 0.60 + (progress - 0.75) * (0.40 / 0.25);
+  // Linear progress across 8000vh for a calm, premium reading experience
+  const sceneProgress = progress;
   const [isAutoScrolling, setIsAutoScrolling] = useState(false);
+  const [scrollSpeed, setScrollSpeed] = useState(1.0);
+  const scrollSpeedRef = useRef(1.0);
+  const [isSpeedControlOpen, setIsSpeedControlOpen] = useState(false);
+  const speedTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isRedoHovered, setIsRedoHovered] = useState(false);
+  const showRecordedWorkflow = useRoadmapWorkflowVideoMode();
 
-  // ── Auto-scroll via Lenis ──────────────────────────────────────────────────
+  /** Lenis owns scroll; drive programmatic scroll through Lenis so autoplay isn't overwritten. */
+  const readScrollY = () => lenisRef.current?.scroll ?? window.scrollY;
+  const applyScrollY = (y: number) => {
+    const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    const clamped = Math.min(maxScroll, Math.max(0, y));
+    const lenis = lenisRef.current;
+    if (lenis) {
+      lenis.scrollTo(clamped, { immediate: true, force: true });
+    } else {
+      window.scrollTo(0, clamped);
+    }
+  };
+
+  // Sync state to ref for animation loop
   useEffect(() => {
+    scrollSpeedRef.current = scrollSpeed;
+  }, [scrollSpeed]);
+
+  const handleSpeedInteraction = () => {
+    if (speedTimeoutRef.current) clearTimeout(speedTimeoutRef.current);
+    speedTimeoutRef.current = setTimeout(() => {
+      setIsSpeedControlOpen(false);
+    }, 3000);
+  };
+
+  useEffect(() => {
+    if (isSpeedControlOpen) {
+      handleSpeedInteraction();
+    }
+    return () => {
+      if (speedTimeoutRef.current) clearTimeout(speedTimeoutRef.current);
+    };
+  }, [isSpeedControlOpen, scrollSpeed]);
+
+  // ── Auto-scroll logic (Mirrors AIHackingLayout / ScrollytellingLayout to fix Safari speeds & standardize Hz-independent scroll) ──
+  useEffect(() => {
+    if (showRecordedWorkflow) return;
     if (!isAutoScrolling) return;
 
-    let userInterrupted = false;
+    let lastScrollY = readScrollY();
     let rafId: number;
+    let lastTime = performance.now();
+    let currentVirtualScroll = lastScrollY;
 
-    const onWheel     = () => { userInterrupted = true; setIsAutoScrolling(false); };
-    const onTouchMove = () => { userInterrupted = true; setIsAutoScrolling(false); };
-    window.addEventListener("wheel",      onWheel,     { passive: true });
-    window.addEventListener("touchmove",  onTouchMove, { passive: true });
+    const scrollStep = (time: number) => {
+      const currentScrollY = readScrollY();
 
-    const scrollStep = () => {
-      if (userInterrupted) return;
-      const lenis    = lenisRef.current;
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      if (!lenis || window.scrollY >= maxScroll - 10) {
+      // Interrupt auto-scroll if the user manually scrolls native wheel/touch
+      if (Math.abs(currentScrollY - lastScrollY) > 5) {
         setIsAutoScrolling(false);
         return;
       }
-      lenis.scrollTo(window.scrollY + 2, { immediate: true });
-      rafId = requestAnimationFrame(scrollStep);
+
+      const dt = time - lastTime;
+      lastTime = time;
+
+      // Target speed: 190 pixels per second (Hz independent) multiplied by speed control
+      let scrollAmount = 190 * (dt / 1000) * scrollSpeedRef.current;
+
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const p = currentScrollY / maxScroll;
+
+      if (p < INTRO_AUTOPLAY_END_PROGRESS) {
+        scrollAmount *= INTRO_AUTOPLAY_SPEED_MULT;
+      }
+
+      currentVirtualScroll = Math.min(maxScroll, currentVirtualScroll + scrollAmount);
+      applyScrollY(currentVirtualScroll);
+      lastScrollY = readScrollY();
+
+      if (readScrollY() < maxScroll - 10) {
+        rafId = requestAnimationFrame(scrollStep);
+      } else {
+        setIsAutoScrolling(false);
+      }
     };
 
     rafId = requestAnimationFrame(scrollStep);
-    return () => {
-      cancelAnimationFrame(rafId);
-      window.removeEventListener("wheel",     onWheel);
-      window.removeEventListener("touchmove", onTouchMove);
-    };
-  }, [isAutoScrolling]);
+    return () => cancelAnimationFrame(rafId);
+  }, [isAutoScrolling, showRecordedWorkflow]);
 
   // ── GSAP + Lenis ──────────────────────────────────────────────────────────
   useEffect(() => {
+    if (showRecordedWorkflow) return;
     if (!scrollSectionRef.current || !pinnedViewportRef.current) return;
 
-    const lenis = new Lenis({ lerp: 0.05, wheelMultiplier: 0.7 });
+    const lenis = new Lenis({ lerp: 0.05, wheelMultiplier: 0.5 });
     lenisRef.current = lenis;
     lenis.on("scroll", ScrollTrigger.update);
 
@@ -136,10 +191,14 @@ export const WebHackingLayout: React.FC = () => {
       lenis.destroy();
       lenisRef.current = null;
     };
-  }, []);
+  }, [showRecordedWorkflow]);
+
+  if (showRecordedWorkflow) {
+    return <RoadmapWorkflowMobileWalkthrough slug="web-hacking" />;
+  }
 
   return (
-    <section ref={scrollSectionRef} className="relative h-[1600vh] w-screen bg-slate-950">
+    <section ref={scrollSectionRef} className="relative h-[2000vh] w-screen bg-slate-950">
       <div
         ref={pinnedViewportRef}
         className="sticky top-0 flex h-screen min-h-[600px] w-screen items-center justify-center overflow-hidden"
@@ -210,7 +269,7 @@ export const WebHackingLayout: React.FC = () => {
           style={{
             borderColor: "rgba(244,63,94,0.12)",
             background: "rgba(2,6,23,0.45)",
-            opacity: progress >= 0.08 ? 1 : 0,
+            opacity: progress >= 0.05 ? 1 : 0,
           }}
         >
           <div className="flex items-center justify-center gap-0">
@@ -250,18 +309,97 @@ export const WebHackingLayout: React.FC = () => {
           </div>
         </div>
 
-        {/* ── Persistent play / pause toggle — top right ─────────────────── */}
+        {/* ── Persistent play / pause toggle + Speed Control — top right ────────────── */}
         <div
-          className="fixed top-10 right-10 z-[1000] transition-all duration-700"
+          className="fixed top-10 right-10 z-[1000] flex items-center gap-4 transition-all duration-700"
           style={{
             opacity:       progress > 0.01 ? 1 : 0,
             transform:     progress > 0.01 ? "translateY(0)" : "translateY(-20px)",
             pointerEvents: progress > 0.01 ? "auto" : "none",
           }}
         >
+          {/* Speed Control Wrapper */}
+          <div className="relative flex items-center" onMouseMove={handleSpeedInteraction} onTouchMove={handleSpeedInteraction}>
+            {/* Expanded Slider Panel */}
+            <div
+              className="absolute right-6 flex items-center justify-between rounded-l-full border-y border-l pl-5 pr-8 h-12 backdrop-blur-md transition-all duration-300 overflow-hidden"
+              style={{
+                borderColor: "rgba(255,255,255,0.1)",
+                background: "rgba(2,6,23,0.75)",
+                opacity: isSpeedControlOpen ? 1 : 0,
+                pointerEvents: isSpeedControlOpen ? "auto" : "none",
+                transform: isSpeedControlOpen ? "translateX(0)" : "translateX(20px)",
+                width: isSpeedControlOpen ? "180px" : "0px",
+              }}
+            >
+              <input
+                type="range"
+                min="0.5"
+                max="2"
+                step="0.1"
+                value={scrollSpeed}
+                onChange={(e) => {
+                  setScrollSpeed(parseFloat(e.target.value));
+                  handleSpeedInteraction();
+                }}
+                className="w-full accent-rose-500 cursor-pointer"
+                style={{
+                  height: "2px",
+                  background: "rgba(255,255,255,0.2)",
+                  appearance: "none",
+                  outline: "none",
+                  borderRadius: "2px",
+                }}
+              />
+              <button 
+                onClick={() => setIsSpeedControlOpen(false)}
+                className="scrolly-control-btn ml-3 flex h-6 w-6 shrink-0 items-center justify-center rounded-full hover:bg-white/10 transition-colors text-slate-400 hover:text-white"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Toggle Button */}
+            <button
+              onClick={() => {
+                setIsSpeedControlOpen(!isSpeedControlOpen);
+                if (!isSpeedControlOpen) handleSpeedInteraction();
+              }}
+              className="scrolly-control-btn relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border backdrop-blur-md transition-all duration-300"
+              style={{
+                borderColor: isSpeedControlOpen ? "rgba(244,63,94,0.5)" : "rgba(255,255,255,0.1)",
+                background: isSpeedControlOpen ? "rgba(15,3,7,0.8)" : "rgba(2,6,23,0.4)",
+                boxShadow: isSpeedControlOpen ? `0 0 15px ${ROSE_GLOW}` : "none",
+              }}
+            >
+              <span className="font-mono text-[10px] font-bold" style={{ color: ROSE }}>
+                {scrollSpeed.toFixed(1)}x
+              </span>
+            </button>
+
+            <style>{`
+              input[type=range]::-webkit-slider-thumb {
+                appearance: none;
+                width: 12px;
+                height: 12px;
+                background: ${ROSE};
+                border-radius: 50%;
+                cursor: pointer;
+                box-shadow: 0 0 10px ${ROSE_GLOW};
+                transition: transform 0.1s;
+              }
+              input[type=range]::-webkit-slider-thumb:hover {
+                transform: scale(1.2);
+              }
+            `}</style>
+          </div>
+
+          {/* Play/Pause Button */}
           <button
             onClick={() => setIsAutoScrolling(!isAutoScrolling)}
-            className="group relative flex h-12 w-12 items-center justify-center rounded-full border text-white backdrop-blur-md transition-all duration-300"
+            className="scrolly-control-btn group relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border text-white backdrop-blur-md transition-all duration-300"
             style={{
               borderColor: isAutoScrolling ? "rgba(244,63,94,0.5)" : "rgba(255,255,255,0.1)",
               background:  isAutoScrolling ? "rgba(15,3,7,0.8)"    : "rgba(2,6,23,0.4)",
@@ -278,14 +416,14 @@ export const WebHackingLayout: React.FC = () => {
                 <path d="M8 5v14l11-7z" />
               </svg>
             )}
-            <div className="absolute right-full mr-4 whitespace-nowrap rounded-lg border border-white/10 bg-slate-900/90 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.2em] opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none backdrop-blur-sm"
+            <div className="absolute top-[120%] mr-0 whitespace-nowrap rounded-lg border border-white/10 bg-slate-900/90 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.2em] opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none backdrop-blur-sm"
               style={{ color: ROSE }}>
-              {isAutoScrolling ? "Pause Auto-Player" : "Resume Auto-Player"}
+              {isAutoScrolling ? "Pause" : "Resume"}
             </div>
           </button>
         </div>
 
-        {/* ── Home button + Career Path pill — top left ───────────────────── */}
+        {/* ── Home button — top left ───────────────────── */}
         <div
           className="fixed top-10 left-10 z-[1000] flex items-center gap-3 transition-all duration-700"
           style={{
@@ -297,7 +435,7 @@ export const WebHackingLayout: React.FC = () => {
           {/* Home */}
           <button
             onClick={() => router.push("/")}
-            className="group relative flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-slate-950/40 text-white shadow-2xl backdrop-blur-md transition-all hover:scale-110 hover:border-white/30 hover:bg-slate-900/60"
+            className="scrolly-control-btn group relative flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-slate-950/40 text-white shadow-2xl backdrop-blur-md transition-all hover:scale-110 hover:border-white/30 hover:bg-slate-900/60"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -308,34 +446,6 @@ export const WebHackingLayout: React.FC = () => {
               Return Home
             </div>
           </button>
-
-          {/* Career Path pill */}
-          <button
-            onClick={() => router.push("/roadmaps/web-hacking/career-path")}
-            className="flex items-center gap-2 rounded-full border backdrop-blur-md transition-all duration-300 hover:scale-105"
-            style={{
-              height: 40,
-              padding: "0 16px",
-              background: "rgba(244,63,94,0.08)",
-              border: "1px solid rgba(244,63,94,0.28)",
-              color: ROSE,
-            }}
-            onMouseEnter={e => {
-              (e.currentTarget as HTMLElement).style.background = "rgba(244,63,94,0.18)";
-              (e.currentTarget as HTMLElement).style.borderColor = "rgba(244,63,94,0.55)";
-            }}
-            onMouseLeave={e => {
-              (e.currentTarget as HTMLElement).style.background = "rgba(244,63,94,0.08)";
-              (e.currentTarget as HTMLElement).style.borderColor = "rgba(244,63,94,0.28)";
-            }}
-          >
-            <span className="font-mono text-[9px] font-bold uppercase tracking-[0.25em]" style={{ color: ROSE }}>
-              Career Path
-            </span>
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-              <path d="M1 5h8M6 2l3 3-3 3" stroke={ROSE} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
         </div>
 
         {/* ── Rewatch button — appears at end ────────────────────────────── */}
@@ -345,13 +455,15 @@ export const WebHackingLayout: React.FC = () => {
             bottom:     "100px",
             right:      "40px",
             zIndex:     500,
-            opacity:    progress > 0.96 ? 1 : 0,
-            visibility: progress > 0.96 ? "visible" : "hidden",
-            transform:  progress > 0.96 ? "scale(1)" : "scale(0.8)",
+            opacity:    progress > 0.955 ? 1 : 0,
+            visibility: progress > 0.955 ? "visible" : "hidden",
+            transform:  progress > 0.955 ? "scale(1)" : "scale(0.8)",
             transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
           }}
         >
           <button
+            type="button"
+            className="scrolly-control-btn"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             onMouseEnter={() => setIsRedoHovered(true)}
             onMouseLeave={() => setIsRedoHovered(false)}
