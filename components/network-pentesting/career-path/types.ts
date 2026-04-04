@@ -13,7 +13,6 @@ export interface Level {
   border: string;
   quote: string;
   time: string;
-  salary: string;
   tools: string[];
   skills: string[];
   certs: ResourceItem[];

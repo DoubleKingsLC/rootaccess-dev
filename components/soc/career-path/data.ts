@@ -11,7 +11,6 @@ export const LEVELS: Level[] = [
     quote:
       "You don't need a degree. You need curiosity and the discipline to build it. Everyone starts here.",
     time: "0–6 months",
-    salary: "£25K–£35K",
     tools: ["VirtualBox", "Linux", "Terminal / PowerShell", "Python"],
     skills: [
       "Networking — TCP/IP, DNS, DHCP, subnetting",
@@ -39,7 +38,6 @@ export const LEVELS: Level[] = [
     quote:
       "07:45. You open the SIEM dashboard. 4,200 alerts overnight. Your job is to find the three that matter.",
     time: "6–18 months",
-    salary: "£30K–£45K",
     tools: ["Splunk / ELK / Wazuh", "Wireshark / tcpdump", "VirusTotal", "grep / awk"],
     skills: [
       "SIEM log analysis and search query writing",
@@ -69,7 +67,6 @@ export const LEVELS: Level[] = [
     quote:
       "Three events. Each harmless alone. But you see them together — and you see the attacker's hand.",
     time: "2–4 years",
-    salary: "£45K–£65K",
     tools: ["CyberChef", "Velociraptor", "MISP", "TheHive", "MITRE ATT&CK"],
     skills: [
       "Threat correlation and attack pattern mapping",
@@ -97,7 +94,6 @@ export const LEVELS: Level[] = [
     quote:
       "You pull the disk. You find the malware. You trace it to its first byte. This is where the story ends.",
     time: "4–7 years",
-    salary: "£65K–£90K",
     tools: ["Volatility", "KAPE", "EZTools", "x64dbg", "FTK Imager"],
     skills: [
       "Disk and memory forensics — full acquisition",
@@ -126,7 +122,6 @@ export const LEVELS: Level[] = [
     quote:
       "The team responds as fast as the system you built for them. Your job: make the next incident take 10 minutes, not 15.",
     time: "7+ years",
-    salary: "£90K–£130K+",
     tools: ["Palo Alto XSOAR", "PowerBI", "ServiceNow SecOps", "Confluence / Jira"],
     skills: [
       "SOC architecture design and tool strategy",

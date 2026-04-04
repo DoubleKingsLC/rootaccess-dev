@@ -7,11 +7,11 @@ import { motion, AnimatePresence } from "framer-motion";
 // ── Data ──────────────────────────────────────────────────────────────────────
 
 const LEVELS = [
-  { num: "00", label: "Entry Point",         color: "#94a3b8", time: "0-6 months",  salary: "£25K-£35K" },
-  { num: "01", label: "Junior Pentester",    color: "#f43f5e", time: "0-2 years",   salary: "£35K-£55K" },
-  { num: "02", label: "Exploitation Specialist", color: "#fb923c", time: "2-5 years",   salary: "£55K-£80K" },
-  { num: "03", label: "Senior Pentester",    color: "#a78bfa", time: "5-8 years",   salary: "£80K-£110K" },
-  { num: "04", label: "Pentest Lead",        color: "#34d399", time: "8+ years",    salary: "£110K-£160K+" },
+  { num: "00", label: "Entry Point",         color: "#94a3b8", time: "0-6 months" },
+  { num: "01", label: "Junior Pentester",    color: "#f43f5e", time: "0-2 years" },
+  { num: "02", label: "Exploitation Specialist", color: "#fb923c", time: "2-5 years" },
+  { num: "03", label: "Senior Pentester",    color: "#a78bfa", time: "5-8 years" },
+  { num: "04", label: "Pentest Lead",        color: "#34d399", time: "8+ years" },
 ] as const;
 
 // ── Sidebar ───────────────────────────────────────────────────────────────────
@@ -294,8 +294,8 @@ function SkillCard({ name, category, correlatedTools, accentColor, what, why, re
   );
 }
 
-function SectionHeader({ num, label, color, time, salary, subtitle }: {
-  num: string; label: string; color: string; time: string; salary: string; subtitle: string;
+function SectionHeader({ num, label, color, time, subtitle }: {
+  num: string; label: string; color: string; time: string; subtitle: string;
 }) {
   return (
     <div className="mb-12">
@@ -307,7 +307,7 @@ function SectionHeader({ num, label, color, time, salary, subtitle }: {
           Level {num}
         </span>
         <span className="font-mono text-[13px] font-medium" style={{ color: "rgba(148,163,184,0.7)" }}>
-          {time} • {salary}
+          {time}
         </span>
       </div>
       <h2
@@ -482,7 +482,7 @@ export default function DetailedWebHackingClient() {
             <SectionHeader
               num="00" label="The Entry Point" color="#94a3b8"
               subtitle="Foundational Theory & Basic Logic"
-              time="0-6 months" salary="£25K-£35K"
+              time="0-6 months"
             />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>
@@ -571,7 +571,7 @@ export default function DetailedWebHackingClient() {
             <SectionHeader
               num="01" label="Junior Pentester" color="#f43f5e"
               subtitle="Breaking the Logic & Writing Proofs"
-              time="0–2 years" salary="£35K–£55K"
+              time="0–2 years"
             />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>
@@ -655,7 +655,7 @@ export default function DetailedWebHackingClient() {
             <SectionHeader
               num="02" label="Exploitation Specialist" color="#fb923c"
               subtitle="Complex Chaining & Cloud Infrastructures"
-              time="2–5 years" salary="£55K–£80K"
+              time="2–5 years"
             />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>
@@ -743,7 +743,7 @@ export default function DetailedWebHackingClient() {
             <SectionHeader
               num="03" label="Senior Pentester" color="#a78bfa"
               subtitle="Red Teaming & Advanced Adversary Simulation"
-              time="5–8 years" salary="£80K–£110K"
+              time="5–8 years"
             />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>
@@ -826,7 +826,7 @@ export default function DetailedWebHackingClient() {
             <SectionHeader
               num="04" label="Pentest Lead" color="#34d399"
               subtitle="Enterprise Security Ownership & Strategy"
-              time="8+ years" salary="£110K–£160K+"
+              time="8+ years"
             />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>

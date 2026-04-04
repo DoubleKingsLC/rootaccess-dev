@@ -7,10 +7,10 @@ import { motion, AnimatePresence } from "framer-motion";
 // ── Data ──────────────────────────────────────────────────────────────────────
 
 const LEVELS = [
-  { num: "00", label: "Entry Point",                    color: "#94a3b8", time: "0-6 months",  salary: "£25K-£35K" },
-  { num: "01", label: "AI Red Team Operator",           color: "#f97316", time: "6-18 months", salary: "£30K-£50K" },
-  { num: "02", label: "AI Security Researcher",         color: "#fb7185", time: "4-7 years",   salary: "£75K-£110K" },
-  { num: "03", label: "Principal AI Security Architect",color: "#a78bfa", time: "7+ years",    salary: "£110K-£160K+" },
+  { num: "00", label: "Entry Point",                    color: "#94a3b8", time: "0-6 months" },
+  { num: "01", label: "AI Red Team Operator",           color: "#f97316", time: "6-18 months" },
+  { num: "02", label: "AI Security Researcher",         color: "#fb7185", time: "4-7 years" },
+  { num: "03", label: "Principal AI Security Architect",color: "#a78bfa", time: "7+ years" },
 ] as const;
 
 // ── Sidebar ───────────────────────────────────────────────────────────────────
@@ -293,8 +293,8 @@ function SkillCard({ name, category, correlatedTools, accentColor, what, why, re
   );
 }
 
-function SectionHeader({ num, label, color, time, salary, subtitle }: {
-  num: string; label: string; color: string; time: string; salary: string; subtitle: string;
+function SectionHeader({ num, label, color, time, subtitle }: {
+  num: string; label: string; color: string; time: string; subtitle: string;
 }) {
   return (
     <div className="mb-12">
@@ -306,7 +306,7 @@ function SectionHeader({ num, label, color, time, salary, subtitle }: {
           Level {num}
         </span>
         <span className="font-mono text-[13px] font-medium" style={{ color: "rgba(148,163,184,0.7)" }}>
-          {time} • {salary}
+          {time}
         </span>
       </div>
       <h2
@@ -501,7 +501,7 @@ export default function DetailedAiHackingClient() {
             <SectionHeader
               num="00" label="The Entry Point" color="#94a3b8"
               subtitle="Building the Technical Foundation"
-              time="0-6 months" salary="£25K-£35K"
+              time="0-6 months"
             />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>
@@ -590,7 +590,7 @@ export default function DetailedAiHackingClient() {
             <SectionHeader
               num="01" label="AI Red Team Operator" color="#f97316"
               subtitle="Breaking the Prompt Logic"
-              time="6-18 months" salary="£30K-£50K"
+              time="6-18 months"
             />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>
@@ -662,7 +662,7 @@ export default function DetailedAiHackingClient() {
             <SectionHeader
               num="02" label="AI Security Researcher" color="#fb7185"
               subtitle="Deep Exploitation & Adversarial ML"
-              time="4-7 years" salary="£75K-£110K"
+              time="4-7 years"
             />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>
@@ -672,7 +672,7 @@ export default function DetailedAiHackingClient() {
                 You focus on complex attack surfaces like RAG (Retrieval-Augmented Generation). If you can get a poisoned document into a company's database, the AI will reciting your malicious content with full corporate authority to every employee who asks.
               </p>
               <p>
-                This is the point where security overlaps with machine learning research. You need to understand embeddings, vector databases, and why certain model architectures fail predictably. This commitment is exactly why the salary for this role is so high.
+                This is the point where security overlaps with machine learning research. You need to understand embeddings, vector databases, and why certain model architectures fail predictably. This commitment is exactly why this role is so highly valued in the industry.
               </p>
             </div>
 
@@ -717,7 +717,7 @@ export default function DetailedAiHackingClient() {
             <SectionHeader
               num="03" label="Principal AI Security Architect" color="#a78bfa"
               subtitle="Enterprise Defense & Strategy"
-              time="7+ years" salary="£110K-£160K+"
+              time="7+ years"
             />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>

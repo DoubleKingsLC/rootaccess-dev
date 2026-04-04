@@ -46,12 +46,14 @@ function Sidebar() {
 }
 
 function SectionHeader({
-  num, label, color, subtitle,
+  num, label, color, subtitle, slug,
 }: {
-  num: string; label: string; color: string; subtitle: string;
+  num: string; label: string; color: string; subtitle: string; slug: string;
 }) {
+  const router = useRouter();
+
   return (
-    <div className="mb-10">
+    <div className="mb-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
       <div className="flex-1 min-w-0">
         <div className="flex flex-wrap items-baseline gap-4 mb-4">
           <span
@@ -69,6 +71,52 @@ function SectionHeader({
         </h2>
         <p className="font-mono text-sm" style={{ color: `${color}aa` }}>{subtitle}</p>
         <div className="mt-6 h-px" style={{ background: `linear-gradient(to right, ${color}28, transparent)` }} />
+      </div>
+
+      <div className="flex-shrink-0">
+        <button
+          onClick={() => router.push(`/roadmaps/${slug}/career-path/detailed#level-${num}`)}
+          className="group relative flex flex-col items-start p-5 rounded-2xl transition-all duration-300 hover:scale-[1.02] text-left lg:w-[320px]"
+          style={{
+            background: "rgba(15,22,35,0.4)",
+            border: "1px solid rgba(255,255,255,0.05)",
+            backdropFilter: "blur(10px)",
+          }}
+        >
+          <div className="flex items-center justify-between w-full mb-2">
+            <span className="font-mono text-[10px] font-black uppercase tracking-[0.35em]" style={{ color }}>
+              Deep Dive
+            </span>
+            <div 
+              className="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300"
+              style={{ background: `${color}12`, border: `1px solid ${color}28` }}
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                className="transition-transform duration-300 group-hover:translate-x-1"
+                style={{ color }}
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+          </div>
+          <p className="text-[12px] leading-relaxed text-slate-400 group-hover:text-slate-300 transition-colors pr-4">
+            Full breakdown of every certification, tool, and the &quot;why&quot; behind them.
+          </p>
+          <div 
+            className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+            style={{ 
+              boxShadow: `0 0 40px -10px ${color}30`,
+              border: `1px solid ${color}40`,
+              zIndex: -1
+            }}
+          />
+        </button>
       </div>
     </div>
   );
@@ -408,12 +456,13 @@ export default function SocCareerPathPage() {
           {LEVELS.map((level, i) => (
             <React.Fragment key={level.num}>
               <section id={`level-${level.num}`} className="py-16 xl:py-20">
-                <SectionHeader
-                  num={level.num}
-                  label={level.label}
-                  color={level.color}
-                  subtitle={level.subtitle}
-                />
+                 <SectionHeader
+                   num={level.num}
+                   label={level.label}
+                   color={level.color}
+                   subtitle={level.subtitle}
+                   slug="soc"
+                 />
 
                 <p
                   className="font-sans text-lg italic leading-relaxed mb-10 pl-4"

@@ -10,9 +10,11 @@ type MobileSocCareerPathProps = {
   showScrollTop: boolean;
 };
 
-function SectionHeader({ num, label, color, time, salary, subtitle }: {
-  num: string; label: string; color: string; time: string; salary: string; subtitle: string;
+function SectionHeader({ num, label, color, time, subtitle, slug }: {
+  num: string; label: string; color: string; time: string; subtitle: string; slug: string;
 }) {
+  const router = useRouter();
+
   return (
     <div className="mb-12">
       <div className="flex flex-wrap items-baseline gap-4 mb-4">
@@ -23,7 +25,7 @@ function SectionHeader({ num, label, color, time, salary, subtitle }: {
           Level {num}
         </span>
         <span className="font-mono text-[13px] font-medium" style={{ color: "rgba(148,163,184,0.7)" }}>
-          {time} • {salary}
+          {time}
         </span>
       </div>
       <h2
@@ -32,7 +34,41 @@ function SectionHeader({ num, label, color, time, salary, subtitle }: {
       >
         {label}
       </h2>
-      <p className="font-mono text-[14px] leading-relaxed" style={{ color: `${color}dd` }}>{subtitle}</p>
+      <p className="font-mono text-[14px] leading-relaxed mb-6" style={{ color: `${color}dd` }}>{subtitle}</p>
+
+      {/* Deep Dive Button for Mobile */}
+      <button
+        onClick={() => router.push(`/roadmaps/${slug}/career-path/detailed#level-${num}`)}
+        className="w-full py-4 px-6 rounded-2xl flex items-center justify-between group transition-all duration-300"
+        style={{
+          background: "rgba(15,22,35,0.4)",
+          border: `1px solid ${color}30`,
+          backdropFilter: "blur(10px)",
+        }}
+      >
+        <div className="flex flex-col items-start gap-0.5">
+          <span className="font-mono text-[10px] font-black uppercase tracking-[0.3em]" style={{ color }}>
+            Deep Dive
+          </span>
+          <span className="text-[11px] text-slate-400">Full breakdown & justification</span>
+        </div>
+        <div 
+          className="w-8 h-8 rounded-full flex items-center justify-center transition-transform duration-300 group-active:translate-x-1"
+          style={{ background: `${color}12`, border: `1px solid ${color}28` }}
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            style={{ color }}
+          >
+            <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+      </button>
 
       <div className="mt-8 h-px" style={{ background: `linear-gradient(to right, ${color}40, transparent)` }} />
     </div>
@@ -132,8 +168,8 @@ export function MobileSocCareerPath({ showScrollTop }: MobileSocCareerPathProps)
               label={level.label}
               color={level.color}
               time={level.time}
-              salary={level.salary}
               subtitle={level.subtitle}
+              slug="soc"
             />
 
             <div className="space-y-6 text-lg leading-relaxed mb-12" style={{ color: "rgba(203,213,225,0.75)" }}>

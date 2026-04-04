@@ -11,7 +11,6 @@ export const LEVELS: Level[] = [
     quote:
       "You don't need a degree. You need curiosity and the discipline to build it. Everyone starts here.",
     time: "0–6 months",
-    salary: "£25K–£35K",
     tools: ["VirtualBox", "Linux", "Terminal / PowerShell", "Python"],
     skills: [
       "Networking — TCP/IP, DNS, DHCP, subnetting",
@@ -39,7 +38,6 @@ export const LEVELS: Level[] = [
     border: "rgba(249,115,22,0.25)",
     quote: "In 2026, we don't just 'chat' with the AI. We probe its architecture, intercept its traffic, and automate its failure.",
     time: "6–18 months",
-    salary: "£30K–£50K",
     tools: [
       "Microsoft PyRIT",
       "Garak",
@@ -75,7 +73,6 @@ export const LEVELS: Level[] = [
     quote:
       "You're not running known exploits. You're discovering techniques the field hasn't documented yet.",
     time: "4–7 years",
-    salary: "£75K–£110K",
     tools: [
       "ART (Adversarial Robustness Toolbox)",
       "HiddenLayer Model Scanner",
@@ -110,7 +107,6 @@ export const LEVELS: Level[] = [
     quote:
       "You've been the attacker. Now you build the systems that make the next attacker's job impossible.",
     time: "7+ years",
-    salary: "£110K–£160K+",
     tools: [
       "Lakera Guard",
       "Azure AI Content Safety",

@@ -7,11 +7,11 @@ import { motion, AnimatePresence } from "framer-motion";
 // ── Data ──────────────────────────────────────────────────────────────────────
 
 const LEVELS = [
-  { num: "00", label: "Entry Point",         color: "#94a3b8", time: "0-6 months",  salary: "£25K-£35K" },
-  { num: "01", label: "L1 Triage",           color: "#3b82f6", time: "0-2 years",   salary: "£35K-£50K" },
-  { num: "02", label: "L2 Advanced",         color: "#8b5cf6", time: "2-5 years",   salary: "£50K-£75K" },
-  { num: "03", label: "L3 Forensic",         color: "#ec4899", time: "5-8 years",   salary: "£75K-£100K" },
-  { num: "04", label: "SOC Lead",            color: "#f59e0b", time: "8+ years",    salary: "£100K-£140K+" },
+  { num: "00", label: "Entry Point",         color: "#94a3b8", time: "0-6 months" },
+  { num: "01", label: "L1 Triage",           color: "#3b82f6", time: "0-2 years"  },
+  { num: "02", label: "L2 Advanced",         color: "#8b5cf6", time: "2-5 years"  },
+  { num: "03", label: "L3 Forensic",         color: "#ec4899", time: "5-8 years"  },
+  { num: "04", label: "SOC Lead",            color: "#f59e0b", time: "8+ years"   },
 ] as const;
 
 // ── Sidebar ───────────────────────────────────────────────────────────────────
@@ -294,8 +294,8 @@ function SkillCard({ name, category, correlatedTools, accentColor, what, why, re
   );
 }
 
-function SectionHeader({ num, label, color, time, salary, subtitle }: {
-  num: string; label: string; color: string; time: string; salary: string; subtitle: string;
+function SectionHeader({ num, label, color, time, subtitle }: {
+  num: string; label: string; color: string; time: string; subtitle: string;
 }) {
   return (
     <div className="mb-12">
@@ -307,7 +307,7 @@ function SectionHeader({ num, label, color, time, salary, subtitle }: {
           Level {num}
         </span>
         <span className="font-mono text-[13px] font-medium" style={{ color: "rgba(148,163,184,0.7)" }}>
-          {time} • {salary}
+          {time}
         </span>
       </div>
       <h2
@@ -534,7 +534,7 @@ export default function DetailedSOCPageClient() {
             <SectionHeader
               num="00" label="The Entry Point" color="#94a3b8"
               subtitle="Building the Foundation"
-              time="0-6 months" salary="£25K-£35K"
+              time="0-6 months"
             />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>
@@ -623,7 +623,7 @@ export default function DetailedSOCPageClient() {
             <SectionHeader
               num="01" label="L1 Triage" color="#3b82f6"
               subtitle="The Front Lines of Defense"
-              time="0-2 years" salary="£35K-£50K"
+              time="0-2 years"
             />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>
@@ -699,7 +699,7 @@ export default function DetailedSOCPageClient() {
             <SectionHeader
               num="02" label="L2 Advanced" color="#8b5cf6"
               subtitle="The Pattern Matcher & Hunter"
-              time="2-5 years" salary="£50K-£75K"
+              time="2-5 years"
             />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>
@@ -771,7 +771,7 @@ export default function DetailedSOCPageClient() {
             <SectionHeader
               num="03" label="L3 Forensic" color="#ec4899"
               subtitle="The Narrative Storyteller"
-              time="5-8 years" salary="£75K-£100K"
+              time="5-8 years"
             />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>
@@ -826,7 +826,7 @@ export default function DetailedSOCPageClient() {
             <SectionHeader
               num="04" label="SOC Lead" color="#f59e0b"
               subtitle="Defensive Architecture & Strategy"
-              time="8+ years" salary="£100K-£140K+"
+              time="8+ years"
             />
             <div className="space-y-6 text-lg leading-relaxed mb-14" style={{ color: "rgba(203,213,225,0.75)" }}>
               <p>

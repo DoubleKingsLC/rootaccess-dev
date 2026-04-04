@@ -44,7 +44,6 @@ export const LEVELS: Level[] = [
     quote:
       "You don't need a degree. You need curiosity and the discipline to build it. Everyone starts here.",
     time: "0–6 months",
-    salary: "£25K–£35K",
     tools: ["VirtualBox", "Linux", "Terminal / PowerShell", "Python"],
     skills: [
       "Networking — TCP/IP, DNS, DHCP, subnetting",
@@ -72,7 +71,6 @@ export const LEVELS: Level[] = [
     quote:
       "You found the SQLi. Now write a report that makes the developer fix it. Both skills matter equally.",
     time: "0–2 years",
-    salary: "£35K–£55K",
     tools: ["Burp Suite Community", "Nmap", "SQLmap", "OWASP Juice Shop"],
     skills: [
       "OWASP Top 10 — SQLi, XSS, broken access control",
@@ -102,7 +100,6 @@ export const LEVELS: Level[] = [
     quote:
       "One XSS becomes a session hijack, becomes an IDOR, becomes a full data breach. You learn to chain.",
     time: "2–5 years",
-    salary: "£55K–£80K",
     tools: ["Burp Suite Pro", "Metasploit", "Gobuster / ffuf", "AWS CLI / Azure CLI"],
     skills: [
       "Cloud pentesting — IAM misconfigs, S3, Lambda",
@@ -133,7 +130,6 @@ export const LEVELS: Level[] = [
     quote:
       "It's not a test anymore. It's a simulation of a real APT. Your job: think like the adversary.",
     time: "5–8 years",
-    salary: "£80K–£110K",
     tools: ["Cobalt Strike / Sliver", "BloodHound / Mimikatz", "Havoc C2", "OSINT Framework"],
     skills: [
       "Red team TTPs — APT simulation with C2 frameworks",
@@ -164,7 +160,6 @@ export const LEVELS: Level[] = [
     quote:
       "You don't just find vulnerabilities. You design the program that finds them at scale, across every product.",
     time: "8+ years",
-    salary: "£110K–£160K+",
     tools: ["Dradis / Plextrac", "Confluence / Jira", "PowerBI", "Threat intel platforms"],
     skills: [
       "Pentest program design, tooling strategy and methodology ownership",
