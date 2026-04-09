@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 type Props = { progress: number };
 
 const careerOpacity = (p: number): number => {
-  if (p < 0.99) return 0;
-  if (p < 0.998) return (p - 0.99) / 0.008;
+  if (p < 0.988) return 0;
+  if (p < 0.996) return (p - 0.988) / 0.008;
   return 1;
 };
 
@@ -16,7 +16,7 @@ function OutroCareerCard({ op, onNavigate }: { op: number; onNavigate: () => voi
 
   return (
     <div
-      className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center px-6 transition-all duration-700"
+      className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center px-6 transition-all duration-300"
       style={{
         opacity: op,
         transform: `scale(${0.92 + op * 0.08}) translateY(${(1 - op) * 20}px)`,
@@ -24,7 +24,7 @@ function OutroCareerCard({ op, onNavigate }: { op: number; onNavigate: () => voi
       }}
     >
       <div
-        className={`w-[min(580px,94vw)] rounded-3xl border border-teal-500/30 bg-black/85 px-6 py-8 md:px-10 md:py-12 backdrop-blur-3xl shadow-[0_0_80px_rgba(20,184,166,0.15)] text-center relative overflow-hidden transition-all duration-300 ${
+        className={`relative w-[min(580px,94vw)] overflow-hidden rounded-3xl border border-teal-500/30 bg-black/85 px-6 py-8 text-center shadow-[0_0_80px_rgba(20,184,166,0.15)] backdrop-blur-3xl transition-all duration-200 md:px-10 md:py-12 ${
           op > 0.1 ? "pointer-events-auto" : "pointer-events-none"
         }`}
         role="banner"
@@ -59,12 +59,12 @@ function OutroCareerCard({ op, onNavigate }: { op: number; onNavigate: () => voi
           <button
             type="button"
             onClick={onNavigate}
-            className="group relative w-full max-w-sm overflow-hidden rounded-2xl border border-teal-500/50 bg-teal-500/10 px-8 py-5 font-mono text-sm font-black uppercase tracking-[0.3em] text-teal-400 transition-all hover:border-teal-400 hover:bg-teal-500/20 hover:text-white hover:shadow-[0_0_40px_rgba(20,184,166,0.3)]"
+            className="group relative w-full max-w-sm overflow-hidden rounded-2xl border border-teal-500/50 bg-teal-500/10 px-8 py-5 font-mono text-sm font-black uppercase tracking-[0.3em] text-teal-400 transition-all duration-200 hover:border-teal-400 hover:bg-teal-500/20 hover:text-white hover:shadow-[0_0_40px_rgba(20,184,166,0.3)]"
           >
             <div className="relative z-10 flex items-center justify-center gap-3">
               GO THROUGH THE ROADMAP
               <svg
-                className="transition-transform group-hover:translate-x-1"
+                className="transition-transform duration-200 group-hover:translate-x-1"
                 width="16"
                 height="16"
                 viewBox="0 0 24 24"
@@ -78,7 +78,7 @@ function OutroCareerCard({ op, onNavigate }: { op: number; onNavigate: () => voi
                 <polyline points="12 5 19 12 12 19" />
               </svg>
             </div>
-            <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-teal-500 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+            <div className="absolute inset-x-0 bottom-0 h-1 scale-x-0 transform bg-gradient-to-r from-transparent via-teal-500 to-transparent transition-transform duration-200 group-hover:scale-x-100" />
           </button>
 
           <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-teal-900/60 font-bold">

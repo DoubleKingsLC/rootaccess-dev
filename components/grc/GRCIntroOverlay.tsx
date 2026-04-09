@@ -40,28 +40,28 @@ export const GRCIntroOverlay: React.FC<GRCIntroOverlayProps> = ({
 
       {/* Title */}
       <h1
-        className="font-sans text-4xl font-bold tracking-tight text-white md:text-6xl lg:text-7xl uppercase text-center"
+        className="text-center font-sans text-3xl font-bold uppercase tracking-tight text-white sm:text-4xl md:text-6xl lg:text-7xl"
         style={{ textShadow: "0 0 60px rgba(20,184,166,0.18)" }}
       >
         A Day In The Life:<br/>
-        <span className="text-teal-400">GRC Engineer</span>
+        <span className="text-teal-400">GRC Analyst</span>
       </h1>
 
       {/* Subtitle & Description */}
-      <div className="mt-8 flex flex-col items-center gap-4 text-center">
-        <p className="font-mono text-sm tracking-[0.3em] text-slate-300 md:text-base uppercase">
+      <div className="mt-6 flex flex-col items-center gap-3 text-center md:mt-8 md:gap-4">
+        <p className="font-mono text-xs uppercase tracking-[0.28em] text-slate-300 md:text-base md:tracking-[0.3em]">
           The Silent Guardian of Innovation.
         </p>
-        <p className="max-w-3xl px-4 font-sans text-sm md:text-base leading-relaxed tracking-wide text-teal-100/90 drop-shadow-sm">
+        <p className="max-w-3xl px-4 font-sans text-xs leading-relaxed tracking-wide text-teal-100/90 drop-shadow-sm sm:text-sm md:text-base">
           Join us on a journey through the life of a GRC analyst—ensuring that the wheels of 
           development keep turning smoothly while adhering to the highest standards of safety and risk mitigation.
         </p>
       </div>
 
-      <div className="h-10" />
+      <div className="h-6 md:h-10" />
 
       {/* Scroll + autoplay controls */}
-      <div className="flex flex-col items-center gap-8">
+      <div className="flex flex-col items-center gap-6 md:gap-8">
         {/* Scroll CTA */}
         <div className="flex flex-col items-center gap-3">
           <p
@@ -104,7 +104,7 @@ export const GRCIntroOverlay: React.FC<GRCIntroOverlayProps> = ({
               onPlay();
             }}
             disabled={isAutoScrolling}
-            className="scrolly-control-btn group relative flex h-20 w-20 shrink-0 items-center justify-center overflow-visible rounded-full text-white shadow-none outline-none transition-all duration-500 hover:scale-110 focus-visible:ring-2 focus-visible:ring-teal-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[rgb(2,15,18)] disabled:opacity-50 disabled:pointer-events-none"
+            className="scrolly-control-btn group relative flex h-16 w-16 shrink-0 items-center justify-center overflow-visible rounded-full text-white shadow-none outline-none transition-all duration-300 hover:scale-105 md:h-20 md:w-20 focus-visible:ring-2 focus-visible:ring-teal-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[rgb(2,15,18)] disabled:pointer-events-none disabled:opacity-50"
             style={{
               border: "1px solid rgba(20,184,166,0.3)",
               background: "rgba(2,15,18,0.7)",
@@ -136,7 +136,7 @@ export const GRCIntroOverlay: React.FC<GRCIntroOverlayProps> = ({
               <>
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[7.5rem] w-[7.5rem] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[min(7.5rem,28vw)] w-[min(7.5rem,28vw)] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                   style={{
                     background:
                       "radial-gradient(circle at center, rgba(20,184,166,0.38) 0%, rgba(20,184,166,0.12) 42%, transparent 72%)",
@@ -144,7 +144,7 @@ export const GRCIntroOverlay: React.FC<GRCIntroOverlayProps> = ({
                 />
                 <div className="relative z-10 flex items-center justify-center">
                   <svg
-                    className="ml-1 h-8 w-8 transition-transform group-hover:scale-110"
+                    className="ml-1 h-7 w-7 transition-transform duration-200 group-hover:scale-105 md:h-8 md:w-8"
                     viewBox="0 0 24 24"
                     fill={TEAL}
                   >
