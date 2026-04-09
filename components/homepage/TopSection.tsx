@@ -36,7 +36,7 @@ const DOMAIN_DATA = [
     id: "soc",
     nodeCode: "NODE_001",
     title: "SOC",
-    subtitle: "Security monitoring simulation.",
+    subtitle: "Real-time alerts, triage & incident response.",
     analystRole: "SOC Analyst",
     isLive: true,
     status: "ACTIVE",
@@ -47,7 +47,7 @@ const DOMAIN_DATA = [
     id: "web",
     nodeCode: "NODE_002",
     title: "WEB_HACKING",
-    subtitle: "Vulnerability exploitation research.",
+    subtitle: "Exploiting web apps: recon, bugs & access.",
     analystRole: "WebApp Pentester",
     isLive: true,
     status: "ACTIVE",
@@ -58,7 +58,7 @@ const DOMAIN_DATA = [
     id: "ai",
     nodeCode: "NODE_003",
     title: "AI_HACKING",
-    subtitle: "Hacking into LLMs — jailbreaks, prompts & extraction.",
+    subtitle: "Hacking into LLMs: jailbreaks, prompts & extraction.",
     analystRole: "AI Security Analyst",
     isLive: true,
     status: "ACTIVE",
@@ -69,7 +69,7 @@ const DOMAIN_DATA = [
     id: "network",
     nodeCode: "NODE_004",
     title: "NETWORK_PENTESTING",
-    subtitle: "Enterprise intrusion testing.",
+    subtitle: "Internal pentests, AD & lateral movement.",
     analystRole: "Network Pentester",
     isLive: true,
     status: "ACTIVE",
@@ -80,7 +80,7 @@ const DOMAIN_DATA = [
     id: "grc",
     nodeCode: "NODE_005",
     title: "GRC",
-    subtitle: "Governance & Risk frameworks.",
+    subtitle: "Compliance, audits & enterprise risk.",
     analystRole: "GRC Analyst",
     isLive: true,
     status: "ACTIVE",
@@ -91,7 +91,7 @@ const DOMAIN_DATA = [
     id: "cloud",
     nodeCode: "NODE_006",
     title: "CLOUD_SEC",
-    subtitle: "Cloud hardening & IAM.",
+    subtitle: "IAM, misconfigs & multi-cloud hardening.",
     analystRole: "Cloud Security Engineer",
     isLive: false,
     status: "ACTIVE",
@@ -102,7 +102,7 @@ const DOMAIN_DATA = [
     id: "devsecops",
     nodeCode: "NODE_007",
     title: "DEVSECOPS",
-    subtitle: "Pipeline security, SAST/DAST & secure SDLC.",
+    subtitle: "Secure builds, pipelines & supply chain.",
     analystRole: "DevSecOps Engineer",
     isLive: false,
     status: "ACTIVE",
@@ -528,7 +528,7 @@ export default function TopSection() {
                 </div>
 
                 <h3 className="font-headline text-xl font-bold text-white mb-0.5">Career Paths</h3>
-                <p className="font-label text-white/40 text-[12px] mb-4">Per level, per domain — everything mapped.</p>
+                <p className="font-label text-white/40 text-[12px] mb-4">Per level, per domain. Everything mapped.</p>
 
                 <div className="flex flex-col gap-3">
                   {[
@@ -817,7 +817,7 @@ export default function TopSection() {
                           <span
                             className="relative group flex-1 flex items-center justify-center gap-1.5 bg-cyan-400/15 text-white/35 border border-cyan-400/20 font-headline text-[11px] tracking-[0.1em] font-bold py-3 px-4 uppercase cursor-not-allowed select-none"
                             aria-disabled
-                            aria-label="Experience It — coming soon"
+                            aria-label="Experience It, coming soon"
                           >
                             <span
                               className="pointer-events-none absolute bottom-[calc(100%+6px)] left-1/2 z-20 -translate-x-1/2 rounded border border-cyan-400/35 bg-[#0a0f12] px-2.5 py-1.5 font-mono text-[9px] font-bold tracking-[0.2em] text-cyan-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)] opacity-0 transition-opacity duration-150 group-hover:opacity-100 whitespace-nowrap"
@@ -840,7 +840,7 @@ export default function TopSection() {
                           <span
                             className="relative group flex-1 flex items-center justify-center gap-1.5 border border-white/[0.08] text-white/35 font-headline text-[11px] tracking-[0.1em] font-bold py-3 px-4 uppercase cursor-not-allowed select-none"
                             aria-disabled
-                            aria-label="Explore Pathway — coming soon"
+                            aria-label="Explore Pathway, coming soon"
                           >
                             <span
                               className="pointer-events-none absolute bottom-[calc(100%+6px)] left-1/2 z-20 -translate-x-1/2 rounded border border-white/20 bg-[#0a0f12] px-2.5 py-1.5 font-mono text-[9px] font-bold tracking-[0.2em] text-white/90 shadow-[0_4px_20px_rgba(0,0,0,0.5)] opacity-0 transition-opacity duration-150 group-hover:opacity-100 whitespace-nowrap"
