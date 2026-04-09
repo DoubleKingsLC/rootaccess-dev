@@ -58,7 +58,7 @@ const DOMAIN_DATA = [
     id: "ai",
     nodeCode: "NODE_003",
     title: "AI_HACKING",
-    subtitle: "LLM security audits.",
+    subtitle: "Hacking into LLMs — jailbreaks, prompts & extraction.",
     analystRole: "AI Security Analyst",
     isLive: true,
     status: "ACTIVE",
@@ -77,19 +77,8 @@ const DOMAIN_DATA = [
     sync: "1x11_LAN",
   },
   {
-    id: "cloud",
-    nodeCode: "NODE_005",
-    title: "CLOUD_SEC",
-    subtitle: "Cloud hardening & IAM.",
-    analystRole: "Cloud Security Engineer",
-    isLive: false,
-    status: "ACTIVE",
-    threat: "LOW // 0.12",
-    sync: "AWS_SYNC_OK",
-  },
-  {
     id: "grc",
-    nodeCode: "NODE_006",
+    nodeCode: "NODE_005",
     title: "GRC",
     subtitle: "Governance & Risk frameworks.",
     analystRole: "GRC Analyst",
@@ -97,6 +86,17 @@ const DOMAIN_DATA = [
     status: "ACTIVE",
     threat: "NOMINAL",
     sync: "COMPLIANT",
+  },
+  {
+    id: "cloud",
+    nodeCode: "NODE_006",
+    title: "CLOUD_SEC",
+    subtitle: "Cloud hardening & IAM.",
+    analystRole: "Cloud Security Engineer",
+    isLive: false,
+    status: "ACTIVE",
+    threat: "LOW // 0.12",
+    sync: "AWS_SYNC_OK",
   },
   {
     id: "devsecops",
@@ -419,8 +419,8 @@ export default function TopSection() {
                     Scenario-driven technical progression.
                   </p>
 
-                  <div className="mt-2 grid grid-cols-2 gap-x-4 md:gap-x-6">
-                    <div>
+                  <div className="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-x-4 md:gap-x-6 gap-y-5 sm:gap-y-0">
+                    <div className="min-w-0">
                       <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/60 mb-2">Live Now</p>
                       <ul className="space-y-1.5">
                         {[
@@ -437,15 +437,22 @@ export default function TopSection() {
                         ))}
                       </ul>
                     </div>
-                    <div>
+                    <div className="min-w-0 sm:text-center">
+                      <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/45 mb-2 sm:mx-auto sm:max-w-[12rem]">Coming Soon</p>
+                      <ul className="space-y-1.5 sm:flex sm:flex-col sm:items-center">
+                        <li className="flex items-center gap-2.5 sm:justify-center">
+                          <span className="w-1.5 h-1.5 rounded-full border border-white/30 flex-shrink-0" />
+                          <span className="font-label text-[17px] sm:text-[18px] text-white/50">DevSecOps</span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="min-w-0 sm:text-right">
                       <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/45 mb-2">Coming Soon</p>
-                      <ul className="space-y-1.5">
-                        {["DevSecOps", "Cloud Sec"].map((label) => (
-                          <li key={label} className="flex items-center gap-2.5">
-                            <span className="w-1.5 h-1.5 rounded-full border border-white/30 flex-shrink-0" />
-                            <span className="font-label text-[17px] sm:text-[18px] text-white/50">{label}</span>
-                          </li>
-                        ))}
+                      <ul className="space-y-1.5 sm:flex sm:flex-col sm:items-end">
+                        <li className="flex items-center gap-2.5 sm:justify-end">
+                          <span className="w-1.5 h-1.5 rounded-full border border-white/30 flex-shrink-0" />
+                          <span className="font-label text-[17px] sm:text-[18px] text-white/50">Cloud Sec</span>
+                        </li>
                       </ul>
                     </div>
                   </div>
