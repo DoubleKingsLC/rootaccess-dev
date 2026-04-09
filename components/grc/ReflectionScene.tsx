@@ -17,7 +17,7 @@ const DEBRIEF_TASKS = [
   { task: 3, label: "Risk Assessment",   outcome: "Identified and scored 14 organizational risks", icon: "⚡" },
   { task: 4, label: "Team Alignment",    outcome: "Coordinated fixes across SRE, AppSec, and Eng", icon: "🤝" },
   { task: 5, label: "Documentation",     outcome: "Verified evidence against 3 policy requirements", icon: "📄" },
-  { task: 6, label: "Emergency Ops",     outcome: "Contained 1 SEV-1 incident, isolated blast radius", icon: "🚨" },
+  { task: 6, label: "Audit & Controls",  outcome: "Signed off domain controls; Network Security cleared last", icon: "🛡️" },
 ];
 
 export const ReflectionScene: React.FC<SceneProps> = ({ progress }) => {

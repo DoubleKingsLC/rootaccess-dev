@@ -1,10 +1,68 @@
 "use client";
 
+import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GRCBriefingCard } from "./GRCBriefingCard";
+import { IconCog, IconLockClosed, IconLaptop, IconShieldCheck } from "./GRCSceneIcons";
+import { type MeetingFaceRole, MeetingFace } from "./GRCPeopleAvatars";
 
 interface SceneProps {
   progress: number;
+}
+
+type RoleTone = "teal" | "indigo" | "orange" | "purple";
+
+const ROLE_STYLE: Record<RoleTone, { ring: string; iconClass: string; ping: string }> = {
+  teal: { ring: "ring-teal-400/45", iconClass: "text-teal-300", ping: "border-teal-500" },
+  indigo: { ring: "ring-indigo-400/45", iconClass: "text-indigo-300", ping: "border-indigo-500" },
+  orange: { ring: "ring-orange-400/45", iconClass: "text-orange-300", ping: "border-orange-500" },
+  purple: { ring: "ring-purple-400/45", iconClass: "text-purple-300", ping: "border-purple-500" },
+};
+
+function MeetingPersonAvatar({
+  face,
+  tone,
+  Icon,
+  size = "md",
+  showPing = false,
+}: {
+  face: MeetingFaceRole;
+  tone: RoleTone;
+  Icon: React.ComponentType<{ className?: string; size?: number; title?: string }>;
+  size?: "sm" | "md" | "lg";
+  /** Pulse ring only around the face circle (not the role icon below). */
+  showPing?: boolean;
+}) {
+  const s = ROLE_STYLE[tone];
+  const box =
+    size === "lg"
+      ? "h-[5.25rem] w-[5.25rem]"
+      : size === "md"
+        ? "h-14 w-14"
+        : "h-10 w-10";
+  /** Tiny icons under the face so they never cover the portrait. */
+  const iconPx = size === "lg" ? 9 : size === "md" ? 8 : 7;
+  const badgeBox = size === "lg" ? "h-3.5 w-3.5" : "h-3 w-3";
+  return (
+    <div className="inline-flex flex-col items-center gap-1">
+      <div className="relative">
+        {showPing && (
+          <div
+            className={`pointer-events-none absolute inset-0 rounded-full border-2 ${s.ping} animate-ping opacity-25`}
+          />
+        )}
+        <div className={`relative overflow-hidden rounded-full shadow-lg ring-2 ${s.ring} ${box}`}>
+          <MeetingFace role={face} className="h-full w-full object-cover object-top" />
+        </div>
+      </div>
+      <div
+        className={`flex shrink-0 items-center justify-center rounded-full border border-white/10 bg-[#0c1219]/95 shadow-sm ${badgeBox}`}
+        aria-hidden
+      >
+        <Icon size={iconPx} className={`shrink-0 ${s.iconClass}`} />
+      </div>
+    </div>
+  );
 }
 
 /**
@@ -90,7 +148,7 @@ export const CollaborationScene: React.FC<SceneProps> = ({ progress }) => {
                    {/* SRE Node State */}
                    <div className={`flex items-center justify-between rounded-lg border p-3 transition-colors duration-300 ${isAligned ? 'bg-emerald-500/10 border-emerald-500/30' : p > 0.1 ? 'bg-indigo-500/10 border-indigo-500/30' : 'bg-white/5 border-white/5'}`}>
                       <div className="flex items-center gap-3">
-                         <span className="text-lg">⚙️</span>
+                         <MeetingPersonAvatar face="sre" tone="indigo" Icon={IconCog} size="sm" />
                          <div className="flex flex-col">
                             <span className="text-xs font-bold text-white">DevOps / SRE</span>
                             <span className="text-[9px] font-mono text-slate-500">AWS Infrastructure</span>
@@ -104,7 +162,7 @@ export const CollaborationScene: React.FC<SceneProps> = ({ progress }) => {
                    {/* AppSec Node State */}
                    <div className={`flex items-center justify-between rounded-lg border p-3 transition-colors duration-300 ${isAligned ? 'bg-emerald-500/10 border-emerald-500/30' : p > 0.55 ? 'bg-orange-500/10 border-orange-500/30' : 'bg-white/5 border-white/5'}`}>
                       <div className="flex items-center gap-3">
-                         <span className="text-lg">🔐</span>
+                         <MeetingPersonAvatar face="appsec" tone="orange" Icon={IconLockClosed} size="sm" />
                          <div className="flex flex-col">
                             <span className="text-xs font-bold text-white">Application Security</span>
                             <span className="text-[9px] font-mono text-slate-500">Pipeline Checks</span>
@@ -118,7 +176,7 @@ export const CollaborationScene: React.FC<SceneProps> = ({ progress }) => {
                    {/* EngLead Node State */}
                    <div className={`flex items-center justify-between rounded-lg border p-3 transition-colors duration-300 ${isAligned ? 'bg-emerald-500/10 border-emerald-500/30' : p > 0.75 ? 'bg-purple-500/10 border-purple-500/30' : 'bg-white/5 border-white/5'}`}>
                       <div className="flex items-center gap-3">
-                         <span className="text-lg">💻</span>
+                         <MeetingPersonAvatar face="eng" tone="purple" Icon={IconLaptop} size="sm" />
                          <div className="flex flex-col">
                             <span className="text-xs font-bold text-white">Engineering Lead</span>
                             <span className="text-[9px] font-mono text-slate-500">Core Services</span>
@@ -205,8 +263,12 @@ export const CollaborationScene: React.FC<SceneProps> = ({ progress }) => {
                          </motion.div>
                       )}
                    </AnimatePresence>
-                   <div className={`w-24 h-24 rounded-[2rem] flex items-center justify-center border-2 border-teal-500 shadow-[0_0_40px_rgba(20,184,166,0.2)] bg-[#121c26] backdrop-blur-md transition-colors ${isAligned ? 'border-emerald-500 shadow-[0_0_80px_rgba(16,185,129,0.4)]' : ''}`}>
-                      <span className="text-4xl">🛡️</span>
+                   <div
+                     className={`relative rounded-[2rem] p-1 transition-all duration-300 ${
+                       isAligned ? "shadow-[0_0_60px_rgba(16,185,129,0.35)] ring-2 ring-emerald-500/50" : "shadow-[0_0_40px_rgba(20,184,166,0.2)] ring-2 ring-teal-500/30"
+                     }`}
+                   >
+                      <MeetingPersonAvatar face="grc" tone="teal" Icon={IconShieldCheck} size="lg" />
                    </div>
                    <div className="flex flex-col items-center">
                       <span className={`text-[11px] font-black uppercase tracking-[0.2em] px-4 py-1.5 rounded-lg bg-[#0b1016]/80 backdrop-blur-md border ${isAligned ? 'text-emerald-400 border-emerald-500/50' : 'text-teal-400 border-teal-500/50'}`}>GRC Analyst</span>
@@ -225,10 +287,13 @@ export const CollaborationScene: React.FC<SceneProps> = ({ progress }) => {
                       )}
                    </AnimatePresence>
 
-                   <div className={`relative flex h-16 w-16 items-center justify-center rounded-full border-2 bg-[#121c26] backdrop-blur-md transition-colors duration-300 ${isAligned ? 'border-emerald-500 shadow-[0_0_40px_rgba(16,185,129,0.3)]' : p > 0.1 ? 'border-indigo-500 shadow-[0_0_40px_rgba(99,102,241,0.3)]' : 'border-slate-700'}`}>
-                      {p > 0.1 && !isAligned && <div className="absolute inset-0 rounded-full border-2 border-indigo-500 animate-ping opacity-30" />}
-                      <span className="text-2xl">⚙️</span>
-                   </div>
+                   <MeetingPersonAvatar
+                     face="sre"
+                     tone="indigo"
+                     Icon={IconCog}
+                     size="md"
+                     showPing={p > 0.1 && !isAligned}
+                   />
                    <div className="flex flex-col items-center">
                       <span className={`text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded bg-[#0b1016]/80 backdrop-blur-md border ${isAligned ? 'text-emerald-400 border-emerald-500/50' : p > 0.1 ? 'text-indigo-400 border-indigo-500/50' : 'text-slate-400 border-slate-700'}`}>DevOps/SRE</span>
                    </div>
@@ -246,10 +311,13 @@ export const CollaborationScene: React.FC<SceneProps> = ({ progress }) => {
                       )}
                    </AnimatePresence>
 
-                   <div className={`relative flex h-16 w-16 items-center justify-center rounded-full border-2 bg-[#121c26] backdrop-blur-md transition-colors duration-300 ${isAligned ? 'border-emerald-500 shadow-[0_0_40px_rgba(16,185,129,0.3)]' : p > 0.55 ? 'border-orange-500 shadow-[0_0_40px_rgba(249,115,22,0.3)]' : 'border-slate-700'}`}>
-                      {p > 0.55 && !isAligned && <div className="absolute inset-0 rounded-full border-2 border-orange-500 animate-ping opacity-30" />}
-                      <span className="text-2xl">🔐</span>
-                   </div>
+                   <MeetingPersonAvatar
+                     face="appsec"
+                     tone="orange"
+                     Icon={IconLockClosed}
+                     size="md"
+                     showPing={p > 0.55 && !isAligned}
+                   />
                    <div className="flex flex-col items-center">
                       <span className={`text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded bg-[#0b1016]/80 backdrop-blur-md border ${isAligned ? 'text-emerald-400 border-emerald-500/50' : p > 0.55 ? 'text-orange-400 border-orange-500/50' : 'text-slate-400 border-slate-700'}`}>AppSec</span>
                    </div>
@@ -267,10 +335,13 @@ export const CollaborationScene: React.FC<SceneProps> = ({ progress }) => {
                       )}
                    </AnimatePresence>
 
-                   <div className={`relative flex h-16 w-16 items-center justify-center rounded-full border-2 bg-[#121c26] backdrop-blur-md transition-colors duration-300 ${isAligned ? 'border-emerald-500 shadow-[0_0_40px_rgba(16,185,129,0.3)]' : p > 0.75 ? 'border-purple-500 shadow-[0_0_40px_rgba(168,85,247,0.3)]' : 'border-slate-700'}`}>
-                      {p > 0.75 && !isAligned && <div className="absolute inset-0 rounded-full border-2 border-purple-500 animate-ping opacity-30" />}
-                      <span className="text-2xl">💻</span>
-                   </div>
+                   <MeetingPersonAvatar
+                     face="eng"
+                     tone="purple"
+                     Icon={IconLaptop}
+                     size="md"
+                     showPing={p > 0.75 && !isAligned}
+                   />
                    <div className="flex flex-col items-center">
                       <span className={`text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded bg-[#0b1016]/80 backdrop-blur-md border ${isAligned ? 'text-emerald-400 border-emerald-500/50' : p > 0.75 ? 'text-purple-400 border-purple-500/50' : 'text-slate-400 border-slate-700'}`}>Eng Lead</span>
                    </div>
