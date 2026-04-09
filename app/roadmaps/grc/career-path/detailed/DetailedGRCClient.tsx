@@ -9,8 +9,8 @@ import { motion } from "framer-motion";
 const LEVELS = [
   { num: "00", label: "Entry Point",                 color: "#94a3b8", time: "0–6 months" },
   { num: "01", label: "Junior GRC Analyst",          color: "#14b8a6", time: "1–2 years"   },
-  { num: "02", label: "GRC Analyst",                 color: "#14b8a6", time: "2–4 years"   },
-  { num: "03", label: "GRC Lead",                    color: "#14b8a6", time: "5+ years"    },
+  { num: "02", label: "GRC Analyst",                 color: "#3b82f6", time: "2–4 years"   },
+  { num: "03", label: "GRC Lead",                    color: "#f59e0b", time: "5+ years"    },
 ] as const;
 
 // ── Sidebar ───────────────────────────────────────────────────────────────────
@@ -450,7 +450,7 @@ export default function DetailedGRCClient() {
 
           {/* LEVEL 02 */}
           <section id="level-02" className="py-20">
-            <SectionHeader num="02" label="GRC Analyst" color="#14b8a6" subtitle="Audit Ownership & Risk Lifecycle" time="2–4 years" />
+            <SectionHeader num="02" label="GRC Analyst" color="#3b82f6" subtitle="Audit Ownership & Risk Lifecycle" time="2–4 years" />
             <div className="space-y-6 text-lg leading-relaxed mb-14 text-slate-400 font-sans">
               <p>
                 By year two, something changes. You have survived a full audit cycle. You have felt the panic of missing evidence and seen findings issued over simple errors. Now, you understand the game well enough to spot gaps before an auditor does. This instinct separates junior analysts from seniors.
@@ -463,25 +463,25 @@ export default function DetailedGRCClient() {
               </p>
             </div>
 
-            <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] mb-6" style={{ color: "rgba(20,184,166,0.85)" }}>Certifications</p>
+            <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] mb-6" style={{ color: "rgba(59,130,246,0.85)" }}>Certifications</p>
             <div className="space-y-5">
-              <CertCard name="CISA — Certified Information Systems Auditor" provider="ISACA" href="https://www.isaca.org/credentialing/cisa" accentColor="#14b8a6" isTop
+              <CertCard name="CISA — Certified Information Systems Auditor" provider="ISACA" href="https://www.isaca.org/credentialing/cisa" accentColor="#3b82f6" isTop
                 what="The industry gold standard for auditing information systems. Covers the full audit lifecycle — planning, fieldwork, reporting, and follow-up — across systems, controls, and governance."
                 why="CISA is the credential that tells a hiring manager or client that you can own an audit, not just participate in one. It is on more mid-to-senior GRC job descriptions than any other single cert. Study now and sit it the moment you are eligible."
               />
-              <CertCard name="ISO 27001 Lead Implementer" provider="ISO" href="https://www.iso.org/standard/27001" accentColor="#14b8a6"
+              <CertCard name="ISO 27001 Lead Implementer" provider="ISO" href="https://www.iso.org/standard/27001" accentColor="#3b82f6"
                 what="How to design, implement, and manage an ISMS from scratch. Covers scope definition, risk assessment methodology, Statement of Applicability, and internal audit process."
                 why="CISA proves you can audit an existing program; Lead Implementer proves you can build one. If you are in consulting or helping organizations achieve certification, this is more immediately useful. Strong signal for international markets."
               />
             </div>
 
-            <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] mt-12 mb-6" style={{ color: "rgba(20,184,166,0.85)" }}>Skills & Resources</p>
+            <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] mt-12 mb-6" style={{ color: "rgba(59,130,246,0.85)" }}>Skills & Resources</p>
             <div className="space-y-6">
               <SkillCard
                 name="Gap Analysis"
                 category="Risk Strategy"
                 correlatedTools={["Excel", "Vanta"]}
-                accentColor="#14b8a6"
+                accentColor="#3b82f6"
                 what="A structured comparison of what a framework requires against what an organization has in place. The output is a prioritized list of control gaps — ranked by risk exposure and tied to remediation."
                 why="Gap analysis is the deliverable that justifies GRC's seat at the table. It translates abstract requirements into a concrete list of decisions leadership needs to make. If an executive can read it in ten minutes and understand their exposure, you are valuable."
                 resources={{
@@ -498,7 +498,7 @@ export default function DetailedGRCClient() {
                 name="Vendor Risk Management"
                 category="Third-Party Risk"
                 correlatedTools={["OneTrust", "Vanta"]}
-                accentColor="#14b8a6"
+                accentColor="#3b82f6"
                 what="Evaluating the security posture of third-party vendors (questionnaires, reviewing SOC 2 reports, etc.) and making risk-based recommendations on vendor relationships."
                 why="Most data breaches involve a third party. If your organization can't demonstrate it has reviewed its critical vendors, that is a significant finding. You need to know how to identify exceptions and missing controls in a SOC 2 report."
                 resources={{
@@ -515,7 +515,7 @@ export default function DetailedGRCClient() {
                 name="Risk Lifecycle Management"
                 category="Risk Operations"
                 correlatedTools={["ServiceNow IRM", "eramba"]}
-                accentColor="#14b8a6"
+                accentColor="#3b82f6"
                 what="Taking a risk from first identification to board-level reporting: logging it, assigning owners, tracking mitigation, and validating that remediation actually closed the gap."
                 why="A lot of junior analysts identify risk and hand it off. At this level you are accountable for the full loop. The analysts who close the loop are the ones who get asked to run programs. This is how you build Lead credibility."
                 resources={{
@@ -535,7 +535,7 @@ export default function DetailedGRCClient() {
 
           {/* LEVEL 03 */}
           <section id="level-03" className="py-20 pb-32">
-            <SectionHeader num="03" label="GRC Lead" color="#14b8a6" subtitle="Program Design & Executive Influence" time="5+ years" />
+            <SectionHeader num="03" label="GRC Lead" color="#f59e0b" subtitle="Program Design & Executive Influence" time="5+ years" />
             <div className="space-y-6 text-lg leading-relaxed mb-14 text-slate-400 font-sans">
               <p>
                 The hardest transition in GRC is moving from analyst to lead. The methodical execution that got you here is no longer enough. Now, your job is deciding what the program prioritizes and convincing senior leadership to act. The CFO does not care about your spreadsheet. The board ignores NIST subcategories. You must translate technical details into clear business decisions.
@@ -548,25 +548,25 @@ export default function DetailedGRCClient() {
               </p>
             </div>
 
-            <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] mb-6" style={{ color: "rgba(20,184,166,0.85)" }}>Certifications</p>
+            <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] mb-6" style={{ color: "rgba(245,158,11,0.85)" }}>Certifications</p>
             <div className="space-y-5">
-              <CertCard name="CISSP — Certified Information Systems Security Professional" provider="ISC2" href="https://www.isc2.org/certifications/cissp" accentColor="#14b8a6" isTop
+              <CertCard name="CISSP — Certified Information Systems Security Professional" provider="ISC2" href="https://www.isc2.org/certifications/cissp" accentColor="#f59e0b" isTop
                 what="Eight domains spanning the full security landscape. The broadest security credential available, globally recognized cross-industry and by executives who may not know specialized certs."
                 why="CISSP is the credential that travels. If your Lead role spans both GRC and technical teams — or if you are in a market where brand recognition matters most — CISSP signals authority at a level others do not."
               />
-              <CertCard name="CRISC — Certified in Risk and Information Systems Control" provider="ISACA" href="https://www.isaca.org/credentialing/crisc" accentColor="#14b8a6"
+              <CertCard name="CRISC — Certified in Risk and Information Systems Control" provider="ISACA" href="https://www.isaca.org/credentialing/crisc" accentColor="#f59e0b"
                 what="Enterprise-level IT risk identification, response, and reporting. Covers risk appetite definition, control design, and how to produce metrics that drive board-level decisions."
                 why="CRISC is the credential that signals you can run a risk program, not just work in one. It sits on Head of GRC or Senior Risk Manager job descriptions. It is the clearest signal to the CISO that you think at a program level."
               />
             </div>
 
-            <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] mt-12 mb-6" style={{ color: "rgba(20,184,166,0.85)" }}>Skills & Resources</p>
+            <p className="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] mt-12 mb-6" style={{ color: "rgba(245,158,11,0.85)" }}>Skills & Resources</p>
             <div className="space-y-6">
               <SkillCard
                 name="GRC Program Design"
                 category="Program Architecture"
                 correlatedTools={["ServiceNow IRM", "Vanta"]}
-                accentColor="#14b8a6"
+                accentColor="#f59e0b"
                 what="Designing the end-to-end governance program from the ground up: selecting frameworks, establishing risk appetite, choosing tooling, and setting evidence standards."
                 why="Every analyst-level skill exists within a program someone designed. At Lead, you are the one designing it. The first question is always: 'What are we actually trying to accomplish, and what is the simplest structure that gets us there?' Answering that is the entire job."
                 resources={{
@@ -583,7 +583,7 @@ export default function DetailedGRCClient() {
                 name="Quantitative Risk Analysis (FAIR)"
                 category="Risk Strategy"
                 correlatedTools={["FAIR Model", "Power BI"]}
-                accentColor="#14b8a6"
+                accentColor="#f59e0b"
                 what="A methodology for quantifying risk in financial terms (Factor Analysis of Information Risk). It produces a range of probable financial loss outcomes that executives can weigh against mitigation costs."
                 why="Qualitative ratings (color maps) get ignored in boardrooms. If you can say 'this risk represents $1.8M in annualized loss expectancy and we can reduce it by 70% with a $300K investment,' you are no longer a cost center. You are a business advisor."
                 resources={{
@@ -600,7 +600,7 @@ export default function DetailedGRCClient() {
                 name="Executive & Board Reporting"
                 category="Strategic Communication"
                 correlatedTools={["Power BI", "ServiceNow"]}
-                accentColor="#14b8a6"
+                accentColor="#f59e0b"
                 what="Translating program complexity into concise, decision-ready formats: risk posture scores, trend data, and prioritized residual risks requiring board decisions — without GRC jargon."
                 why="Everything your team does is in service of this output. If the board cannot understand your report, they cannot make informed decisions. The ability to communicate risk in business language is the most career-defining skill at this level."
                 resources={{

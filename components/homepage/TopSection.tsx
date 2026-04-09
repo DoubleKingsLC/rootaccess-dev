@@ -10,6 +10,7 @@ const ROADMAPS_DATA = [
   { id: "web", label: "Web Hacking Path", href: "/roadmaps/web-hacking/career-path", color: "#f43f5e" },
   { id: "ai", label: "AI Hacking Path", href: "/roadmaps/ai-hacking/career-path", color: "#ef4444" },
   { id: "network", label: "Network Pentesting", href: "/roadmaps/network-pentesting/career-path", color: "#dc2626" },
+  { id: "grc", label: "GRC Career Path", href: "/roadmaps/grc/career-path", color: "#14b8a6" },
 ];
 
 const EXPERIENCES_DATA = [
@@ -17,6 +18,7 @@ const EXPERIENCES_DATA = [
   { id: "web", label: "Web Hacking", href: "/roadmaps/web-hacking", color: "#f43f5e" },
   { id: "ai", label: "AI Hacking", href: "/roadmaps/ai-hacking", color: "#ef4444" },
   { id: "network", label: "Network Pentesting", href: "/roadmaps/network-pentesting", color: "#dc2626" },
+  { id: "grc", label: "GRC", href: "/roadmaps/grc", color: "#14b8a6" },
 ];
 
 /** Favicon hostnames for Curated Resources pills (DuckDuckGo icon proxy); null = no favicon. */
@@ -91,7 +93,7 @@ const DOMAIN_DATA = [
     title: "GRC",
     subtitle: "Governance & Risk frameworks.",
     analystRole: "GRC Analyst",
-    isLive: false,
+    isLive: true,
     status: "ACTIVE",
     threat: "NOMINAL",
     sync: "COMPLIANT",
@@ -426,6 +428,7 @@ export default function TopSection() {
                           { label: "Web Hacking", color: "#f43f5e" },
                           { label: "AI Hacking", color: "#ef4444" },
                           { label: "Network Pentest", color: "#dc2626" },
+                          { label: "GRC", color: "#14b8a6" },
                         ].map((d) => (
                           <li key={d.label} className="flex items-center gap-2.5">
                             <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 animate-pulse" style={{ background: d.color, boxShadow: `0 0 6px ${d.color}` }} />
@@ -437,7 +440,7 @@ export default function TopSection() {
                     <div>
                       <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/45 mb-2">Coming Soon</p>
                       <ul className="space-y-1.5">
-                        {["DevSecOps", "Cloud Sec", "GRC"].map((label) => (
+                        {["DevSecOps", "Cloud Sec"].map((label) => (
                           <li key={label} className="flex items-center gap-2.5">
                             <span className="w-1.5 h-1.5 rounded-full border border-white/30 flex-shrink-0" />
                             <span className="font-label text-[17px] sm:text-[18px] text-white/50">{label}</span>
@@ -665,13 +668,16 @@ export default function TopSection() {
           </div>
 
           {/* Scroll Prompt */}
-          <div className="mt-8 mb-4 flex flex-col items-center gap-1 group cursor-pointer opacity-80 hover:opacity-100 transition-opacity">
+          <a
+            href="#explore-domains"
+            className="mt-8 mb-4 flex flex-col items-center gap-1 group cursor-pointer opacity-80 hover:opacity-100 transition-opacity outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:rounded"
+          >
             <span className="font-label text-[8px] tracking-[0.5em] uppercase text-on-surface-variant transition-colors group-hover:text-primary">SCROLL TO EXPLORE</span>
             <div className="relative flex flex-col items-center">
               <span className="material-symbols-outlined text-primary text-xl animate-scroll-indicator lowercase select-none">keyboard_double_arrow_down</span>
               <div className="w-px h-8 bg-gradient-to-b from-primary/60 to-transparent mt-1"></div>
             </div>
-          </div>
+          </a>
         </div>
       </main>
 
