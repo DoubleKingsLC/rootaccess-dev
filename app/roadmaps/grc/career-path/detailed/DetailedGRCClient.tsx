@@ -174,9 +174,16 @@ function SkillCard({ name, category, correlatedTools, accentColor, what, why, re
                 <div className="space-y-4">
                   {resources.free.map(r => (
                     <div key={r.label}>
-                      <a href={r.url} target="_blank" rel="noopener noreferrer" className="text-[13px] font-bold text-slate-200 hover:text-white underline decoration-teal-500/30 hover:decoration-teal-500 transition-all block mb-1">
-                        {r.label}
-                      </a>
+                      <div className="flex items-center gap-2 mb-1.25">
+                        <img 
+                          src={`https://www.google.com/s2/favicons?domain=${new URL(r.url).hostname}&sz=32`} 
+                          alt="" 
+                          className="w-3.5 h-3.5 rounded-sm opacity-60 group-hover:opacity-100 transition-opacity" 
+                        />
+                        <a href={r.url} target="_blank" rel="noopener noreferrer" className="text-[13px] font-bold text-slate-200 hover:text-white underline decoration-teal-500/30 hover:decoration-teal-500 transition-all block">
+                          {r.label}
+                        </a>
+                      </div>
                       {r.why && <p className="text-[12px] leading-relaxed text-slate-500">{r.why}</p>}
                     </div>
                   ))}
@@ -189,9 +196,16 @@ function SkillCard({ name, category, correlatedTools, accentColor, what, why, re
                 <div className="space-y-4">
                   {resources.paid.map(r => (
                     <div key={r.label}>
-                      <a href={r.url} target="_blank" rel="noopener noreferrer" className="text-[13px] font-bold text-slate-200 hover:text-white underline decoration-amber-500/30 hover:decoration-amber-500 transition-all block mb-1">
-                        {r.label}
-                      </a>
+                      <div className="flex items-center gap-2 mb-1.25">
+                        <img 
+                          src={`https://www.google.com/s2/favicons?domain=${new URL(r.url).hostname}&sz=32`} 
+                          alt="" 
+                          className="w-3.5 h-3.5 rounded-sm opacity-60 group-hover:opacity-100 transition-opacity" 
+                        />
+                        <a href={r.url} target="_blank" rel="noopener noreferrer" className="text-[13px] font-bold text-slate-200 hover:text-white underline decoration-amber-500/30 hover:decoration-amber-500 transition-all block">
+                          {r.label}
+                        </a>
+                      </div>
                       {r.why && <p className="text-[12px] leading-relaxed text-slate-500">{r.why}</p>}
                     </div>
                   ))}
@@ -320,7 +334,7 @@ export default function DetailedGRCClient() {
                     { label: "NetworkChuck", url: "https://www.youtube.com/playlist?list=PLIhvC56v63IJVXv0GJcl9vO5Z6znCVb1P", why: "An high-energy, visual way to learn complex networking concepts." },
                   ],
                   paid: [
-                    { label: "Jason Dion Net+", url: "https://www.udemy.com/course/comptia-network-cert-n10-008-the-total-course/", why: "The best exam prep if you plan on actually taking the Network+ certification." }
+                    { label: "Jason Dion Net+", url: "https://www.udemy.com/course/comptia-link-network-plus-exam-prep/", why: "The best exam prep if you plan on actually taking the Network+ certification." }
                   ]
                 }}
               />
@@ -351,7 +365,7 @@ export default function DetailedGRCClient() {
                 resources={{
                   free: [
                     { label: "Automate the Boring Stuff", url: "https://automatetheboringstuff.com/", why: "The most practical Python guide ever written for non-programmers." },
-                    { label: "CS50P — Python", url: "https://cs50.harvard.edu/python/2022/", why: "A world-class introduction to Python from Harvard University." }
+                    { label: "CS50P — Python", url: "https://cs50.harvard.edu/python/", why: "A world-class introduction to Python from Harvard University." }
                   ],
                   paid: [
                     { label: "TCM Python 101", url: "https://academy.tcm-sec.com/p/python-101-for-hackers", why: "Python explained specifically through the lens of a security professional." }
@@ -436,7 +450,7 @@ export default function DetailedGRCClient() {
                 resources={{
                   free: [
                     { label: "NIST CSF 2.0 Reference Tool", url: "https://csrc.nist.gov/projects/cybersecurity-framework/filters", why: "The interactive online version lets you browse functions and implementation examples. Spend an afternoon mapping a fictional company's controls against it." },
-                    { label: "Simply Cyber YouTube Channel", url: "https://www.youtube.com/@SimplyCyber", why: "The most consistently practical free GRC content online. Start with any audit scenario or framework mapping exercise." },
+                    { label: "Simply Cyber on YouTube", url: "https://www.youtube.com/@SimplyCyber", why: "The most consistently practical free GRC content online. Start with any audit scenario or framework mapping exercise." },
                   ],
                   paid: [
                     { label: "ISO 27001 Foundation Course", url: "https://www.udemy.com/topic/iso-27001/", why: "A structured walkthrough of the standard before you try to work with it in a job context. Cheap and sufficient at this level." }
@@ -520,7 +534,7 @@ export default function DetailedGRCClient() {
                 why="A lot of junior analysts identify risk and hand it off. At this level you are accountable for the full loop. The analysts who close the loop are the ones who get asked to run programs. This is how you build Lead credibility."
                 resources={{
                   free: [
-                    { label: "NIST Risk Management Framework (SP 800-37)", url: "https://csrc.nist.gov/pubs/sp/800/37/r2/final", why: "The definitive reference for how a risk lifecycle should be structured. The six-step process is the clearest articulation of end-to-end risk management." },
+                    { label: "NIST Risk Management Framework (SP 800-37)", url: "https://doi.org/10.6028/NIST.SP.800-37r2", why: "The definitive reference for how a risk lifecycle should be structured. The six-step process is the clearest articulation of end-to-end risk management." },
                     { label: "ServiceNow Developer Program", url: "https://developer.servicenow.com/", why: "Free personal developer instance. Build a mock risk register and dashboard; hands-on ServiceNow experience is a massive differentiator." }
                   ],
                   paid: [
@@ -571,7 +585,7 @@ export default function DetailedGRCClient() {
                 why="Every analyst-level skill exists within a program someone designed. At Lead, you are the one designing it. The first question is always: 'What are we actually trying to accomplish, and what is the simplest structure that gets us there?' Answering that is the entire job."
                 resources={{
                   free: [
-                    { label: "NIST Cybersecurity Framework 2.0 — Govern Function", url: "https://www.nist.gov/cyberframework", why: "The Govern function in CSF 2.0 is essentially a blueprint for a mature GRC program structure. Read it as a design checklist, not just a reference." },
+                    { label: "NIST Cybersecurity Framework 2.0 — Govern Function", url: "https://doi.org/10.6028/NIST.CSWP.29", why: "The Govern function in CSF 2.0 is essentially a blueprint for a mature GRC program structure. Read it as a design checklist, not just a reference." },
                     { label: "ISACA COBIT Framework Overview", url: "https://www.isaca.org/resources/cobit", why: "COBIT is the governance framework that underpins how GRC connects to business objectives. Understanding it gives you the architecture for C-suite conversations." }
                   ],
                   paid: [

@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LEVELS } from "./data";
+import { ACTIONS, LEVELS } from "./data";
 import { ProviderFavicon } from "./ProviderFavicon";
 
 type MobileGRCCareerPathProps = {
@@ -276,6 +276,53 @@ export function MobileGRCCareerPath({ showScrollTop }: MobileGRCCareerPathProps)
 
           </section>
         ))}
+
+        {/* ── Next Actions ── */}
+        <section className="py-20 border-t border-white/5">
+          <div className="mb-10">
+            <p className="font-mono text-[10px] uppercase tracking-[0.4em] mb-4 text-teal-500/70">Begin</p>
+            <h2 className="text-4xl font-bold text-white mb-3">Next Actions</h2>
+            <p className="font-sans text-base text-slate-500">Kickstart your GRC career.</p>
+          </div>
+          <div className="grid grid-cols-1 gap-5">
+            {ACTIONS.map((action: any) => (
+              <div
+                key={action.title}
+                className="rounded-2xl border border-white/5 bg-white/[0.02] p-6"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-lg">{action.icon}</span>
+                  <p className="font-mono text-xs font-bold uppercase tracking-[0.3em]" style={{ color: action.color }}>{action.title}</p>
+                </div>
+                <ul className="space-y-4">
+                  {action.items.map((item: any, idx: number) => {
+                    const label = typeof item === "object" ? item.label : item;
+                    const link = typeof item === "object" ? item.link : null;
+                    return (
+                      <li key={idx} className="flex items-start gap-3 group/li">
+                        {link ? (
+                          <div className="flex items-center gap-2">
+                            <img 
+                              src={`https://www.google.com/s2/favicons?domain=${new URL(link).hostname}&sz=32`} 
+                              alt="" 
+                              className="w-3.5 h-3.5 rounded-sm opacity-50 active:opacity-100 transition-opacity flex-shrink-0" 
+                            />
+                            <a href={link} className="text-[14px] text-slate-400 hover:text-white transition-colors underline decoration-slate-700">{label}</a>
+                          </div>
+                        ) : (
+                          <>
+                            <span className="mt-2 h-1 w-1 rounded-full bg-slate-600 flex-shrink-0" />
+                            <span className="text-[14px] text-slate-400">{label}</span>
+                          </>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
       </main>
 
       {/* ── Footer ────────────────────────────────────────────────────────── */}

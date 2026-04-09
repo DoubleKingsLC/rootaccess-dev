@@ -485,12 +485,21 @@ export default function GRCCareerPathPage() {
                       const label = typeof item === "object" ? item.label : item;
                       const link = typeof item === "object" ? item.link : null;
                       return (
-                        <li key={idx} className="flex items-start gap-3">
-                          <span className="mt-1.5 h-1 w-1 rounded-full bg-slate-600" />
+                        <li key={idx} className="flex items-start gap-3 group/li">
                           {link ? (
-                            <a href={link} className="text-[13px] text-slate-400 hover:text-white transition-colors underline">{label}</a>
+                            <div className="flex items-center gap-2">
+                              <img 
+                                src={`https://www.google.com/s2/favicons?domain=${new URL(link).hostname}&sz=32`} 
+                                alt="" 
+                                className="w-3.5 h-3.5 rounded-sm opacity-50 group-hover/li:opacity-100 transition-opacity flex-shrink-0" 
+                              />
+                              <a href={link} className="text-[13px] text-slate-400 hover:text-white transition-colors underline decoration-slate-700">{label}</a>
+                            </div>
                           ) : (
-                            <span className="text-[13px] text-slate-400">{label}</span>
+                            <>
+                              <span className="mt-1.5 h-1 w-1 rounded-full bg-slate-600 flex-shrink-0" />
+                              <span className="text-[13px] text-slate-400">{label}</span>
+                            </>
                           )}
                         </li>
                       );

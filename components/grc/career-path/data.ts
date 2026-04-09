@@ -44,6 +44,11 @@ export const PROVIDER_DOMAINS: Record<string, string> = {
   rootaccess:       "rootaccess.tech",
   iso:              "iso.org",
   grcmastery:       "grcmastery.com",
+  nist:             "nist.gov",
+  servicenow:       "servicenow.com",
+  reddit:           "reddit.com",
+  eramba:           "eramba.org",
+  fairinstitute:    "fairinstitute.org",
 };
 
 export const LEVELS: Level[] = [
@@ -94,8 +99,8 @@ export const LEVELS: Level[] = [
       { label: "CompTIA Security+", link: "https://www.comptia.org/certifications/security", provider: "comptia" }
     ],
     labs: [
-      { label: "NIST CSF 2.0 Official Publication", link: "https://www.nist.gov/cyberframework", provider: "google" },
-      { label: "eramba Community Edition (Local GRC)", link: "https://www.eramba.org/community-edition", provider: "github" },
+      { label: "NIST CSF 2.0 Official Publication", link: "https://doi.org/10.6028/NIST.CSWP.29", provider: "nist" },
+      { label: "eramba Community Edition (Local GRC)", link: "https://www.eramba.org/community-edition", provider: "eramba" },
       { label: "ServiceNow Developer Program", link: "https://developer.servicenow.com/", provider: "servicenow" },
       { label: "Simply Cyber on YouTube", link: "https://www.youtube.com/@SimplyCyber", provider: "youtube" }
     ],
@@ -120,10 +125,10 @@ export const LEVELS: Level[] = [
       { label: "ISO 27001 Lead Implementer", link: "https://www.iso.org/standard/27001", provider: "iso" }
     ],
     labs: [
-      { label: "ISACA CISA Review Manual", link: "#", provider: "isaca" },
-      { label: "NIST RMF (SP 800-37) Full Document", link: "#", provider: "google" },
+      { label: "ISACA CISA Review Manual", link: "https://www.isaca.org/credentialing/cisa/prepare-for-the-cisa-exam", provider: "isaca" },
+      { label: "NIST RMF (SP 800-37) Full Document", link: "https://doi.org/10.6028/NIST.SP.800-37r2", provider: "nist" },
       { label: "Vanta / Drata Automated GRC Trials", link: "https://www.vanta.com/", provider: "vanta" },
-      { label: "r/cybersecurity GRC Practitioner Threads", link: "https://www.reddit.com/r/cybersecurity/", provider: "youtube" }
+      { label: "r/cybersecurity GRC Practitioner Threads", link: "https://www.reddit.com/r/cybersecurity/", provider: "reddit" }
     ],
   },
   {
@@ -146,7 +151,7 @@ export const LEVELS: Level[] = [
       { label: "CRISC — Certified in Risk and IS Control", link: "https://www.isaca.org/credentialing/crisc", provider: "isaca" }
     ],
     labs: [
-      { label: "FAIR Institute (Quantitative Risk)", link: "https://www.fairinstitute.org/", provider: "google" },
+      { label: "FAIR Institute (Quantitative Risk)", link: "https://www.fairinstitute.org/", provider: "fairinstitute" },
       { label: "ISACA Practitioner Journal", link: "https://www.isaca.org/resources/isaca-journal", provider: "isaca" },
       { label: "The CISO Playbook (Board Comms)", link: "https://www.vanta.com/resources/ciso-playbook", provider: "vanta" },
       { label: "IAPP Privacy Governance (GDPR/CCPA)", link: "https://iapp.org/certify/cipp/", provider: "iapp" }
@@ -162,9 +167,9 @@ export const ACTIONS: Action[] = [
     border: "rgba(20,184,166,0.25)",
     glow: "rgba(20,184,166,0.08)",
     items: [
-      "Map one control in NIST CSF to your personal PC settings",
-      "Draft an Acceptable Use Policy for your home network",
-      "Run eramba locally and log one 'High' risk you found"
+      { label: "Map one control in NIST CSF and start tracking", link: "https://www.nist.gov/cyberframework" },
+      { label: "Draft a policy using SANS free templates", link: "https://www.sans.org/information-security-policy/" },
+      { label: "Run eramba locally and log one 'High' risk", link: "https://www.eramba.org/community-edition" }
     ],
   },
   {
@@ -174,9 +179,9 @@ export const ACTIONS: Action[] = [
     border: "rgba(245,158,11,0.25)",
     glow: "rgba(245,158,11,0.08)",
     items: [
-      "Join the FAIR Institute to learn quantitative risk",
-      "Review a public SOC 2 report (e.g., from major SaaS vendors)",
-      "Set up a free ServiceNow developer instance"
+      { label: "Join the FAIR Institute for Quantitative Risk", link: "https://www.fairinstitute.org/" },
+      { label: "Review a public SOC 2 report guide", link: "https://www.vanta.com/resources/soc-2-compliance-checklist" },
+      { label: "Set up a free ServiceNow developer instance", link: "https://developer.servicenow.com/" }
     ],
   },
 ];
