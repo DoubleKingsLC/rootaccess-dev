@@ -8,7 +8,7 @@ interface SceneProps {
 }
 
 /**
- * PHASE 1: Morning Rituals (~0.01 - ~0.198, overlaps Phase 2 briefing)
+ * TASK 1: Morning Rituals (~0.01 - ~0.198, overlaps Task 2 briefing)
  * GRC Inbox Simulation — Show, don't tell.
  */
 export const MorningRitualsScene: React.FC<SceneProps> = ({ progress }) => {
@@ -21,7 +21,7 @@ export const MorningRitualsScene: React.FC<SceneProps> = ({ progress }) => {
   const sceneStartFadeIn = 0.072;
   const sceneFullOpacity = 0.08;
   const sceneStartFadeOut = 0.18;
-  /** Slightly longer tail so Phase 2 briefing can crossfade in */
+  /** Slightly longer tail so Task 2 briefing can crossfade in */
   const sceneEndFadeOut = 0.198;
 
   const isActive = progress >= cardStartFadeIn && progress < sceneEndFadeOut;
@@ -57,7 +57,7 @@ export const MorningRitualsScene: React.FC<SceneProps> = ({ progress }) => {
 
   // Browser Sequence derived states
   const isTypingPeriod = p < 0.25;
-  const targetUrl = "mail.rootaccess.tech/inbox";
+  const targetUrl = "mail.company.internal/inbox";
   const typedUrl = p < 0.20 
     ? targetUrl.slice(0, Math.floor((p / 0.20) * targetUrl.length))
     : targetUrl;
@@ -118,17 +118,17 @@ export const MorningRitualsScene: React.FC<SceneProps> = ({ progress }) => {
   };
 
   const getPaneDetails = (index: number) => {
-     if (index === 0) return { title: "ISO 27001: Evidence Needed", initials: "SA", email: "audit.ops@rootaccess.tech", time: "08:12 AM" };
-     if (index === 1) return { title: "Risk Review for Project X", initials: "SR", email: "sre.lead@rootaccess.tech", time: "08:24 AM" };
-     return { title: "Quarterly Compliance Sync", initials: "CI", email: "ciso.office@rootaccess.tech", time: "08:45 AM" };
+     if (index === 0) return { title: "ISO 27001: Evidence Needed", initials: "SA", email: "audit.ops@company.internal", time: "08:12 AM" };
+     if (index === 1) return { title: "Risk Review for Project X", initials: "SR", email: "sre.lead@company.internal", time: "08:24 AM" };
+     return { title: "Quarterly Compliance Sync", initials: "CI", email: "ciso.office@company.internal", time: "08:45 AM" };
   };
 
   return (
     <>
     <GRCBriefingCard 
-      phaseNumber={1}
-      title="The Inbox Ritual"
-      description="Sifting through the morning noise to find the signals. You are checking priority emails before the standups begin."
+      taskNumber={1}
+      title="Start with the inbox"
+      description="Review overnight security and compliance messages so you know what’s urgent before meetings and deeper work begin."
       opacity={cardOpacity}
     />
     <motion.div 

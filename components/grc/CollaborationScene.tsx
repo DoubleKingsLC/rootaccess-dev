@@ -8,7 +8,7 @@ interface SceneProps {
 }
 
 /**
- * PHASE 4: Collaboration — crossfades with Phase 3 exit + Phase 5 entry.
+ * TASK 4: Collaboration — crossfades with Task 3 exit + Task 5 entry.
  */
 export const CollaborationScene: React.FC<SceneProps> = ({ progress }) => {
   const cardStartFadeIn = 0.456;
@@ -51,9 +51,9 @@ export const CollaborationScene: React.FC<SceneProps> = ({ progress }) => {
   return (
     <>
     <GRCBriefingCard 
-      phaseNumber={4}
-      title="Security Alignment"
-      description="The risk is patched. You now hop into a cross-functional standup to verify the fix and align the whole team on the security standards going forward."
+      taskNumber={4}
+      title="Align on the fix"
+      description="After a change is prepared, sync with engineering and security so everyone agrees on the remediation, owners, and what “done” looks like."
       opacity={cardOpacity}
     />
     <motion.div 
@@ -71,7 +71,7 @@ export const CollaborationScene: React.FC<SceneProps> = ({ progress }) => {
                transition={{ duration: 0.45 }}
              >
                 <h2 className="font-mono text-xs uppercase tracking-[0.4em] text-teal-500 mb-2">Team Dynamics</h2>
-                <h3 className="text-4xl md:text-6xl font-black tracking-tight mb-6 leading-none">Synergy <span className="text-teal-400">Map</span></h3>
+                <h3 className="text-4xl md:text-6xl font-black tracking-tight mb-6 leading-none">Team <span className="text-teal-400">Meeting</span></h3>
                 <p className="text-slate-400 text-base italic border-l-2 border-teal-500/20 pl-6 leading-relaxed">
                   "Collaboration is the lifeblood... serving as educators and partners to our developers."
                 </p>

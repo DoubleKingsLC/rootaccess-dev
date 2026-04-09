@@ -8,16 +8,16 @@ interface SceneProps {
 }
 
 /**
- * PHASE 7: Reflection & Impact — starts after Phase 6 scene is fully faded out (~0.93).
+ * Reflection & Impact — starts after the sixth task scene is fully faded out (~0.93).
  */
 
-const DEBRIEF_PHASES = [
-  { phase: 1, label: "Morning Rituals",   outcome: "Reviewed overnight alerts and set priorities", icon: "📋" },
-  { phase: 2, label: "Frameworks",        outcome: "Mapped NIST & ISO controls to business units", icon: "📐" },
-  { phase: 3, label: "Risk Assessment",   outcome: "Identified and scored 14 organizational risks", icon: "⚡" },
-  { phase: 4, label: "Team Alignment",    outcome: "Coordinated fixes across SRE, AppSec, and Eng", icon: "🤝" },
-  { phase: 5, label: "Documentation",     outcome: "Verified evidence against 3 policy requirements", icon: "📄" },
-  { phase: 6, label: "Emergency Ops",     outcome: "Contained 1 SEV-1 incident, isolated blast radius", icon: "🚨" },
+const DEBRIEF_TASKS = [
+  { task: 1, label: "Morning Rituals",   outcome: "Reviewed overnight alerts and set priorities", icon: "📋" },
+  { task: 2, label: "Frameworks",        outcome: "Mapped NIST & ISO controls to business units", icon: "📐" },
+  { task: 3, label: "Risk Assessment",   outcome: "Identified and scored 14 organizational risks", icon: "⚡" },
+  { task: 4, label: "Team Alignment",    outcome: "Coordinated fixes across SRE, AppSec, and Eng", icon: "🤝" },
+  { task: 5, label: "Documentation",     outcome: "Verified evidence against 3 policy requirements", icon: "📄" },
+  { task: 6, label: "Emergency Ops",     outcome: "Contained 1 SEV-1 incident, isolated blast radius", icon: "🚨" },
 ];
 
 export const ReflectionScene: React.FC<SceneProps> = ({ progress }) => {
@@ -39,8 +39,8 @@ export const ReflectionScene: React.FC<SceneProps> = ({ progress }) => {
 
   const p = Math.min(1, Math.max(0, (progress - sceneStartFadeIn) / (sceneEndFadeOut - sceneStartFadeIn)));
 
-  // How many phases to reveal (staggered as user scrolls)
-  const revealedPhases = Math.min(6, Math.floor(p * 10) + 1);
+  // How many tasks to reveal (staggered as user scrolls)
+  const revealedTasks = Math.min(6, Math.floor(p * 10) + 1);
   const showSummary = p > 0.6;
 
   return (
@@ -66,10 +66,10 @@ export const ReflectionScene: React.FC<SceneProps> = ({ progress }) => {
                    </div>
                    
                    <p className="text-slate-400 text-sm md:text-base leading-relaxed border-l-2 border-teal-500/20 pl-6 max-w-sm">
-                     This is what a single day looks like as a GRC Analyst. Every phase you scrolled through represents real work that keeps the entire company safe, compliant, and ready for anything.
+                     This is what a single day looks like as a GRC Analyst. Every task you scrolled through represents real work that keeps the entire company safe, compliant, and ready for anything.
                    </p>
 
-                   {/* Concrete Impact Summary (appears after phases reveal) */}
+                   {/* Concrete Impact Summary (appears after tasks reveal) */}
                    <AnimatePresence>
                      {showSummary && (
                        <motion.div 
@@ -110,7 +110,7 @@ export const ReflectionScene: React.FC<SceneProps> = ({ progress }) => {
                 </motion.div>
              </div>
 
-             {/* Right: The Journey Recap — visual timeline of completed phases */}
+             {/* Right: The Journey Recap — visual timeline of completed tasks */}
              <div className="lg:col-span-7 relative">
                 <motion.div 
                   className="rounded-3xl bg-[#060b10] border border-white/5 overflow-hidden shadow-2xl ring-1 ring-white/[0.03]"
@@ -132,11 +132,11 @@ export const ReflectionScene: React.FC<SceneProps> = ({ progress }) => {
                     </div>
                   </div>
 
-                  {/* Phase Timeline */}
+                  {/* Task timeline */}
                   <div className="px-6 md:px-8 py-6">
-                    {DEBRIEF_PHASES.map((phase, i) => {
-                      const isRevealed = i < revealedPhases;
-                      const isLast = i === DEBRIEF_PHASES.length - 1;
+                    {DEBRIEF_TASKS.map((task, i) => {
+                      const isRevealed = i < revealedTasks;
+                      const isLast = i === DEBRIEF_TASKS.length - 1;
                       return (
                         <motion.div 
                           key={i}
@@ -152,7 +152,7 @@ export const ReflectionScene: React.FC<SceneProps> = ({ progress }) => {
                                 ? 'bg-teal-500/10 border-teal-500/40 shadow-[0_0_20px_rgba(20,184,166,0.1)]'
                                 : 'bg-[#0a0f16] border-white/5'
                             }`}>
-                              <span className="text-base">{phase.icon}</span>
+                              <span className="text-base">{task.icon}</span>
                             </div>
                             {/* Connector line to next node */}
                             {!isLast && (
@@ -160,14 +160,14 @@ export const ReflectionScene: React.FC<SceneProps> = ({ progress }) => {
                             )}
                           </div>
 
-                          {/* Phase content */}
+                          {/* Task content */}
                           <div className={`flex-1 min-w-0 ${isLast ? 'pb-0' : 'pb-5'}`}>
                             <div className="flex items-center gap-3 mb-0.5">
                               <span className={`text-[9px] font-mono uppercase tracking-widest font-black transition-colors duration-300 ${isRevealed ? 'text-teal-400' : 'text-slate-700'}`}>
-                                Phase {phase.phase}
+                                Task {task.task}
                               </span>
                               <span className={`text-[11px] md:text-xs font-bold uppercase tracking-wide transition-colors duration-300 ${isRevealed ? 'text-white' : 'text-slate-700'}`}>
-                                {phase.label}
+                                {task.label}
                               </span>
                               {/* Inline check */}
                               {isRevealed && (
@@ -180,7 +180,7 @@ export const ReflectionScene: React.FC<SceneProps> = ({ progress }) => {
                               )}
                             </div>
                             <p className={`text-[11px] leading-relaxed transition-colors duration-300 ${isRevealed ? 'text-slate-400' : 'text-slate-800'}`}>
-                              {phase.outcome}
+                              {task.outcome}
                             </p>
                           </div>
                         </motion.div>
@@ -197,7 +197,7 @@ export const ReflectionScene: React.FC<SceneProps> = ({ progress }) => {
                       </span>
                     </div>
                     <span className="font-mono text-[9px] text-slate-600 uppercase tracking-widest">
-                      {revealedPhases}/6
+                      {revealedTasks}/6
                     </span>
                   </div>
                 </motion.div>

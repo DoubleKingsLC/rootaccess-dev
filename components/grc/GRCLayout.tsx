@@ -25,7 +25,7 @@ const TEAL = "#14b8a6";
 const TEAL_GLOW = "rgba(20,184,166,0.35)";
 const TEAL_DIM = "rgba(20,184,166,0.22)";
 
-// ── Phase timeline ─────────────────────────────────────────────────────────────
+// ── Task timeline ─────────────────────────────────────────────────────────────
 const TIMELINE = [
   { label: "Rituals",       threshold: 0.01 },
   { label: "Frameworks",    threshold: 0.182 },
@@ -296,11 +296,11 @@ export const GRCLayout: React.FC = () => {
           }}
         >
           <div className="flex flex-wrap items-center justify-center gap-y-2">
-            {TIMELINE.map((phase, i) => {
-              const isActive = progress >= phase.threshold;
+            {TIMELINE.map((item, i) => {
+              const isActive = progress >= item.threshold;
               const nextActive = i < TIMELINE.length - 1 && progress >= TIMELINE[i + 1].threshold;
               return (
-                <React.Fragment key={phase.label}>
+                <React.Fragment key={item.label}>
                   <div className="flex flex-col items-center gap-1.5">
                     <div
                       className="h-3 w-3 rounded-full border-2 transition-all duration-300"
@@ -314,7 +314,7 @@ export const GRCLayout: React.FC = () => {
                       className="font-mono text-[7px] uppercase tracking-widest transition-colors duration-300 sm:text-[8px]"
                       style={{ color: isActive ? TEAL : "rgba(20,184,166,0.25)" }}
                     >
-                      {phase.label}
+                      {item.label}
                     </p>
                   </div>
                   {i < TIMELINE.length - 1 && (

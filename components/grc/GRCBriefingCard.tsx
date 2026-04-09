@@ -3,7 +3,7 @@
 import React from "react";
 
 interface GRCBriefingCardProps {
-  phaseNumber: number;
+  taskNumber: number;
   title: string;
   description: string;
   opacity: number;
@@ -14,7 +14,7 @@ interface GRCBriefingCardProps {
  * Used to explicitly declare narrative context before a visual simulator loads.
  */
 export const GRCBriefingCard: React.FC<GRCBriefingCardProps> = ({ 
-  phaseNumber, 
+  taskNumber, 
   title, 
   description, 
   opacity 
@@ -38,7 +38,7 @@ export const GRCBriefingCard: React.FC<GRCBriefingCardProps> = ({
              <div className="w-2 h-2 rounded-full bg-slate-700" />
              <div className="w-2 h-2 rounded-full bg-slate-700" />
           </div>
-          <span className="font-mono text-xs md:text-sm uppercase tracking-[0.3em] text-teal-500 font-bold">Phase {phaseNumber}</span>
+          <span className="font-mono text-xs md:text-sm uppercase tracking-[0.3em] text-teal-500 font-bold">Task {taskNumber}</span>
         </div>
         
         <h3 className="mb-5 text-3xl font-black uppercase leading-[1.1] tracking-tight text-white sm:text-4xl md:mb-6 md:text-6xl">

@@ -67,7 +67,7 @@ export const AuditIncidentScene: React.FC<SceneProps> = ({ progress }) => {
   const cardStartFadeIn = 0.774;
   const cardEndFadeOut = 0.79;
   const sceneStartFadeIn = 0.79;
-  /** Scene fully gone before Phase 7 (Reflection) begins — see ReflectionScene */
+  /** Scene fully gone before Reflection begins — see ReflectionScene */
   const sceneEndFadeOut = 0.93;
 
   const isActive = progress >= cardStartFadeIn && progress < sceneEndFadeOut;
@@ -92,7 +92,7 @@ export const AuditIncidentScene: React.FC<SceneProps> = ({ progress }) => {
   const breachOccurred      = p > 0.50;
   const blastExpanding      = p > 0.58;
   const containmentActive   = p > 0.78;
-  const isIncidentPhase     = p > 0.40;
+  const isIncidentMode     = p > 0.40;
 
   const getNodeState = (index: number): "idle" | "scanning" | "verified" | "breached" | "threatened" | "contained" => {
     if (!auditComplete) {
@@ -175,9 +175,9 @@ export const AuditIncidentScene: React.FC<SceneProps> = ({ progress }) => {
   return (
     <>
       <GRCBriefingCard
-        phaseNumber={6}
-        title="Emergency Ops"
-        description="The moment of truth. When the pressure peaks, GRC is the voice of readiness. You guide operations through audits and manage the containment radius when a breach occurs."
+        taskNumber={6}
+        title="Respond under pressure"
+        description="When a check fails or an incident fires, coordinate scope and containment, then document outcomes so auditors and leadership get an accurate record."
         opacity={cardOpacity}
       />
 
@@ -203,37 +203,61 @@ export const AuditIncidentScene: React.FC<SceneProps> = ({ progress }) => {
                 className="space-y-6"
               >
                 <div>
-                  <h2 className={`mb-2 font-mono text-[10px] uppercase tracking-[0.5em] transition-colors duration-300 ${isIncidentPhase ? 'text-red-500' : 'text-teal-500'}`}>
-                    {isIncidentPhase ? 'Tactical Response' : 'Pre-Audit Validation'}
+                  <h2 className={`mb-2 font-mono text-[10px] uppercase tracking-[0.5em] transition-colors duration-300 ${isIncidentMode ? 'text-red-500' : 'text-teal-500'}`}>
+                    {isIncidentMode ? 'Tactical Response' : 'Pre-Audit Validation'}
                   </h2>
                   <h3 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tight uppercase leading-none">
-                    Mission <span className={isIncidentPhase ? 'text-red-500' : 'text-teal-400 transition-colors duration-300'}>Critical</span>
+                    Mission Critical{" "}
+                    <span className={isIncidentMode ? "text-red-500" : "text-teal-400 transition-colors duration-300"}>Audits</span>
                   </h3>
                 </div>
 
                 <div className="space-y-6 border-l-2 border-white/5 pl-8 text-slate-400 text-sm md:text-base leading-relaxed max-w-sm">
-                  <p className={`transition-all duration-300 ${isIncidentPhase ? 'opacity-30 scale-95 blur-[1px]' : 'opacity-100 scale-100'}`}>
+                  <p className={`transition-all duration-300 ${isIncidentMode ? 'opacity-30 scale-95 blur-[1px]' : 'opacity-100 scale-100'}`}>
                     Continuous auditing ensures that security targets aren't just met—they are <span className="text-white font-bold italic underline decoration-teal-500/50">permanent</span>.
                   </p>
-                  <p className={`transition-all duration-300 ${isIncidentPhase ? 'opacity-100 scale-100' : 'opacity-30 scale-95 blur-[1px]'}`}>
+                  <p className={`transition-all duration-300 ${isIncidentMode ? 'opacity-100 scale-100' : 'opacity-30 scale-95 blur-[1px]'}`}>
                     When alarms ring, GRC defines the <span className="text-red-400 font-bold">Blast Radius</span>. We boundary the damage to protect the legal core of the business.
                   </p>
                 </div>
 
-                {/* HUD Display */}
-                <div className={`relative mt-8 overflow-hidden rounded-3xl border p-6 backdrop-blur-md transition-all duration-[360ms] ${breachOccurred ? 'bg-red-950/20 border-red-500/30 ring-1 ring-red-500/20' : 'bg-[#0a0f16] border-teal-500/20 shadow-2xl'}`}>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="font-mono text-[9px] uppercase tracking-widest text-slate-500">System Command Feed</span>
-                    <div className="flex gap-1">
-                      <div className="w-1 h-1 rounded-full bg-slate-700" />
-                      <div className="w-1 h-1 rounded-full bg-slate-700" />
+                {/* HUD Display — enlarged so the command feed + validation state read as primary context */}
+                <div
+                  className={`relative mt-10 w-full min-h-[clamp(11rem,26vh,18rem)] overflow-hidden rounded-3xl border p-8 md:p-10 backdrop-blur-md transition-all duration-[360ms] ${breachOccurred ? "bg-red-950/20 border-red-500/30 ring-1 ring-red-500/20" : "bg-[#0a0f16] border-teal-500/20 shadow-2xl"}`}
+                >
+                  <div className="flex items-center justify-between mb-6">
+                    <span className="font-mono text-[11px] md:text-xs uppercase tracking-[0.2em] text-slate-400">
+                      System Command Feed
+                    </span>
+                    <div className="flex gap-1.5">
+                      <div className="h-1.5 w-1.5 rounded-full bg-slate-600" />
+                      <div className="h-1.5 w-1.5 rounded-full bg-slate-600" />
                     </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <div className={`w-3 h-3 rounded-full ${breachOccurred ? 'bg-red-500 animate-ping' : 'bg-teal-500'}`} />
-                    <span className={`font-mono text-xs uppercase font-black tracking-widest ${breachOccurred ? 'text-red-400' : 'text-teal-400'}`}>
-                      {getHudMessage()}
-                    </span>
+                  <div className="flex flex-col gap-5">
+                    <div className="flex items-start gap-4">
+                      <div
+                        className={`mt-1 h-4 w-4 shrink-0 rounded-full ${breachOccurred ? "animate-ping bg-red-500" : "bg-teal-500"}`}
+                      />
+                      <span
+                        className={`font-mono text-sm font-black uppercase leading-snug tracking-[0.08em] md:text-base ${breachOccurred ? "text-red-400" : "text-teal-400"}`}
+                      >
+                        {getHudMessage()}
+                      </span>
+                    </div>
+                    {!auditComplete && (
+                      <div className="space-y-2 border-t border-white/5 pt-5">
+                        <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-800/90">
+                          <div
+                            className="h-full rounded-full bg-teal-500 shadow-[0_0_12px_rgba(20,184,166,0.35)] transition-[width] duration-300"
+                            style={{ width: `${Math.min(100, (p / 0.3) * 100)}%` }}
+                          />
+                        </div>
+                        <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 md:text-[11px]">
+                          Mapping audit checks to live controls — progress updates as each domain validates.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </motion.div>
@@ -380,7 +404,7 @@ export const AuditIncidentScene: React.FC<SceneProps> = ({ progress }) => {
                         <span className="text-xl md:text-2xl">{node.emoji}</span>
                         
                         {/* Verfied Badge */}
-                        {isVerified && !isBreached && !isIncidentPhase && (
+                        {isVerified && !isBreached && !isIncidentMode && (
                           <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute -top-1 -right-1 w-5 h-5 bg-teal-500 rounded-full flex items-center justify-center text-[10px] shadow-lg">✓</motion.div>
                         )}
                         {isBreached && (

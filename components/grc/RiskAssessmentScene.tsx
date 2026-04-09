@@ -8,7 +8,7 @@ interface SceneProps {
 }
 
 /**
- * PHASE 3: Risk — overlaps Phase 2 fade + Phase 4 briefing; `p` span 0.10.
+ * TASK 3: Risk — overlaps Task 2 fade + Task 4 briefing; `p` span 0.10.
  */
 export const RiskAssessmentScene: React.FC<SceneProps> = ({ progress }) => {
   const cardStartFadeIn = 0.318;
@@ -63,9 +63,9 @@ export const RiskAssessmentScene: React.FC<SceneProps> = ({ progress }) => {
   return (
     <>
     <GRCBriefingCard 
-      phaseNumber={3}
-      title="Proactive Risk Mitigation"
-      description="You step out of the compliance portal and directly into the IDE. A developer flagged a database query, and you must measure its active risk."
+      taskNumber={3}
+      title="Assess the risk"
+      description="Leave policy views for a hands-on check: review a real code issue—like an unsafe query—and judge how serious it is before it ships."
       opacity={cardOpacity}
     />
     <motion.div 
@@ -83,7 +83,7 @@ export const RiskAssessmentScene: React.FC<SceneProps> = ({ progress }) => {
                    transition={{ duration: 0.45 }}
                 >
                    <h2 className="font-mono text-xs uppercase tracking-[0.4em] text-teal-500 mb-2">Threat Intelligence</h2>
-                   <h3 className="text-4xl md:text-6xl font-black tracking-tight mb-4 uppercase leading-none">Risk <span className="text-teal-400">Lab</span></h3>
+                   <h3 className="text-4xl md:text-6xl font-black tracking-tight mb-4 uppercase leading-none">Risk <span className="text-teal-400">Handling</span></h3>
                    <p className="text-slate-400 text-sm italic border-l-2 border-teal-500/20 pl-4 mb-8">
                      "Balancing innovation and risk... identifying the cracks in the armor."
                    </p>
@@ -205,7 +205,7 @@ export const RiskAssessmentScene: React.FC<SceneProps> = ({ progress }) => {
                                <polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" />
                             </svg>
                          </div>
-                         <h4 className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">Static Analysis // rootaccess-api / main</h4>
+                         <h4 className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">Static Analysis // core-api / main</h4>
                       </div>
                       <div className="flex items-center gap-2">
                          <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />

@@ -9,7 +9,7 @@ interface SceneProps {
 }
 
 /**
- * PHASE 5: Documentation — crossfades with Phase 4 + Phase 6.
+ * TASK 5: Documentation — crossfades with Task 4 + Task 6.
  */
 export const DocumentationScene: React.FC<SceneProps> = ({ progress }) => {
   const cardStartFadeIn = 0.616;
@@ -48,9 +48,9 @@ export const DocumentationScene: React.FC<SceneProps> = ({ progress }) => {
   return (
     <>
       <GRCBriefingCard
-        phaseNumber={5}
-        title="The Details"
-        description="The devil is in the details. Evidence gathering and documentation form the foundation of compliance assurance. Proper records prove that security controls are not just theoretical, but actively enforced."
+        taskNumber={5}
+        title="Prove the controls"
+        description="Collect concrete artifacts—logs, configs, tickets—that show controls really operate the way your policies say they should."
         opacity={cardOpacity}
       />
 
@@ -69,7 +69,7 @@ export const DocumentationScene: React.FC<SceneProps> = ({ progress }) => {
                    transition={{ duration: 0.45 }}
                 >
                    <h2 className="font-mono text-xs uppercase tracking-[0.4em] text-teal-500 mb-2">The Evidence Match</h2>
-                   <h3 className="text-4xl md:text-5xl font-black tracking-tight mb-4 uppercase leading-none">Mapping <span className="text-teal-400">Reality</span></h3>
+                   <h3 className="text-4xl md:text-5xl font-black tracking-tight mb-4 uppercase leading-none">Verifying <span className="text-teal-400">Claims</span></h3>
                    <p className="text-slate-400 text-sm md:text-base leading-relaxed italic border-l-2 border-teal-500/20 pl-6 max-w-sm">
                      "Policies hold no weight without proof. Validation is the art of mapping real-world engineering evidence directly to your control framework."
                    </p>

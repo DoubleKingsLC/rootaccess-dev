@@ -8,8 +8,8 @@ interface SceneProps {
 }
 
 /**
- * PHASE 2: Compliance — overlaps Phase 1 exit + Phase 3 briefing (~0.338 scene end)
- * Dynamic Compliance Portal Simulation bridging from Phase 1.
+ * TASK 2: Compliance — overlaps Task 1 exit + Task 3 briefing (~0.338 scene end)
+ * Dynamic Compliance Portal Simulation bridging from Task 1.
  */
 export const ComplianceFrameworksScene: React.FC<SceneProps> = ({ progress }) => {
   const cardStartFadeIn = 0.182;
@@ -20,7 +20,7 @@ export const ComplianceFrameworksScene: React.FC<SceneProps> = ({ progress }) =>
   const sceneStartFadeIn = 0.222;
   const sceneFullOpacity = 0.232;
   const sceneStartFadeOut = 0.31;
-  /** Longer fade-out so Phase 3 briefing can overlap (no blank frame) */
+  /** Longer fade-out so Task 3 briefing can overlap (no blank frame) */
   const sceneEndFadeOut = 0.338;
 
   const isActive = progress >= cardStartFadeIn && progress < sceneEndFadeOut;
@@ -125,9 +125,9 @@ export const ComplianceFrameworksScene: React.FC<SceneProps> = ({ progress }) =>
   return (
     <>
     <GRCBriefingCard 
-      phaseNumber={2}
-      title="Hunting The Gaps"
-      description="You've identified a critical alert in your inbox. Now, you pivot into the root access compliance portal to locate missing staging evidence."
+      taskNumber={2}
+      title="Map the controls"
+      description="Follow up on that alert in your compliance workspace: see how controls map to frameworks, and find where evidence or approvals are missing."
       opacity={cardOpacity}
     />
     <motion.div 
@@ -145,7 +145,7 @@ export const ComplianceFrameworksScene: React.FC<SceneProps> = ({ progress }) =>
                transition={{ duration: 0.45 }}
              >
                 <h2 className="font-mono text-[10px] uppercase tracking-[0.4em] text-teal-500 mb-3">Audit Readiness</h2>
-                <h3 className="text-4xl lg:text-5xl font-black tracking-tight mb-5 leading-[1.1] uppercase">Hunting The <span className="text-teal-400">Gaps</span></h3>
+                <h3 className="text-4xl lg:text-5xl font-black tracking-tight mb-5 leading-[1.1]">Analyzing <span className="text-teal-400">gaps</span></h3>
                 <div className="w-12 h-1 bg-teal-500/50 mb-6 rounded-full" />
                 <p className="text-slate-400 text-sm leading-relaxed border-l-2 border-teal-500/20 pl-4 italic">
                   "It's never a clean sweep. It's about finding the missing pieces before the external auditors do."
@@ -188,7 +188,7 @@ export const ComplianceFrameworksScene: React.FC<SceneProps> = ({ progress }) =>
                         <div className="w-6 h-6 rounded bg-teal-500/20 flex items-center justify-center text-teal-400">
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-3.5 h-3.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
                         </div>
-                        <span className="font-bold text-white tracking-wide text-sm font-mono uppercase">RootAccess CmdCtr // Audits</span>
+                        <span className="font-bold text-white tracking-wide text-sm font-mono uppercase">Compliance console // Audits</span>
                       </div>
                    </div>
                    
