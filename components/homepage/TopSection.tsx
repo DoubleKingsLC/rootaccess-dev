@@ -10,6 +10,7 @@ const ROADMAPS_DATA = [
   { id: "web", label: "Web Hacking Path", href: "/roadmaps/web-hacking/career-path", color: "#f43f5e" },
   { id: "ai", label: "AI Hacking Path", href: "/roadmaps/ai-hacking/career-path", color: "#ef4444" },
   { id: "network", label: "Network Pentesting", href: "/roadmaps/network-pentesting/career-path", color: "#dc2626" },
+  { id: "grc", label: "GRC Career Path", href: "/roadmaps/grc/career-path", color: "#14b8a6" },
 ];
 
 const EXPERIENCES_DATA = [
@@ -17,6 +18,7 @@ const EXPERIENCES_DATA = [
   { id: "web", label: "Web Hacking", href: "/roadmaps/web-hacking", color: "#f43f5e" },
   { id: "ai", label: "AI Hacking", href: "/roadmaps/ai-hacking", color: "#ef4444" },
   { id: "network", label: "Network Pentesting", href: "/roadmaps/network-pentesting", color: "#dc2626" },
+  { id: "grc", label: "GRC", href: "/roadmaps/grc", color: "#14b8a6" },
 ];
 
 /** Favicon hostnames for Curated Resources pills (DuckDuckGo icon proxy); null = no favicon. */
@@ -34,7 +36,7 @@ const DOMAIN_DATA = [
     id: "soc",
     nodeCode: "NODE_001",
     title: "SOC",
-    subtitle: "Security monitoring simulation.",
+    subtitle: "Real-time alerts, triage & incident response.",
     analystRole: "SOC Analyst",
     isLive: true,
     status: "ACTIVE",
@@ -45,7 +47,7 @@ const DOMAIN_DATA = [
     id: "web",
     nodeCode: "NODE_002",
     title: "WEB_HACKING",
-    subtitle: "Vulnerability exploitation research.",
+    subtitle: "Exploiting web apps: recon, bugs & access.",
     analystRole: "WebApp Pentester",
     isLive: true,
     status: "ACTIVE",
@@ -56,7 +58,7 @@ const DOMAIN_DATA = [
     id: "ai",
     nodeCode: "NODE_003",
     title: "AI_HACKING",
-    subtitle: "LLM security audits.",
+    subtitle: "Hacking into LLMs: jailbreaks, prompts & extraction.",
     analystRole: "AI Security Analyst",
     isLive: true,
     status: "ACTIVE",
@@ -67,7 +69,7 @@ const DOMAIN_DATA = [
     id: "network",
     nodeCode: "NODE_004",
     title: "NETWORK_PENTESTING",
-    subtitle: "Enterprise intrusion testing.",
+    subtitle: "Internal pentests, AD & lateral movement.",
     analystRole: "Network Pentester",
     isLive: true,
     status: "ACTIVE",
@@ -75,10 +77,21 @@ const DOMAIN_DATA = [
     sync: "1x11_LAN",
   },
   {
-    id: "cloud",
+    id: "grc",
     nodeCode: "NODE_005",
+    title: "GRC",
+    subtitle: "Compliance, audits & enterprise risk.",
+    analystRole: "GRC Analyst",
+    isLive: true,
+    status: "ACTIVE",
+    threat: "NOMINAL",
+    sync: "COMPLIANT",
+  },
+  {
+    id: "cloud",
+    nodeCode: "NODE_006",
     title: "CLOUD_SEC",
-    subtitle: "Cloud hardening & IAM.",
+    subtitle: "IAM, misconfigs & multi-cloud hardening.",
     analystRole: "Cloud Security Engineer",
     isLive: false,
     status: "ACTIVE",
@@ -86,21 +99,10 @@ const DOMAIN_DATA = [
     sync: "AWS_SYNC_OK",
   },
   {
-    id: "grc",
-    nodeCode: "NODE_006",
-    title: "GRC",
-    subtitle: "Governance & Risk frameworks.",
-    analystRole: "GRC Analyst",
-    isLive: false,
-    status: "ACTIVE",
-    threat: "NOMINAL",
-    sync: "COMPLIANT",
-  },
-  {
     id: "devsecops",
     nodeCode: "NODE_007",
     title: "DEVSECOPS",
-    subtitle: "Pipeline security, SAST/DAST & secure SDLC.",
+    subtitle: "Secure builds, pipelines & supply chain.",
     analystRole: "DevSecOps Engineer",
     isLive: false,
     status: "ACTIVE",
@@ -417,8 +419,8 @@ export default function TopSection() {
                     Scenario-driven technical progression.
                   </p>
 
-                  <div className="mt-2 grid grid-cols-2 gap-x-4 md:gap-x-6">
-                    <div>
+                  <div className="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-x-4 md:gap-x-6 gap-y-5 sm:gap-y-0">
+                    <div className="min-w-0">
                       <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/60 mb-2">Live Now</p>
                       <ul className="space-y-1.5">
                         {[
@@ -426,6 +428,7 @@ export default function TopSection() {
                           { label: "Web Hacking", color: "#f43f5e" },
                           { label: "AI Hacking", color: "#ef4444" },
                           { label: "Network Pentest", color: "#dc2626" },
+                          { label: "GRC", color: "#14b8a6" },
                         ].map((d) => (
                           <li key={d.label} className="flex items-center gap-2.5">
                             <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 animate-pulse" style={{ background: d.color, boxShadow: `0 0 6px ${d.color}` }} />
@@ -434,15 +437,22 @@ export default function TopSection() {
                         ))}
                       </ul>
                     </div>
-                    <div>
+                    <div className="min-w-0 sm:text-center">
+                      <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/45 mb-2 sm:mx-auto sm:max-w-[12rem]">Coming Soon</p>
+                      <ul className="space-y-1.5 sm:flex sm:flex-col sm:items-center">
+                        <li className="flex items-center gap-2.5 sm:justify-center">
+                          <span className="w-1.5 h-1.5 rounded-full border border-white/30 flex-shrink-0" />
+                          <span className="font-label text-[17px] sm:text-[18px] text-white/50">DevSecOps</span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="min-w-0 sm:text-right">
                       <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/45 mb-2">Coming Soon</p>
-                      <ul className="space-y-1.5">
-                        {["DevSecOps", "Cloud Sec", "GRC"].map((label) => (
-                          <li key={label} className="flex items-center gap-2.5">
-                            <span className="w-1.5 h-1.5 rounded-full border border-white/30 flex-shrink-0" />
-                            <span className="font-label text-[17px] sm:text-[18px] text-white/50">{label}</span>
-                          </li>
-                        ))}
+                      <ul className="space-y-1.5 sm:flex sm:flex-col sm:items-end">
+                        <li className="flex items-center gap-2.5 sm:justify-end">
+                          <span className="w-1.5 h-1.5 rounded-full border border-white/30 flex-shrink-0" />
+                          <span className="font-label text-[17px] sm:text-[18px] text-white/50">Cloud Sec</span>
+                        </li>
                       </ul>
                     </div>
                   </div>
@@ -518,7 +528,7 @@ export default function TopSection() {
                 </div>
 
                 <h3 className="font-headline text-xl font-bold text-white mb-0.5">Career Paths</h3>
-                <p className="font-label text-white/40 text-[12px] mb-4">Per level, per domain — everything mapped.</p>
+                <p className="font-label text-white/40 text-[12px] mb-4">Per level, per domain. Everything mapped.</p>
 
                 <div className="flex flex-col gap-3">
                   {[
@@ -665,13 +675,16 @@ export default function TopSection() {
           </div>
 
           {/* Scroll Prompt */}
-          <div className="mt-8 mb-4 flex flex-col items-center gap-1 group cursor-pointer opacity-80 hover:opacity-100 transition-opacity">
+          <a
+            href="#explore-domains"
+            className="mt-8 mb-4 flex flex-col items-center gap-1 group cursor-pointer opacity-80 hover:opacity-100 transition-opacity outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:rounded"
+          >
             <span className="font-label text-[8px] tracking-[0.5em] uppercase text-on-surface-variant transition-colors group-hover:text-primary">SCROLL TO EXPLORE</span>
             <div className="relative flex flex-col items-center">
               <span className="material-symbols-outlined text-primary text-xl animate-scroll-indicator lowercase select-none">keyboard_double_arrow_down</span>
               <div className="w-px h-8 bg-gradient-to-b from-primary/60 to-transparent mt-1"></div>
             </div>
-          </div>
+          </a>
         </div>
       </main>
 
@@ -804,7 +817,7 @@ export default function TopSection() {
                           <span
                             className="relative group flex-1 flex items-center justify-center gap-1.5 bg-cyan-400/15 text-white/35 border border-cyan-400/20 font-headline text-[11px] tracking-[0.1em] font-bold py-3 px-4 uppercase cursor-not-allowed select-none"
                             aria-disabled
-                            aria-label="Experience It — coming soon"
+                            aria-label="Experience It, coming soon"
                           >
                             <span
                               className="pointer-events-none absolute bottom-[calc(100%+6px)] left-1/2 z-20 -translate-x-1/2 rounded border border-cyan-400/35 bg-[#0a0f12] px-2.5 py-1.5 font-mono text-[9px] font-bold tracking-[0.2em] text-cyan-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)] opacity-0 transition-opacity duration-150 group-hover:opacity-100 whitespace-nowrap"
@@ -827,7 +840,7 @@ export default function TopSection() {
                           <span
                             className="relative group flex-1 flex items-center justify-center gap-1.5 border border-white/[0.08] text-white/35 font-headline text-[11px] tracking-[0.1em] font-bold py-3 px-4 uppercase cursor-not-allowed select-none"
                             aria-disabled
-                            aria-label="Explore Pathway — coming soon"
+                            aria-label="Explore Pathway, coming soon"
                           >
                             <span
                               className="pointer-events-none absolute bottom-[calc(100%+6px)] left-1/2 z-20 -translate-x-1/2 rounded border border-white/20 bg-[#0a0f12] px-2.5 py-1.5 font-mono text-[9px] font-bold tracking-[0.2em] text-white/90 shadow-[0_4px_20px_rgba(0,0,0,0.5)] opacity-0 transition-opacity duration-150 group-hover:opacity-100 whitespace-nowrap"

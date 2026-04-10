@@ -16,6 +16,7 @@ import { AuditIncidentScene } from "./AuditIncidentScene";
 import { ReflectionScene } from "./ReflectionScene";
 import { useRoadmapWorkflowVideoMode } from "@/hooks/useRoadmapWorkflowVideoMode";
 import { RoadmapWorkflowMobileWalkthrough } from "@/components/roadmaps/RoadmapWorkflowMobileWalkthrough";
+import { GRC_MOTION_MS, GRC_SCROLL_TUNING } from "./motionProfile";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -24,15 +25,15 @@ const TEAL = "#14b8a6";
 const TEAL_GLOW = "rgba(20,184,166,0.35)";
 const TEAL_DIM = "rgba(20,184,166,0.22)";
 
-// ── Phase timeline ─────────────────────────────────────────────────────────────
+// ── Task timeline ─────────────────────────────────────────────────────────────
 const TIMELINE = [
   { label: "Rituals",       threshold: 0.01 },
-  { label: "Frameworks",    threshold: 0.15 },
-  { label: "Risk",          threshold: 0.30 },
-  { label: "Collab",        threshold: 0.45 },
-  { label: "Details",       threshold: 0.60 },
-  { label: "Audits",        threshold: 0.75 },
-  { label: "Future",        threshold: 0.92 },
+  { label: "Frameworks",    threshold: 0.182 },
+  { label: "Risk",          threshold: 0.318 },
+  { label: "Collab",        threshold: 0.456 },
+  { label: "Details",       threshold: 0.616 },
+  { label: "Audits",        threshold: 0.774 },
+  { label: "Future",        threshold: 0.932 },
 ] as const;
 
 // ── Background packets ─────────────────────────────────────────────────────────
@@ -51,12 +52,18 @@ const PACKETS = [
 const INTRO_AUTOPLAY_END_PROGRESS = 0.045;
 const INTRO_AUTOPLAY_SPEED_MULT = 4;
 
-/** Base autoscroll rate before the speed slider (0.5–2×); multiplied by `scrollSpeedRef` every frame. */
-const AUTOPLAY_BASE_PX_PER_SEC = 180;
+/** Base autoscroll at 1× (px/s); slider 0.5–2× multiplies this (e.g. 2× → 504 px/s). */
+const AUTOPLAY_BASE_PX_PER_SEC = 252;
 
 /** Lenis wheel: Safari trackpad deltas are much smaller than Chrome — keep manual scroll feel aligned. */
 const LENIS_WHEEL_MULT_SAFARI = 2.65;
 const LENIS_WHEEL_MULT_DEFAULT = 0.7;
+
+/** Desktop/mobile Safari (excludes Chrome on iOS). Used to sync programmatic scroll with Lenis. */
+function isAppleSafari(): boolean {
+  if (typeof navigator === "undefined") return false;
+  return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+}
 
 export const GRCLayout: React.FC = () => {
   const router = useRouter();
@@ -75,7 +82,14 @@ export const GRCLayout: React.FC = () => {
   const [isRedoHovered, setIsRedoHovered] = useState(false);
   const showRecordedWorkflow = useRoadmapWorkflowVideoMode();
 
-  const readScrollY = () => lenisRef.current?.scroll ?? window.scrollY;
+  const readScrollY = () => {
+    const lenis = lenisRef.current;
+    if (lenis && typeof lenis.scroll === "number" && !Number.isNaN(lenis.scroll)) {
+      return lenis.scroll;
+    }
+    return window.scrollY ?? document.documentElement.scrollTop ?? 0;
+  };
+
   const applyScrollY = (y: number) => {
     const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     const clamped = Math.min(maxScroll, Math.max(0, y));
@@ -83,6 +97,22 @@ export const GRCLayout: React.FC = () => {
     if (lenis) {
       lenis.scrollTo(clamped, { immediate: true, force: true });
     } else {
+      window.scrollTo(0, clamped);
+    }
+  };
+
+  /** Autoplay only: Safari often lags Lenis behind gsap.ticker — native scroll + lock keeps ~AUTOPLAY_BASE_PX_PER_SEC accurate. */
+  const applyAutoplayScrollY = (y: number) => {
+    const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    const clamped = Math.min(maxScroll, Math.max(0, y));
+    const lenis = lenisRef.current;
+
+    if (isAppleSafari()) {
+      window.scrollTo(0, clamped);
+    }
+    if (lenis) {
+      lenis.scrollTo(clamped, { immediate: true, force: true, lock: true });
+    } else if (!isAppleSafari()) {
       window.scrollTo(0, clamped);
     }
   };
@@ -128,19 +158,21 @@ export const GRCLayout: React.FC = () => {
       }
 
       const now = performance.now();
-      const dt = now - lastTime;
+      // Cap dt so background-tab wakeups don’t jump; keeps integrated px/s near target on Safari too
+      const dt = Math.min(Math.max(now - lastTime, 0), 120);
       lastTime = now;
 
       let scrollAmount = AUTOPLAY_BASE_PX_PER_SEC * (dt / 1000) * scrollSpeedRef.current;
 
       const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       const currentProgress = currentScrollY / maxScroll;
-      if (currentProgress < INTRO_AUTOPLAY_END_PROGRESS) {
-        scrollAmount *= INTRO_AUTOPLAY_SPEED_MULT;
-      }
+      // TEMPORARILY DISABLED: 4x speed during intro
+      // if (currentProgress < INTRO_AUTOPLAY_END_PROGRESS) {
+      //   scrollAmount *= INTRO_AUTOPLAY_SPEED_MULT;
+      // }
 
       currentVirtualScroll = Math.min(maxScroll, currentVirtualScroll + scrollAmount);
-      applyScrollY(currentVirtualScroll);
+      applyAutoplayScrollY(currentVirtualScroll);
       lastScrollY = readScrollY();
 
       if (readScrollY() >= maxScroll - 10) {
@@ -161,10 +193,9 @@ export const GRCLayout: React.FC = () => {
     if (showRecordedWorkflow) return;
     if (!scrollSectionRef.current || !pinnedViewportRef.current) return;
 
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    const multiplier = isSafari ? LENIS_WHEEL_MULT_SAFARI : LENIS_WHEEL_MULT_DEFAULT;
+    const multiplier = isAppleSafari() ? LENIS_WHEEL_MULT_SAFARI : LENIS_WHEEL_MULT_DEFAULT;
 
-    const lenis = new Lenis({ lerp: 0.05, wheelMultiplier: multiplier });
+    const lenis = new Lenis({ lerp: GRC_SCROLL_TUNING.lenisLerp, wheelMultiplier: multiplier });
     lenisRef.current = lenis;
     lenis.on("scroll", ScrollTrigger.update);
 
@@ -181,7 +212,7 @@ export const GRCLayout: React.FC = () => {
           trigger: scrollSectionRef.current,
           start: "top top",
           end: "bottom bottom",
-          scrub: 3,
+          scrub: GRC_SCROLL_TUNING.scrub,
           pin: pinnedViewportRef.current,
           anticipatePin: 1,
           onUpdate: (self) => setProgress(self.progress),
@@ -203,10 +234,10 @@ export const GRCLayout: React.FC = () => {
   }
 
   return (
-    <section ref={scrollSectionRef} className="relative h-[4000vh] w-screen" style={{ background: "#020f14" }}>
+    <section ref={scrollSectionRef} className="relative h-[5000vh] w-screen" style={{ background: "#020f14" }}>
       <div
         ref={pinnedViewportRef}
-        className="sticky top-0 flex h-screen min-h-[600px] w-screen items-center justify-center overflow-hidden"
+        className="sticky top-0 flex h-[100dvh] min-h-[100svh] w-screen items-center justify-center overflow-hidden"
       >
         <div
           className="pointer-events-none absolute inset-0 z-0"
@@ -257,22 +288,22 @@ export const GRCLayout: React.FC = () => {
         </div>
 
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-30 border-t px-8 py-3 backdrop-blur-sm transition-opacity duration-500"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-30 border-t px-4 py-3 backdrop-blur-sm transition-opacity duration-300 sm:px-8"
           style={{
             borderColor: "rgba(20,184,166,0.10)",
             background: "rgba(2,15,20,0.50)",
             opacity: progress >= 0.08 ? 1 : 0,
           }}
         >
-          <div className="flex items-center justify-center gap-0">
-            {TIMELINE.map((phase, i) => {
-              const isActive = progress >= phase.threshold;
+          <div className="flex flex-wrap items-center justify-center gap-y-2">
+            {TIMELINE.map((item, i) => {
+              const isActive = progress >= item.threshold;
               const nextActive = i < TIMELINE.length - 1 && progress >= TIMELINE[i + 1].threshold;
               return (
-                <React.Fragment key={phase.label}>
+                <React.Fragment key={item.label}>
                   <div className="flex flex-col items-center gap-1.5">
                     <div
-                      className="h-3 w-3 rounded-full border-2 transition-all duration-500"
+                      className="h-3 w-3 rounded-full border-2 transition-all duration-300"
                       style={{
                         borderColor: isActive ? TEAL : "rgba(20,184,166,0.18)",
                         background: isActive ? TEAL : "transparent",
@@ -280,15 +311,15 @@ export const GRCLayout: React.FC = () => {
                       }}
                     />
                     <p
-                      className="whitespace-nowrap font-mono text-[8px] uppercase tracking-widest transition-colors duration-500"
+                      className="font-mono text-[7px] uppercase tracking-widest transition-colors duration-300 sm:text-[8px]"
                       style={{ color: isActive ? TEAL : "rgba(20,184,166,0.25)" }}
                     >
-                      {phase.label}
+                      {item.label}
                     </p>
                   </div>
                   {i < TIMELINE.length - 1 && (
                     <div
-                      className="mb-5 mx-3 h-px w-14 transition-all duration-700"
+                      className="mb-5 mx-2 h-px w-8 transition-all duration-300 sm:mx-3 sm:w-14"
                       style={{
                         background: nextActive ? TEAL_DIM : "rgba(20,184,166,0.10)",
                         boxShadow: nextActive ? `0 0 6px ${TEAL_DIM}` : "none",
@@ -302,8 +333,10 @@ export const GRCLayout: React.FC = () => {
         </div>
 
         <div
-          className="fixed top-10 right-10 z-[1000] flex items-center gap-4 transition-all duration-700"
+          className="fixed z-[1000] flex items-center gap-3 transition-all duration-300 sm:gap-4"
           style={{
+            top: "max(1rem, env(safe-area-inset-top))",
+            right: "max(1rem, env(safe-area-inset-right))",
             opacity: progress > 0.01 ? 1 : 0,
             transform: progress > 0.01 ? "translateY(0)" : "translateY(-20px)",
             pointerEvents: progress > 0.01 ? "auto" : "none",
@@ -315,14 +348,14 @@ export const GRCLayout: React.FC = () => {
             onTouchMove={handleSpeedInteraction}
           >
             <div
-              className="absolute right-6 flex items-center justify-between rounded-l-full border-y border-l pl-5 pr-8 h-12 backdrop-blur-md transition-all duration-300 overflow-hidden"
+              className="absolute right-6 flex h-12 items-center justify-between overflow-hidden rounded-l-full border-y border-l pl-4 pr-7 backdrop-blur-md transition-all duration-[220ms]"
               style={{
                 borderColor: "rgba(20,184,166,0.15)",
                 background: "rgba(2,15,20,0.75)",
                 opacity: isSpeedControlOpen ? 1 : 0,
                 pointerEvents: isSpeedControlOpen ? "auto" : "none",
                 transform: isSpeedControlOpen ? "translateX(0)" : "translateX(20px)",
-                width: isSpeedControlOpen ? "180px" : "0px",
+                width: isSpeedControlOpen ? "170px" : "0px",
               }}
             >
               <input
@@ -347,7 +380,7 @@ export const GRCLayout: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsSpeedControlOpen(false)}
-                className="scrolly-control-btn ml-3 flex h-6 w-6 shrink-0 items-center justify-center rounded-full hover:bg-white/10 transition-colors text-slate-400 hover:text-white"
+                className="scrolly-control-btn ml-3 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-white/10 hover:text-white"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M9 18l6-6-6-6" />
@@ -361,7 +394,7 @@ export const GRCLayout: React.FC = () => {
                 setIsSpeedControlOpen(!isSpeedControlOpen);
                 if (!isSpeedControlOpen) handleSpeedInteraction();
               }}
-              className="scrolly-control-btn relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border backdrop-blur-md transition-all duration-300"
+              className="scrolly-control-btn relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border backdrop-blur-md transition-all duration-[220ms]"
               style={{
                 borderColor: isSpeedControlOpen ? "rgba(20,184,166,0.5)" : "rgba(255,255,255,0.1)",
                 background: isSpeedControlOpen ? "rgba(2,28,26,0.8)" : "rgba(2,15,20,0.4)",
@@ -393,7 +426,7 @@ export const GRCLayout: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsAutoScrolling(!isAutoScrolling)}
-            className="scrolly-control-btn group relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border text-white backdrop-blur-md transition-all duration-300"
+            className="scrolly-control-btn group relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border text-white backdrop-blur-md transition-all duration-[220ms]"
             style={{
               borderColor: isAutoScrolling ? "rgba(20,184,166,0.5)" : "rgba(255,255,255,0.1)",
               background: isAutoScrolling ? "rgba(2,28,26,0.8)" : "rgba(2,15,20,0.4)",
@@ -411,7 +444,7 @@ export const GRCLayout: React.FC = () => {
               </svg>
             )}
             <div
-              className="absolute top-[120%] mr-0 whitespace-nowrap rounded-lg border border-white/10 bg-slate-900/90 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.2em] opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none backdrop-blur-sm"
+              className="pointer-events-none absolute top-[120%] mr-0 whitespace-nowrap rounded-lg border border-white/10 bg-slate-900/90 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.2em] opacity-0 transition-opacity duration-[180ms] group-hover:opacity-100 backdrop-blur-sm"
               style={{ color: TEAL }}
             >
               {isAutoScrolling ? "Pause" : "Resume"}
@@ -420,8 +453,10 @@ export const GRCLayout: React.FC = () => {
         </div>
 
         <div
-          className="fixed top-10 left-10 z-[1000] flex items-center gap-3 transition-all duration-700"
+          className="fixed z-[1000] flex items-center gap-3 transition-all duration-300"
           style={{
+            top: "max(1rem, env(safe-area-inset-top))",
+            left: "max(1rem, env(safe-area-inset-left))",
             opacity: progress > 0.01 ? 1 : 0,
             transform: progress > 0.01 ? "translateY(0)" : "translateY(-20px)",
             pointerEvents: progress > 0.01 ? "auto" : "none",
@@ -430,14 +465,14 @@ export const GRCLayout: React.FC = () => {
           <button
             type="button"
             onClick={() => router.push("/")}
-            className="scrolly-control-btn group relative flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-slate-950/40 text-white shadow-2xl backdrop-blur-md transition-all hover:scale-110 hover:border-white/30 hover:bg-slate-900/60"
+            className="scrolly-control-btn group relative flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-slate-950/40 text-white shadow-2xl backdrop-blur-md transition-all duration-[220ms] hover:scale-105 hover:border-white/30 hover:bg-slate-900/60"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
               <polyline points="9 22 9 12 15 12 15 22" />
             </svg>
             <div
-              className="absolute left-full ml-4 whitespace-nowrap rounded-lg border border-white/10 bg-slate-900/90 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.2em] opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none backdrop-blur-sm"
+              className="pointer-events-none absolute left-full ml-4 whitespace-nowrap rounded-lg border border-white/10 bg-slate-900/90 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.2em] opacity-0 transition-opacity duration-[180ms] group-hover:opacity-100 backdrop-blur-sm"
               style={{ color: TEAL }}
             >
               Return Home
@@ -448,13 +483,13 @@ export const GRCLayout: React.FC = () => {
         <div
           style={{
             position: "fixed",
-            bottom: "100px",
-            right: "40px",
+            bottom: "max(1rem, calc(env(safe-area-inset-bottom) + 5.5rem))",
+            right: "max(1rem, env(safe-area-inset-right))",
             zIndex: 500,
             opacity: progress > 0.99 ? 1 : 0,
             visibility: progress > 0.99 ? "visible" : "hidden",
             transform: progress > 0.99 ? "scale(1)" : "scale(0.8)",
-            transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+            transition: `all ${GRC_MOTION_MS.medium}ms cubic-bezier(0.16, 1, 0.3, 1)`,
           }}
         >
           <button
@@ -476,7 +511,7 @@ export const GRCLayout: React.FC = () => {
               justifyContent: "center",
               cursor: "pointer",
               boxShadow: `0 0 20px ${TEAL_GLOW}`,
-              transition: "all 0.3s ease",
+              transition: `all ${GRC_MOTION_MS.fast}ms ease`,
             }}
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
