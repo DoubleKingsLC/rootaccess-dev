@@ -9,7 +9,8 @@ export type RoadmapWorkflowSlug =
   | "web-hacking"
   | "ai-hacking"
   | "network-pentesting"
-  | "grc";
+  | "grc"
+  | "cloud-security";
 
 /** Static root: maps to `public/roadmaps/workflow-walkthroughs/` */
 const BASE = "/roadmaps/workflow-walkthroughs";
@@ -83,5 +84,13 @@ export const ROADMAP_WORKFLOW_MOBILE: Record<
     careerPathHref: "/roadmaps/grc/career-path",
     videoBasename: "GRC_Mobile",
     breadcrumbLabel: "GRC",
+  },
+  "cloud-security": {
+    slug: "cloud-security",
+    title: "Cloud security workflow",
+    accentColor: "#f59e0b",
+    careerPathHref: "/roadmaps/cloud-security/career-path",
+    videoBasename: "CloudSecurity_Mobile",
+    breadcrumbLabel: "Cloud Security",
   },
 };
