@@ -1,8 +1,12 @@
 import React from "react";
 
 // ── Colors ────────────────────────────────────────────────────────────────────
-export const BLUE        = "#3b82f6";
-export const BLUE_GLOW   = "rgba(59,130,246,0.30)";
+export const PURPLE      = "#a855f7";
+export const PURPLE_GLOW = "rgba(168,85,247,0.30)";
+export const VIOLET      = "#8b5cf6";   // Vivid cloud security theme
+export const VIOLET_GLOW = "rgba(139,92,246,0.30)";
+export const BLUE        = PURPLE;      // Alias for transition
+export const BLUE_GLOW   = PURPLE_GLOW; // Alias for transition
 export const CF_C        = "#8b5cf6";   // CloudFront violet
 export const CF_GLOW     = "rgba(139,92,246,0.30)";
 export const S3_GREEN    = "#22c55e";
@@ -25,10 +29,12 @@ export const T = 27;
 // Best-practices palette
 export const WAF_C    = "#C7131F";
 export const WAF_GLOW = "rgba(199,19,31,0.30)";
-export const ALB_C    = "#0073bb";
-export const ALB_GLOW = "rgba(0,115,187,0.30)";
+export const ALB_C    = "#8b5cf6";   // Shifted from blue to violet
+export const ALB_GLOW = "rgba(139,92,246,0.30)";
 export const GD_C     = "#f97316";
 export const GD_GLOW  = "rgba(249,115,22,0.30)";
+export const CT_C     = "#a78bfa";   // Shifted from cyan to light violet
+export const CT_GLOW  = "rgba(167,139,250,0.30)";
 
 // ── Node positions (SVG viewBox 0 0 1100 600) ─────────────────────────────────
 // Horizontal layout: USER → WEBAPP → BUCKET (left to right, all at y=300)
@@ -106,7 +112,7 @@ export function CloudFrontIcon({ color = CF_C }: { color?: string }) {
 }
 
 // ── User / Person icon ────────────────────────────────────────────────────────
-export function UserIcon({ color = BLUE }: { color?: string }) {
+export function UserIcon({ color = PURPLE }: { color?: string }) {
   return (
     <Tile color={color} glow={color === S3_RED}>
       {/* Head */}
@@ -119,7 +125,7 @@ export function UserIcon({ color = BLUE }: { color?: string }) {
 }
 
 // ── Internet Globe icon ────────────────────────────────────────────────────────
-export function GlobeIcon({ color = BLUE }: { color?: string }) {
+export function GlobeIcon({ color = PURPLE }: { color?: string }) {
   return (
     <Tile color={color}>
       <circle cx={0} cy={0} r={16} stroke="rgba(255,255,255,0.82)" strokeWidth={1.3} fill="none" />
@@ -197,8 +203,6 @@ export function ServerIcon({ color = CF_C }: { color?: string }) {
 }
 
 // ── CloudTrail icon (teal, log lines) ──────────────────────────────────────────
-export const CT_C    = "#06b6d4";
-export const CT_GLOW = "rgba(6,182,212,0.30)";
 export function CloudTrailIcon({ color = CT_C }: { color?: string }) {
   const lines = [-11, -4, 3, 10] as const;
   return (

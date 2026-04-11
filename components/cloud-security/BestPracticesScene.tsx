@@ -3,7 +3,7 @@
 import React from "react";
 import {
   WAF_C, ALB_C, GD_C, CT_C,
-  CF_C, S3_GREEN, S3_GREEN_GL, BLUE, BG,
+  CF_C, S3_GREEN, S3_GREEN_GL, BLUE, BG, VIOLET,
   T, ramp, UserIcon, S3Icon, CloudKeyframes,
   WafIcon, AlbIcon, ServerIcon, CloudTrailIcon, GuardDutyIcon,
 } from "./cloudShared";
@@ -214,12 +214,12 @@ export const BestPracticesScene: React.FC<{ progress: number }> = ({ progress })
         <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
           style={{ opacity: quoteOp }}>
           <div className="flex flex-col items-center gap-5 text-center px-8">
-            <div className="h-px w-20" style={{ background: "linear-gradient(to right, transparent, rgba(0,115,187,0.5), transparent)" }} />
+            <div className="h-px w-20" style={{ background: "linear-gradient(to right, transparent, rgba(168,85,247,0.5), transparent)" }} />
             <p className="font-sans text-3xl md:text-4xl font-semibold tracking-tight max-w-2xl leading-snug"
               style={{ color: "rgba(255,255,255,0.92)" }}>
               How do we make it <span style={{ color: ALB_C }}>even better?</span>
             </p>
-            <div className="h-px w-20" style={{ background: "linear-gradient(to right, transparent, rgba(0,115,187,0.5), transparent)" }} />
+            <div className="h-px w-20" style={{ background: "linear-gradient(to right, transparent, rgba(168,85,247,0.5), transparent)" }} />
           </div>
         </div>
       )}
@@ -243,12 +243,12 @@ export const BestPracticesScene: React.FC<{ progress: number }> = ({ progress })
         {vpcOp > 0.05 && (
           <g opacity={vpcOp * 0.85}>
             <rect x={330} y={228} width={88} height={108} rx={5}
-              fill={`${BLUE}05`} stroke={BLUE} strokeWidth={0.9}
+              fill={`${VIOLET}05`} stroke={VIOLET} strokeWidth={0.9}
               strokeDasharray="6 4" opacity={0.55} />
             <rect x={334} y={220} width={74} height={14} rx={3}
               fill={BG} stroke={BLUE} strokeWidth={0.7} strokeOpacity={0.4} />
             <text x={341} y={230} fontFamily="monospace" fontSize={7.5}
-              fill={BLUE} opacity={0.72}>Public Subnet</text>
+              fill={VIOLET} opacity={0.72}>Public Subnet</text>
           </g>
         )}
 
@@ -323,7 +323,7 @@ export const BestPracticesScene: React.FC<{ progress: number }> = ({ progress })
         </g>
         {userOp > 0.3 && (
           <text x={U.x} y={U.y+T+17} textAnchor="middle" fontSize={9.5}
-            fontFamily="monospace" fill={BLUE} opacity={0.75*userOp}>User</text>
+            fontFamily="monospace" fill={VIOLET} opacity={0.75*userOp}>User</text>
         )}
 
         <g transform={`translate(${W.x},${W.y}) scale(${0.55+0.45*wafOp})`} style={{ opacity: wafOp }}>
@@ -410,7 +410,7 @@ export const BestPracticesScene: React.FC<{ progress: number }> = ({ progress })
         ))}
 
         <text x={22} y={592} fontFamily="monospace" fontSize={9}
-          fill={`${ALB_C}55`} opacity={captionOp}>SCENE 06 · BEST PRACTICES</text>
+          fill="rgba(148,163,184,0.85)" opacity={captionOp}>SCENE 06 · BEST PRACTICES</text>
       </svg>
 
       <div className="absolute bottom-14 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-center z-10 pointer-events-none"
@@ -418,7 +418,7 @@ export const BestPracticesScene: React.FC<{ progress: number }> = ({ progress })
         <p className="font-mono text-xs uppercase tracking-[0.32em]" style={{ color: ALB_C }}>
           Defense in Depth
         </p>
-        <p className="max-w-lg font-sans text-sm leading-relaxed" style={{ color: "rgba(148,163,184,0.55)" }}>
+        <p className="max-w-lg font-sans text-sm leading-relaxed" style={{ color: "rgba(148,163,184,0.85)" }}>
           WAF at the edge. ALB in the public subnet. Servers isolated in private. S3 via VPC endpoint only.
         </p>
       </div>

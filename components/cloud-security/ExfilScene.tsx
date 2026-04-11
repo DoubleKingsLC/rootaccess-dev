@@ -2,7 +2,7 @@
 
 import React from "react";
 import {
-  CF_C, S3_RED, S3_RED_GL, BLUE,
+  CF_C, S3_RED, S3_RED_GL, BLUE, VIOLET,
   USER, CF, BUCKET, T,
   ramp, VpcBoundary, UserIcon, CloudFrontIcon, S3Icon, CloudKeyframes,
 } from "./cloudShared";
@@ -51,9 +51,9 @@ export const ExfilScene: React.FC<{ progress: number }> = ({ progress }) => {
   const filesCount  = Math.floor(counterP * FILES.length);
   const currentFile = FILES[Math.min(filesCount, FILES.length - 1)];
 
-  // Interpolated user color: blue → red
-  const userR = Math.round(59  + (239 - 59)  * userRedP);
-  const userG = Math.round(130 + (68  - 130) * userRedP);
+  // Interpolated user color: violet → red
+  const userR = Math.round(139 + (239 - 139) * userRedP);
+  const userG = Math.round(92  + (68  - 92)  * userRedP);
   const userB = Math.round(246 + (68  - 246) * userRedP);
   const userColor = `rgb(${userR},${userG},${userB})`;
 
@@ -152,7 +152,7 @@ export const ExfilScene: React.FC<{ progress: number }> = ({ progress }) => {
         </g>
         <text x={USER.x} y={USER.y + T + 17} textAnchor="middle" fontSize={9.5}
           fontFamily="monospace"
-          fill={userRedP > 0.6 ? S3_RED : BLUE} opacity={0.85}>
+          fill={userRedP > 0.6 ? S3_RED : VIOLET} opacity={0.85}>
           {userRedP > 0.6 ? "Attacker" : "User"}
         </text>
         {/* Red pulse ring when user turns red */}
@@ -224,7 +224,7 @@ export const ExfilScene: React.FC<{ progress: number }> = ({ progress }) => {
         )}
 
         <text x={22} y={592} fontFamily="monospace" fontSize={9}
-          fill="rgba(239,68,68,0.38)" opacity={captionOp}>SCENE 03 · BREACH</text>
+          fill="rgba(148,163,184,0.85)" opacity={captionOp}>SCENE 03 · THE BREACH</text>
       </svg>
 
       {/* File counter */}
@@ -264,8 +264,8 @@ export const ExfilScene: React.FC<{ progress: number }> = ({ progress }) => {
         <p className="font-mono text-xs uppercase tracking-[0.32em]" style={{ color: S3_RED }}>
           No Credentials Required
         </p>
-        <p className="max-w-md font-sans text-sm leading-relaxed" style={{ color: "rgba(148,163,184,0.65)" }}>
-          The attacker bypasses the web application completely. Files walk straight out the door.
+        <p className="max-w-md font-sans text-sm leading-relaxed" style={{ color: "rgba(148,163,184,0.85)" }}>
+          An attacker exploits the open bucket to exfiltrate private internal data without triggering application logs.
         </p>
       </div>
     </div>

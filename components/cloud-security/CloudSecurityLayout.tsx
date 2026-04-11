@@ -15,7 +15,7 @@ import { BestPracticesScene } from "./BestPracticesScene";
 import { LessonsScene }       from "./LessonsScene";
 import { useRoadmapWorkflowVideoMode } from "@/hooks/useRoadmapWorkflowVideoMode";
 import { RoadmapWorkflowMobileWalkthrough } from "@/components/roadmaps/RoadmapWorkflowMobileWalkthrough";
-import { S3_GREEN, CF_C, BLUE, AMBER, S3_RED, ALB_C } from "./cloudShared";
+import { S3_GREEN, CF_C, BLUE, AMBER, S3_RED, ALB_C, VIOLET, PURPLE } from "./cloudShared";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -24,9 +24,9 @@ const TIMELINE = [
   { label: "Exposure",      threshold: 0.20, color: S3_RED  },
   { label: "Breach",        threshold: 0.38, color: S3_RED  },
   { label: "Fix",           threshold: 0.57, color: AMBER   },
-  { label: "Hardened",       threshold: 0.73, color: S3_GREEN },
-  { label: "Best Practices", threshold: 0.83, color: ALB_C   },
-  { label: "Takeaways",      threshold: 0.93, color: S3_GREEN },
+  { label: "Hardened",       threshold: 0.73, color: "#a855f7" },
+  { label: "Best Practices", threshold: 0.83, color: "#8b5cf6" },
+  { label: "Takeaways",      threshold: 0.93, color: "#a78bfa" },
 ] as const;
 
 const PACKETS = [
@@ -137,10 +137,10 @@ export const CloudSecurityLayout: React.FC = () => {
           <div style={{
             position: "absolute", inset: 0,
             backgroundImage: [
-              "radial-gradient(ellipse at 50% 38%, rgba(34,197,94,0.03) 0%, transparent 58%)",
+              "radial-gradient(ellipse at 50% 38%, rgba(168,85,247,0.03) 0%, transparent 58%)",
               "radial-gradient(circle at center, transparent 0%, rgba(7,9,15,0.88) 100%)",
-              "linear-gradient(to right, rgba(15,20,35,0.6) 1px, transparent 1px)",
-              "linear-gradient(to bottom, rgba(15,20,35,0.6) 1px, transparent 1px)",
+              "linear-gradient(to right, rgba(139,92,246,0.06) 1px, transparent 1px)",
+              "linear-gradient(to bottom, rgba(139,92,246,0.06) 1px, transparent 1px)",
             ].join(", "),
             backgroundSize: "100% 100%, 100% 100%, 44px 44px, 44px 44px",
           }} />
@@ -149,8 +149,8 @@ export const CloudSecurityLayout: React.FC = () => {
               left: p.left, top: p.top,
               animation: `${p.anim} ${p.dur}s linear infinite`,
               animationDelay: `${p.delay}s`,
-              background: "rgba(59,130,246,0.35)",
-              boxShadow: "0 0 6px rgba(59,130,246,0.2)",
+              background: "rgba(168,85,247,0.35)",
+              boxShadow: "0 0 6px rgba(168,85,247,0.2)",
             }} />
           ))}
         </div>
@@ -179,7 +179,7 @@ export const CloudSecurityLayout: React.FC = () => {
         <div
           className="pointer-events-none absolute inset-x-0 bottom-0 z-30 border-t px-4 py-2 backdrop-blur-sm"
           style={{
-            borderColor: "rgba(59,130,246,0.08)",
+            borderColor: "rgba(168,85,247,0.08)",
             background: "rgba(7,9,15,0.6)",
             opacity: progress >= 0.04 ? 1 : 0,
             transition: "opacity 0.5s",
@@ -228,7 +228,7 @@ export const CloudSecurityLayout: React.FC = () => {
           <div className="relative flex items-center" onMouseMove={handleSpeedInteraction}>
             <div className="absolute right-6 flex items-center justify-between rounded-l-full border-y border-l pl-5 pr-8 h-12 backdrop-blur-md transition-all duration-300 overflow-hidden"
               style={{
-                borderColor: "rgba(59,130,246,0.15)",
+                borderColor: "rgba(168,85,247,0.15)",
                 background:  "rgba(7,9,15,0.8)",
                 opacity:       isSpeedControlOpen ? 1 : 0,
                 pointerEvents: isSpeedControlOpen ? "auto" : "none",
@@ -239,7 +239,7 @@ export const CloudSecurityLayout: React.FC = () => {
               <input type="range" min="0.5" max="2" step="0.1" value={scrollSpeed}
                 onChange={e => { setScrollSpeed(parseFloat(e.target.value)); handleSpeedInteraction(); }}
                 className="w-full cursor-pointer"
-                style={{ height: "2px", appearance: "none", outline: "none", borderRadius: "2px", background: "rgba(59,130,246,0.2)" }}
+                style={{ height: "2px", appearance: "none", outline: "none", borderRadius: "2px", background: "rgba(168,85,247,0.2)" }}
               />
               <button onClick={() => setIsSpeedControlOpen(false)}
                 className="scrolly-control-btn ml-3 flex h-6 w-6 shrink-0 items-center justify-center rounded-full hover:bg-white/10 text-slate-400">
@@ -251,22 +251,22 @@ export const CloudSecurityLayout: React.FC = () => {
             <button onClick={() => { setIsSpeedControlOpen(!isSpeedControlOpen); if (!isSpeedControlOpen) handleSpeedInteraction(); }}
               className="scrolly-control-btn relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border backdrop-blur-md transition-all duration-300"
               style={{
-                borderColor: isSpeedControlOpen ? "rgba(59,130,246,0.5)" : "rgba(255,255,255,0.1)",
+                borderColor: isSpeedControlOpen ? "rgba(168,85,247,0.5)" : "rgba(255,255,255,0.1)",
                 background:  isSpeedControlOpen ? "rgba(7,9,20,0.85)"    : "rgba(7,9,15,0.4)",
-                boxShadow:   isSpeedControlOpen ? "0 0 14px rgba(59,130,246,0.3)" : "none",
+                boxShadow:   isSpeedControlOpen ? "0 0 14px rgba(168,85,247,0.3)" : "none",
               }}
             >
-              <span className="font-mono text-[10px] font-bold" style={{ color: BLUE }}>{scrollSpeed.toFixed(1)}x</span>
+              <span className="font-mono text-[10px] font-bold" style={{ color: "white" }}>{scrollSpeed.toFixed(1)}x</span>
             </button>
-            <style>{`input[type=range]::-webkit-slider-thumb{appearance:none;width:12px;height:12px;background:#3b82f6;border-radius:50%;cursor:pointer;box-shadow:0 0 8px rgba(59,130,246,0.6);}`}</style>
+            <style>{`input[type=range]::-webkit-slider-thumb{appearance:none;width:12px;height:12px;background:#8b5cf6;border-radius:50%;cursor:pointer;box-shadow:0 0 8px rgba(139,92,246,0.6);}`}</style>
           </div>
 
           <button onClick={() => setIsAutoScrolling(!isAutoScrolling)}
             className="scrolly-control-btn group relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border text-white backdrop-blur-md transition-all duration-300"
             style={{
-              borderColor: isAutoScrolling ? "rgba(34,197,94,0.5)"  : "rgba(255,255,255,0.1)",
-              background:  isAutoScrolling ? "rgba(7,14,10,0.85)"   : "rgba(7,9,15,0.4)",
-              boxShadow:   isAutoScrolling ? "0 0 18px rgba(34,197,94,0.3)" : "none",
+              borderColor: isAutoScrolling ? "rgba(168,85,247,0.5)"  : "rgba(255,255,255,0.1)",
+              background:  isAutoScrolling ? "rgba(10,8,15,0.85)"   : "rgba(7,9,15,0.4)",
+              boxShadow:   isAutoScrolling ? "0 0 18px rgba(168,85,247,0.3)" : "none",
             }}
           >
             {isAutoScrolling
@@ -286,7 +286,7 @@ export const CloudSecurityLayout: React.FC = () => {
         >
           <button onClick={() => router.push("/")}
             className="scrolly-control-btn group relative flex h-12 w-12 items-center justify-center rounded-full border text-white backdrop-blur-md transition-all hover:scale-110"
-            style={{ borderColor: "rgba(59,130,246,0.2)", background: "rgba(7,9,15,0.45)" }}
+            style={{ borderColor: "rgba(168,85,247,0.2)", background: "rgba(7,9,15,0.45)" }}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
@@ -311,9 +311,9 @@ export const CloudSecurityLayout: React.FC = () => {
             style={{
               width: 56, height: 56, borderRadius: "50%",
               background: "rgba(7,9,15,0.9)", backdropFilter: "blur(12px)",
-              border: `1px solid ${S3_GREEN}50`, color: S3_GREEN,
+              border: `1px solid ${VIOLET}50`, color: VIOLET,
               display: "flex", alignItems: "center", justifyContent: "center",
-              cursor: "pointer", boxShadow: `0 0 18px ${S3_GREEN}30`,
+              cursor: "pointer", boxShadow: `0 0 18px ${VIOLET}30`,
             }}
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -324,9 +324,9 @@ export const CloudSecurityLayout: React.FC = () => {
               <div style={{
                 position: "absolute", right: "110%", top: "50%", transform: "translateY(-50%)",
                 background: "rgba(7,9,15,0.92)", backdropFilter: "blur(8px)",
-                border: `1px solid ${S3_GREEN}25`, borderRadius: 8,
+                border: `1px solid ${VIOLET}25`, borderRadius: 8,
                 padding: "8px 16px", whiteSpace: "nowrap",
-                fontSize: 10, fontFamily: "monospace", color: S3_GREEN,
+                fontSize: 10, fontFamily: "monospace", color: VIOLET,
                 letterSpacing: "0.1em", textTransform: "uppercase",
               }}>Rewatch</div>
             )}
