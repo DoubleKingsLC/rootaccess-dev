@@ -89,6 +89,7 @@ const DOMAIN_DATA = [
     threat: "NOMINAL",
     sync: "COMPLIANT",
   },
+  {
     id: "cloud",
     nodeCode: "NODE_006",
     title: "CLOUD_SEC",
