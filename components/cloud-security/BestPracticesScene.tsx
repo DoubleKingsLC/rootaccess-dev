@@ -52,6 +52,9 @@ function easeOut(t: number) { return 1 - (1 - t) * (1 - t); }
 interface CardDef {
   nodeX: number;
   nodeY: number;
+  node2X?: number;  // second source node (optional — for two-icon cards)
+  node2Y?: number;
+  node2Color?: string;
   cardCX: number;
   cardCY: number;
   color: string;
@@ -66,18 +69,31 @@ function ExplainCard({
   const ease = easeOut(Math.min(1, cardInRamp));
   const cx   = def.nodeX + (def.cardCX - def.nodeX) * ease;
   const cy   = def.nodeY + (def.cardCY - def.nodeY) * ease;
+  // If there's a second node, card animates from the midpoint between both
+  const cx2  = def.node2X != null ? def.node2X + (def.cardCX - def.node2X) * ease : cx;
+  const cy2  = def.node2Y != null ? def.node2Y + (def.cardCY - def.node2Y) * ease : cy;
+  const cardX = def.node2X != null ? (cx + cx2) / 2 : cx;
+  const cardY = def.node2Y != null ? (cy + cy2) / 2 : cy;
   const sc   = 0.35 + 0.65 * ease;
 
   return (
     <>
-      {/* Dashed connector from node to card */}
+      {/* Connector from node 1 to card */}
       <line
-        x1={def.nodeX} y1={def.nodeY} x2={cx} y2={cy}
+        x1={def.nodeX} y1={def.nodeY} x2={cardX} y2={cardY}
         stroke={def.color} strokeWidth={0.9}
-        strokeDasharray="4 3" opacity={cardOp * 0.5}
+        strokeDasharray="4 3" opacity={cardOp * 0.55}
       />
-      {/* Card group — scales up from node position */}
-      <g transform={`translate(${cx},${cy}) scale(${sc})`} style={{ opacity: cardOp }}>
+      {/* Connector from node 2 to card (if present) */}
+      {def.node2X != null && def.node2Y != null && (
+        <line
+          x1={def.node2X} y1={def.node2Y} x2={cardX} y2={cardY}
+          stroke={def.node2Color ?? def.color} strokeWidth={0.9}
+          strokeDasharray="4 3" opacity={cardOp * 0.55}
+        />
+      )}
+      {/* Card group — scales up from anchor position */}
+      <g transform={`translate(${cardX},${cardY}) scale(${sc})`} style={{ opacity: cardOp }}>
         {/* Drop shadow */}
         <rect x={-118} y={-46} width={240} height={96} rx={8} fill="rgba(0,0,0,0.55)" />
         {/* Card body */}
@@ -192,7 +208,8 @@ export const BestPracticesScene: React.FC<{ progress: number }> = ({ progress })
     {
       cardInRamp: logCardIn, cardOp: logCardOp,
       def: {
-        nodeX: (CT.x + GD.x) / 2, nodeY: CT.y,
+        nodeX: CT.x, nodeY: CT.y,
+        node2X: GD.x, node2Y: GD.y, node2Color: GD_C,
         cardCX: 875, cardCY: 390,
         color: CT_C,
         title: "Log Monitoring",
