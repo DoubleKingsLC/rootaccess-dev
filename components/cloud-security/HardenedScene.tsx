@@ -24,8 +24,6 @@ const BK_LEFT  = BUCKET.x - T;
 const LINE1_LEN = WA_LEFT  - U_RIGHT;
 const LINE2_LEN = BK_LEFT  - WA_RIGHT;
 const MID_Y     = USER.y;
-const MID1_X    = (U_RIGHT + WA_LEFT)  / 2;
-const MID2_X    = (WA_RIGHT + BK_LEFT) / 2;
 
 // Bypass arc — shown as blocked
 const BYPASS_PATH = `M${U_RIGHT},${USER.y} C${USER.x + 180},${USER.y - 160} ${BUCKET.x - 180},${BUCKET.y - 160} ${BK_LEFT},${BUCKET.y}`;
@@ -80,19 +78,35 @@ export const HardenedScene: React.FC<{ progress: number }> = ({ progress }) => {
           style={line2P > 0.9 ? { filter: `drop-shadow(0 0 5px ${S3_GREEN_GL})` } : undefined}
         />
 
-        {/* ── Input Filtering badge (restored) ── */}
-        {filterOp > 0.1 && (
-          <g style={{ opacity: filterOp }}>
-            {/* Filter funnel */}
-            <polygon
-              points={`${MID2_X - 8},${MID_Y - 18} ${MID2_X + 8},${MID_Y - 18} ${MID2_X + 3},${MID_Y - 10} ${MID2_X + 3},${MID_Y - 5} ${MID2_X - 3},${MID_Y - 5} ${MID2_X - 3},${MID_Y - 10}`}
-              fill={S3_GREEN} fillOpacity={0.85}
-            />
-            <rect x={MID2_X - 44} y={MID_Y - 36} width={88} height={15} rx={4}
-              fill="rgba(7,9,15,0.92)" stroke={`${S3_GREEN}50`} strokeWidth={0.8} />
-            <text x={MID2_X} y={MID_Y - 26} textAnchor="middle" fontSize={8}
-              fontFamily="monospace" fill={S3_GREEN} opacity={0.95}>✓ Input Filtering</text>
-          </g>
+        {/* ── Input packet animation — red <script> in, green &lt;script&gt; out ── */}
+        {filterOp > 0.5 && (
+          <>
+            {/* Raw input: User → WebApp */}
+            <g opacity={0.92}>
+              <animateMotion
+                path={`M${U_RIGHT},${MID_Y} L${WA_LEFT},${MID_Y}`}
+                dur="2.4s" repeatCount="indefinite" begin="0s" />
+              <rect x={-28} y={-10} width={56} height={18} rx={4}
+                fill="rgba(239,68,68,0.18)" stroke="rgba(239,68,68,0.7)" strokeWidth={0.8} />
+              <text x={0} y={4} textAnchor="middle" fontSize={8.5}
+                fontFamily="monospace" fill="#fca5a5">&lt;script&gt;</text>
+            </g>
+            {/* Filter pulse ring at WebApp */}
+            <circle cx={CF.x} cy={CF.y} r={T} fill="none" stroke={CF_C} strokeWidth={1.5} opacity={0}>
+              <animate attributeName="r" values={`${T};${T * 1.5};${T}`} dur="2.4s" begin="0.72s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.6;0;0.6" dur="2.4s" begin="0.72s" repeatCount="indefinite" />
+            </circle>
+            {/* Sanitised output: WebApp → S3 */}
+            <g opacity={0.92}>
+              <animateMotion
+                path={`M${WA_RIGHT},${MID_Y} L${BK_LEFT},${MID_Y}`}
+                dur="2.4s" repeatCount="indefinite" begin="1.2s" />
+              <rect x={-36} y={-10} width={72} height={18} rx={4}
+                fill="rgba(34,197,94,0.12)" stroke="rgba(34,197,94,0.55)" strokeWidth={0.8} />
+              <text x={0} y={4} textAnchor="middle" fontSize={8}
+                fontFamily="monospace" fill="#86efac">&amp;lt;script&amp;gt;</text>
+            </g>
+          </>
         )}
 
         {/* ── Green packets along normal path ── */}
@@ -134,7 +148,7 @@ export const HardenedScene: React.FC<{ progress: number }> = ({ progress }) => {
             fontFamily="monospace" fill={BLUE} opacity={0.78 * userOp}>User</text>
         )}
 
-        {/* ── WebApp node ── */}
+        {/* ── WebApp node — painted BEFORE filter badge so badge sits on top ── */}
         <g transform={`translate(${CF.x},${CF.y}) scale(${0.55 + 0.45 * webappOp})`}
           style={{ opacity: webappOp }}>
           <CloudFrontIcon />
@@ -146,6 +160,19 @@ export const HardenedScene: React.FC<{ progress: number }> = ({ progress }) => {
             <text x={CF.x} y={CF.y + T + 29} textAnchor="middle" fontSize={7.5}
               fontFamily="monospace" fill={CF_C} opacity={0.45 * webappOp}>Controlled Access</text>
           </>
+        )}
+
+        {/* ── Filter badge ON WebApp node ── */}
+        {filterOp > 0.1 && (
+          <g style={{ opacity: filterOp }}>
+            <rect x={CF.x - 46} y={CF.y - T - 30} width={92} height={19} rx={5}
+              fill="rgba(7,9,15,0.94)" stroke={`${CF_C}50`} strokeWidth={0.9} />
+            <text x={CF.x} y={CF.y - T - 17} textAnchor="middle" fontSize={8.5}
+              fontFamily="monospace" fill={CF_C} opacity={0.95}>▽ Filters Inputs</text>
+            <circle cx={CF.x + T - 2} cy={CF.y - T + 2} r={14}
+              fill="rgba(7,9,15,0.97)" stroke={CF_C} strokeWidth={1.3} strokeOpacity={0.6} />
+            <text x={CF.x + T - 2} y={CF.y - T + 7} textAnchor="middle" fontSize={13}>🛡</text>
+          </g>
         )}
 
         {/* ── S3 Bucket — locked, green ── */}
