@@ -107,13 +107,13 @@ export const RiskScene: React.FC<{ progress: number }> = ({ progress }) => {
         <div className="absolute top-8 left-1/2 -translate-x-1/2 z-20 pointer-events-none flex items-center gap-2.5 px-5 py-2"
           style={{
             opacity: normalCtxOp,
-            background: "rgba(59,130,246,0.08)",
-            border: "1px solid rgba(59,130,246,0.25)",
+            background: "rgba(139,92,246,0.08)",
+            border: "1px solid rgba(139,92,246,0.25)",
             borderRadius: 999,
             backdropFilter: "blur(8px)",
           }}>
-          <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#3b82f6", display: "inline-block" }} />
-          <span className="font-mono text-xs tracking-widest uppercase" style={{ color: "rgba(147,197,253,0.9)" }}>
+          <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#8b5cf6", display: "inline-block" }} />
+          <span className="font-mono text-xs tracking-widest uppercase" style={{ color: "rgba(196,181,253,0.9)" }}>
             Normal users access files through the web application
           </span>
         </div>
@@ -157,14 +157,14 @@ export const RiskScene: React.FC<{ progress: number }> = ({ progress }) => {
         <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
           style={{ opacity: normalLabelOp }}>
           <div className="flex flex-col items-center gap-4 text-center px-8">
-            <div className="h-px w-16" style={{ background: "linear-gradient(to right, transparent, rgba(59,130,246,0.5), transparent)" }} />
+            <div className="h-px w-16" style={{ background: "linear-gradient(to right, transparent, rgba(168,85,247,0.5), transparent)" }} />
             <p className="font-mono text-[10px] uppercase tracking-[0.55em]"
-              style={{ color: "rgba(59,130,246,0.65)" }}>Part 01</p>
+              style={{ color: "rgba(168,85,247,0.65)" }}>Part 01</p>
             <p className="font-sans text-3xl font-semibold tracking-tight"
               style={{ color: "rgba(255,255,255,0.92)" }}>
               Normal User Interaction
             </p>
-            <div className="h-px w-16" style={{ background: "linear-gradient(to right, transparent, rgba(59,130,246,0.5), transparent)" }} />
+            <div className="h-px w-16" style={{ background: "linear-gradient(to right, transparent, rgba(168,85,247,0.5), transparent)" }} />
           </div>
         </div>
       )}
@@ -322,7 +322,7 @@ export const RiskScene: React.FC<{ progress: number }> = ({ progress }) => {
         )}
 
         <text x={22} y={592} fontFamily="monospace" fontSize={9}
-          fill="rgba(148,163,184,0.35)" opacity={captionOp}>SCENE 02 · EXPOSURE</text>
+          fill="rgba(148,163,184,0.85)" opacity={captionOp}>SCENE 02 · EXPOSURE</text>
       </svg>
 
       <div className="absolute bottom-14 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-center z-10"
@@ -330,7 +330,7 @@ export const RiskScene: React.FC<{ progress: number }> = ({ progress }) => {
         <p className="font-mono text-xs uppercase tracking-[0.32em]" style={{ color: AMBER }}>
           Publicly Reachable
         </p>
-        <p className="max-w-md font-sans text-sm leading-relaxed" style={{ color: "rgba(148,163,184,0.65)" }}>
+        <p className="max-w-md font-sans text-sm leading-relaxed" style={{ color: "rgba(148,163,184,0.85)" }}>
           Normally requests go through the Web Application. With public access on, anyone can skip it entirely.
         </p>
       </div>

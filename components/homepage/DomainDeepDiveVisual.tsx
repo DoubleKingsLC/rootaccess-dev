@@ -17,7 +17,7 @@ const ACCENT = {
   web: "from-rose-500/15 border-rose-500/20",
   ai: "from-orange-500/15 border-orange-500/20",
   network: "from-cyan-500/15 border-cyan-500/20",
-  cloud: "from-indigo-500/15 border-indigo-500/20",
+  cloud: "from-purple-500/15 border-purple-500/20",
   grc: "from-teal-500/15 border-teal-500/20",
   devsecops: "from-amber-500/15 border-amber-500/20",
 } as const;
@@ -205,14 +205,14 @@ function NetworkVisual() {
 function CloudVisual() {
   return (
     <div className="relative flex h-full items-center justify-center p-4">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(99,102,241,0.15),transparent_55%)]" />
-      <Scanline color="via-indigo-400/20" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(168,85,247,0.15),transparent_55%)]" />
+      <Scanline color="via-purple-400/20" />
       <svg viewBox="0 0 280 140" className="relative z-10 h-[120px] w-full max-w-[320px]" aria-hidden>
         <defs>
           <linearGradient id="cwire" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="rgba(129,140,248,0)" />
-            <stop offset="50%" stopColor="rgba(129,140,248,0.6)" />
-            <stop offset="100%" stopColor="rgba(129,140,248,0)" />
+            <stop offset="0%" stopColor="rgba(168,85,247,0)" />
+            <stop offset="50%" stopColor="rgba(168,85,247,0.6)" />
+            <stop offset="100%" stopColor="rgba(168,85,247,0)" />
           </linearGradient>
         </defs>
         {[0, 1, 2].map((i) => (
@@ -223,8 +223,8 @@ function CloudVisual() {
             cx={70 + i * 70}
             cy={55 + (i % 2) * 18}
             r={22}
-            fill="rgba(99,102,241,0.08)"
-            stroke="rgba(129,140,248,0.45)"
+            fill="rgba(168,85,247,0.08)"
+            stroke="rgba(168,85,247,0.45)"
             strokeWidth="1"
           />
         ))}
@@ -236,7 +236,7 @@ function CloudVisual() {
           strokeWidth="1.5"
           strokeDasharray="6 8"
         />
-        <text x="140" y="118" textAnchor="middle" className="fill-indigo-200/50" style={{ fontSize: "9px", fontFamily: "ui-monospace" }}>
+        <text x="140" y="118" textAnchor="middle" className="fill-purple-200/50" style={{ fontSize: "9px", fontFamily: "ui-monospace" }}>
           IAM · regions · least privilege
         </text>
       </svg>

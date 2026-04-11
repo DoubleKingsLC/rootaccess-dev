@@ -187,15 +187,15 @@ export const HardenedScene: React.FC<{ progress: number }> = ({ progress }) => {
         )}
 
         <text x={22} y={592} fontFamily="monospace" fontSize={9}
-          fill={`${S3_GREEN}55`} opacity={captionOp}>SCENE 05 · HARDENED ARCHITECTURE</text>
+          fill="rgba(148,163,184,0.85)" opacity={captionOp}>SCENE 05 · HARDENED ARCHITECTURE</text>
       </svg>
 
       <div className="absolute bottom-14 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-center z-10"
         style={{ opacity: captionOp }}>
-        <p className="font-mono text-xs uppercase tracking-[0.32em]" style={{ color: S3_GREEN }}>
+        <p className="font-mono text-xs uppercase tracking-[0.32em]" style={{ color: "#a855f7" }}>
           Secure by Design
         </p>
-        <p className="max-w-md font-sans text-sm leading-relaxed" style={{ color: "rgba(148,163,184,0.65)" }}>
+        <p className="max-w-md font-sans text-sm leading-relaxed" style={{ color: "rgba(203,213,225,0.95)" }}>
           Every request flows through the Web Application. Direct access is blocked. Filtering is back.
         </p>
       </div>

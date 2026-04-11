@@ -102,13 +102,13 @@ function DesktopScene({ terminalOp, notifSlide, notifOp, desktopCursorOp, dcx, d
 
       {/* ── Desktop surface ── */}
       <div style={{
-        background: "linear-gradient(135deg, #0f172a 0%, #0a0f1e 100%)",
+        background: "linear-gradient(135deg, #1e0f2a 0%, #120a1e 100%)",
         position: "relative", height: 440, overflow: "hidden",
       }}>
         {/* Subtle grid */}
         <div style={{
           position: "absolute", inset: 0, opacity: 0.04,
-          backgroundImage: "linear-gradient(rgba(59,130,246,1) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,1) 1px, transparent 1px)",
+          backgroundImage: "linear-gradient(rgba(168,85,247,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(168,85,247,0.1) 1px, transparent 1px)",
           backgroundSize: "44px 44px",
         }} />
 
@@ -116,7 +116,7 @@ function DesktopScene({ terminalOp, notifSlide, notifOp, desktopCursorOp, dcx, d
         <div style={{
           position: "absolute", top: 14, left: 18,
           fontFamily: "monospace", fontSize: 11,
-          color: "rgba(34,197,94,0.55)",
+          color: "rgba(34,197,94,0.8)",
           display: "flex", alignItems: "center", gap: 6,
         }}>
           <span style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(34,197,94,0.8)", display: "inline-block" }} />
@@ -141,7 +141,7 @@ function DesktopScene({ terminalOp, notifSlide, notifOp, desktopCursorOp, dcx, d
             <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#ef4444" }} />
             <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#f59e0b" }} />
             <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#22c55e" }} />
-            <span style={{ marginLeft: 8, fontSize: 10.5, color: "rgba(148,163,184,0.45)" }}>
+            <span style={{ marginLeft: 8, fontSize: 10.5, color: "rgba(148,163,184,0.65)" }}>
               admin@prod-bastion — bash
             </span>
           </div>
@@ -150,9 +150,9 @@ function DesktopScene({ terminalOp, notifSlide, notifOp, desktopCursorOp, dcx, d
               <div key={i} style={{
                 fontSize: 11, lineHeight: 1.75,
                 color: line.startsWith("$") ? "#4ade80"
-                     : line.match(/^\d+$/) ? "#93c5fd"
+                     : line.match(/^\d+$/) ? "#d8b4fe"
                      : line.includes("%") ? "#fbbf24"
-                     : "rgba(148,163,184,0.7)",
+                     : "rgba(148,163,184,0.85)",
               }}>
                 {line}
               </div>
@@ -185,7 +185,7 @@ function DesktopScene({ terminalOp, notifSlide, notifOp, desktopCursorOp, dcx, d
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
                   <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.88)" }}>AWS Config</span>
-                  <span style={{ fontSize: 10, color: "rgba(148,163,184,0.45)" }}>just now</span>
+                  <span style={{ fontSize: 10, color: "rgba(148,163,184,0.65)" }}>just now</span>
                 </div>
                 <div style={{ fontSize: 11.5, fontWeight: 700, color: "#fbbf24", marginBottom: 3 }}>
                   Config Rule Triggered
@@ -193,7 +193,7 @@ function DesktopScene({ terminalOp, notifSlide, notifOp, desktopCursorOp, dcx, d
                 <div style={{ fontSize: 10, color: "rgba(239,68,68,0.85)", fontFamily: "monospace", marginBottom: 2 }}>
                   NON_COMPLIANT · s3-bucket-public-read-prohibited
                 </div>
-                <div style={{ fontSize: 10, color: "rgba(148,163,184,0.5)", fontFamily: "monospace" }}>
+                <div style={{ fontSize: 10, color: "rgba(148,163,184,0.7)", fontFamily: "monospace" }}>
                   prod-company-assets · us-east-1
                 </div>
               </div>
@@ -237,7 +237,7 @@ function EmailPage() {
       {/* Sidebar */}
       <div style={{ width: 188, background: "#f6f8fc", borderRight: "1px solid #e2e8f0", padding: "12px 0", flexShrink: 0 }}>
         <div style={{ padding: "8px 14px 12px" }}>
-          <div style={{ background: "#1a73e8", color: "white", borderRadius: 24, padding: "9px 14px", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{ background: "#8b5cf6", color: "white", borderRadius: 24, padding: "9px 14px", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
             <span style={{ fontSize: 16 }}>✏</span> Compose
           </div>
         </div>
@@ -257,7 +257,7 @@ function EmailPage() {
             <span style={{ fontSize: 13 }}>{item.icon}</span>
             <span style={{ fontSize: 12.5, fontWeight: item.active ? 700 : 400, color: "#333", flex: 1 }}>{item.label}</span>
             {item.badge && (
-              <span style={{ background: "#1a73e8", color: "white", borderRadius: 10, padding: "1px 6px", fontSize: 10, fontWeight: 700 }}>{item.badge}</span>
+              <span style={{ background: "#8b5cf6", color: "white", borderRadius: 10, padding: "1px 6px", fontSize: 10, fontWeight: 700 }}>{item.badge}</span>
             )}
           </div>
         ))}
@@ -285,7 +285,7 @@ function EmailPage() {
         <div style={{ border: "1px solid #e2e8f0", borderRadius: 6, overflow: "hidden" }}>
           <div style={{ background: "#232f3e", padding: "10px 18px", display: "flex", alignItems: "center", gap: 10 }}>
             <span style={{ color: "#f59e0b", fontWeight: 900, fontSize: 17, letterSpacing: "-1px" }}>aws</span>
-            <span style={{ color: "rgba(255,255,255,0.6)", fontSize: 11 }}>Config Notification</span>
+            <span style={{ color: "rgba(255,255,255,0.8)", fontSize: 11 }}>Config Notification</span>
           </div>
           <div style={{ padding: "16px 18px", background: "#fff" }}>
             <div style={{ display: "grid", gridTemplateColumns: "120px 1fr", rowGap: 8 }}>
@@ -298,7 +298,7 @@ function EmailPage() {
               ].map(([k, v]) => (
                 <React.Fragment key={k}>
                   <span style={{ fontSize: 11, color: "#9ca3af" }}>{k}</span>
-                  <span style={{ fontSize: 11, color: k === "Resource" ? "#1a73e8" : "#111827", fontWeight: k === "Resource" ? 700 : 400 }}>{v}</span>
+                  <span style={{ fontSize: 11, color: k === "Resource" ? "#818cf8" : "#111827", fontWeight: k === "Resource" ? 700 : 400 }}>{v}</span>
                 </React.Fragment>
               ))}
               <span style={{ fontSize: 11, color: "#9ca3af" }}>Compliance</span>
@@ -309,7 +309,7 @@ function EmailPage() {
               </span>
             </div>
             <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px solid #f3f4f6" }}>
-              <span style={{ background: "#0073bb", color: "white", padding: "7px 16px", borderRadius: 4, fontSize: 11, fontWeight: 600 }}>
+              <span style={{ background: "#8b5cf6", color: "white", padding: "7px 16px", borderRadius: 4, fontSize: 11, fontWeight: 600 }}>
                 View in AWS Config →
               </span>
             </div>
@@ -330,14 +330,14 @@ function ConfigPage() {
         {["Dashboard", "Rules", "Resources", "Conformance packs"].map(item => (
           <div key={item} style={{
             padding: "9px 16px", fontSize: 12,
-            color: item === "Rules" ? "white" : "rgba(255,255,255,0.5)",
+            color: item === "Rules" ? "white" : "rgba(255,255,255,0.7)",
             background: item === "Rules" ? "rgba(255,255,255,0.1)" : "transparent",
           }}>{item}</div>
         ))}
       </div>
 
       <div style={{ flex: 1, padding: "18px 22px", background: "#f4f5f7", overflowY: "auto" }}>
-        <div style={{ fontSize: 11, color: "#0073bb", marginBottom: 12 }}>
+        <div style={{ fontSize: 11, color: "#8b5cf6", marginBottom: 12 }}>
           Config <span style={{ color: "#999", margin: "0 4px" }}>›</span>
           Rules <span style={{ color: "#999", margin: "0 4px" }}>›</span>
           s3-bucket-public-read-prohibited
@@ -375,13 +375,13 @@ function ConfigPage() {
             </thead>
             <tbody>
               <tr style={{ background: "#fef2f2" }}>
-                <td style={{ padding: "10px 16px", color: "#0073bb", fontWeight: 700 }}>prod-company-assets</td>
+                <td style={{ padding: "10px 16px", color: "#8b5cf6", fontWeight: 700 }}>prod-company-assets</td>
                 <td style={{ padding: "10px 16px" }}><span style={{ color: "#dc2626", fontWeight: 700 }}>● NON_COMPLIANT</span></td>
                 <td style={{ padding: "10px 16px", color: "#9ca3af" }}>09:42 UTC</td>
               </tr>
               {[["backup-logs-archive", "08:15 UTC"], ["static-website-assets", "08:15 UTC"]].map(([name, ts]) => (
                 <tr key={name} style={{ borderTop: "1px solid #f3f4f6" }}>
-                  <td style={{ padding: "10px 16px", color: "#0073bb" }}>{name}</td>
+                  <td style={{ padding: "10px 16px", color: "#818cf8" }}>{name}</td>
                   <td style={{ padding: "10px 16px" }}><span style={{ color: "#16a34a", fontWeight: 600 }}>✓ Compliant</span></td>
                   <td style={{ padding: "10px 16px", color: "#9ca3af" }}>{ts}</td>
                 </tr>
@@ -404,14 +404,14 @@ function S3PermissionsPage() {
         {["Overview", "Properties", "Permissions", "Metrics"].map(item => (
           <div key={item} style={{
             padding: "9px 16px", fontSize: 12,
-            color: item === "Permissions" ? "white" : "rgba(255,255,255,0.5)",
+            color: item === "Permissions" ? "white" : "rgba(255,255,255,0.7)",
             background: item === "Permissions" ? "rgba(255,255,255,0.1)" : "transparent",
           }}>{item}</div>
         ))}
       </div>
 
       <div style={{ flex: 1, padding: "18px 22px", background: "#f4f5f7", overflowY: "auto" }}>
-        <div style={{ fontSize: 11, color: "#0073bb", marginBottom: 12 }}>
+        <div style={{ fontSize: 11, color: "#8b5cf6", marginBottom: 12 }}>
           S3 <span style={{ color: "#999", margin: "0 4px" }}>›</span>
           prod-company-assets <span style={{ color: "#999", margin: "0 4px" }}>›</span>
           Permissions
@@ -495,6 +495,7 @@ export const AlertScene: React.FC<{ progress: number }> = ({ progress }) => {
   const ripple1  = clickRipple(lp, 0.54);   // email → config click
   const ripple2  = clickRipple(lp, 0.76);   // config → S3 click
   const cursorOp = Math.min(1, Math.max(0, (lp - 0.38) / 0.08));
+  const captionOp = ramp(lp, 0.38, 0.14);
 
   return (
     <div className="absolute inset-0 flex items-center justify-center" style={{ opacity }}>
@@ -602,7 +603,7 @@ export const AlertScene: React.FC<{ progress: number }> = ({ progress }) => {
 
       {/* Phase label */}
       <div className="absolute bottom-8 left-8 font-mono text-[9px] uppercase tracking-widest"
-        style={{ color: "rgba(148,163,184,0.4)", opacity: ramp(lp, 0.38, 0.14) }}>
+        style={{ color: "rgba(148,163,184,0.85)", opacity: captionOp }}>
         SCENE 01 · THE ALERT
       </div>
     </div>

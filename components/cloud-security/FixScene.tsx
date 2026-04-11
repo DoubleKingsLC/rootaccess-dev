@@ -102,12 +102,12 @@ export const FixScene: React.FC<{ progress: number }> = ({ progress }) => {
         <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
           style={{ opacity: quoteOp }}>
           <div className="flex flex-col items-center gap-5 text-center px-8">
-            <div className="h-px w-20" style={{ background: "linear-gradient(to right, transparent, rgba(34,197,94,0.5), transparent)" }} />
+            <div className="h-px w-20" style={{ background: "linear-gradient(to right, transparent, rgba(168,85,247,0.5), transparent)" }} />
             <p className="font-sans text-3xl md:text-4xl font-semibold tracking-tight max-w-2xl leading-snug"
               style={{ color: "rgba(255,255,255,0.92)" }}>
-              So how do we <span style={{ color: "#22c55e" }}>fix it?</span>
+              So how do we <span style={{ color: "#a855f7" }}>fix it?</span>
             </p>
-            <div className="h-px w-20" style={{ background: "linear-gradient(to right, transparent, rgba(34,197,94,0.5), transparent)" }} />
+            <div className="h-px w-20" style={{ background: "linear-gradient(to right, transparent, rgba(168,85,247,0.5), transparent)" }} />
           </div>
         </div>
       )}
@@ -164,7 +164,7 @@ export const FixScene: React.FC<{ progress: number }> = ({ progress }) => {
             </div>
 
             <div style={{ flex: 1, padding: "18px 22px", overflowY: "auto" }}>
-              <div style={{ fontSize: 11, color: "#0073bb", marginBottom: 12 }}>
+              <div style={{ fontSize: 11, color: "#8b5cf6", marginBottom: 12 }}>
                 S3 <span style={{ color: "#999", margin: "0 4px" }}>›</span>
                 prod-company-assets <span style={{ color: "#999", margin: "0 4px" }}>›</span>
                 Permissions
@@ -194,7 +194,7 @@ export const FixScene: React.FC<{ progress: number }> = ({ progress }) => {
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     {editClick > 0.4 && editClick < 0.95 && !allOn && (
                       <div style={{
-                        background: "#0073bb", color: "white", borderRadius: 4,
+                        background: "#8b5cf6", color: "white", borderRadius: 4,
                         padding: "5px 14px", fontSize: 11, fontWeight: 600,
                         opacity: Math.min(1, editClick * 2),
                       }}>Editing…</div>
@@ -262,7 +262,7 @@ export const FixScene: React.FC<{ progress: number }> = ({ progress }) => {
                       Cancel
                     </button>
                     <button style={{
-                      background: saveClick > 0.3 ? S3_GREEN : "#0073bb",
+                      background: saveClick > 0.3 ? S3_GREEN : "#8b5cf6",
                       border: "none", borderRadius: 4, padding: "6px 16px",
                       fontSize: 11.5, color: "white", fontWeight: 600, cursor: "pointer",
                       transition: "background 0.3s",
@@ -307,7 +307,7 @@ export const FixScene: React.FC<{ progress: number }> = ({ progress }) => {
       </div>
 
       <div className="absolute bottom-8 left-8 font-mono text-[9px] uppercase tracking-widest"
-        style={{ color: "rgba(148,163,184,0.4)", opacity: captionOp }}>
+        style={{ color: "rgba(148,163,184,0.85)", opacity: captionOp }}>
         SCENE 04 · REMEDIATION
       </div>
     </div>

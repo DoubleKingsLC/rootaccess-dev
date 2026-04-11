@@ -11,6 +11,7 @@ const ROADMAPS_DATA = [
   { id: "ai", label: "AI Hacking Path", href: "/roadmaps/ai-hacking/career-path", color: "#ef4444" },
   { id: "network", label: "Network Pentesting", href: "/roadmaps/network-pentesting/career-path", color: "#dc2626" },
   { id: "grc", label: "GRC Career Path", href: "/roadmaps/grc/career-path", color: "#14b8a6" },
+  { id: "cloud", label: "Cloud Security", href: "/roadmaps/cloud-security/career-path", color: "#a855f7" },
 ];
 
 const EXPERIENCES_DATA = [
@@ -19,6 +20,7 @@ const EXPERIENCES_DATA = [
   { id: "ai", label: "AI Hacking", href: "/roadmaps/ai-hacking", color: "#ef4444" },
   { id: "network", label: "Network Pentesting", href: "/roadmaps/network-pentesting", color: "#dc2626" },
   { id: "grc", label: "GRC", href: "/roadmaps/grc", color: "#14b8a6" },
+  { id: "cloud", label: "Cloud Security", href: "/roadmaps/cloud-security", color: "#a855f7" },
 ];
 
 /** Favicon hostnames for Curated Resources pills (DuckDuckGo icon proxy); null = no favicon. */
@@ -93,7 +95,7 @@ const DOMAIN_DATA = [
     title: "CLOUD_SEC",
     subtitle: "IAM, misconfigs & multi-cloud hardening.",
     analystRole: "Cloud Security Engineer",
-    isLive: false,
+    isLive: true,
     status: "ACTIVE",
     threat: "LOW // 0.12",
     sync: "AWS_SYNC_OK",
@@ -147,8 +149,8 @@ const DomainIcons = {
     </svg>
   ),
   cloud: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-indigo-400 w-5 h-5">
-      <path d="M17.5 19C19.9853 19 22 16.9853 22 14.5C22 12.18 20.24 10.27 18 10.03C17.47 6.64 14.47 4 11 4C7.13401 4 4 7.13401 4 11C4 11.2312 4.011 11.459 4.033 11.683C2.28 12.35 1 14.03 1 16C1 18.2091 2.79086 20 5 20H17.5" fill="rgba(129,140,248,0.2)"/>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-purple-500 w-5 h-5">
+      <path d="M17.5 19C19.9853 19 22 16.9853 22 14.5C22 12.18 20.24 10.27 18 10.03C17.47 6.64 14.47 4 11 4C7.13401 4 4 7.13401 4 11C4 11.2312 4.011 11.459 4.033 11.683C2.28 12.35 1 14.03 1 16C1 18.2091 2.79086 20 5 20H17.5" fill="rgba(168,85,247,0.2)"/>
     </svg>
   ),
   grc: (
@@ -429,6 +431,7 @@ export default function TopSection() {
                           { label: "AI Hacking", color: "#ef4444" },
                           { label: "Network Pentest", color: "#dc2626" },
                           { label: "GRC", color: "#14b8a6" },
+                          { label: "Cloud Sec", color: "#a855f7" },
                         ].map((d) => (
                           <li key={d.label} className="flex items-center gap-2.5">
                             <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 animate-pulse" style={{ background: d.color, boxShadow: `0 0 6px ${d.color}` }} />
@@ -451,7 +454,7 @@ export default function TopSection() {
                       <ul className="space-y-1.5 sm:flex sm:flex-col sm:items-end">
                         <li className="flex items-center gap-2.5 sm:justify-end">
                           <span className="w-1.5 h-1.5 rounded-full border border-white/30 flex-shrink-0" />
-                          <span className="font-label text-[17px] sm:text-[18px] text-white/50">Cloud Sec</span>
+                          <span className="font-label text-[17px] sm:text-[18px] text-white/50">Forensics</span>
                         </li>
                       </ul>
                     </div>

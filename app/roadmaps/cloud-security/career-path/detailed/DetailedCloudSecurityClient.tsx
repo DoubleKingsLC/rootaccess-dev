@@ -6,11 +6,11 @@ import { useEffect, useState } from "react";
 // ── Level metadata ─────────────────────────────────────────────────────────────
 
 const LEVELS = [
-  { num: "00", label: "Cloud Foundations",        color: "#94a3b8", time: "0–6 months",       subtitle: "Zero to Cloud Literate"              },
-  { num: "01", label: "Cloud Security Associate", color: "#22d3ee", time: "6 months – 2 years", subtitle: "Identity, Visibility & Hardening"    },
-  { num: "02", label: "Cloud Security Engineer",  color: "#3b82f6", time: "2–5 years",         subtitle: "Automation, IaC & Posture at Scale"  },
-  { num: "03", label: "Cloud Penetration Tester", color: "#a855f7", time: "4–8 years",         subtitle: "Offensive Cloud & Privilege Escalation" },
-  { num: "04", label: "Cloud Security Architect", color: "#f59e0b", time: "8+ years",           subtitle: "Zero Trust, CNAPP & Enterprise Programs" },
+  { num: "00", label: "Cloud Foundations",        color: "#ada3c1", time: "0–6 months",       subtitle: "Zero to Cloud Literate"              },
+  { num: "01", label: "Cloud Security Associate", color: "#a78bfa", time: "6 months – 2 years", subtitle: "Identity, Visibility & Hardening"    },
+  { num: "02", label: "Cloud Security Engineer",  color: "#a855f7", time: "2–5 years",         subtitle: "Automation, IaC & Posture at Scale"  },
+  { num: "03", label: "Cloud Penetration Tester", color: "#7c3aed", time: "4–8 years",         subtitle: "Offensive Cloud & Privilege Escalation" },
+  { num: "04", label: "Cloud Security Architect", color: "#6d28d9", time: "8+ years",           subtitle: "Zero Trust, CNAPP & Enterprise Programs" },
 ] as const;
 
 // ── Sidebar ───────────────────────────────────────────────────────────────────
@@ -44,7 +44,7 @@ function Sidebar() {
       <div className="mt-6 pt-6" style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
         <Link href="/roadmaps/cloud-security/career-path"
           className="flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-widest transition-colors duration-150 hover:text-white"
-          style={{ color: "rgba(34,211,238,0.85)", textDecoration: "underline" }}>
+          style={{ color: "rgba(167,139,250,0.85)", textDecoration: "underline" }}>
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
             <path d="M8 2L4 6L8 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
@@ -153,12 +153,12 @@ function SkillCard({ name, category, correlatedTools, accentColor, what, why, re
           <div className="grid grid-cols-1 gap-6">
             {resources.free.length > 0 && (
               <div>
-                <p className="text-[10px] font-bold uppercase text-blue-400/70 mb-3 tracking-widest">Free</p>
+                <p className="text-[10px] font-bold uppercase text-violet-400/70 mb-3 tracking-widest">Free</p>
                 <div className="space-y-4">
                   {resources.free.map(r => (
                     <div key={r.label}>
                       <a href={r.url} target="_blank" rel="noopener noreferrer"
-                        className="text-[13px] font-bold text-slate-200 hover:text-white underline decoration-blue-500/30 hover:decoration-blue-500 transition-all block mb-1">
+                        className="text-[13px] font-bold text-slate-200 hover:text-white underline decoration-violet-500/30 hover:decoration-violet-500 transition-all block mb-1">
                         {r.label}
                       </a>
                       {r.why && <p className="text-[12px] leading-relaxed text-slate-500">{r.why}</p>}
@@ -212,7 +212,7 @@ function SectionHeader({ num, label, color, time, subtitle }: {
 // ── Level 00 ──────────────────────────────────────────────────────────────────
 
 function Level00() {
-  const c = "#94a3b8";
+  const c = "#ada3c1";
   return (
     <section id="level-00" className="py-16 xl:py-20">
       <SectionHeader num="00" label="Cloud Foundations" color={c} time="0–6 months" subtitle="Zero to Cloud Literate" />
@@ -296,7 +296,7 @@ function Level00() {
 // ── Level 01 ──────────────────────────────────────────────────────────────────
 
 function Level01() {
-  const c = "#22d3ee";
+  const c = "#a78bfa";
   return (
     <section id="level-01" className="py-16 xl:py-20">
       <SectionHeader num="01" label="Cloud Security Associate" color={c} time="6 months – 2 years" subtitle="Identity, Visibility & Hardening" />
@@ -380,7 +380,7 @@ function Level01() {
 // ── Level 02 ──────────────────────────────────────────────────────────────────
 
 function Level02() {
-  const c = "#3b82f6";
+  const c = "#a855f7";
   return (
     <section id="level-02" className="py-16 xl:py-20">
       <SectionHeader num="02" label="Cloud Security Engineer" color={c} time="2–5 years" subtitle="Automation, IaC & Posture at Scale" />
@@ -465,7 +465,7 @@ function Level02() {
 // ── Level 03 ──────────────────────────────────────────────────────────────────
 
 function Level03() {
-  const c = "#a855f7";
+  const c = "#7c3aed";
   return (
     <section id="level-03" className="py-16 xl:py-20">
       <SectionHeader num="03" label="Cloud Penetration Tester" color={c} time="4–8 years" subtitle="Offensive Cloud & Privilege Escalation" />
@@ -547,7 +547,7 @@ function Level03() {
 // ── Level 04 ──────────────────────────────────────────────────────────────────
 
 function Level04() {
-  const c = "#f59e0b";
+  const c = "#6d28d9";
   return (
     <section id="level-04" className="py-16 xl:py-20">
       <SectionHeader num="04" label="Cloud Security Architect" color={c} time="8+ years" subtitle="Zero Trust, CNAPP & Enterprise Programs" />
@@ -659,14 +659,14 @@ export default function DetailedCloudSecurityClient() {
         <span className="text-slate-700">/</span>
         <span className="font-mono text-[11px] uppercase tracking-widest font-semibold text-slate-500">Deep Dive</span>
         <div className="flex-1" />
-        <span className="hidden lg:block font-mono text-[11px] font-black uppercase tracking-[0.4em] text-amber-400">
+        <span className="hidden lg:block font-mono text-[11px] font-black uppercase tracking-[0.4em] text-violet-400">
           Cloud Security — Deep Dive
         </span>
       </div>
 
       {/* Hero */}
       <div className="px-6 lg:px-16 xl:px-20 pt-14 pb-10">
-        <p className="font-mono text-[10px] uppercase tracking-[0.4em] mb-4 text-amber-400/55">Deep Dive</p>
+        <p className="font-mono text-[10px] uppercase tracking-[0.4em] mb-4 text-violet-400/55">Deep Dive</p>
         <h1 className="text-4xl sm:text-5xl xl:text-6xl font-bold text-white mb-4 tracking-tight leading-tight">
           The &ldquo;why&rdquo; behind<br />every certification.
         </h1>

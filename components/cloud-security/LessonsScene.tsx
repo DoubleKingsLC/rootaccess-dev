@@ -117,11 +117,11 @@ function IncidentDebrief({ op }: { op: number }) {
           <div className="absolute" style={{ top: -12, right: -14, transform: "rotate(-12deg)" }}>
             <div className="font-bold text-[9px] px-2.5 py-1 font-mono tracking-widest"
               style={{
-                border: `2px solid ${S3_GREEN}`,
-                color: S3_GREEN,
+                border: `2px solid #a855f7`,
+                color: "#a855f7",
                 background: "rgba(7,9,15,0.95)",
                 borderRadius: 3,
-                boxShadow: `0 0 16px rgba(34,197,94,0.4)`,
+                boxShadow: `0 0 16px rgba(168,85,247,0.4)`,
               }}>
               REMEDIATED ✓
             </div>
@@ -131,13 +131,13 @@ function IncidentDebrief({ op }: { op: number }) {
         {/* ── Right: Lessons ── */}
         <div className="flex-1 flex flex-col gap-3">
           <div className="mb-1">
-            <p className="font-mono text-[9px] uppercase tracking-[0.5em] mb-2" style={{ color: "rgba(148,163,184,0.4)" }}>
+            <p className="font-mono text-[9px] uppercase tracking-[0.5em] mb-2" style={{ color: "rgba(148,163,184,0.75)" }}>
               What this breach teaches us
             </p>
             <h2 className="font-sans text-2xl font-bold tracking-tight" style={{ color: "rgba(255,255,255,0.95)" }}>
               Five rules every cloud practitioner must know
             </h2>
-            <div className="h-px w-16 mt-3" style={{ background: `linear-gradient(to right, ${S3_GREEN}, transparent)` }} />
+            <div className="h-px w-16 mt-3" style={{ background: `linear-gradient(to right, #a855f7, transparent)` }} />
           </div>
 
           {LESSONS.map((lesson) => (
@@ -173,22 +173,22 @@ function CareerPathCTA({ op }: { op: number }) {
 
       {/* Heading block */}
       <div className="flex flex-col items-center gap-3 text-center">
-        <div className="font-mono text-[9px] uppercase tracking-[0.55em]"
-          style={{ color: "rgba(148,163,184,0.4)" }}>
-          Your next step
-        </div>
+          <div className="font-mono text-[9px] uppercase tracking-[0.55em]"
+            style={{ color: "rgba(148,163,184,0.75)" }}>
+            Your next step
+          </div>
         <h2 className="font-sans font-bold tracking-tight leading-tight"
           style={{ fontSize: "clamp(1.6rem, 3vw, 2.5rem)", color: "rgba(255,255,255,0.95)" }}>
           Want to{" "}
-          <span style={{ color: S3_GREEN }}>secure cloud environments</span>
+          <span style={{ color: "#a855f7" }}>secure cloud environments</span>
           <br />for a living?
         </h2>
         <p className="font-sans text-sm max-w-lg leading-relaxed"
-          style={{ color: "rgba(148,163,184,0.6)" }}>
+          style={{ color: "rgba(203,213,225,0.95)" }}>
           This scenario is real. Companies need people who understand how cloud misconfigurations happen —
           and how to prevent them before they become headlines.
         </p>
-        <div className="h-px w-32" style={{ background: `linear-gradient(to right, transparent, ${S3_GREEN}60, transparent)` }} />
+        <div className="h-px w-32" style={{ background: `linear-gradient(to right, transparent, #a855f760, transparent)` }} />
       </div>
 
       {/* Featured card */}
@@ -198,24 +198,24 @@ function CareerPathCTA({ op }: { op: number }) {
         <div className="relative rounded-lg overflow-hidden transition-all duration-300"
           style={{
             background: "rgba(7,9,15,0.97)",
-            border: `1px solid rgba(34,197,94,0.35)`,
-            borderTop: `3px solid ${S3_GREEN}`,
+            border: `1px solid rgba(168,85,247,0.35)`,
+            borderTop: `3px solid #a855f7`,
             padding: "26px 28px",
-            boxShadow: `0 0 48px rgba(34,197,94,0.12), 0 24px 64px rgba(0,0,0,0.6)`,
+            boxShadow: `0 0 48px rgba(168,85,247,0.12), 0 24px 64px rgba(0,0,0,0.6)`,
           }}
           onMouseEnter={e => {
-            (e.currentTarget as HTMLDivElement).style.boxShadow = `0 0 72px rgba(34,197,94,0.25), 0 24px 64px rgba(0,0,0,0.6)`;
-            (e.currentTarget as HTMLDivElement).style.borderColor = `rgba(34,197,94,0.65)`;
+            (e.currentTarget as HTMLDivElement).style.boxShadow = `0 0 72px rgba(168,85,247,0.25), 0 24px 64px rgba(0,0,0,0.6)`;
+            (e.currentTarget as HTMLDivElement).style.borderColor = `rgba(168,85,247,0.65)`;
           }}
           onMouseLeave={e => {
-            (e.currentTarget as HTMLDivElement).style.boxShadow = `0 0 48px rgba(34,197,94,0.12), 0 24px 64px rgba(0,0,0,0.6)`;
-            (e.currentTarget as HTMLDivElement).style.borderColor = `rgba(34,197,94,0.35)`;
+            (e.currentTarget as HTMLDivElement).style.boxShadow = `0 0 48px rgba(168,85,247,0.12), 0 24px 64px rgba(0,0,0,0.6)`;
+            (e.currentTarget as HTMLDivElement).style.borderColor = `rgba(168,85,247,0.35)`;
           }}>
 
           {/* Glow pulse ring */}
           <div className="absolute inset-0 rounded-lg pointer-events-none"
             style={{
-              border: `1px solid ${S3_GREEN}`,
+              border: `1px solid #a855f7`,
               opacity: 0.08,
               animation: "cs-pulse 3s ease-in-out infinite",
             }} />
@@ -223,7 +223,7 @@ function CareerPathCTA({ op }: { op: number }) {
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="font-mono text-[9px] uppercase tracking-widest mb-2"
-                style={{ color: `${S3_GREEN}70` }}>
+                style={{ color: `#a855f7cc` }}>
                 Career Roadmap
               </div>
               <div className="font-sans text-xl font-bold mb-1" style={{ color: "#ffffff" }}>
@@ -238,14 +238,14 @@ function CareerPathCTA({ op }: { op: number }) {
               <div className="flex flex-wrap gap-2 mb-5">
                 {["AWS Security", "IAM & Policies", "CloudTrail", "GuardDuty", "Threat Detection"].map(tag => (
                   <span key={tag} className="font-mono text-[8px] px-2 py-0.5 rounded"
-                    style={{ background: `${S3_GREEN}10`, border: `1px solid ${S3_GREEN}25`, color: `${S3_GREEN}90` }}>
+                    style={{ background: `rgba(168,85,247,0.1)`, border: `1px solid rgba(168,85,247,0.25)`, color: `#a855f7` }}>
                     {tag}
                   </span>
                 ))}
               </div>
 
               <div className="flex items-center gap-2 font-mono text-xs font-bold"
-                style={{ color: S3_GREEN }}>
+                style={{ color: "#a855f7" }}>
                 Explore the roadmap
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M5 12h14M12 5l7 7-7 7" />
@@ -255,12 +255,12 @@ function CareerPathCTA({ op }: { op: number }) {
 
             {/* Right: shield icon */}
             <div className="flex-shrink-0 w-16 h-16 rounded-xl flex items-center justify-center"
-              style={{ background: `${S3_GREEN}10`, border: `1px solid ${S3_GREEN}20` }}>
+              style={{ background: `rgba(168,85,247,0.1)`, border: `1px solid rgba(168,85,247,0.2)` }}>
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
                 <path d="M16 2 L28 7 L28 16 C28 23 22 29 16 31 C10 29 4 23 4 16 L4 7 Z"
-                  fill={`${S3_GREEN}18`} stroke={S3_GREEN} strokeWidth="1.5" />
+                  fill={`rgba(168,85,247,0.18)`} stroke="#a855f7" strokeWidth="1.5" />
                 <path d="M11 16 L14.5 19.5 L21 13"
-                  stroke={S3_GREEN} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  stroke="#a855f7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
           </div>
